@@ -66,7 +66,8 @@ profiles/*/
 .scratch/
 .drama_run/
 .drama_tmp/
-.claude/
+.claude/*
+!.claude/commands/
 
 # SKILL 自研原始版本（保留备查，含嵌套 git 仓库，不入库）
 skill-test/
