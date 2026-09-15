@@ -1,9 +1,10 @@
 ---
 name: skill-profile-manager
-description: >
-  管理账号画像全生命周期：创建空白画像、编辑六维字段、更新记忆、切换、导出和对比。
-  当用户说“新建/编辑/更新/切换/导出/对比画像、写进画像记忆”时使用。
-  首次从社媒数据生成画像用 skill-profile-builder；只提炼语言风格用 skill-voice-builder；品牌首次入驻引导用 skill-brand-onboarding。
+description: >-
+  Quản lý vòng đời hồ sơ (Profile): tạo trống, sửa 6 trường, ghi memory, chuyển, xuất, so sánh.
+  Dùng khi người dùng nói "tạo hồ sơ mới", "sửa hồ sơ", "ghi memory", "đổi hồ sơ". Sinh từ mạng xã
+  hội → skill-profile-builder, giọng văn → skill-voice-builder, onboarding →
+  skill-brand-onboarding.
 layer: general
 ---
 

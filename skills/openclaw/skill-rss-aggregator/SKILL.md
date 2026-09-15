@@ -1,10 +1,10 @@
 ---
 name: skill-rss-aggregator
 description: >-
-  RSS/Newsletter 聚合：订阅一批博主/媒体/Newsletter 的 RSS/Atom 源，拉取最新条目，
-  按关键词与时间窗过滤、去重、按时间排序，产出选题/资讯摘要。当用户说"RSS""订阅源"
-  "聚合资讯""追更博主""Newsletter""看看最近有什么新文章""汇总这些源的更新""feed"时使用。
-  纯标准库解析，无第三方依赖。
+  Tổng hợp feed RSS/Atom của blogger, báo, Newsletter: kéo bài mới, lọc theo từ khoá, khung thời
+  gian, bỏ trùng, xếp theo thời gian, ra tóm tắt đề tài/tin. Dùng khi người dùng nói "RSS",
+  "feed", "Newsletter", "theo dõi blogger", "có bài gì mới". Thuần thư viện chuẩn, không phụ thuộc
+  ngoài.
 layer: discover
 ---
 

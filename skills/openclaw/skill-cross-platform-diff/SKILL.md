@@ -1,12 +1,9 @@
 ---
 name: skill-cross-platform-diff
-description: >
-  跨平台内容差异深度分析。分析同一话题/内容在不同平台（小红书、抖音、B站、知乎、
-  微博、公众号、X 等）的呈现差异：内容形式、受众偏好、话语体系、流量逻辑、变现路径。
-  帮创作者理解"同一个内容在不同平台应该怎么做"。当用户说"小红书和抖音有什么区别"、
-  "这个话题在B站怎么做"、"跨平台差异"、"不同平台"、"各平台怎么做"、"平台特点"时触发。
-  和 skill-content-repurposing 的区别：repurposing 做格式适配和内容改写，
-  cross-platform-diff 做深度差异分析和策略洞察。
+description: >-
+  Phân tích sâu cùng một chủ đề khác nhau thế nào trên Facebook/TikTok/YouTube/Zalo: hình thức, gu
+  khán giả, ngôn ngữ, phân phối, kiếm tiền. Dùng khi người dùng nói "Facebook với TikTok khác gì",
+  "lên YouTube thì làm sao", "nền tảng nào hợp". Viết lại bài dùng skill-content-repurposing.
 layer: discover
 ---
 

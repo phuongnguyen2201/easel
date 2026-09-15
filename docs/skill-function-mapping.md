@@ -20,12 +20,12 @@
 
 | Skill | 功能介绍 |
 |---|---|
-| `asset-manager` | outputs/ 目录下的产物管理：按日期/平台/类型归档、打标签、搜索历史内容、生成素材清单。 |
-| `batch-process` | 批量处理：对一个目录里的一批图片/视频/音频统一套用同一操作——批量压缩、加水印、转格式、缩放、转比例、音量归一化等。 |
-| `skill-my-account` | 查询用户在 Easel 已登录的小红书、抖音、快手、知乎和视频号账号，以及粉丝、获赞、关注和作品列表。 |
-| `skill-profile-builder` | 首次使用引导：从社媒链接分析、从零生成账号画像 Profile。收集社媒链接+运营意图，分析已发内容与收藏喜好，生成 6 维 Profile。 |
-| `skill-profile-manager` | 管理账号画像全生命周期：创建空白画像、编辑六维字段、更新记忆、切换、导出和对比。 |
-| `template-library` | 内容模板的保存、复用、管理。把成功的内容结构保存为模板，下次直接套用，支持模板分类和版本管理。 |
+| `asset-manager` | Quản lý sản phẩm đã tạo trong outputs/: lưu trữ theo ngày/nền tảng/loại, gắn tag, tìm lại nội dung cũ, lập danh sách và thống kê tư liệu. |
+| `batch-process` | Áp một thao tác cho cả thư mục ảnh/video/audio qua batch_process.py: nén, gắn watermark, đổi định dạng, scale, đổi tỉ lệ, chuẩn hoá âm lượng; xuất ra batch_out/, không ghi đè bản gốc. |
+| `skill-my-account` | Tra tài khoản đã đăng nhập trong Easel (Facebook, TikTok, YouTube, Zalo) từ trạng thái đăng nhập cục bộ: danh tính, người theo dõi, lượt thích, đang theo dõi và danh sách bài, không cần hỏi tên tài khoản hay link. |
+| `skill-profile-builder` | Hướng dẫn lần đầu dùng Easel: thu thập link mạng xã hội và ý định vận hành, phân tích nội dung đã đăng cùng gu lưu/thích để sinh hồ sơ tài khoản (Profile) 6 chiều từ đầu, đánh dấu phần còn thiếu để hỏi bổ sung. |
+| `skill-profile-manager` | Quản lý vòng đời hồ sơ tài khoản (Profile): tạo hồ sơ trống, sửa 6 trường, ghi thêm memory, chuyển hồ sơ đang kích hoạt, xuất ra outputs/ và so sánh hai hồ sơ theo từng chiều. |
+| `template-library` | Lưu, tái dùng và quản lý mẫu nội dung riêng của nhà sáng tạo: đúc bài thành công thành mẫu có biến, lần sau điền chủ đề là ra bài, có phân loại và quản lý phiên bản. |
 
 ## 🔭 发现层
 
@@ -33,15 +33,15 @@
 
 | Skill | 功能介绍 |
 |---|---|
-| `skill-algorithm-updates` | 追踪抖音、小红书、B站、微博、知乎和视频号的算法、推荐分发、审核与变现规则变化，并分析对创作者的影响。 |
-| `skill-competitor-analysis` | 分析竞品账号的内容策略，拆解选题、格式、爆款规律和互动模式，输出差异化机会与行动建议。 |
-| `skill-content-gap-analysis` | 分析社媒赛道的内容空白，发现高需求低竞争的蓝海选题机会。 |
-| `skill-cross-platform-diff` | 跨平台内容差异深度分析。分析同一话题/内容在不同平台（小红书、抖音、B站、知乎、 微博、公众号、X 等）的呈现差异：内容形式、受众偏好、话语体系、流量逻辑、变现路径。 帮创作者理解"同一个内容在不同平台应该怎么做"。 |
-| `skill-event-calendar` | 查询未来 N 天的节日、纪念日、电商节点、行业事件，为创作者提供内容蹭点。 覆盖中国节假日、国际节日、电商大促、行业展会、考试节点、体育赛事等。 |
-| `skill-news-intelligence` | 聚合中文行业媒体、垂类资讯和平台商业动态，按创作者赛道过滤，生成结构化情报简报与可执行选题。 |
-| `skill-rss-aggregator` | RSS/Newsletter 聚合：订阅一批博主/媒体/Newsletter 的 RSS/Atom 源，拉取最新条目， 按关键词与时间窗过滤、去重、按时间排序，产出选题/资讯摘要。 |
-| `skill-trending-topics` | 抓取微博、抖音、知乎、头条、B站实时热搜，筛选与创作者赛道相关的热点，输出二创选题建议。 |
-| `skill-ugc-discovery` | 发现用户生成内容（UGC）。搜索与创作者品牌/账号相关的粉丝内容、测评、提及和社区讨论， 输出高价值 UGC 列表与互动建议。 |
+| `skill-algorithm-updates` | Theo dõi thay đổi thuật toán, phân phối đề xuất, kiểm duyệt và quy tắc kiếm tiền của các nền tảng như Facebook, TikTok, YouTube, Zalo, phân tích tác động tới nhà sáng tạo và xuất bản tin có nguồn kèm gợi ý ứng phó. |
+| `skill-competitor-analysis` | Mổ xẻ toàn diện chiến lược nội dung của kênh đối thủ cùng ngách: phân bố đề tài, định dạng, nhịp đăng, quy luật viral, cách tương tác, SWOT, từ đó chỉ ra cơ hội khác biệt và hành động ưu tiên có dữ liệu chứng minh. |
+| `skill-content-gap-analysis` | Quét cung–cầu nội dung của một ngách trên mạng xã hội, đối chiếu tín hiệu tìm kiếm, trend và câu hỏi ở bình luận để tìm đề tài nhu cầu cao nhưng ít cạnh tranh, xuất danh sách đề tài xếp ưu tiên kèm 3-5 việc làm ngay. |
+| `skill-cross-platform-diff` | Phân tích sâu cùng một chủ đề khác nhau thế nào giữa các nền tảng (hình thức, gu khán giả, ngôn ngữ, logic phân phối, đường kiếm tiền), chấm độ hợp từng nền tảng và gợi ý nền tảng chủ lực kèm hướng thích ứng. |
+| `skill-event-calendar` | Tra N ngày tới có ngày lễ, ngày kỷ niệm, mốc sale, sự kiện ngành và thể thao để bắt điểm rơi nội dung, chấm giá trị bắt trend từng mốc, số ngày cần chuẩn bị và gợi ý hướng nội dung cho nhà sáng tạo. |
+| `skill-news-intelligence` | Gom tin từ báo và trang tin ngành, tin chuyên ngành và động thái thương mại của nền tảng, lọc theo ngách của nhà sáng tạo để ra bản tin tình báo có cấu trúc kèm 3-5 đề tài làm được ngay. |
+| `skill-rss-aggregator` | Tổng hợp feed RSS/Atom đã đăng ký của blogger, báo, newsletter: kéo bài mới, lọc theo từ khoá và khung thời gian, bỏ trùng lặp, xếp theo thời gian rồi ra tóm tắt đề tài/tin; thuần thư viện chuẩn, không phụ thuộc ngoài. |
+| `skill-trending-topics` | Lấy bảng xếp hạng trend theo thời gian thực từ các nguồn đã cấu hình, lọc trend liên quan ngách của nhà sáng tạo, gợi ý 3-5 đề tài phái sinh kèm góc vào, định dạng, thời điểm đăng và nhận định xu hướng. |
+| `skill-ugc-discovery` | Tìm nội dung do người dùng tạo (UGC) về thương hiệu/kênh: bài của fan, review, nhắc tên, thảo luận cộng đồng; phân loại cảm xúc, tách phản hồi tiêu cực, xuất danh sách UGC giá trị kèm link nguồn và gợi ý tương tác. |
 
 ## 🧭 策划层
 

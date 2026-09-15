@@ -1,9 +1,10 @@
 ---
 name: skill-algorithm-updates
-description: >
-  追踪抖音、小红书、B站、微博、知乎和视频号的算法、推荐分发、审核与变现规则变化，并分析对创作者的影响。
-  当用户说“算法/推荐机制变了吗、流量规则更新、为什么流量下降、平台规则变化”时使用。
-  内容热点用 skill-trending-topics；泛行业资讯用 skill-news-intelligence；本 SKILL 只看平台机制。
+description: >-
+  Theo dõi thay đổi cơ chế nền tảng: thuật toán, phân phối, kiểm duyệt, kiếm tiền của Facebook,
+  TikTok, YouTube, Zalo, tác động tới nhà sáng tạo. Dùng khi người dùng nói "thuật toán đổi à",
+  "nền tảng đổi luật", "sao view tụt". Trend: skill-trending-topics; tin ngành:
+  skill-news-intelligence.
 layer: discover
 ---
 
