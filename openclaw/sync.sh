@@ -78,29 +78,29 @@ done
 # configuration checks never fall back to the workspace's shared/ copy.
 cat >> "$OPENCLAW_WORKSPACE_DST/AGENTS.md" << AGENTROOTEOF
 
-## 运行时项目根（由 openclaw/sync.sh 生成）
+## Thư mục gốc dự án lúc chạy (do openclaw/sync.sh sinh ra)
 
-Easel 项目根绝对路径：\`$PROJECT_ROOT\`
+Đường dẫn tuyệt đối của thư mục gốc Easel: \`$PROJECT_ROOT\`
 
-运行任何 \`skills/...\` 项目脚本前都必须先执行：
+Trước khi chạy bất kỳ script dự án nào trong \`skills/...\`, bắt buộc thực hiện:
 
 \`\`\`bash
 cd "$PROJECT_ROOT"
 test -f .env && test -d skills/shared/scripts
 \`\`\`
 
-不得在 \`$OPENCLAW_WORKSPACE_DST\` 的 \`shared/\` 副本中检查 Key、URL 或模型配置。
+Không kiểm tra Key, URL hay cấu hình model trong bản sao \`shared/\` tại \`$OPENCLAW_WORKSPACE_DST\`.
 AGENTROOTEOF
 echo "  ✓ AGENTS.md runtime project root"
 echo ""
 
-# ---- 清理已废弃的全局 USER.md ----
-# 画像已改为「消息内联」注入（见 docs/prompt-stack.md），不再写全局 USER.md。
-# 清掉历史残留，避免旧画像污染 system prompt。
-rm -f "$OPENCLAW_WORKSPACE_DST/USER.md" 2>/dev/null && echo "Cleanup: ✓ 移除残留 USER.md" || true
-# Easel 的长期记忆按画像隔离；全局 MEMORY.md 必须保持为空，避免跨画像污染。
+# ---- Dọn USER.md toàn cục đã bỏ ----
+# Profile nay được tiêm inline vào message (xem docs/prompt-stack.md), không ghi USER.md toàn cục nữa.
+# Xoá tàn dư cũ để profile cũ không làm bẩn system prompt.
+rm -f "$OPENCLAW_WORKSPACE_DST/USER.md" 2>/dev/null && echo "Cleanup: ✓ đã xoá USER.md còn sót" || true
+# Bộ nhớ dài hạn của Easel tách theo profile; MEMORY.md toàn cục phải luôn rỗng để tránh lẫn giữa các profile.
 : > "$OPENCLAW_WORKSPACE_DST/MEMORY.md"
-echo "Cleanup: ✓ 清空全局 MEMORY.md（画像记忆按会话读取）"
+echo "Cleanup: ✓ đã làm rỗng MEMORY.md toàn cục (bộ nhớ profile đọc theo từng phiên)"
 echo ""
 
 # ---- Profile 目录 symlink ----
@@ -126,20 +126,21 @@ echo ""
 
 # ---- 记录项目根路径（供 workspace 内人工/工具读取；AGENTS.md 另有每轮注入副本） ----
 cat > "$OPENCLAW_WORKSPACE_DST/CONTEXT.md" << CTXEOF
-# Easel 项目路径
+# Đường dẫn dự án Easel
 
-项目根目录：$PROJECT_ROOT
+Thư mục gốc dự án: $PROJECT_ROOT
 
-发现 / 策划 / 制作 / 发布 / 归因五层全部由你直接执行。跑项目脚本 / 产出成品前先 \`cd\` 到项目根
-（**本 claude 版本不支持 --cwd**）：
+Cả năm tầng Khám phá / Lập kế hoạch / Sản xuất / Xuất bản / Đo lường đều do bạn trực tiếp thực hiện.
+Trước khi chạy script dự án hoặc tạo sản phẩm, phải \`cd\` về thư mục gốc dự án
+(**phiên bản claude này không hỗ trợ --cwd**):
 \`\`\`
-cd $PROJECT_ROOT && python skills/shared/scripts/<脚本>.py ...   # 制作 / 发布 / 分析脚本
+cd $PROJECT_ROOT && python skills/shared/scripts/<script>.py ...   # script sản xuất / xuất bản / phân tích
 \`\`\`
-技能库已完整同步（\`skills/\`），读进来照其流程自己产出到 \`outputs/\`。
+Bộ kỹ năng đã được đồng bộ đầy đủ (\`skills/\`); đọc vào rồi làm theo quy trình của kỹ năng, ghi sản phẩm ra \`outputs/\`.
 
-产物输出到：$PROJECT_ROOT/outputs/
-用户素材在：$PROJECT_ROOT/assets/
-用户画像在：$PROJECT_ROOT/profiles/
+Sản phẩm ghi ra: $PROJECT_ROOT/outputs/
+Tư liệu người dùng ở: $PROJECT_ROOT/assets/
+Hồ sơ người dùng (profile) ở: $PROJECT_ROOT/profiles/
 CTXEOF
 echo "Project context: ✓ CONTEXT.md"
 echo ""
