@@ -624,6 +624,10 @@ fi
 $OC config set gateway.mode local 2>&1 | sed '/^No change$/d'
 $OC config set gateway.bind loopback 2>&1 | sed '/^No change$/d'
 $OC config set gateway.auth.mode none 2>&1 | sed '/^No change$/d'
+# 端口与仓库保持一致：解析顺序只有一处（scripts/gateway.sh port ->
+# EASEL_GATEWAY_PORT -> .env 的 OPENCLAW_PORT -> 18789）。这里必须写进 profile
+# 配置，因为 `openclaw --profile easel agent` 是按这个配置去连网关的。
+$OC config set gateway.port "$(bash "$PROJECT_ROOT/scripts/gateway.sh" port)" 2>&1 | sed '/^No change$/d'
 
 # Refuse to start with a config rejected by the installed OpenClaw version.
 # This catches schema changes early instead of producing opaque Gateway errors.

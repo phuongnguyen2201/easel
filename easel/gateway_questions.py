@@ -28,6 +28,8 @@ import time
 from functools import lru_cache
 from pathlib import Path
 
+from .gateway_port import gateway_port
+
 # --- path resolution -------------------------------------------------------
 
 HOME = Path.home()
@@ -37,9 +39,11 @@ PROFILE_DIR = Path(os.environ.get("EASEL_OPENCLAW_STATE_DIR") or (HOME / ".openc
 PROFILE_STATE_DIR = PROFILE_DIR / "state"
 PROFILE_DB = PROFILE_STATE_DIR / "openclaw.sqlite"
 
-# Gateway loopback endpoint (default port 18789; overridable when reconfigured).
+# Gateway loopback endpoint. The port comes from easel/gateway_port.py (which
+# still honours EASEL_GATEWAY_PORT first), so this bridge, the health checks in
+# ping/doctor/web and scripts/gateway.sh cannot drift apart.
 GATEWAY_HOST = os.environ.get("EASEL_GATEWAY_HOST", "127.0.0.1")
-GATEWAY_PORT = int(os.environ.get("EASEL_GATEWAY_PORT", "18789"))
+GATEWAY_PORT = gateway_port()
 
 # Gateway WS handshake constants. Kept here as a single source of truth rather
 # than buried in the connect payload — bump these to track OpenClaw's gateway

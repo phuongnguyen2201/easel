@@ -30,6 +30,9 @@
   // ---- Gateway ----
   gateway: {
     bind: "lan",  // 容器内绑定所有接口
+    // 真正生效的端口不在这里：由 .env 的 OPENCLAW_PORT（或 EASEL_GATEWAY_PORT）
+    // 决定，setup.sh 再用 `config set gateway.port` 写入 ~/.openclaw-easel/openclaw.json。
+    // 改这一行不会有任何效果。
     port: 18789,
   },
 }

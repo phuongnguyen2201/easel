@@ -10,6 +10,8 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
+from easel.gateway_port import gateway_port, gateway_url
+
 # 项目根目录（Easel/）
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -25,6 +27,15 @@ NC = "\033[0m"
 
 def _check(label: str, ok: bool, detail: str = "") -> bool:
     status = f"{GREEN}OK{NC}" if ok else f"{RED}FAIL{NC}"
+    print(f"  {label:<40s} {status}")
+    if not ok and detail:
+        print(f"    └─ {detail}")
+    return ok
+
+
+def _warn(label: str, ok: bool, detail: str = "") -> bool:
+    """Như _check nhưng lỗi chỉ là cảnh báo — không tính vào kết quả chung."""
+    status = f"{GREEN}OK{NC}" if ok else f"{YELLOW}WARN{NC}"
     print(f"  {label:<40s} {status}")
     if not ok and detail:
         print(f"    └─ {detail}")
@@ -103,7 +114,7 @@ def _chromium_available() -> bool:
 def _gateway_healthy() -> bool:
     """Check OpenClaw gateway is running via healthz endpoint."""
     try:
-        with urllib.request.urlopen("http://127.0.0.1:18789/healthz", timeout=5) as response:
+        with urllib.request.urlopen(gateway_url(), timeout=5) as response:
             return response.status == 200
     except (OSError, urllib.error.URLError):
         return False
@@ -214,13 +225,18 @@ def cmd_doctor(_args) -> int:
                       "运行 python3 -m playwright install chromium")
 
     # 3. .env file with valid key
+    # Không tính vào all_ok: các kênh đăng nhập như claude-cli / OAuth giữ
+    # credential trong profile OpenClaw (~/.openclaw-easel/), không đặt trong .env,
+    # nên check tĩnh này sẽ FAIL vĩnh viễn dù máy đang chạy tốt.
     env_ok = _env_key_valid()
-    all_ok &= _check(".env (API Key)", env_ok,
-                      "填 ANTHROPIC_API_KEY，或 EASEL_LLM_API_KEY + EASEL_LLM_BASE_URL")
+    _warn(".env (API Key)", env_ok,
+          "Không thấy key trong .env. Dùng claude-cli/OAuth thì đây là bình thường; "
+          "nếu không, điền ANTHROPIC_API_KEY hoặc EASEL_LLM_API_KEY + EASEL_LLM_BASE_URL. "
+          "Kết luận cuối cùng lấy từ: python -m easel ping")
 
     # 4. OpenClaw gateway running
     gw_ok = _gateway_healthy()
-    all_ok &= _check("OpenClaw gateway (localhost:18789)", gw_ok,
+    all_ok &= _check(f"OpenClaw gateway (localhost:{gateway_port()})", gw_ok,
                       "运行 python -m easel gateway start")
 
     # 5. Skills synced

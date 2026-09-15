@@ -11,25 +11,65 @@ LOGFILE="/tmp/easel-gateway.log"
 ADAPTER_LOGFILE="/tmp/easel-openai-maas-adapter.log"
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
+# Gateway port — same resolution order as easel/gateway_port.py:
+#   EASEL_GATEWAY_PORT env -> OPENCLAW_PORT in .env -> 18789.
+# Must match gateway.port in ~/.openclaw-easel/openclaw.json, which is where
+# `openclaw --profile easel agent` connects. Change both or neither:
+#   openclaw --profile easel config set gateway.port <port>
+resolve_port() {
+    local port
+    port="${EASEL_GATEWAY_PORT:-}"
+    if [ -z "$port" ]; then
+        port="$(sed -n 's/^OPENCLAW_PORT=//p' "$PROJECT_ROOT/.env" 2>/dev/null | tail -n 1 || true)"
+    fi
+    port="${port//\"/}"
+    port="${port//\'/}"
+    port="${port//$'\r'/}"
+    port="${port// /}"
+    case "$port" in
+        ''|*[!0-9]*) port=18789 ;;
+    esac
+    printf '%s' "$port"
+}
+PORT="$(resolve_port)"
+
 gateway_live() {
-    curl -sf --max-time 2 http://localhost:18789/healthz > /dev/null 2>&1
+    curl -sf --max-time 2 "http://localhost:$PORT/healthz" > /dev/null 2>&1
 }
 
 gateway_pid() {
-    ss -ltnp 2>/dev/null \
-        | sed -n 's/.*127\.0\.0\.1:18789.*pid=\([0-9][0-9]*\).*/\1/p' \
-        | head -n 1
+    if command -v ss >/dev/null 2>&1; then
+        ss -ltnp 2>/dev/null \
+            | sed -n "s/.*127\\.0\\.0\\.1:${PORT}.*pid=\\([0-9][0-9]*\\).*/\\1/p" \
+            | head -n 1
+    elif command -v lsof >/dev/null 2>&1; then
+        # macOS has no ss. lsof -t prints bare PIDs, one per matching socket
+        # (IPv4 + IPv6), and exits 1 when nothing listens -> || true for pipefail.
+        lsof -nP -iTCP:"$PORT" -sTCP:LISTEN -t 2>/dev/null | head -n 1 || true
+    else
+        echo "[easel] Need ss or lsof to resolve the gateway PID on port $PORT" >&2
+    fi
 }
 
 adapter_port() {
-    sed -n 's/^OPENAI_MAAS_ADAPTER_PORT=//p' "$PROJECT_ROOT/.env" 2>/dev/null | tail -n 1
+    # `|| true`: sed exits 2 when .env is missing, and under pipefail that kills
+    # the caller's assignment (the same trap resolve_port guards against).
+    sed -n 's/^OPENAI_MAAS_ADAPTER_PORT=//p' "$PROJECT_ROOT/.env" 2>/dev/null | tail -n 1 || true
 }
 
 adapter_pid() {
     local port="${1:-18791}"
-    ss -ltnp 2>/dev/null \
-        | sed -n "s/.*127\\.0\\.0\\.1:${port}.*pid=\\([0-9][0-9]*\\).*/\\1/p" \
-        | head -n 1
+    if command -v ss >/dev/null 2>&1; then
+        ss -ltnp 2>/dev/null \
+            | sed -n "s/.*127\\.0\\.0\\.1:${port}.*pid=\\([0-9][0-9]*\\).*/\\1/p" \
+            | head -n 1
+    elif command -v lsof >/dev/null 2>&1; then
+        # macOS: same fallback as gateway_pid. Empty result is fine here --
+        # callers treat it as "adapter not running".
+        lsof -nP -iTCP:"$port" -sTCP:LISTEN -t 2>/dev/null | head -n 1 || true
+    else
+        return 0
+    fi
 }
 
 start_adapter() {
@@ -81,8 +121,15 @@ case "${1:-status}" in
             echo "[easel] Gateway already running${PID:+ (PID $PID)}"
             exit 0
         fi
-        echo "[easel] Starting Easel gateway (profile: $PROFILE)..."
-        setsid -f openclaw --profile "$PROFILE" gateway run --force --allow-unconfigured --bind loopback > "$LOGFILE" 2>&1
+        echo "[easel] Starting Easel gateway (profile: $PROFILE, port: $PORT)..."
+        if command -v setsid >/dev/null 2>&1; then
+            setsid -f openclaw --profile "$PROFILE" gateway run --force --allow-unconfigured --bind loopback --port "$PORT" > "$LOGFILE" 2>&1
+        else
+            # macOS has no setsid. A backgrounded child of a non-interactive
+            # script is not killed when the script exits; nohup adds SIGHUP
+            # immunity, </dev/null avoids SIGTTIN if openclaw reads stdin.
+            nohup openclaw --profile "$PROFILE" gateway run --force --allow-unconfigured --bind loopback --port "$PORT" > "$LOGFILE" 2>&1 < /dev/null &
+        fi
         sleep 4
         if gateway_live; then
             PID="$(gateway_pid)"
@@ -108,8 +155,8 @@ case "${1:-status}" in
     status)
         if gateway_live; then
             PID="$(gateway_pid)"
-            HEALTH=$(curl -sf http://localhost:18789/healthz 2>&1 || echo '{"ok":false}')
-            echo "[easel] Gateway running${PID:+ (PID $PID)}, profile: $PROFILE"
+            HEALTH=$(curl -sf "http://localhost:$PORT/healthz" 2>&1 || echo '{"ok":false}')
+            echo "[easel] Gateway running${PID:+ (PID $PID)}, profile: $PROFILE, port: $PORT"
             echo "  health: $HEALTH"
         else
             echo "[easel] Gateway not running"
@@ -118,8 +165,13 @@ case "${1:-status}" in
     logs)
         tail -f "$LOGFILE"
         ;;
+    port)
+        # Resolved port for other scripts (setup.sh writes it into the profile
+        # config), so the resolution order stays in exactly one place.
+        printf '%s\n' "$PORT"
+        ;;
     *)
-        echo "Usage: $0 {start|stop|restart|status|logs}"
+        echo "Usage: $0 {start|stop|restart|status|logs|port}"
         exit 1
         ;;
 esac
