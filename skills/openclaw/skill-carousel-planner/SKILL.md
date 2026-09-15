@@ -1,9 +1,9 @@
 ---
 name: skill-carousel-planner
 description: >-
-  规划轮播图/多图笔记的分页结构：封面 Hook、内容节奏、每页文案和视觉方向、CTA 设计，附互动评分。
-  当用户说"轮播图策划""多图笔记""图集结构""分页设计""九宫格怎么排""每页写什么""carousel"时使用。
-  本 SKILL 出分页结构与文案规划（策划层）；实际渲染卡片图用 card-xiaohongshu / xhs-note-creator。
+  Lên cấu trúc từng trang cho bài nhiều ảnh (carousel): Hook trang bìa, nhịp nội dung, chữ và hình
+  mỗi trang, CTA, caption, chấm điểm tương tác. Dùng khi người dùng nói "lên carousel", "bài nhiều
+  ảnh", "mỗi trang viết gì". Render thẻ ảnh thật dùng card-xiaohongshu / xhs-note-creator.
 layer: plan
 ---
 

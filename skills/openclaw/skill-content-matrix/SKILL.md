@@ -1,9 +1,9 @@
 ---
 name: skill-content-matrix
 description: >-
-  将内容支柱与多种格式交叉，生成选题矩阵，每个格子产出一个可直接执行的选题。
-  当用户说"选题矩阵""批量选题""选题池""内容矩阵""一次多个选题""支柱×格式""选题规划表"时使用。
-  和 skill-topic-evaluator 的区别：本 SKILL 批量生成选题池；topic-evaluator 评估单个选题是否值得做。
+  Lập ma trận đề tài: giao trụ cột nội dung với 8 định dạng bài, mỗi ô là một đề tài cụ thể làm
+  được ngay, kèm chấm điểm ưu tiên. Dùng khi người dùng nói "ma trận đề tài", "kho đề tài", "cho
+  tôi nhiều đề tài một lúc". Khác skill-topic-evaluator: skill đó chỉ đánh giá một đề tài đơn lẻ.
 layer: plan
 ---
 

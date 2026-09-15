@@ -1,9 +1,9 @@
 ---
 name: skill-brand-onboarding
 description: >-
-  创作者/品牌入驻：通过结构化访谈收集视觉风格、内容调性、受众画像和运营目标，生成完整的账号画像档案。
-  当用户说"账号入驻""建档案""新账号建立画像""品牌入驻""从零建号""完善账号信息""onboarding"时使用。
-  产出覆盖多维度的完整账号档案；只建声音画像用 skill-voice-builder，只建受众画像用 skill-audience-profiler。
+  Onboarding kênh/thương hiệu: phỏng vấn bài bản về hình ảnh, tone, khán giả, mục tiêu; sinh hồ sơ
+  (Profile) đầy đủ. Dùng khi người dùng nói "onboarding", "tạo hồ sơ kênh", "hồ sơ thương hiệu",
+  "xây kênh từ đầu". Chỉ giọng văn → skill-voice-builder, chỉ khán giả → skill-audience-profiler.
 layer: plan
 ---
 

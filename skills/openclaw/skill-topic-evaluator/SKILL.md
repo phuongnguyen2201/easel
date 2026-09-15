@@ -1,11 +1,10 @@
 ---
 name: skill-topic-evaluator
-description: >
-  评估单个选题的潜力，按统一维度（流量潜力、账号匹配、
-  竞争差异化、时效价值、变现空间、制作成本、合规风险）打分，输出"做/不做/改方向"建议。
-  当用户说"这个选题值不值得做"、"评估一下"、"能不能火"、"有没有流量"、
-  "做不做这个"、"选题评估"、"值得做吗"、"这个话题行不行"、"帮我判断一下"时触发。
-  skill-content-matrix 批量生成选题池；skill-post-scorer 评估已完成内容，本 SKILL 评估尚未制作的单个选题。
+description: >-
+  Chấm một đề tài theo 7 tiêu chí (lưu lượng, khớp kênh, khác biệt, thời sự, kiếm tiền, chi phí,
+  tuân thủ), chốt làm/bỏ/đổi hướng. Dùng khi người dùng nói "đề tài này nên làm không", "có viral
+  không", "đánh giá đề tài". skill-content-matrix sinh hàng loạt, skill-post-scorer chấm bài đã
+  làm.
 layer: plan
 ---
 

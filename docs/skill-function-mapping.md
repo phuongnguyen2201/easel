@@ -49,22 +49,22 @@
 
 | Skill | 功能介绍 |
 |---|---|
-| `skill-account-diagnosis` | 账号诊断/起号体检：读取已完善的画像 Profile + 近期内容数据，诊断垂直度、定位清晰度、限流降权信号、流量池阶段，给出病因→证据→处方式的起号意见与发布建议。 |
-| `skill-article-outline` | 生成长文大纲：基于搜索分析生成 H2/H3 标题结构、段落字数目标、图表位置和 FAQ 规划，适用于公众号文章、知乎专栏、博客。 |
-| `skill-audience-profiler` | 构建目标受众画像：分析粉丝人群特征、痛点需求、内容偏好和触达渠道，输出可执行的受众画像卡。 |
-| `skill-brand-onboarding` | 创作者/品牌入驻：通过结构化访谈收集视觉风格、内容调性、受众画像和运营目标，生成完整的账号画像档案。 |
-| `skill-campaign-planner` | 活动/营销策划（国内本地化）：为节日营销、电商大促（618/双11/年货节）、新品发布、活动造势 制定完整方案——目标拆解、营销节奏（预热-爆发-返场）、多平台内容矩阵、互动玩法、KOL 分层、 预算分配、风险合规、效果指标。 |
-| `skill-carousel-planner` | 规划轮播图/多图笔记的分页结构：封面 Hook、内容节奏、每页文案和视觉方向、CTA 设计，附互动评分。 |
-| `skill-collab-proposal` | 品牌合作方案与联名策划。 |
-| `skill-content-calendar` | 生成月度社媒内容排期表：逐条选题+角度+视觉方向，覆盖小红书/抖音/B站/微博。 |
-| `skill-content-matrix` | 将内容支柱与多种格式交叉，生成选题矩阵，每个格子产出一个可直接执行的选题。 |
-| `skill-content-strategy` | 制定全面的内容策略方案：内容支柱架构、受众路径规划、90 天节奏原则、分发渠道策略、KPI 体系，输出可执行的策略文档。 |
-| `skill-hook-generator` | 针对任意主题生成多种 Hook（开头钩子）变体，用经过验证的互动公式抓住开头注意力，附字数校验。 |
-| `skill-livestream` | 为直播生成完整方案：直播主题、流程时间表、开场白/过渡语/催单话术/感谢话术/互动话术。 适用于带货直播、知识分享直播、娱乐直播。 |
-| `skill-positioning-analysis` | 差异化定位分析：帮账号/品牌找到差异化定位——扫描赛道、给竞品定位坐标、识别空白机会、 从人群/场景/价值/形式/人设多维找差异点，凝练一句话定位并给落地建议。 |
-| `skill-topic-evaluator` | 评估单个选题的潜力，按统一维度（流量潜力、账号匹配、 竞争差异化、时效价值、变现空间、制作成本、合规风险）打分，输出"做/不做/改方向"建议。 |
-| `skill-trend-rider` | 给定一个热点事件或话题，结合创作者账号定位，输出蹭热点的具体内容方案。 包含切入角度、内容形式、标题建议、风险提醒。 |
-| `skill-voice-builder` | 通过结构化访谈和写作样本分析，构建创作者个人声音画像（语气/用词/节奏/风格），确保后续内容风格一致。 |
+| `skill-account-diagnosis` | Chẩn đoán sức khỏe kênh từ hồ sơ tài khoản và dữ liệu nội dung gần đây, chỉ ra vấn đề theo cấu trúc bệnh → bằng chứng → đơn thuốc, kèm ý kiến xây kênh theo giai đoạn và gợi ý đăng bài. |
+| `skill-article-outline` | Phân tích kết quả tìm kiếm rồi lập dàn ý bài dài gồm cấu trúc tiêu đề H2/H3, số chữ mục tiêu từng đoạn, vị trí biểu đồ và kế hoạch FAQ cho bài blog/website hoặc bài dài trên Facebook. |
+| `skill-audience-profiler` | Phân tích đặc điểm, nỗi đau, nhu cầu, sở thích nội dung và kênh tiếp cận của người theo dõi để dựng 2-4 thẻ chân dung khán giả mục tiêu có thể hành động ngay. |
+| `skill-brand-onboarding` | Thu thập thông tin công khai và phỏng vấn có cấu trúc về phong cách hình ảnh, tone nội dung, chân dung khán giả và mục tiêu vận hành để sinh bộ hồ sơ tài khoản (Profile) đầy đủ nhiều chiều. |
+| `skill-campaign-planner` | Lập kế hoạch campaign marketing trọn gói cho Tết, đợt sale lớn, ra mắt sản phẩm hay sự kiện: mục tiêu, nhịp khởi động – bùng nổ – kéo dài, ma trận nội dung đa kênh, minigame, phân tầng KOL, ngân sách, rủi ro và KPI. |
+| `skill-carousel-planner` | Lên cấu trúc từng trang cho bài nhiều ảnh (carousel): Hook trang bìa, nhịp nội dung, chữ và hướng hình ảnh mỗi trang, CTA trang cuối, caption đi kèm và điểm tương tác dự kiến. |
+| `skill-collab-proposal` | Soạn đề xuất hợp tác theo hai chế độ: booking quảng cáo (báo giá theo bảng giá KOL, hình thức nội dung, lịch, KPI dự kiến) và collab với nhà sáng tạo/thương hiệu khác (thế mạnh bổ trợ, chia việc, quảng bá chéo). |
+| `skill-content-calendar` | Lập lịch đăng theo tháng cho Facebook/TikTok/YouTube/Zalo: từng bài có đề tài cụ thể, góc khai thác và hướng hình ảnh, xếp theo trụ cột nội dung và tần suất chuẩn. |
+| `skill-content-matrix` | Lập ma trận đề tài bằng cách giao trụ cột nội dung với 8 định dạng bài, mỗi ô là một đề tài cụ thể làm được ngay, kèm chấm điểm chọn ra các đề tài mạnh nhất. |
+| `skill-content-strategy` | Lập chiến lược nội dung tổng thể gồm trụ cột nội dung, hành trình khán giả, nguyên tắc nhịp 90 ngày, kênh phân phối và hệ KPI, gộp thành một tài liệu chiến lược thực thi được. |
+| `skill-hook-generator` | Sinh 6 biến thể Hook mở đầu cho mọi chủ đề theo các công thức đã kiểm chứng, mỗi Hook gồm 2 dòng mở màn và lật ngược, có kiểm tra số chữ từng dòng. |
+| `skill-livestream` | Lập kế hoạch livestream trọn bộ gồm chủ đề, timeline, lời mở màn, câu chuyển đoạn, lời chốt đơn, cảm ơn, tương tác và checklist trước giờ live cho livestream bán hàng, chia sẻ kiến thức, giải trí. |
+| `skill-positioning-analysis` | Tìm định vị khác biệt cho kênh/thương hiệu: quét ngách, vẽ toạ độ đối thủ, tìm khoảng trống, chọn điểm khác biệt về khán giả, bối cảnh, giá trị, hình thức, persona rồi chốt một câu định vị kèm gợi ý triển khai. |
+| `skill-topic-evaluator` | Chấm một đề tài chưa làm theo 7 tiêu chí (lưu lượng, khớp kênh, khác biệt, thời sự, kiếm tiền, chi phí, rủi ro tuân thủ), kết luận làm, không làm hay đổi hướng kèm gợi ý sửa hoặc đề tài thay thế. |
+| `skill-trend-rider` | Từ một trend hoặc sự kiện nóng cụ thể và định vị kênh, lên phương án bắt trend gồm đánh giá độ liên quan, góc vào, hình thức, gợi ý tiêu đề, thời điểm đăng và cảnh báo rủi ro. |
+| `skill-voice-builder` | Dựng hồ sơ giọng văn (voice/tone: giọng điệu, từ ngữ, nhịp, phong cách) của nhà sáng tạo qua phỏng vấn có cấu trúc và phân tích mẫu viết để nội dung về sau giữ được sự nhất quán. |
 
 ## 🎨 创作层
 

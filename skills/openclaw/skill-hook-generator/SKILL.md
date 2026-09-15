@@ -1,9 +1,9 @@
 ---
 name: skill-hook-generator
 description: >-
-  针对任意主题生成多种 Hook（开头钩子）变体，用经过验证的互动公式抓住开头注意力，附字数校验。
-  当用户说"写钩子""开头怎么写""Hook""抓眼球的开头""标题钩子""前三秒""怎么开头"时使用。
-  本 SKILL 专攻可复用的开头钩子变体；成篇营销文案用 copywriting，视频分秒脚本用 video-script。
+  Sinh 6 biến thể Hook mở đầu cho mọi chủ đề theo công thức đã kiểm chứng, mỗi Hook 2 dòng, có
+  kiểm tra số chữ. Dùng khi người dùng nói "viết hook", "mở đầu sao cho hút", "3 giây đầu". Bài
+  quảng cáo trọn vẹn dùng copywriting, kịch bản video theo giây dùng video-script.
 layer: plan
 ---
 

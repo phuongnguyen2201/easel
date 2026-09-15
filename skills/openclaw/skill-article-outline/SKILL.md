@@ -1,8 +1,9 @@
 ---
 name: skill-article-outline
 description: >-
-  生成长文大纲：基于搜索分析生成 H2/H3 标题结构、段落字数目标、图表位置和 FAQ 规划，适用于公众号文章、知乎专栏、博客。
-  当用户说"文章大纲""长文结构""公众号大纲""知乎回答框架""写作提纲""文章框架""H2/H3 结构"时使用。
+  Lập dàn ý bài dài từ phân tích kết quả tìm kiếm: cấu trúc tiêu đề H2/H3, số chữ từng đoạn, vị
+  trí biểu đồ và kế hoạch FAQ, cho bài blog/website hay bài dài trên Facebook. Dùng khi người dùng
+  nói "dàn ý bài viết", "cấu trúc bài dài", "dàn ý blog", "khung bài viết", "cấu trúc H2/H3".
 layer: plan
 ---
 

@@ -1,9 +1,9 @@
 ---
 name: skill-content-strategy
 description: >-
-  制定全面的内容策略方案：内容支柱架构、受众路径规划、90 天节奏原则、分发渠道策略、KPI 体系，输出可执行的策略文档。
-  当用户说"内容策略""策略方案""内容规划""怎么做内容""内容支柱""增长策略""涨粉策略"时使用。
-  元策略层，只出框架不出具体排期表（排期用 skill-content-calendar）。
+  Lập chiến lược nội dung tổng thể: trụ cột nội dung, hành trình khán giả, nhịp 90 ngày, kênh phân
+  phối, KPI, gộp thành một tài liệu. Dùng khi người dùng nói "chiến lược nội dung", "làm nội dung
+  thế nào", "chiến lược tăng follow". Chỉ ra khung, lịch đăng cụ thể dùng skill-content-calendar.
 layer: plan
 ---
 

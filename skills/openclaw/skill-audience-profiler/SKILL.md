@@ -1,9 +1,9 @@
 ---
 name: skill-audience-profiler
 description: >-
-  构建目标受众画像：分析粉丝人群特征、痛点需求、内容偏好和触达渠道，输出可执行的受众画像卡。
-  当用户说"受众画像""粉丝画像""我的用户是谁""目标人群""用户痛点""受众分析""谁在看我"时使用。
-  构建的是受众/粉丝画像，创作者自己的声音画像用 skill-voice-builder。
+  Dựng chân dung khán giả mục tiêu: đặc điểm, nỗi đau, nhu cầu, gu nội dung, kênh tiếp cận; xuất
+  thẻ chân dung dùng ngay. Dùng khi người dùng nói "chân dung khán giả", "khán giả của tôi là ai",
+  "ai đang xem tôi", "nỗi đau khách hàng". Hồ sơ giọng văn của nhà sáng tạo → skill-voice-builder.
 layer: plan
 ---
 

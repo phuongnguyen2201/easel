@@ -1,9 +1,10 @@
 ---
 name: skill-content-calendar
 description: >-
-  生成月度社媒内容排期表：逐条选题+角度+视觉方向，覆盖小红书/抖音/B站/微博。
-  当用户说"内容排期""月度日历""发布计划""内容日历""排期表""这个月发什么""内容节奏表"时使用。
-  消费 skill-content-strategy 定义的支柱与 shared 频率基线，只出具体排期不重复定义支柱理论。
+  Lập lịch đăng theo tháng cho Facebook/TikTok/YouTube/Zalo: mỗi bài có đề tài, góc khai thác,
+  hướng hình ảnh. Dùng khi người dùng nói "lịch đăng tháng này", "tháng này đăng gì", "lịch nội
+  dung". Lấy trụ cột từ skill-content-strategy, chỉ ra lịch cụ thể, không định nghĩa lại lý
+  thuyết.
 layer: plan
 ---
 

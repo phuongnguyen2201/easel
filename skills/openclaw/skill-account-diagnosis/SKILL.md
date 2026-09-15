@@ -1,6 +1,10 @@
 ---
 name: skill-account-diagnosis
-description: "账号诊断/起号体检：读取已完善的画像 Profile + 近期内容数据，诊断垂直度、定位清晰度、限流降权信号、流量池阶段，给出病因→证据→处方式的起号意见与发布建议。当用户说账号诊断/起号体检/为什么没流量/是不是被限流了/账号定位诊断/起号建议/怎么起号时使用"
+description: >-
+  Chẩn đoán kênh từ hồ sơ (Profile) + dữ liệu nội dung: độ tập trung ngách, định vị, dấu hiệu bóp
+  tương tác, vòng phân phối; gợi ý xây kênh dạng bệnh → bằng chứng → đơn thuốc. Dùng khi người
+  dùng nói "chẩn đoán kênh", "kênh tôi sao không lên", "có bị bóp tương tác không", "xây kênh thế
+  nào".
 layer: plan
 ---
 
