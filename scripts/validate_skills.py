@@ -13,7 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS_DIR = ROOT / "skills" / "openclaw"
 ALLOWED_KEYS = {"name", "description", "layer", "metadata"}
 LAYERS = {"discover", "plan", "produce", "publish", "attribute", "general"}
-INTENTIONAL_NAME_MISMATCHES = {"skill-xhs-analyzer": "redbook"}
+INTENTIONAL_NAME_MISMATCHES: dict[str, str] = {}
+# Rỗng từ runbook 4.2 (skill-xhs-analyzer đã chuyển sang retired/skills/).
+# Giữ cơ chế: thêm lại {"<tên thư mục>": "<name trong frontmatter>"} khi có ngoại lệ mới.
 KEY_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$")
 # Trigger phrases a `description` must contain so the agent can route to the
 # skill. Matched case-insensitively on NFC-normalized text. Keep the Chinese
@@ -56,29 +58,11 @@ LEGACY_OUTPUT_DIRS = {
     "subtitle-translate", "tts-voiceover", "video-chapters", "video-highlights",
     "video-intro-outro", "video-reframe", "video-to-article", "voice-clone",
 }
-PUBLISH_SCRIPT_CONTRACTS = {
-    "skills/openclaw/skill-bilibili-upload/scripts/bili_upload.py": (
-        "content_guard.guard_or_die", 'add_argument("--exec"',
-    ),
-    "skills/openclaw/skill-wechat-publisher/scripts/publish.py": (
-        "content_guard.guard_or_die", '"--exec"',
-    ),
-    "skills/openclaw/skill-wechat-publisher/scripts/multi_publish.py": (
-        "content_guard.guard_or_die", '"--exec"',
-    ),
-    "skills/shared/scripts/xhs_publish.py": (
-        "content_guard.guard_or_die", 'add_argument("--exec"',
-    ),
-    "skills/shared/scripts/douyin_publish.py": (
-        "content_guard.guard_or_die", 'add_argument("--exec"',
-    ),
-    "skills/shared/scripts/web_publisher.py": (
-        "content_guard.guard_or_die", 'add_argument("--exec"',
-    ),
-    "skills/shared/scripts/zhihu_answer.py": (
-        "content_guard.guard_or_die", 'add_argument("--exec"',
-    ),
-}
+# Hợp đồng an toàn cho script đăng bài: mỗi entry là <đường dẫn>: (<marker bắt buộc>, ...).
+# RỖNG từ runbook 4.2 — toàn bộ 7 script đăng của nền tảng TQ đã chuyển sang retired/.
+# Giai đoạn 5 nạp lại theo TỪNG adapter VN, giữ nguyên 2 marker:
+#   "skills/shared/scripts/<platform>_publish.py": ("content_guard.guard_or_die", 'add_argument("--exec"'),
+PUBLISH_SCRIPT_CONTRACTS: dict[str, tuple[str, ...]] = {}
 OUTPUT_SCAN_SUFFIXES = {".md", ".py", ".sh"}
 GENERIC_OUTPUT_DIRS = {"xhs", "test", "tmp", "temp", "demo", "output", "outputs", "result", "results"}
 ROOT_OUTPUT_FILE_RE = re.compile(
@@ -200,17 +184,8 @@ def validate_execution_contracts() -> list[str]:
             if marker not in text:
                 errors.append(f"{relative_path}: missing safety marker {marker!r}")
 
-    analyzer_docs = [
-        ROOT / "skills/openclaw/skill-xhs-analyzer/SKILL.md",
-        ROOT / "skills/openclaw/skill-xhs-analyzer/references/commands.md",
-        ROOT / "skills/openclaw/skill-xhs-analyzer/references/modules.md",
-    ]
-    forbidden = re.compile(r"redbook\s+(?:post|comment|reply|batch-reply|like|collect)\b")
-    for path in analyzer_docs:
-        if match := forbidden.search(path.read_text(encoding="utf-8")):
-            errors.append(
-                f"{path.relative_to(ROOT)}: analyzer must stay read-only; found {match.group()!r}"
-            )
+    # Bỏ từ runbook 4.2: guard read-only của skill-xhs-analyzer (3 path hardcode)
+    # đã theo skill sang retired/skills/skill-xhs-analyzer/.
     return errors
 
 

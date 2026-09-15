@@ -1,7 +1,7 @@
 # my-account 命令样例
 
 脚本（CWD=项目根，用 `python` 直接调）：
-- 身份：`skills/shared/scripts/{xhs_publish,douyin_publish,web_publisher}.py whoami`
+- Định danh (whoami): chờ adapter nền tảng VN ở Giai đoạn 5 — runner cũ đã gỡ ở runbook 4.2.
 - 数据：`skills/shared/scripts/account_stats.py fetch --platform <平台>`
 
 代理**自动按平台**处理：小红书直连、其它走 env——`account_stats` 无需手动指定；whoami 见下方各平台注意。
@@ -17,16 +17,8 @@ python skills/shared/scripts/account_stats.py check
 输出单行 JSON：`{"loggedIn": true/false, "name": "昵称", "avatar": "头像URL"}`。
 
 ```bash
-# 小红书（必须直连，走代理常被判风险）
-python skills/shared/scripts/xhs_publish.py whoami --no-proxy
-
-# 抖音（走代理，默认取 env，勿加 --no-proxy）
-python skills/shared/scripts/douyin_publish.py whoami
-
-# 知乎 / 快手 / 视频号（web_publisher，--platform 三选一）
-python skills/shared/scripts/web_publisher.py whoami --platform zhihu
-python skills/shared/scripts/web_publisher.py whoami --platform kuaishou
-python skills/shared/scripts/web_publisher.py whoami --platform weixin-channels
+# Chưa có lệnh whoami: runner của các nền tảng TQ đã gỡ ở runbook 4.2.
+# Giai đoạn 5 bổ sung lại theo từng adapter VN (Facebook Page, YouTube, TikTok, Zalo OA).
 ```
 
 - `loggedIn=false` → 告诉用户"你还没登录 X，去 Web『账号』页扫码"。

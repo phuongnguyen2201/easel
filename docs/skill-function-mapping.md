@@ -1,7 +1,7 @@
 # Easel Skill 能力地图
 
 > 本文档按 Easel 的内容工作流分层介绍当前技能库。每个条目对应 `skills/openclaw/` 中一个可用的 `SKILL.md`。
-> 当前共 **112 个 Skill**；这里只说明各 Skill 负责什么，具体输入、输出和执行流程请查看对应目录。
+> 当前共 **101 个 Skill**；这里只说明各 Skill 负责什么，具体输入、输出和执行流程请查看对应目录。
 
 ## 🗺️ 分层总览
 
@@ -11,8 +11,8 @@
 | 🔭 发现层 | 9 | 发现热点、趋势、行业变化、竞品动态和内容机会。 |
 | 🧭 策划层 | 16 | 把机会转化为定位、选题、结构、排期和可执行方案。 |
 | 🎨 创作层 | 50 | 完成文字、视觉、音频、视频和复合内容的实际制作。 |
-| 📣 发布层 | 20 | 完成平台适配、质量检查、排期、互动和真实发布。 |
-| 📊 归因层 | 11 | 记录内容表现，分析数据与评论，并把结论用于下一轮策略。 |
+| 📣 发布层 | 10 | 完成平台适配、质量检查、排期、互动和真实发布。 |
+| 📊 归因层 | 10 | 记录内容表现，分析数据与评论，并把结论用于下一轮策略。 |
 
 ## 🧱 基础能力
 
@@ -129,13 +129,8 @@
 
 | Skill | 功能介绍 |
 |---|---|
-| `skill-bilibili-upload` | B站视频投稿：把视频投稿到哔哩哔哩，支持标题/简介/分区/标签/封面/转载声明/定时发布。 |
-| `skill-channels-upload` | 微信视频号发布：把竖版短视频发布到微信视频号（channels.weixin.qq.com）。 |
 | `skill-community-ops` | Vận hành bình luận và ứng phó khủng hoảng sau đăng: mẫu trả lời phân tầng theo 5 loại bình luận kèm quy tắc xử lý theo mức, khai thác đề tài từ bình luận; có sự cố thì phân cấp, dự thảo tuyên bố, thống nhất phát ngôn. |
 | `skill-content-repurposing` | Tách một bài gốc (bài viết, kịch bản video, bản ghi livestream) theo tháp trụ cột – phái sinh – vi nội dung rồi viết lại thành nội dung bản địa cho từng nền tảng như Facebook, TikTok, YouTube, Zalo, kèm thứ tự đăng. |
-| `skill-cross-platform-publish` | Đăng một chạm lên các nền tảng đã kết nối: thích ứng một nội dung theo số chữ, tỉ lệ, hashtag, loại nội dung của từng nền tảng rồi uỷ quyền cho SKILL đăng tương ứng; publish_dispatch.py kiểm ràng buộc và định tuyến. |
-| `skill-douyin-upload` | 将视频/图文内容发布到抖音（creator.douyin.com）。 |
-| `skill-kuaishou-upload` | 快手视频发布：把竖版短视频发布到快手创作者中心。 |
 | `skill-persona-check` | Kiểm tra nhất quán persona và tone thương hiệu của nội dung so với hồ sơ (Profile) về định vị, ngách, hình thức, khán giả, phong cách, sở thích; chấm điểm, chỉ rõ điểm lệch kèm gợi ý sửa, chỉ cảnh báo không chặn đăng. |
 | `skill-publish-checklist` | Kiểm đủ trước khi đăng: rà từng mục tiêu đề, ảnh bìa, hashtag, định dạng, nhãn tuân thủ, link, CTA có đủ chưa, kết luận đăng được hay chưa kèm danh sách mục còn thiếu và cách bổ sung. |
 | `skill-publish-notify` | Đẩy thông báo sau khi đăng: thành công hay thất bại đều gửi kết quả (trạng thái, tiêu đề, nền tảng, link) tới Telegram, Slack, webhook bất kỳ hoặc bot nhóm Feishu/DingTalk/WeCom; thuần script, không phụ thuộc ngoài. |
@@ -144,11 +139,6 @@
 | `skill-risk-scanner` | Đánh giá độ nguyên bản và rủi ro bản quyền bằng LLM: dấu hiệu xào bài/đăng lại, bản quyền ảnh và nhạc, chuẩn trích dẫn, thương hiệu; xuất báo cáo rủi ro thấp/trung bình/cao kèm gợi ý sửa, không check trùng kỹ thuật. |
 | `skill-seo-quality` | Kiểm và tối ưu để bài hiện trong kết quả tìm kiếm của nền tảng: từ khoá ở tiêu đề, thân bài, hashtag, chữ trên ảnh bìa/khung đầu, cân đối tìm kiếm và đề xuất; xuất báo cáo kèm Top 3 việc sửa, có chế độ SEO web/blog. |
 | `skill-short-link` | Gắn tham số UTM (nguồn/kênh/chiến dịch) vào link nội dung hoặc quảng cáo rồi rút gọn qua dịch vụ công khai không cần key, mỗi kênh một link riêng để theo dõi nguồn truy cập và hiệu quả campaign trên từng nền tảng. |
-| `skill-wechat-publisher` | 微信公众号文章自动创作与发布工具。给定参考文章、文字或文档，自动搜索整理全网相关信息、生成图文并茂的公众号文章，并发布到微信公众号草稿箱。特别强调反 AI 检测写作。 |
-| `skill-xhs-comment-reply` | 小红书评论互动运营：列出我的笔记、抓取某条笔记下的评论、按画像语气逐条回复、以及删除评论 （含自己发的回复）。 |
-| `skill-xhs-publisher` | 将图文/视频内容发布到小红书（XHS）。 |
-| `skill-zhihu-answer` | 知乎问答回答发布：在知乎问题下发布原创回答——搜热门问题、检查可答性、写内容、 Playwright 发布（绕 header 遮挡 + JS 遍历发布按钮）。 |
-| `skill-zhihu-publisher` | 知乎发布：把文章发布到知乎专栏（也可用于回答草稿）。 |
 
 ## 📊 归因层
 
@@ -166,4 +156,3 @@
 | `skill-publish-log` | Quản lý nhật ký đăng bài: ghi từng lần đăng (nền tảng, tiêu đề, link, thời gian, số liệu ban đầu, tag), tra cứu theo thời gian, nền tảng, từ khoá và thống kê số bài, tổng tương tác để hậu kiểm và quy kết. |
 | `skill-social-performance-review` | Phân tích hiệu quả nội dung tháng trước trên Facebook, TikTok, YouTube, Zalo từ CSV, ảnh chụp hoặc mô tả, tìm mô hình hiệu quả và nguyên nhân thất bại, xuất báo cáo hậu kiểm tháng kèm đề xuất thực thi cho tháng sau. |
 | `skill-strategy-advisor` | Phân tích hiệu quả nội dung gần đây, hồ sơ tài khoản và xu hướng ngành để tối ưu lặp chiến lược: khuyến nghị giai đoạn tới về hướng nội dung, ngách mới, hình thức, nhịp đăng, tinh chỉnh hồ sơ, kèm danh sách hành động. |
-| `skill-xhs-analyzer` | 小红书内容分析：搜索笔记、拉取互动数据、分析爆款规律、创作者画像、限流检测，支持 CLI 自动化操作。 |
