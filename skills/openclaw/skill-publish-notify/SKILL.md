@@ -1,9 +1,9 @@
 ---
 name: skill-publish-notify
 description: >-
-  发布通知推送：内容发布成功/失败后，把结果推送到飞书/钉钉/企业微信群机器人、
-  Telegram、Slack 或任意 webhook。当用户说"发布通知""发到飞书群""通知钉钉""推送到企微"
-  "发布成功提醒""webhook 通知""发布完通知我""群机器人"时使用。纯脚本无第三方依赖。
+  Đẩy thông báo sau khi đăng: thành công hay thất bại đều gửi kết quả và link tới Telegram, Slack
+  hoặc webhook bất kỳ (kèm Feishu/DingTalk/WeCom); thuần script, không phụ thuộc ngoài. Dùng khi
+  người dùng nói "báo khi đăng xong", "thông báo Telegram", "gửi webhook", "đăng xong nhắn tôi".
 layer: publish
 ---
 

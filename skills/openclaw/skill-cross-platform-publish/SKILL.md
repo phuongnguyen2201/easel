@@ -1,10 +1,9 @@
 ---
 name: skill-cross-platform-publish
 description: >-
-  跨平台一键发布：一份内容适配并发布到多个平台（小红书/抖音/B站/公众号/快手/视频号/知乎）。
-  按各平台格式约束（字数/比例/标签/内容类型）适配内容，再逐个委派对应平台发布 SKILL。
-  当用户说"一键发布""同时发到多个平台""多平台发布""一稿多发""全平台发""发到抖音+小红书+B站"
-  "分发到各平台"时使用。适配由 LLM 做，路由与约束检查由 scripts/publish_dispatch.py。
+  Đăng một chạm lên các nền tảng đã kết nối: thích ứng một nội dung theo ràng buộc số chữ, tỉ lệ,
+  hashtag, loại nội dung của từng nền tảng rồi uỷ quyền lần lượt cho SKILL đăng tương ứng. Dùng
+  khi người dùng nói "đăng một chạm", "đăng cùng lúc nhiều nền tảng", "phân phối đa nền tảng".
 layer: publish
 ---
 

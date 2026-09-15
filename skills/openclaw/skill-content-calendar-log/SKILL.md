@@ -1,10 +1,10 @@
 ---
 name: skill-content-calendar-log
-description: >
-  统一内容日历底座。记录每次发布（发布页/对话页均自动落库）、用户排期、平台活动/节日/特殊日期到
-  一个时间线，并供 Agent 规划前读回。当用户说"内容日历""日历里有什么""接下来发什么""这周发了啥"
-  "把这个活动记到日历""最近的发布节奏""哪个平台该更新了"时触发。是发布时间线的权威底座，
-  与 skill-publish-log（指标底座）互补：本底座管"何时发什么/该做什么"，publish-log 管"每条数据表现"。
+description: >-
+  Nền lịch nội dung thống nhất: tự ghi mọi lần đăng (trang đăng/chat), lịch đã xếp, sự kiện nền
+  tảng/ngày lễ vào một timeline; Agent đọc lại trước khi lập kế hoạch. Dùng khi người dùng nói
+  "trong lịch có gì", "tiếp theo đăng gì", "ghi sự kiện vào lịch". Hiệu quả từng bài →
+  skill-publish-log.
 layer: attribute
 ---
 

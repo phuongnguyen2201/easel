@@ -1,8 +1,10 @@
 ---
 name: roi-calculator
 description: >-
-  计算内容营销 ROI：根据投放数据算出 CTR/CPC/CPM/ROAS 等指标，对比行业基准，支持单活动分析与多活动横向比较。
-  当用户说"算ROI""投放效果""CTR/CPC/CPM/ROAS""投产比""广告效果""投放数据分析""活动ROI"时使用。
+  Tính ROI content marketing từ dữ liệu chạy quảng cáo: CTR/CPC/CPM/ROAS, CPA, lợi nhuận, so với
+  chuẩn ngành; một chiến dịch hoặc so sánh nhiều chiến dịch theo ROI, gợi ý chia ngân sách. Dùng
+  khi người dùng nói "tính ROI", "chạy ads hiệu quả không", "CTR/CPC/CPM/ROAS", "hiệu quả quảng
+  cáo".
 layer: attribute
 ---
 

@@ -1,11 +1,9 @@
 ---
 name: skill-publish-checklist
 description: >-
-  发布前完整性检查：逐项检查标题、封面、标签、格式、合规标记、链接、CTA 是否齐全，
-  确保内容没有遗漏就能发布。当用户说"检查一下能不能发"、"发布前检查"、"checklist"、
-  "查漏补缺"、"发之前看一眼"、"发布清单"、"漏了什么没"、"能发了吗"时触发。
-  和 skill-quality-gate 的区别：quality-gate 做深度合规审核和质量评分，
-  publish-checklist 只做"有没有漏东西"的快速完整性检查。
+  Kiểm đủ trước khi đăng: rà tiêu đề, ảnh bìa, hashtag, định dạng, nhãn tuân thủ, link, CTA. Dùng
+  khi người dùng nói "kiểm tra xem đăng được chưa", "checklist trước khi đăng", "còn thiếu gì
+  không". skill-quality-gate kiểm duyệt tuân thủ sâu và chấm chất lượng; checklist chỉ kiểm nhanh.
 layer: publish
 ---
 

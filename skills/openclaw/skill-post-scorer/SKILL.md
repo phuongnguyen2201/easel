@@ -1,10 +1,10 @@
 ---
 name: skill-post-scorer
 description: >-
-  对社媒帖子草稿进行互动潜力评分，基于历史表现数据输出结构化评分卡。
-  当用户说"帖子打分""评分""这条能火吗""发布前评估""内容质量分""评分卡""草稿评估"时使用。
-  和 skill-topic-evaluator 的区别：evaluator 评还没做的选题潜力，本 SKILL 评已写好的草稿质量；
-  和 skill-social-performance-review 的区别：本 SKILL 评单条草稿（发布前），review 做月度组合复盘（发布后）。
+  Chấm tiềm năng tương tác của bản nháp bài đăng dựa trên hiệu quả lịch sử, xuất thẻ điểm 5 chiều,
+  gợi ý sửa. Dùng khi người dùng nói "chấm điểm bài", "bài này có viral không", "đánh giá bản
+  nháp". Đề tài chưa làm → skill-topic-evaluator; hậu kiểm sau đăng →
+  skill-social-performance-review.
 layer: attribute
 ---
 

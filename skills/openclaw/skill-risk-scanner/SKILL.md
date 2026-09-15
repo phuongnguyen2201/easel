@@ -1,12 +1,9 @@
 ---
 name: skill-risk-scanner
 description: >-
-  内容原创度与版权风险评估：分析文案是否存在洗稿/搬运嫌疑，评估素材版权风险，
-  检查引用规范。基于 LLM 文本分析，不包含技术查重。
-  当用户说"查重"、"原创度"、"是不是抄的"、"版权风险"、"能不能用这张图"、
-  "音乐版权"、"原创检测"、"有没有侵权"、"素材版权"、"会不会被投诉"时触发。
-  和 skill-quality-gate 的区别：quality-gate 查敏感词和平台规则合规，
-  risk-scanner 专注原创度和版权侵权风险。
+  Đánh giá độ nguyên bản, rủi ro bản quyền: dấu hiệu xào bài/đăng lại, nguồn ảnh/nhạc, chuẩn trích
+  dẫn; dựa trên LLM, không check trùng kỹ thuật. Dùng khi người dùng nói "có đạo văn không", "dùng
+  ảnh này được không", "bản quyền nhạc", "có bị kiện không". Từ nhạy cảm → skill-quality-gate.
 layer: publish
 ---
 

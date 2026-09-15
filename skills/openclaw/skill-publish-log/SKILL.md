@@ -1,9 +1,10 @@
 ---
 name: skill-publish-log
-description: >
-  发布记录管理。当用户提到"记一下刚发的"、"发布记录"、"这个月发了多少"、"发布历史"、
-  "记录一下"、"发布日志"、"上次发了什么"时触发。支持记录每次发布的内容信息（平台、标题、
-  链接、时间、初始数据），并提供查询和统计功能，方便后续复盘。
+description: >-
+  Quản lý nhật ký đăng: ghi từng lần đăng (nền tảng, tiêu đề, link, thời gian, số liệu ban đầu),
+  tra cứu theo nền tảng/từ khoá, thống kê số bài và tổng tương tác để hậu kiểm. Dùng khi người
+  dùng nói "ghi lại bài vừa đăng", "tháng này đăng bao nhiêu", "lịch sử đăng", "lần trước đăng
+  gì".
 layer: attribute
 ---
 

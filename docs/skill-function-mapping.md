@@ -131,19 +131,19 @@
 |---|---|
 | `skill-bilibili-upload` | B站视频投稿：把视频投稿到哔哩哔哩，支持标题/简介/分区/标签/封面/转载声明/定时发布。 |
 | `skill-channels-upload` | 微信视频号发布：把竖版短视频发布到微信视频号（channels.weixin.qq.com）。 |
-| `skill-community-ops` | 评论区运营与舆情危机应对：为一批评论生成分层回复模板（赞美/提问/求购/杠精/黑粉） 与分级处理规则，从评论中挖掘选题反哺内容，负面事件时做危机分级 + 声明草稿 + 统一口径。 |
-| `skill-content-repurposing` | 将一篇内容拆解改编到小红书、抖音、B站、微博等多平台，适配各平台原生格式和风格。 |
-| `skill-cross-platform-publish` | 跨平台一键发布：一份内容适配并发布到多个平台（小红书/抖音/B站/公众号/快手/视频号/知乎）。 按各平台格式约束（字数/比例/标签/内容类型）适配内容，再逐个委派对应平台发布 SKILL。 |
+| `skill-community-ops` | Vận hành bình luận và ứng phó khủng hoảng sau đăng: mẫu trả lời phân tầng theo 5 loại bình luận kèm quy tắc xử lý theo mức, khai thác đề tài từ bình luận; có sự cố thì phân cấp, dự thảo tuyên bố, thống nhất phát ngôn. |
+| `skill-content-repurposing` | Tách một bài gốc (bài viết, kịch bản video, bản ghi livestream) theo tháp trụ cột – phái sinh – vi nội dung rồi viết lại thành nội dung bản địa cho từng nền tảng như Facebook, TikTok, YouTube, Zalo, kèm thứ tự đăng. |
+| `skill-cross-platform-publish` | Đăng một chạm lên các nền tảng đã kết nối: thích ứng một nội dung theo số chữ, tỉ lệ, hashtag, loại nội dung của từng nền tảng rồi uỷ quyền cho SKILL đăng tương ứng; publish_dispatch.py kiểm ràng buộc và định tuyến. |
 | `skill-douyin-upload` | 将视频/图文内容发布到抖音（creator.douyin.com）。 |
 | `skill-kuaishou-upload` | 快手视频发布：把竖版短视频发布到快手创作者中心。 |
-| `skill-persona-check` | 人设一致性检查与品牌调性检查：对比内容与创作者画像的账号定位、内容赛道、形式、受众、 风格和偏好， 输出一致性评分和具体偏离点。 |
-| `skill-publish-checklist` | 发布前完整性检查：逐项检查标题、封面、标签、格式、合规标记、链接、CTA 是否齐全， 确保内容没有遗漏就能发布。 |
-| `skill-publish-notify` | 发布通知推送：内容发布成功/失败后，把结果推送到飞书/钉钉/企业微信群机器人、 Telegram、Slack 或任意 webhook。 |
-| `skill-publish-scheduler` | 批量定时发布排期：管理"内容 × 平台 × 发布时间"的排期表，导入排期、查看队列、计算到期项、 到期派发给各平台发布 SKILL、回填状态。 |
-| `skill-quality-gate` | 发布前质量关卡：合规风险检测（敏感词、绝对化用语、平台规则） + 产物质量审核（完整性、可读性、平台适配度）。一次检查，两道把关。 |
-| `skill-risk-scanner` | 内容原创度与版权风险评估：分析文案是否存在洗稿/搬运嫌疑，评估素材版权风险， 检查引用规范。 |
-| `skill-seo-quality` | 平台原生搜索流量优化：把内容做成能被平台搜索到的样子。 校验并优化标题/正文关键词布局、话题标签搜索权重、封面/首帧文字关键词、 搜索流量 vs 推荐流量的取舍。覆盖小红书、抖音、知乎、公众号、B站、微博。 |
-| `skill-short-link` | 短链 + UTM 追踪：给内容/投放链接拼接 UTM 追踪参数（来源/媒介/活动）并缩短， 便于在小红书/抖音/公众号等追踪流量来源与活动效果。 |
+| `skill-persona-check` | Kiểm tra nhất quán persona và tone thương hiệu của nội dung so với hồ sơ (Profile) về định vị, ngách, hình thức, khán giả, phong cách, sở thích; chấm điểm, chỉ rõ điểm lệch kèm gợi ý sửa, chỉ cảnh báo không chặn đăng. |
+| `skill-publish-checklist` | Kiểm đủ trước khi đăng: rà từng mục tiêu đề, ảnh bìa, hashtag, định dạng, nhãn tuân thủ, link, CTA có đủ chưa, kết luận đăng được hay chưa kèm danh sách mục còn thiếu và cách bổ sung. |
+| `skill-publish-notify` | Đẩy thông báo sau khi đăng: thành công hay thất bại đều gửi kết quả (trạng thái, tiêu đề, nền tảng, link) tới Telegram, Slack, webhook bất kỳ hoặc bot nhóm Feishu/DingTalk/WeCom; thuần script, không phụ thuộc ngoài. |
+| `skill-publish-scheduler` | Hẹn giờ đăng hàng loạt theo bảng "nội dung × nền tảng × giờ đăng": nhập lịch, xem hàng đợi, tính mục đến hạn, đến giờ giao cho SKILL đăng của từng nền tảng rồi ghi lại trạng thái; lập lịch thuần script, không tự đăng. |
+| `skill-quality-gate` | Cổng chất lượng trước khi đăng, một lần kiểm hai cửa: soát rủi ro tuân thủ (từ nhạy cảm, từ tuyệt đối, quy tắc nền tảng) và thẩm định chất lượng sản phẩm (đầy đủ, dễ đọc, hợp nền tảng), chốt đăng được/cần sửa/không đạt. |
+| `skill-risk-scanner` | Đánh giá độ nguyên bản và rủi ro bản quyền bằng LLM: dấu hiệu xào bài/đăng lại, bản quyền ảnh và nhạc, chuẩn trích dẫn, thương hiệu; xuất báo cáo rủi ro thấp/trung bình/cao kèm gợi ý sửa, không check trùng kỹ thuật. |
+| `skill-seo-quality` | Kiểm và tối ưu để bài hiện trong kết quả tìm kiếm của nền tảng: từ khoá ở tiêu đề, thân bài, hashtag, chữ trên ảnh bìa/khung đầu, cân đối tìm kiếm và đề xuất; xuất báo cáo kèm Top 3 việc sửa, có chế độ SEO web/blog. |
+| `skill-short-link` | Gắn tham số UTM (nguồn/kênh/chiến dịch) vào link nội dung hoặc quảng cáo rồi rút gọn qua dịch vụ công khai không cần key, mỗi kênh một link riêng để theo dõi nguồn truy cập và hiệu quả campaign trên từng nền tảng. |
 | `skill-wechat-publisher` | 微信公众号文章自动创作与发布工具。给定参考文章、文字或文档，自动搜索整理全网相关信息、生成图文并茂的公众号文章，并发布到微信公众号草稿箱。特别强调反 AI 检测写作。 |
 | `skill-xhs-comment-reply` | 小红书评论互动运营：列出我的笔记、抓取某条笔记下的评论、按画像语气逐条回复、以及删除评论 （含自己发的回复）。 |
 | `skill-xhs-publisher` | 将图文/视频内容发布到小红书（XHS）。 |
@@ -156,14 +156,14 @@
 
 | Skill | 功能介绍 |
 |---|---|
-| `roi-calculator` | 计算内容营销 ROI：根据投放数据算出 CTR/CPC/CPM/ROAS 等指标，对比行业基准，支持单活动分析与多活动横向比较。 |
-| `skill-comment-insights` | 评论区量化分析：对一批评论做情感分析（正/中/负占比 + 代表评论）、高频词与短语提取、 以及需求/吐槽/提问的诉求挖掘，为内容复盘和选题反哺提供数据。 |
-| `skill-content-calendar-log` | 统一内容日历底座。记录每次发布（发布页/对话页均自动落库）、用户排期、平台活动/节日/特殊日期到 一个时间线，并供 Agent 规划前读回。 |
-| `skill-content-postmortem` | 内容复盘与爆款规律提炼。两种模式：(A) 单条复盘 — 分析一条已发布内容为什么爆/扑， 从 Hook、结构、选题、时间、平台适配等维度拆解原因；(B) 规律提炼 — 从多条内容中 提炼爆款共同特征、总结可复制的爆款公式。 |
-| `skill-data-tracker` | 社媒数据记录与趋势分析。三种模式：(A) 记录快照 — 记录当日粉丝数、互动量等指标快照； (B) 增长趋势 — 分析粉丝增长率、增速变化、里程碑预测；(C) 内容生命周期 — 追踪单条内容 从发布到衰减的数据变化，判断速爆型/稳增型/长尾型。 |
-| `skill-post-scorer` | 对社媒帖子草稿进行互动潜力评分，基于历史表现数据输出结构化评分卡。 |
-| `skill-publish-analytics` | 分析发布日志数据，从发布时间、标签效果、内容类型、粉丝增长四个维度归因内容表现，输出可执行的优化建议。 |
-| `skill-publish-log` | 发布记录管理。 |
-| `skill-social-performance-review` | 生成月度社媒效果复盘报告，分析小红书、抖音、B站、微博等平台的内容表现，输出下月可执行建议。 |
-| `skill-strategy-advisor` | 基于现有内容数据和画像迭代优化内容策略。分析过去一段时间的内容表现、画像信息、 行业趋势，给出下一阶段的内容方向调整、新赛道建议、内容形式优化、发布节奏调整、 画像微调等策略建议。 |
+| `roi-calculator` | Tính ROI content marketing từ dữ liệu chạy quảng cáo: CTR/CPC/CPM/ROAS, CPA, lợi nhuận, đối chiếu chuẩn ngành; phân tích một chiến dịch hoặc so sánh nhiều chiến dịch xếp theo ROI kèm gợi ý phân bổ ngân sách. |
+| `skill-comment-insights` | Phân tích định lượng bình luận: tỉ lệ cảm xúc tích cực/trung tính/tiêu cực kèm bình luận tiêu biểu, từ và cụm từ tần suất cao, khai thác nhu cầu/phàn nàn/câu hỏi làm dữ liệu cho hậu kiểm nội dung và gợi đề tài. |
+| `skill-content-calendar-log` | Nền lịch nội dung thống nhất: tự ghi mọi lần đăng từ trang đăng/chat, lịch người dùng xếp và sự kiện nền tảng/lễ/ngày đặc biệt vào một timeline để Agent đọc lại trước khi lập kế hoạch đề tài, lịch đăng. |
+| `skill-content-postmortem` | Hậu kiểm nội dung hai chế độ: mổ xẻ một bài đã đăng vì sao viral hay xịt theo Hook, cấu trúc, đề tài, thời điểm, nền tảng kèm 3 việc cải thiện; hoặc từ nhiều bài rút quy luật viral thành công thức lặp lại được. |
+| `skill-data-tracker` | Ghi snapshot chỉ số kênh theo ngày (follower, tương tác), phân tích xu hướng tăng trưởng (tốc độ, đổi nhịp, dự báo mốc) và theo dõi vòng đời một bài từ đăng tới suy giảm, phân loại bùng nổ nhanh, tăng đều hay đuôi dài. |
+| `skill-post-scorer` | Chấm tiềm năng tương tác của bản nháp bài đăng trước khi đăng theo 5 chiều (Hook, khớp giọng văn, mật độ giá trị, cấu trúc, sẵn sàng đăng), đối chiếu hiệu quả lịch sử, xuất thẻ điểm kèm gợi ý sửa phần yếu nhất. |
+| `skill-publish-analytics` | Phân tích nhật ký đăng theo 4 chiều (thời điểm đăng, hiệu quả hashtag, loại nội dung, tăng trưởng follower) để quy kết hiệu quả nội dung, xuất báo cáo có phát hiện chính, phương pháp, hạn chế và đề xuất tối ưu. |
+| `skill-publish-log` | Quản lý nhật ký đăng bài: ghi từng lần đăng (nền tảng, tiêu đề, link, thời gian, số liệu ban đầu, tag), tra cứu theo thời gian, nền tảng, từ khoá và thống kê số bài, tổng tương tác để hậu kiểm và quy kết. |
+| `skill-social-performance-review` | Phân tích hiệu quả nội dung tháng trước trên Facebook, TikTok, YouTube, Zalo từ CSV, ảnh chụp hoặc mô tả, tìm mô hình hiệu quả và nguyên nhân thất bại, xuất báo cáo hậu kiểm tháng kèm đề xuất thực thi cho tháng sau. |
+| `skill-strategy-advisor` | Phân tích hiệu quả nội dung gần đây, hồ sơ tài khoản và xu hướng ngành để tối ưu lặp chiến lược: khuyến nghị giai đoạn tới về hướng nội dung, ngách mới, hình thức, nhịp đăng, tinh chỉnh hồ sơ, kèm danh sách hành động. |
 | `skill-xhs-analyzer` | 小红书内容分析：搜索笔记、拉取互动数据、分析爆款规律、创作者画像、限流检测，支持 CLI 自动化操作。 |

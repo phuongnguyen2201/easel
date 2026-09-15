@@ -1,10 +1,10 @@
 ---
 name: skill-data-tracker
-description: >
-  社媒数据记录与趋势分析。三种模式：(A) 记录快照 — 记录当日粉丝数、互动量等指标快照；
-  (B) 增长趋势 — 分析粉丝增长率、增速变化、里程碑预测；(C) 内容生命周期 — 追踪单条内容
-  从发布到衰减的数据变化，判断速爆型/稳增型/长尾型。当用户说"记录数据"、"今天粉丝数"、
-  "增长趋势"、"粉丝增长"、"内容生命周期"、"这条笔记数据变化"、"数据快照"时触发。
+description: >-
+  Ghi và phân tích số liệu kênh: (A) snapshot theo ngày (follower, tương tác); (B) xu hướng tăng
+  trưởng (tốc độ, đổi nhịp, dự báo mốc); (C) vòng đời bài từ đăng tới suy giảm (bùng nổ nhanh/tăng
+  đều/đuôi dài). Dùng khi người dùng nói "ghi số liệu hôm nay", "follower hôm nay", "vòng đời
+  bài".
 layer: attribute
 ---
 

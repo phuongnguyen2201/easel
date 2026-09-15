@@ -1,12 +1,10 @@
 ---
 name: skill-strategy-advisor
-description: >
-  基于现有内容数据和画像迭代优化内容策略。分析过去一段时间的内容表现、画像信息、
-  行业趋势，给出下一阶段的内容方向调整、新赛道建议、内容形式优化、发布节奏调整、
-  画像微调等策略建议。当用户说"下一步怎么做"、"策略建议"、"怎么调整"、"内容方向"、
-  "下个月策略"、"优化建议"、"迭代方向"时触发。
-  和 skill-content-strategy 的区别：content-strategy 从零制定策略，
-  strategy-advisor 基于现有数据做迭代优化。
+description: >-
+  Đề xuất điều chỉnh chiến lược giai đoạn tới từ hiệu quả nội dung, hồ sơ (Profile), xu hướng
+  ngành: hướng nội dung, ngách mới, hình thức, nhịp đăng, chỉnh hồ sơ. Dùng khi người dùng nói
+  "bước tiếp theo làm gì", "điều chỉnh thế nào", "chiến lược tháng sau". skill-content-strategy
+  lập từ đầu.
 layer: attribute
 ---
 

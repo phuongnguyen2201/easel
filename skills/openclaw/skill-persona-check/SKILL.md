@@ -1,12 +1,10 @@
 ---
 name: skill-persona-check
 description: >-
-  人设一致性检查与品牌调性检查：对比内容与创作者画像的账号定位、内容赛道、形式、受众、
-  风格和偏好，
-  输出一致性评分和具体偏离点。当用户说"符合我的人设吗"、"一致性检查"、"风格对不对"、
-  "像我写的吗"、"品牌一致"、"调性检查"、"这是我的风格吗"、"人设偏了没"、
-  "语气对不对"、"品牌声音检查"时触发。
-  必须有 Profile 才能工作；无 Profile 时提示先创建。
+  Kiểm tra nhất quán persona và tone thương hiệu so với hồ sơ về định vị, ngách, hình thức, khán
+  giả, phong cách, sở thích; chấm điểm, chỉ điểm lệch. Dùng khi người dùng nói "có đúng persona
+  của tôi không", "giống tôi viết không", "kiểm tra tone". Bắt buộc có Profile, chưa có thì nhắc
+  tạo.
 layer: publish
 ---
 

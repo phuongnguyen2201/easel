@@ -1,9 +1,10 @@
 ---
 name: skill-publish-analytics
 description: >-
-  分析发布日志数据，从发布时间、标签效果、内容类型、粉丝增长四个维度归因内容表现，输出可执行的优化建议。
-  当用户说"发布数据分析""归因分析""什么时间发好""标签效果""内容表现分析""发布日志分析"时使用。
-  和 skill-social-performance-review 的区别：本 SKILL 从发布日志做四维归因，review 做跨平台月度组合复盘。
+  Phân tích nhật ký đăng theo 4 chiều (thời điểm đăng, hashtag, loại nội dung, tăng trưởng
+  follower), quy kết hiệu quả, gợi ý tối ưu. Dùng khi người dùng nói "đăng giờ nào tốt", "hashtag
+  nào hiệu quả", "phân tích dữ liệu đăng". skill-social-performance-review hậu kiểm đa nền tảng
+  theo tháng.
 layer: attribute
 ---
 

@@ -1,9 +1,10 @@
 ---
 name: skill-publish-scheduler
 description: >-
-  批量定时发布排期：管理"内容 × 平台 × 发布时间"的排期表，导入排期、查看队列、计算到期项、
-  到期派发给各平台发布 SKILL、回填状态。当用户说"定时发布""批量发布""排期发布""发布队列"
-  "按计划发""这几条按时间自动发""发布排期表""到点发布"时使用。调度逻辑纯脚本，实际发布委派平台 SKILL。
+  Hẹn giờ đăng hàng loạt từ bảng "nội dung × nền tảng × giờ đăng": nhập lịch, xem hàng đợi, tính
+  mục đến hạn, đến giờ giao SKILL đăng từng nền tảng, ghi lại trạng thái; thuần script, không tự
+  đăng. Dùng khi người dùng nói "hẹn giờ đăng", "đăng theo lịch", "hàng đợi đăng", "đến giờ tự
+  đăng".
 layer: publish
 ---
 

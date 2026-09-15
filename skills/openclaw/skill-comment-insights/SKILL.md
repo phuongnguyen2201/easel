@@ -1,10 +1,10 @@
 ---
 name: skill-comment-insights
 description: >-
-  评论区量化分析：对一批评论做情感分析（正/中/负占比 + 代表评论）、高频词与短语提取、
-  以及需求/吐槽/提问的诉求挖掘，为内容复盘和选题反哺提供数据。当用户说"评论情感分析"
-  "评论区分析""用户在说什么""评论正负面比例""评论高频词""评论关键词""口碑分析""评论词云"
-  "用户诉求""评论区吐槽"时使用。基于 jieba（分词）+ SnowNLP（情感）+ 社媒情感词典。
+  Phân tích định lượng bình luận: cảm xúc (tỉ lệ tích cực/trung tính/tiêu cực + bình luận tiêu
+  biểu), từ/cụm tần suất cao, nhu cầu/phàn nàn/câu hỏi; dữ liệu cho hậu kiểm, đề tài. Dùng khi
+  người dùng nói "phân tích bình luận", "khán giả nói gì", "khách chê gì". Trả lời →
+  skill-community-ops.
 layer: attribute
 ---
 
