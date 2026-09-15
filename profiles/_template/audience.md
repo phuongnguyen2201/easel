@@ -1,17 +1,17 @@
-# 目标受众
+# Đối tượng mục tiêu
 
-## 核心人群
+## Nhóm khách hàng cốt lõi
 
-<!-- 年龄段、性别偏向、职业特征 -->
+<!-- Độ tuổi, giới tính thiên về, đặc điểm nghề nghiệp -->
 
-## 兴趣标签
+## Chủ đề quan tâm
 
-<!-- 他们关注什么话题 -->
+<!-- Họ theo dõi những chủ đề gì -->
 
-## 痛点
+## Nỗi đau
 
-<!-- 他们在什么场景下会搜索/刷到我的内容 -->
+<!-- Trong tình huống nào họ sẽ tìm kiếm / lướt thấy nội dung của tôi -->
 
-## 互动特征
+## Đặc điểm tương tác
 
-<!-- 什么内容容易引发评论/收藏/转发 -->
+<!-- Loại nội dung nào dễ kéo bình luận / lưu / chia sẻ -->

@@ -9,13 +9,18 @@ interface ProfilePageProps {
   onDeleted: (name: string) => void;
 }
 
+/** Bỏ dòng H1 đầu file khi hiển thị — thẻ đã có nhãn, tránh lặp tiêu đề. Chế độ sửa giữ nguyên văn. */
+function stripLeadingH1(md: string): string {
+  return md.replace(/^\s*# [^\n]*\n?/, '');
+}
+
 const DIM_META: Record<string, { label: string; icon: string }> = {
-  'identity.md': { label: '身份定位', icon: '🪪' },
-  'style.md': { label: '内容风格', icon: '🎨' },
-  'audience.md': { label: '目标受众', icon: '👥' },
-  'platforms.md': { label: '平台运营', icon: '📱' },
-  'preferences.md': { label: '偏好与红线', icon: '⚖️' },
-  'memory.md': { label: '经验沉淀', icon: '🧠' },
+  'identity.md': { label: 'Định vị tài khoản', icon: '🪪' },
+  'style.md': { label: 'Phong cách nội dung', icon: '🎨' },
+  'audience.md': { label: 'Đối tượng mục tiêu', icon: '👥' },
+  'platforms.md': { label: 'Nền tảng vận hành', icon: '📱' },
+  'preferences.md': { label: 'Ưu tiên và lằn ranh đỏ', icon: '⚖️' },
+  'memory.md': { label: 'Kinh nghiệm tích luỹ', icon: '🧠' },
 };
 
 export default function ProfilePage({ persona, onNewProfile, onDeleted }: ProfilePageProps) {
@@ -135,7 +140,7 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
               ) : (
                 <div className="card" style={{ padding: '14px 18px' }}>
                   <div className="profile-content"
-                    dangerouslySetInnerHTML={{ __html: renderMarkdown(f.content || '_（空）_') }} />
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(stripLeadingH1(f.content || '') || '_（空）_') }} />
                 </div>
               )}
             </div>

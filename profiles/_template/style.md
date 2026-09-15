@@ -1,21 +1,21 @@
-# 内容风格
+# Phong cách nội dung
 
-## 语气
+## Giọng điệu
 
-<!-- 轻松幽默 / 专业严谨 / 亲切日常 / 犀利吐槽 / ... -->
+<!-- Vui vẻ hài hước / chuyên nghiệp chỉn chu / gần gũi đời thường / châm biếm sắc sảo / ... -->
 
-## 开头结构
+## Cấu trúc mở đầu
 
-<!-- 提问式 / 冲突式 / 故事式 / 直入主题 / 数据开场 / ... -->
+<!-- Đặt câu hỏi / tạo mâu thuẫn / kể chuyện / vào thẳng vấn đề / mở bằng số liệu / ... -->
 
-## 视觉风格
+## Phong cách hình ảnh
 
-<!-- 极简 / 色彩鲜艳 / 电影感 / vlog 风 / 科技感 / ... -->
+<!-- Tối giản / màu sắc rực rỡ / chất điện ảnh / kiểu vlog / công nghệ / ... -->
 
-## 内容节奏
+## Nhịp nội dung
 
-<!-- 短平快(15-30s) / 中等(1-3min) / 深度长内容(5min+) / 图文为主 / ... -->
+<!-- Ngắn gọn (15-30s) / trung bình (1-3 phút) / dài chuyên sâu (5 phút+) / chủ yếu ảnh-chữ / ... -->
 
-## 标志性元素
+## Yếu tố nhận diện
 
-<!-- 口头禅、固定栏目、固定BGM、片头片尾等辨识度元素 -->
+<!-- Câu cửa miệng, chuyên mục cố định, nhạc nền quen thuộc, intro/outro... những thứ giúp nhận ra ngay tài khoản -->

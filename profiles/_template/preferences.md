@@ -1,13 +1,13 @@
-# 偏好与红线
+# Ưu tiên và lằn ranh đỏ
 
-## 要做的
+## Những việc nên làm
 
-<!-- 明确想要坚持的方向和原则 -->
+<!-- Hướng đi và nguyên tắc muốn kiên định theo đuổi -->
 
-## 不做的
+## Những việc không làm
 
-<!-- 明确拒绝的内容类型、话题、合作方式 -->
+<!-- Loại nội dung, chủ đề, hình thức hợp tác từ chối dứt khoát -->
 
-## 合规底线
+## Giới hạn tuân thủ
 
-<!-- 绝对不能碰的：虚假宣传、医疗承诺、导流违规等 -->
+<!-- Tuyệt đối không chạm tới: quảng cáo sai sự thật, cam kết y tế, dẫn dắt vi phạm quy định... -->

@@ -1,23 +1,23 @@
-# 经验沉淀
+# Kinh nghiệm tích luỹ
 
-<!-- 
-此文件记录真正有价值的洞察，不是每次做完任务都写。
-更新时机：
-  - 用户主动说"记住这个偏好"
-  - 发布后用户反馈效果好/差，归因总结
-  - 累积一段时间后做一次凝练（去重、提炼规律）
+<!--
+File này ghi những nhận thức thực sự có giá trị, không phải làm xong việc nào cũng ghi.
+Thời điểm cập nhật:
+  - Người dùng chủ động nói "nhớ sở thích này"
+  - Sau khi đăng, người dùng phản hồi hiệu quả tốt/kém, tổng kết nguyên nhân
+  - Tích luỹ một thời gian thì cô đọng lại một lần (bỏ trùng, rút quy luật)
 
-不要在这里堆流水账。每条记录应该是一个可复用的认知。
+Đừng biến nơi này thành nhật ký công việc. Mỗi dòng phải là một nhận thức tái sử dụng được.
 -->
 
-## 内容洞察
+## Nhận định về nội dung
 
-<!-- 什么题材/结构/风格效果好，为什么 -->
+<!-- Chủ đề / cấu trúc / phong cách nào hiệu quả, vì sao -->
 
-## 踩过的坑
+## Bài học thất bại
 
-<!-- 什么不能做，做了效果差，为什么 -->
+<!-- Điều gì không nên làm, đã làm và kết quả kém, vì sao -->
 
-## 受众反馈规律
+## Quy luật phản hồi của khán giả
 
-<!-- 评论区、私信里反复出现的需求或反馈 -->
+<!-- Nhu cầu hoặc phản hồi lặp đi lặp lại trong bình luận, tin nhắn -->

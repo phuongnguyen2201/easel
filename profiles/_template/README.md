@@ -1,53 +1,53 @@
-# Profile 模板目录
+# Thư mục mẫu Profile
 
-本目录是账号画像（Profile）的模板。创建新画像时，复制整个 `_template/` 目录并重命名，然后填写各文件中的占位内容。
+Thư mục này là mẫu cho hồ sơ tài khoản (Profile). Khi tạo hồ sơ mới, sao chép toàn bộ thư mục `_template/` rồi đổi tên, sau đó điền nội dung thay cho phần chú thích trong từng file.
 
-## 文件清单与层级映射
+## Danh sách file và ánh xạ tầng
 
-Easel 的工作流分为多个层级（发现层、策划层、制作层、发布层、归因层）。每个 Profile 文件在不同层级中扮演不同角色：
+Luồng làm việc của Easel chia thành nhiều tầng (khám phá, lên kế hoạch, sản xuất, đăng bài, quy kết hiệu quả). Mỗi file Profile giữ một vai trò khác nhau ở từng tầng:
 
-| 文件 | 内容 | 使用层级 |
-|------|------|----------|
-| `identity.md` | 账号定位、差异化、内容方向 | OpenClaw 发现层 + 策划层（定位参考） |
-| `style.md` | 语气、开头结构、视觉风格、节奏、标志性元素 | 制作层凝练注入（控制产出的调性、节奏和视觉） |
-| `audience.md` | 核心人群、兴趣标签、痛点、互动特征 | 制作层注入 + 策划层参考（理解为谁写、写什么） |
-| `platforms.md` | 各平台账号信息、内容形式、平台特有规则 | 仅发布层使用（平台适配、格式转换、合规检查） |
-| `preferences.md` | 要做的、不做的、合规底线 | 所有层级（硬规则和红线，全流程强制遵守） |
-| `memory.md` | 内容洞察、踩过的坑、受众反馈规律 | 制作层注入 + 归因层更新（经验沉淀，持续迭代） |
+| File | Nội dung | Tầng sử dụng |
+|------|----------|--------------|
+| `identity.md` | Định vị tài khoản, điểm khác biệt, hướng nội dung | Tầng khám phá + tầng kế hoạch của OpenClaw (tham chiếu định vị) |
+| `style.md` | Giọng điệu, cấu trúc mở đầu, phong cách hình ảnh, nhịp, yếu tố nhận diện | Tầng sản xuất cô đọng rồi nạp vào (điều khiển tông, nhịp và hình ảnh của thành phẩm) |
+| `audience.md` | Nhóm cốt lõi, chủ đề quan tâm, nỗi đau, đặc điểm tương tác | Tầng sản xuất nạp vào + tầng kế hoạch tham chiếu (hiểu viết cho ai, viết gì) |
+| `platforms.md` | Thông tin tài khoản từng nền tảng, dạng nội dung, quy tắc riêng | Chỉ tầng đăng bài dùng (thích ứng nền tảng, chuyển định dạng, kiểm tra tuân thủ) |
+| `preferences.md` | Việc nên làm, không làm, giới hạn tuân thủ | Mọi tầng (quy tắc cứng và lằn ranh đỏ, bắt buộc tuân thủ suốt quy trình) |
+| `memory.md` | Nhận định về nội dung, bài học thất bại, quy luật phản hồi của khán giả | Tầng sản xuất nạp vào + tầng quy kết cập nhật (đúc kết kinh nghiệm, cải tiến liên tục) |
 
-## 各文件详细说明
+## Mô tả chi tiết từng file
 
-### identity.md — 我是谁
+### identity.md — Tôi là ai
 
-定义账号的核心定位和差异化。OpenClaw 的发现层用它来筛选匹配的热点和素材，策划层用它来判断选题是否契合账号方向。制作层不直接注入此文件——定位已经通过选题间接传递。
+Xác định định vị cốt lõi và điểm khác biệt của tài khoản. Tầng khám phá của OpenClaw dùng nó để lọc xu hướng và tư liệu phù hợp; tầng kế hoạch dùng nó để đánh giá đề tài có khớp hướng đi của tài khoản không. Tầng sản xuất không nạp trực tiếp file này — định vị đã được truyền gián tiếp qua đề tài.
 
-### style.md — 怎么说
+### style.md — Nói như thế nào
 
-控制内容产出的"手感"：语气（幽默/严谨/犀利）、开头结构（提问式/冲突式）、内容节奏（短平快/深度长文）、视觉风格和标志性元素。制作层凝练它作为产出的风格锚点，确保产出风格一致。
+Điều khiển "cảm giác" của thành phẩm: giọng điệu (hài hước / chỉn chu / sắc sảo), cấu trúc mở đầu (đặt câu hỏi / tạo mâu thuẫn), nhịp nội dung (ngắn gọn / bài dài chuyên sâu), phong cách hình ảnh và yếu tố nhận diện. Tầng sản xuất cô đọng nó làm điểm neo phong cách, bảo đảm thành phẩm nhất quán.
 
-### audience.md — 说给谁听
+### audience.md — Nói cho ai nghe
 
-描述目标受众的画像和需求。制作层据此调整用词深度、举例方向和互动引导；策划层参考它来评估选题的受众匹配度。
+Mô tả chân dung và nhu cầu của đối tượng mục tiêu. Tầng sản xuất dựa vào đây để điều chỉnh độ sâu từ ngữ, hướng ví dụ và cách dẫn dắt tương tác; tầng kế hoạch tham chiếu để đánh giá độ khớp giữa đề tài và khán giả.
 
-### platforms.md — 发到哪里
+### platforms.md — Đăng ở đâu
 
-记录每个运营平台的账号信息、内容形式和平台规则。仅在发布层使用——将制作层产出适配为各平台要求的格式（竖屏/横屏、字数限制、标签规范等）。不运营的平台直接删除对应段落。
+Ghi thông tin tài khoản, dạng nội dung và quy tắc của từng nền tảng đang vận hành. Chỉ dùng ở tầng đăng bài — chuyển thành phẩm của tầng sản xuất sang định dạng từng nền tảng yêu cầu (dọc/ngang, giới hạn ký tự, quy ước hashtag...). Nền tảng không vận hành thì xoá thẳng đoạn tương ứng.
 
-### preferences.md — 什么能做什么不能做
+### preferences.md — Được làm gì, không được làm gì
 
-硬性规则和红线，贯穿所有层级。发现层据此过滤不合适的素材，策划层据此否决选题，制作层据此约束内容边界，发布层据此做合规检查。这是唯一在全部层级都强制加载的文件。
+Quy tắc cứng và lằn ranh đỏ xuyên suốt mọi tầng. Tầng khám phá dựa vào đây để lọc tư liệu không phù hợp, tầng kế hoạch để loại đề tài, tầng sản xuất để giới hạn ranh giới nội dung, tầng đăng bài để kiểm tra tuân thủ. Đây là file duy nhất bắt buộc nạp ở tất cả các tầng.
 
-### memory.md — 学到了什么
+### memory.md — Đã học được gì
 
-经验沉淀，不是流水账。只在有真正可复用认知时才更新（用户反馈、效果归因、踩坑总结）。制作层凝练它避免重复犯错；归因层在发布后根据数据反馈更新它。
+Đúc kết kinh nghiệm, không phải nhật ký công việc. Chỉ cập nhật khi có nhận thức thực sự tái sử dụng được (phản hồi của người dùng, quy kết hiệu quả, tổng kết thất bại). Tầng sản xuất cô đọng nó để tránh lặp lại sai lầm; tầng quy kết cập nhật nó sau khi đăng dựa trên dữ liệu phản hồi.
 
-## 使用方式
+## Cách sử dụng
 
 ```bash
-# 创建新画像
-cp -r profiles/_template profiles/你的画像名
+# Tạo hồ sơ mới
+cp -r profiles/_template profiles/ten-ho-so-cua-ban
 
-# 编辑各文件，填写实际内容
-# 然后即可在 Easel 中使用
-easel skill <skill_name> -i "内容" -p 你的画像名
+# Sửa từng file, điền nội dung thực tế
+# Sau đó dùng được ngay trong Easel
+easel skill <skill_name> -i "nội dung" -p ten-ho-so-cua-ban
 ```

@@ -1,26 +1,26 @@
-# 平台运营
+# Nền tảng vận hành
 
-<!-- 一个画像可以跨多个平台运营，每个平台有不同的适配要求 -->
+<!-- Một hồ sơ có thể vận hành trên nhiều nền tảng, mỗi nền tảng có yêu cầu thích ứng khác nhau -->
 
-## 抖音
+## Facebook
 
-<!-- 账号名 / 粉丝量级 / 内容形式（竖屏短视频）/ 平台特有规则 -->
-<!-- 不运营则删除此段 -->
+<!-- Tên trang / quy mô người theo dõi / dạng nội dung (bài viết + ảnh, Reels) / quy tắc riêng của nền tảng -->
+<!-- Không vận hành thì xoá đoạn này -->
 
-## 小红书
+## TikTok
 
-<!-- 账号名 / 粉丝量级 / 内容形式（图文+视频）/ 平台特有规则 -->
+<!-- Tên tài khoản / quy mô người theo dõi / dạng nội dung (video dọc ngắn) / quy tắc riêng của nền tảng -->
 
-## B 站
+## YouTube
 
-<!-- 账号名 / 粉丝量级 / 内容形式（中长视频）/ 平台特有规则 -->
+<!-- Tên kênh / quy mô người đăng ký / dạng nội dung (video dài, Shorts) / quy tắc riêng của nền tảng -->
 
-## 知乎
+## Zalo
 
-<!-- 账号名 / 粉丝量级 / 内容形式（图文回答）/ 平台特有规则 -->
+<!-- Tên Zalo OA hoặc nhóm / quy mô thành viên / dạng nội dung (tin nhắn broadcast, bài viết) / quy tắc riêng của nền tảng -->
 
-## 微信公众号
+## Threads
 
-<!-- 账号名 / 粉丝量级 / 内容形式（长文）/ 平台特有规则 -->
+<!-- Tên tài khoản / quy mô người theo dõi / dạng nội dung (bài chữ ngắn, ảnh) / quy tắc riêng của nền tảng -->
 
-<!-- 按需增减平台，只保留实际运营的 -->
+<!-- Thêm bớt nền tảng theo nhu cầu, chỉ giữ những nền tảng thực sự vận hành -->

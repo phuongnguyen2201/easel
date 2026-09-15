@@ -1,13 +1,13 @@
-# 身份定位
+# Định vị tài khoản
 
-## 我是谁
+## Tôi là ai
 
-<!-- 一句话描述这个画像的核心定位 -->
+<!-- Một câu mô tả định vị cốt lõi của hồ sơ này -->
 
-## 差异化
+## Điểm khác biệt
 
-<!-- 跟同类型账号比，我的独特之处是什么 -->
+<!-- So với các tài khoản cùng loại, tôi khác ở đâu -->
 
-## 内容方向
+## Hướng nội dung
 
-<!-- 主要做什么类型的内容 -->
+<!-- Chủ yếu làm loại nội dung gì -->
