@@ -17,7 +17,7 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
     } catch {
       /* 响应体不是 JSON，忽略 */
     }
-    throw new Error(detail || `请求失败（${res.status} ${res.statusText}）`);
+    throw new Error(detail || `Yêu cầu thất bại (${res.status} ${res.statusText})`);
   }
   return res.json() as Promise<T>;
 }
@@ -548,7 +548,7 @@ export function streamChat(
         } else if (currentEvent === 'question' && onQuestion) {
           try { onQuestion(JSON.parse(data) as ChatQuestion); } catch { /* 解析失败忽略 */ }
         } else if (currentEvent === 'error') {
-          let msg = '执行失败';
+          let msg = 'Thực thi thất bại';
           try { msg = JSON.parse(data) as string; } catch { msg = data; }
           onError(new Error(msg));
           return true;
@@ -610,7 +610,7 @@ export function streamChat(
         if (err instanceof Error && err.name === 'AbortError') return;
         const status = (err as Error & { status?: number })?.status;
         if (first && status && status >= 400 && status < 500) {
-          onError(err instanceof Error ? err : new Error('请求失败'));
+          onError(err instanceof Error ? err : new Error('Yêu cầu thất bại'));
           return;
         }
       }
@@ -618,7 +618,7 @@ export function streamChat(
       // Backend chat runs may spend 5 minutes waiting for a session lock and then
       // run for 2 hours. Keep reconnecting for the same end-to-end budget.
       if (!turnId || Date.now() - started >= 130 * 60 * 1000) {
-        onError(new Error('连接中断，自动重连超时'));
+        onError(new Error('Mất kết nối, tự động kết nối lại quá thời gian chờ'));
         return;
       }
       onInterrupted?.();

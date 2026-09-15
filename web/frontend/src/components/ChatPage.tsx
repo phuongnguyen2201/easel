@@ -22,16 +22,16 @@ interface ChatPageProps {
 
 // 空态推荐（贴合 Easel 社媒创作场景）
 const SUGGESTIONS = [
-  { icon: '🔥', title: '蹭个热点', prompt: '看看现在微博和抖音有什么热搜，挑几个适合我做二创的选题' },
-  { icon: '✍️', title: '写小红书文案', prompt: '帮我写一条小红书种草文案，主题先问我' },
-  { icon: '🎴', title: '做金句卡片', prompt: '把一句走心的话做成一张适合发朋友圈的金句卡片' },
-  { icon: '🎬', title: '口播脚本', prompt: '帮我写一条 60 秒的口播短视频脚本，主题先问我' },
+  { icon: '🔥', title: 'Bắt trend', prompt: 'Xem hiện giờ trên Facebook và TikTok đang có gì hot, chọn vài chủ đề phù hợp để tôi sáng tạo lại' },
+  { icon: '✍️', title: 'Viết caption', prompt: 'Viết giúp tôi một caption giới thiệu sản phẩm, hỏi tôi chủ đề trước' },
+  { icon: '🎴', title: 'Làm thẻ quote', prompt: 'Biến một câu nói chạm cảm xúc thành thẻ quote để đăng story/feed' },
+  { icon: '🎬', title: 'Kịch bản nói', prompt: 'Viết giúp tôi kịch bản video ngắn 60 giây dạng nói trực tiếp, hỏi tôi chủ đề trước' },
 ];
 
 function greeting(): string {
   const h = new Date().getHours();
-  const g = h < 6 ? '夜深了' : h < 12 ? '上午好' : h < 14 ? '中午好' : h < 18 ? '下午好' : '晚上好';
-  return `${g}，想创作点什么？`;
+  const g = h < 6 ? 'Khuya rồi' : h < 12 ? 'Chào buổi sáng' : h < 14 ? 'Chào buổi trưa' : h < 18 ? 'Chào buổi chiều' : 'Chào buổi tối';
+  return `${g}, muốn sáng tạo gì hôm nay?`;
 }
 
 export default function ChatPage({ session, stream, onSend, onStop, onResend, onQuestionAnswered }: ChatPageProps) {
@@ -54,7 +54,7 @@ export default function ChatPage({ session, stream, onSend, onStop, onResend, on
       const saved = await uploadFiles(arr, session.id);
       setAttachments((a) => [...a, ...saved]);
     } catch (err) {
-      alert((err as Error).message || '上传失败');
+      alert((err as Error).message || 'Tải lên thất bại');
     } finally {
       setUploading(false);
     }
@@ -106,7 +106,7 @@ export default function ChatPage({ session, stream, onSend, onStop, onResend, on
           {attachments.map((a) => (
             <span key={a.path} className="attach-chip" title={a.path}>
               <IconFile size={12} /> <span className="attach-name">{a.name}</span>
-              <button className="attach-x" onClick={() => removeAttachment(a.path)} title="移除">×</button>
+              <button className="attach-x" onClick={() => removeAttachment(a.path)} title="Gỡ bỏ">×</button>
             </span>
           ))}
         </div>
@@ -114,7 +114,7 @@ export default function ChatPage({ session, stream, onSend, onStop, onResend, on
       <textarea
         ref={textareaRef}
         className="chat-input"
-        placeholder={dragOver ? '松手上传素材…' : hero ? '把你的想法告诉我，选题 / 文案 / 卡片 / 视频 / 发布都行…（可拖入图片/文档当素材）' : '发消息…（Enter 发送，Shift+Enter 换行，可拖入/粘贴素材）'}
+        placeholder={dragOver ? 'Thả để tải tư liệu lên…' : hero ? 'Kể cho tôi ý tưởng của bạn — chủ đề / caption / thẻ / video / đăng bài đều được… (có thể kéo ảnh/tài liệu vào làm tư liệu)' : 'Nhập tin nhắn… (Enter gửi, Shift+Enter xuống dòng, có thể kéo/dán tư liệu)'}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -126,14 +126,14 @@ export default function ChatPage({ session, stream, onSend, onStop, onResend, on
         onChange={(e) => { if (e.target.files) doUpload(e.target.files); e.target.value = ''; }} />
       <div className="composer-bar">
         <button className="composer-attach-btn" onClick={() => fileInputRef.current?.click()}
-          disabled={isStreaming || uploading} title="添加素材（图片/文档）">
-          <IconPlus size={15} /> {uploading ? '上传中…' : '素材'}
+          disabled={isStreaming || uploading} title="Thêm tư liệu (ảnh/tài liệu)">
+          <IconPlus size={15} /> {uploading ? 'Đang tải lên…' : 'Tư liệu'}
         </button>
-        <span className="composer-hint">{isStreaming ? '生成中…' : 'Enter 发送 · Shift+Enter 换行'}</span>
+        <span className="composer-hint">{isStreaming ? 'Đang tạo…' : 'Enter gửi · Shift+Enter xuống dòng'}</span>
         {isStreaming ? (
-          <button className="send-btn" onClick={onStop} title="停止生成"><IconStop size={15} /></button>
+          <button className="send-btn" onClick={onStop} title="Dừng tạo"><IconStop size={15} /></button>
         ) : (
-          <button className="send-btn" onClick={handleSend} disabled={(!input.trim() && !attachments.length) || uploading} title="发送"><IconArrowUp size={17} /></button>
+          <button className="send-btn" onClick={handleSend} disabled={(!input.trim() && !attachments.length) || uploading} title="Gửi"><IconArrowUp size={17} /></button>
         )}
       </div>
     </div>
@@ -149,7 +149,7 @@ export default function ChatPage({ session, stream, onSend, onStop, onResend, on
             <span>Easel</span>
           </div>
           <h1 className="chat-hero-title">{greeting()}</h1>
-          <p className="chat-hero-sub">从选题到发布，一站式帮你把想法做成能发的内容。</p>
+          <p className="chat-hero-sub">Từ ý tưởng đến đăng bài — một nơi giúp bạn biến ý tưởng thành nội dung sẵn sàng đăng.</p>
           {inputBox(true)}
           <div className="suggestions">
             {SUGGESTIONS.map((s) => (

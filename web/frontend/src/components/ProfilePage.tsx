@@ -45,7 +45,7 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
         setFiles(d.files);
         setDrafts(Object.fromEntries(d.files.map((f) => [f.filename, f.content])));
       })
-      .catch(() => { if (!ignore) setError('加载画像失败'); })
+      .catch(() => { if (!ignore) setError('Tải hồ sơ thất bại'); })
       .finally(() => { if (!ignore) setLoading(false); });
     return () => { ignore = true; };
   }, [persona]);
@@ -57,23 +57,23 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
     try {
       await savePersonaFile(persona, filename, drafts[filename] ?? '');
       setFiles((prev) => prev.map((f) => f.filename === filename ? { ...f, content: drafts[filename] ?? '' } : f));
-      showToast(`已保存 ${DIM_META[filename]?.label || filename} ✓`);
+      showToast(`Đã lưu ${DIM_META[filename]?.label || filename} ✓`);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : '保存失败');
+      showToast(e instanceof Error ? e.message : 'Lưu thất bại');
     } finally {
       setSavingFile('');
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm(`确定删除画像「${persona}」吗？\n此操作不可恢复，将删除该画像的全部六维文件。`)) return;
+    if (!window.confirm(`Xoá hồ sơ «${persona}»?\nThao tác này không thể hoàn tác, toàn bộ 6 file của hồ sơ sẽ bị xoá.`)) return;
     setDeleting(true);
     try {
       await deletePersona(persona);
       onDeleted(persona);
-      showToast(`已删除画像「${persona}」`);
+      showToast(`Đã xoá hồ sơ «${persona}»`);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : '删除失败');
+      showToast(e instanceof Error ? e.message : 'Xoá thất bại');
     } finally {
       setDeleting(false);
     }
@@ -82,12 +82,12 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
   if (!persona) {
     return (
       <div className="profile-page">
-        <h1 className="page-title">用户画像 Profile</h1>
+        <h1 className="page-title">Hồ sơ người dùng Profile</h1>
         <div className="empty-state" style={{ height: '70%' }}>
           <div className="empty-icon">👤</div>
-          <h3>还没有选择画像</h3>
-          <p>画像沉淀你的定位、风格、受众与红线，生成内容会更贴合你的人设。</p>
-          <button className="btn btn-primary" onClick={onNewProfile}>+ 新建画像</button>
+          <h3>Chưa chọn hồ sơ</h3>
+          <p>Hồ sơ lưu định vị, phong cách, khán giả và lằn ranh đỏ của bạn để nội dung tạo ra sát persona hơn.</p>
+          <button className="btn btn-primary" onClick={onNewProfile}>+ Hồ sơ mới</button>
         </div>
       </div>
     );
@@ -98,15 +98,15 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
       <div className="profile-head">
         <div>
           <h1 className="page-title">{persona}</h1>
-          <p className="page-subtitle">六个维度构成一个完整人设，可随时编辑保存。</p>
+          <p className="page-subtitle">Sáu khía cạnh tạo nên một persona hoàn chỉnh, có thể sửa và lưu bất cứ lúc nào.</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className={`btn ${editing ? 'btn-primary' : ''}`} onClick={() => setEditing((v) => !v)}>
-            {editing ? '完成编辑' : '✏️ 编辑资料'}
+            {editing ? 'Xong' : '✏️ Sửa hồ sơ'}
           </button>
           <button className="btn" style={{ color: 'var(--red)', borderColor: 'var(--red)' }}
             disabled={deleting} onClick={handleDelete}>
-            {deleting ? '删除中…' : '🗑 删除画像'}
+            {deleting ? 'Đang xoá…' : '🗑 Xoá hồ sơ'}
           </button>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
       {error && <div style={{ color: 'var(--red)', fontSize: 14, marginTop: 12 }}>{error}</div>}
 
       {loading ? (
-        <div className="loading"><div className="spinner" />加载中…</div>
+        <div className="loading"><div className="spinner" />Đang tải…</div>
       ) : (
         files.map((f) => {
           const meta = DIM_META[f.filename] || { label: f.filename, icon: '📄' };
@@ -126,7 +126,7 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
                 {editing && (
                   <button className="btn btn-sm btn-primary" disabled={!dirty || savingFile === f.filename}
                     onClick={() => handleSave(f.filename)}>
-                    {savingFile === f.filename ? '保存中…' : dirty ? '保存' : '已保存'}
+                    {savingFile === f.filename ? 'Đang lưu…' : dirty ? 'Lưu' : 'Đã lưu'}
                   </button>
                 )}
               </div>
@@ -140,7 +140,7 @@ export default function ProfilePage({ persona, onNewProfile, onDeleted }: Profil
               ) : (
                 <div className="card" style={{ padding: '14px 18px' }}>
                   <div className="profile-content"
-                    dangerouslySetInnerHTML={{ __html: renderMarkdown(stripLeadingH1(f.content || '') || '_（空）_') }} />
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(stripLeadingH1(f.content || '') || '_(trống)_') }} />
                 </div>
               )}
             </div>

@@ -8,18 +8,18 @@ interface SubNavProps {
 }
 
 const TOOLS: { page: Page; Icon: ComponentType<{ size?: number }>; label: string }[] = [
-  { page: 'trends', Icon: IconFire, label: '热点雷达' },
-  { page: 'ideas', Icon: IconIdea, label: '选题库' },
-  { page: 'calendar', Icon: IconCalendar, label: '内容日历' },
-  { page: 'publish', Icon: IconPublish, label: '发布中心' },
-  { page: 'breakdown', Icon: IconSkills, label: '爆款拆解' },
+  { page: 'trends', Icon: IconFire, label: 'Radar xu hướng' },
+  { page: 'ideas', Icon: IconIdea, label: 'Kho ý tưởng' },
+  { page: 'calendar', Icon: IconCalendar, label: 'Lịch nội dung' },
+  { page: 'publish', Icon: IconPublish, label: 'Trung tâm đăng bài' },
+  { page: 'breakdown', Icon: IconSkills, label: 'Mổ xẻ bài viral' },
 ];
 
 export default function SubNav({ current, onNavigate }: SubNavProps) {
   return (
     <div className="subnav">
-      <button className="subnav-back" onClick={() => onNavigate('dashboard')} title="返回工作台">
-        <IconDashboard size={15} /> 工作台
+      <button className="subnav-back" onClick={() => onNavigate('dashboard')} title="Về bàn làm việc">
+        <IconDashboard size={15} /> Bàn làm việc
       </button>
       <span className="subnav-div" />
       <div className="subnav-tabs">

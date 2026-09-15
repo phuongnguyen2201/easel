@@ -30,12 +30,12 @@ interface SidebarProps {
 
 // 主导航（精简）；热点雷达/选题库/内容日历/发布中心 收进「工作台」，不占侧栏
 const NAV: { page: Page; Icon: ComponentType<{ size?: number }>; label: string }[] = [
-  { page: 'dashboard', Icon: IconDashboard, label: '工作台' },
-  { page: 'chat', Icon: IconChat, label: '对话' },
-  { page: 'skills', Icon: IconSkills, label: '技能库' },
-  { page: 'outputs', Icon: IconOutputs, label: '内容库' },
-  { page: 'accounts', Icon: IconAccounts, label: '账号' },
-  { page: 'profile', Icon: IconProfile, label: '画像' },
+  { page: 'dashboard', Icon: IconDashboard, label: 'Bàn làm việc' },
+  { page: 'chat', Icon: IconChat, label: 'Trò chuyện' },
+  { page: 'skills', Icon: IconSkills, label: 'Thư viện kỹ năng' },
+  { page: 'outputs', Icon: IconOutputs, label: 'Thư viện nội dung' },
+  { page: 'accounts', Icon: IconAccounts, label: 'Tài khoản' },
+  { page: 'profile', Icon: IconProfile, label: 'Hồ sơ' },
 ];
 
 export default function Sidebar({
@@ -95,13 +95,13 @@ export default function Sidebar({
       >
         <span className="session-item-title">{s.title}</span>
         <div className="session-actions">
-          <button className="session-act" title="重命名"
+          <button className="session-act" title="Đổi tên"
             onClick={(e) => { e.stopPropagation(); startRename(s); }}><IconEdit size={14} /></button>
-          <button className="session-act" title={isArchived ? '取消归档' : '归档'}
+          <button className="session-act" title={isArchived ? 'Bỏ lưu trữ' : 'Lưu trữ'}
             onClick={(e) => { e.stopPropagation(); onSessionArchive(s.id, !isArchived); }}>
             {isArchived ? <IconUnarchive size={14} /> : <IconArchive size={14} />}
           </button>
-          <button className="session-act danger" title="删除"
+          <button className="session-act danger" title="Xoá"
             onClick={(e) => { e.stopPropagation(); onSessionDelete(s.id); }}><IconTrash size={14} /></button>
         </div>
       </div>
@@ -123,13 +123,13 @@ export default function Sidebar({
             onPersonaChange(e.target.value);
           }}
           disabled={activeSessionHasMessages}
-          title={activeSessionHasMessages ? '当前对话已绑定画像，切换画像将新建对话' : '选择用户画像'}
+          title={activeSessionHasMessages ? 'Cuộc trò chuyện hiện tại đã gắn hồ sơ, đổi hồ sơ sẽ tạo cuộc trò chuyện mới' : 'Chọn hồ sơ người dùng'}
         >
-          <option value="">通用模式</option>
+          <option value="">Chế độ chung</option>
           {personas.map((p) => (
             <option key={p.name} value={p.name}>{p.name}</option>
           ))}
-          <option value="__new__">+ 新建画像…</option>
+          <option value="__new__">+ Hồ sơ mới…</option>
         </select>
       </div>
 
@@ -148,9 +148,9 @@ export default function Sidebar({
 
       <div className="sidebar-section">
         <div className="sidebar-section-header">
-          <span className="sidebar-section-title">对话</span>
-          <button className="new-chat-btn" onClick={onNewChat} title="新建对话">
-            <IconNewChat size={13} /> 新对话
+          <span className="sidebar-section-title">Trò chuyện</span>
+          <button className="new-chat-btn" onClick={onNewChat} title="Cuộc trò chuyện mới">
+            <IconNewChat size={13} /> Trò chuyện mới
           </button>
         </div>
         {active.map((s) => renderItem(s, false))}
@@ -159,7 +159,7 @@ export default function Sidebar({
           <>
             <div className="archived-header" onClick={() => setShowArchived((v) => !v)}>
               <span className={`archived-chevron ${showArchived ? 'open' : ''}`}><IconChevron size={12} /></span>
-              已归档 · {archived.length}
+              Đã lưu trữ · {archived.length}
             </div>
             {showArchived && archived.map((s) => renderItem(s, true))}
           </>
@@ -169,10 +169,10 @@ export default function Sidebar({
       <div className="sidebar-status">
         <span className={`status-dot ${gatewayStatus === 'connected' ? '' : 'offline'}`} />
         {gatewayStatus === 'connected'
-          ? '网关已连接'
+          ? 'Gateway đã kết nối'
           : gatewayStatus === 'disconnected'
-            ? '网关离线'
-            : '连接中…'}
+            ? 'Gateway ngoại tuyến'
+            : 'Đang kết nối…'}
         <span style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-tertiary)' }}>subnav-1</span>
       </div>
     </div>

@@ -28,7 +28,7 @@ function QuestionCard({ question, onAnswered }: { question: ChatQuestion; onAnsw
         questionId: question.id,
         answers: { [it.questionId]: [label] },
       });
-      if (!res.ok) setError(res.error || '提交失败');
+      if (!res.ok) setError(res.error || 'Gửi thất bại');
       else onAnswered();
     } catch (e) {
       setError(String(e));
@@ -46,7 +46,7 @@ function QuestionCard({ question, onAnswered }: { question: ChatQuestion; onAnsw
     }
     try {
       const res = await answerQuestion({ questionId: question.id, answers });
-      if (!res.ok) setError(res.error || '提交失败');
+      if (!res.ok) setError(res.error || 'Gửi thất bại');
       else onAnswered();
     } catch (e) {
       setError(String(e));
@@ -67,7 +67,7 @@ function QuestionCard({ question, onAnswered }: { question: ChatQuestion; onAnsw
               <div key={it.questionId} className="question-card__item">
                 {idx > 0 && <div className="question-card__divider" />}
                 {it.header && <div className="question-card__chip">{it.header}</div>}
-                <div className="question-card__title">{it.question || '请选择'}</div>
+                <div className="question-card__title">{it.question || 'Vui lòng chọn'}</div>
                 <div className="question-card__options">
                   {options.map((opt) => (
                     <button key={opt.label}
@@ -80,7 +80,7 @@ function QuestionCard({ question, onAnswered }: { question: ChatQuestion; onAnsw
                   ))}
                   <button className="question-card__other" disabled={busy}
                     onClick={() => setShowCustom((s) => ({ ...s, [it.questionId]: !s[it.questionId] }))}>
-                    {ctl ? '收起自定义输入' : '自行输入…'}
+                    {ctl ? 'Thu gọn ô nhập tự do' : 'Tự nhập…'}
                   </button>
                 </div>
                 {ctl && (
@@ -88,12 +88,12 @@ function QuestionCard({ question, onAnswered }: { question: ChatQuestion; onAnsw
                     <input
                       type="text"
                       value={custom[it.questionId] || ''}
-                      placeholder="输入你的答案"
+                      placeholder="Nhập câu trả lời của bạn"
                       onChange={(e) => setCustom((c) => ({ ...c, [it.questionId]: e.target.value }))}
                     />
                     <button disabled={busy || !(custom[it.questionId] || '').trim()}
                       onClick={() => setSelected((s) => ({ ...s, [it.questionId]: custom[it.questionId].trim() }))}>
-                      填入
+                      Điền
                     </button>
                   </div>
                 )}
@@ -106,19 +106,19 @@ function QuestionCard({ question, onAnswered }: { question: ChatQuestion; onAnsw
             <div className="question-card__actions">
               <button className="question-card__submit" disabled={busy || !allAnswered}
                 onClick={() => void submitSingle(items[0], selected[items[0].questionId])}>
-                提交
+                Gửi
               </button>
             </div>
           ) : (
             allAnswered && !busy && (
               <div className="question-card__actions">
                 <button className="question-card__submit" disabled={busy} onClick={() => void submitAll()}>
-                  全部已选，提交
+                  Đã chọn đủ, gửi
                 </button>
               </div>
             )
           )}
-          {busy && <div className="question-card__hint">已提交，Agent 继续处理中…</div>}
+          {busy && <div className="question-card__hint">Đã gửi, Agent đang tiếp tục xử lý…</div>}
           {error && <div className="question-card__hint question-card__error">{error}</div>}
         </div>
       </div>

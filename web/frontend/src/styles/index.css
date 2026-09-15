@@ -61,7 +61,7 @@ html, body, #root {
 }
 
 body {
-  font-family: 'Manrope', 'Avenir Next', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-family: 'Manrope', 'Avenir Next', sans-serif;
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

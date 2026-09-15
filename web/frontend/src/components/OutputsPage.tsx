@@ -6,18 +6,18 @@ import { renderMarkdown } from '../lib/sanitize';
 import { IconOutputs, IconImage, IconVideo, IconMusic, IconFile, IconFolder, IconRefresh, IconChevron, IconTrash } from './icons';
 
 const FILTERS: { key: string; label: string }[] = [
-  { key: 'all', label: '全部' },
-  { key: 'image', label: '图片' },
-  { key: 'video', label: '视频' },
-  { key: 'audio', label: '音频' },
-  { key: 'text', label: '文档' },
+  { key: 'all', label: 'Tất cả' },
+  { key: 'image', label: 'Ảnh' },
+  { key: 'video', label: 'Video' },
+  { key: 'audio', label: 'Âm thanh' },
+  { key: 'text', label: 'Tài liệu' },
 ];
 
 const KIND_LABEL: Record<string, string> = {
-  article: '文章', 'xhs-note': '小红书', video: '视频', cards: '卡片',
-  poster: '海报', audio: '音频', other: '其他',
+  article: 'Bài viết', 'xhs-note': 'Bài Xiaohongshu', video: 'Video', cards: 'Thẻ',
+  poster: 'Poster', audio: 'Âm thanh', other: 'Khác',
 };
-const STATUS_LABEL: Record<string, string> = { draft: '草稿', ready: '待发', published: '已发' };
+const STATUS_LABEL: Record<string, string> = { draft: 'Nháp', ready: 'Chờ đăng', published: 'Đã đăng' };
 const STATUS_COLOR: Record<string, string> = { draft: '#94a3b8', ready: '#d97706', published: '#16a34a' };
 
 const badge: CSSProperties = {
@@ -36,8 +36,8 @@ function kindIcon(kind: string | undefined, size = 30) {
 }
 const isHtml = (name: string) => /\.html?$/i.test(name);
 const kindLabel = (f: OutputNode) =>
-  f.kind === 'text' ? (isHtml(f.name) ? '卡片' : '文档')
-    : f.kind === 'image' ? '图片' : f.kind === 'video' ? '视频' : f.kind === 'audio' ? '音频' : '文件';
+  f.kind === 'text' ? (isHtml(f.name) ? 'Thẻ' : 'Tài liệu')
+    : f.kind === 'image' ? 'Ảnh' : f.kind === 'video' ? 'Video' : f.kind === 'audio' ? 'Âm thanh' : 'Tệp';
 
 /** 递归找目录下第一张图/视频作封面缩略图。 */
 function firstMedia(node: OutputNode): OutputNode | null {
@@ -76,7 +76,7 @@ function Thumb({ f, big }: { f: OutputNode | null; big?: boolean }) {
 export default function OutputsPage() {
   const [roots, setRoots] = useState<OutputNode[]>([]);
   const [treeError, setTreeError] = useState('');
-  const [stack, setStack] = useState<string[]>([]);   // 当前所在的文件夹名称路径
+  const [stack, setStack] = useState<string[]>([]);   // 当前所在的Thư mục名称路径
   const [filter, setFilter] = useState('all');
   const [selected, setSelected] = useState<OutputNode | null>(null);
   const [content, setContent] = useState('');
@@ -85,7 +85,7 @@ export default function OutputsPage() {
 
   const load = useCallback(() => {
     setTreeError('');
-    fetchOutputs().then(setRoots).catch(() => setTreeError('加载产物列表失败'));
+    fetchOutputs().then(setRoots).catch(() => setTreeError('Tải danh sách sản phẩm thất bại'));
   }, []);
   useEffect(() => { load(); }, [load]);
 
@@ -121,14 +121,14 @@ export default function OutputsPage() {
   const remove = useCallback(async (node: OutputNode, e: React.MouseEvent) => {
     e.stopPropagation();
     const isDir = node.type === 'dir';
-    const label = isDir ? `项目/文件夹「${node.meta?.title || node.name}」及其全部内容` : `文件「${node.name}」`;
-    if (!window.confirm(`确定删除${label}？\n此操作不可恢复。`)) return;
+    const label = isDir ? `dự án/thư mục «${node.meta?.title || node.name}» cùng toàn bộ nội dung` : `tệp «${node.name}»`;
+    if (!window.confirm(`Xoá ${label}?\nThao tác này không thể hoàn tác.`)) return;
     try {
       await deleteOutput(node.path);
       setSelected((cur) => (cur?.path === node.path ? null : cur));
       load();
     } catch (err) {
-      alert((err as Error).message || '删除失败');
+      alert((err as Error).message || 'Xoá thất bại');
     }
   }, [load]);
 
@@ -154,14 +154,14 @@ export default function OutputsPage() {
       <>
         <iframe src={url} title={selected.name} sandbox=""
           style={{ width: '100%', height: '68vh', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: '#fff' }} />
-        <div style={{ marginTop: 8 }}><a href={url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-start)', fontSize: 13 }}>在新标签打开 ↗</a></div>
+        <div style={{ marginTop: 8 }}><a href={url} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-start)', fontSize: 13 }}>Mở trong tab mới ↗</a></div>
       </>
     );
     if (selected.kind === 'text') {
-      if (loading) return <div className="loading"><div className="spinner" />加载中…</div>;
+      if (loading) return <div className="loading"><div className="spinner" />Đang tải…</div>;
       return <div className="outputs-viewer-content" dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />;
     }
-    return <div style={{ color: 'var(--text-secondary)', fontSize: 14 }}>无法预览。<a href={url} download style={{ color: 'var(--accent-start)' }}>下载 {selected.name}</a></div>;
+    return <div style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Không xem trước được.<a href={url} download style={{ color: 'var(--accent-start)' }}>Tải xuống {selected.name}</a></div>;
   };
 
   /** 项目/文件夹卡片：顶层项目用展示头（标题/平台/状态/封面），嵌套子文件夹回退朴素样式。 */
@@ -171,8 +171,8 @@ export default function OutputsPage() {
     return (
       <div key={d.path} className="card card-hover gcard" onClick={() => enterDir(d.name)}>
         <div className="gcard-thumb">
-          <span className="gcard-kind">{m?.kind ? (KIND_LABEL[m.kind] || m.kind) : '文件夹'}</span>
-          <button className="gcard-del" title="删除" onClick={(e) => remove(d, e)}><IconTrash size={14} /></button>
+          <span className="gcard-kind">{m?.kind ? (KIND_LABEL[m.kind] || m.kind) : 'Thư mục'}</span>
+          <button className="gcard-del" title="Xoá" onClick={(e) => remove(d, e)}><IconTrash size={14} /></button>
           {cover ? <Thumb f={cover} big /> : <div className="gcard-ph"><IconFolder size={38} /></div>}
         </div>
         <div className="gcard-meta">
@@ -182,7 +182,7 @@ export default function OutputsPage() {
           <div className="gcard-sub" style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
             {m?.platform && <span style={badge}>{m.platform}</span>}
             {m?.status && <span style={statusBadge(m.status)}>{STATUS_LABEL[m.status] || m.status}</span>}
-            <span>{d.fileCount ?? 0} 个文件</span>
+            <span>{d.fileCount ?? 0} tệp</span>
           </div>
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function OutputsPage() {
     <div key={f.path} className="card card-hover gcard" onClick={() => open(f)}>
       <div className="gcard-thumb">
         <span className="gcard-kind">{kindLabel(f)}</span>
-        <button className="gcard-del" title="删除" onClick={(e) => remove(f, e)}><IconTrash size={14} /></button>
+        <button className="gcard-del" title="Xoá" onClick={(e) => remove(f, e)}><IconTrash size={14} /></button>
         <Thumb f={f} />
       </div>
       <div className="gcard-meta">
@@ -210,7 +210,7 @@ export default function OutputsPage() {
         <div>
           <h1 className="page-title">
             <IconOutputs size={21} />
-            <span className="crumb" onClick={() => goTo(0)}>内容库</span>
+            <span className="crumb" onClick={() => goTo(0)}>Thư viện nội dung</span>
             {stack.map((name, i) => (
               <span key={i}>
                 <span className="crumb-sep">/</span>
@@ -222,11 +222,11 @@ export default function OutputsPage() {
           </h1>
           <p className="page-subtitle">
             {atTop
-              ? `按项目归档，共 ${roots.length} 个项目。点项目进去看成品与素材。`
-              : `${dirs.length} 个文件夹 · ${files.length} 个文件（可继续点开子文件夹）`}
+              ? `Lưu theo dự án, tổng cộng ${roots.length} dự án. Bấm vào dự án để xem thành phẩm và tư liệu.`
+              : `${dirs.length} thư mục · ${files.length} tệp (có thể mở tiếp thư mục con)`}
           </p>
         </div>
-        <button className="btn btn-sm" onClick={load}><IconRefresh size={14} /> 刷新</button>
+        <button className="btn btn-sm" onClick={load}><IconRefresh size={14} /> Làm mới</button>
       </div>
 
       {treeError && <div className="notice-error">{treeError}</div>}
@@ -242,7 +242,7 @@ export default function OutputsPage() {
       {stack.length > 0 && (
         <div className="gallery-filters">
           <button className="btn btn-sm" onClick={() => goTo(stack.length - 1)}>
-            <span style={{ transform: 'rotate(180deg)', display: 'inline-flex' }}><IconChevron size={13} /></span> 返回上级
+            <span style={{ transform: 'rotate(180deg)', display: 'inline-flex' }}><IconChevron size={13} /></span> Lên cấp trên
           </button>
           {files.length > 0 && FILTERS.map((f) => (
             <button key={f.key} className={`chip ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>{f.label}</button>
@@ -253,7 +253,7 @@ export default function OutputsPage() {
       {empty && !treeError ? (
         <div className="empty-state" style={{ height: 300 }}>
           <div className="empty-icon"><IconOutputs size={44} /></div>
-          <p>{atTop ? '还没有产物——去对话或技能库生成第一条内容吧' : '这个文件夹是空的'}</p>
+          <p>{atTop ? 'Chưa có sản phẩm nào — vào Trò chuyện hoặc Thư viện kỹ năng tạo nội dung đầu tiên nhé' : 'Thư mục này trống'}</p>
         </div>
       ) : hasSplit ? (
         <>
@@ -261,7 +261,7 @@ export default function OutputsPage() {
           {deliverableFiles.length > 0 && (
             <>
               <div className="section-label" style={{ margin: '6px 0 8px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>
-                成品 · {deliverableFiles.length}
+                Thành phẩm · {deliverableFiles.length}
               </div>
               <div className="gallery-grid">{deliverableFiles.map(renderFile)}</div>
             </>
@@ -270,7 +270,7 @@ export default function OutputsPage() {
           {(dirs.length > 0 || restFiles.length > 0) && (
             <>
               <div className="section-label" style={{ margin: '18px 0 8px', fontSize: 13, fontWeight: 600, color: 'var(--text-tertiary)' }}>
-                素材 / 过程文件
+                Tư liệu / tệp trung gian
               </div>
               <div className="gallery-grid">
                 {dirs.map(renderDir)}
@@ -298,7 +298,7 @@ export default function OutputsPage() {
             </div>
             <div className="drawer-body">{preview()}</div>
             <div style={{ padding: '10px 16px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'flex-end' }}>
-              <button className="btn btn-sm btn-danger" onClick={(e) => remove(selected, e)}><IconTrash size={13} /> 删除此文件</button>
+              <button className="btn btn-sm btn-danger" onClick={(e) => remove(selected, e)}><IconTrash size={13} /> Xoá tệp này</button>
             </div>
           </div>
         </div>

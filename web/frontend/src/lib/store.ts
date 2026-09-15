@@ -236,8 +236,8 @@ export function generateSessionTitle(message: string, _seed = message): string {
 
   if (!text && attachmentBlock) {
     const path = attachmentBlock.match(/outputs\/([^\s]+)/)?.[1] || '';
-    const filename = path.split('/').pop() || '上传素材';
-    text = `处理附件 ${filename}`;
+    const filename = path.split('/').pop() || 'tư liệu tải lên';
+    text = `Xử lý tệp đính kèm ${filename}`;
   }
 
   text = cleanTitleClause(text);
@@ -253,10 +253,10 @@ export function generateSessionTitle(message: string, _seed = message): string {
     .replace(/[，,、：:\s]+$/g, '')
     .trim();
 
-  const core = Array.from(semanticTopic(text, baseTitle || '新对话'))
+  const core = Array.from(semanticTopic(text, baseTitle || 'Trò chuyện mới'))
     .slice(0, 18).join('')
     .replace(/(?:问题排查|故障分析|异常|问题|优化|改进|分析|检查|制作|生成|发布)$/g, '')
-    .trim() || '新对话';
+    .trim() || 'Trò chuyện mới';
   const intent = titleIntent(text);
   const titles: Record<TitleIntent, string> = {
     issue: `${core}问题排查`,

@@ -303,7 +303,7 @@ export default function App() {
       // streamChat 会按 eventId 自动重连并补发遗漏事件；这里只更新用户可见状态。
       () => {
         setStreams((p) => (p[sessionId]
-          ? { ...p, [sessionId]: { ...p[sessionId], activity: '⏳ 连接中断，正在自动续接…' } } : p));
+          ? { ...p, [sessionId]: { ...p[sessionId], activity: '⏳ Mất kết nối, đang tự động nối lại…' } } : p));
       },
       turnId,
       false,
@@ -338,12 +338,12 @@ export default function App() {
     let turnId = s.pendingTurnId;
     try { turnId = sessionStorage.getItem(`easel_pending_turn:${sessionId}`) || turnId; } catch { /* use persisted id */ }
     streamAcc.current[sessionId] = { content: '', thinking: '', steps: [], questions: [] };
-    setStreams((p) => ({ ...p, [sessionId]: { content: '', thinking: '', activity: '⏳ 正在接回上一轮结果…', questions: [] } }));
+    setStreams((p) => ({ ...p, [sessionId]: { content: '', thinking: '', activity: '⏳ Đang lấy lại kết quả lượt trước…', questions: [] } }));
     typingBuf.current[sessionId] = '';
     startTypingPump(sessionId);
     if (!turnId) {
       void fetchLastTurn(sessionId).then((r) => {
-        if (r.status === 'done') appendAssistant(sessionId, { role: 'assistant', content: r.text || '（无输出）' });
+        if (r.status === 'done') appendAssistant(sessionId, { role: 'assistant', content: r.text || '(không có đầu ra)' });
         clearStream(sessionId);
       }).catch(() => clearStream(sessionId));
       return;
@@ -363,7 +363,7 @@ export default function App() {
           }
           const a = streamAcc.current[sessionId];
           appendAssistant(sessionId, {
-            role: 'assistant', content: a?.content || '（无输出）',
+            role: 'assistant', content: a?.content || '(không có đầu ra)',
             thinking: a?.thinking || undefined, activity: a?.steps.join('\n') || undefined,
           }, sessionKey);
           clearStream(sessionId);
@@ -390,7 +390,7 @@ export default function App() {
         setStreams((p) => (p[sessionId] ? { ...p, [sessionId]: { ...p[sessionId], activity: status } } : p));
       },
       () => setStreams((p) => (p[sessionId]
-        ? { ...p, [sessionId]: { ...p[sessionId], activity: '⏳ 正在自动续接…' } } : p)),
+        ? { ...p, [sessionId]: { ...p[sessionId], activity: '⏳ Đang tự động nối lại…' } } : p)),
       turnId,
       true,
       () => {
@@ -398,18 +398,18 @@ export default function App() {
         // completed per-session snapshot; otherwise terminate stale recovery.
         void fetchLastTurn(sessionId, turnId).then((r) => {
           if (r.status === 'done') {
-            appendAssistant(sessionId, { role: 'assistant', content: r.text || '（无输出）' });
+            appendAssistant(sessionId, { role: 'assistant', content: r.text || '(không có đầu ra)' });
           } else {
             appendAssistant(sessionId, {
               role: 'assistant',
-              content: '上一轮任务记录已失效，无法继续恢复。请重新发送上一条消息。',
+              content: 'Bản ghi tác vụ lượt trước đã hết hiệu lực, không thể khôi phục. Vui lòng gửi lại tin nhắn trước.',
             });
           }
           clearStream(sessionId);
           try { sessionStorage.removeItem(`easel_pending_turn:${sessionId}`); } catch { /* ignore */ }
         }).catch(() => {
           appendAssistant(sessionId, {
-            role: 'assistant', content: '上一轮任务记录已失效，请重新发送上一条消息。',
+            role: 'assistant', content: 'Bản ghi tác vụ lượt trước đã hết hiệu lực, vui lòng gửi lại tin nhắn trước.',
           });
           clearStream(sessionId);
         });
@@ -493,7 +493,7 @@ export default function App() {
 
   // 热点「一键做成内容」：新开会话，把选题作为指令发出去，跳到对话页。
   const handleUseTopic = useCallback((title: string) => {
-    const prompt = `围绕当前热点「${title}」：先判断它适不适合我的账号赛道；若合适，给 2-3 个差异化的二创角度，并把你最推荐的那条写成可直接发布的文案初稿。`;
+    const prompt = `Xoay quanh chủ đề đang hot «${title}»: trước hết đánh giá nó có hợp với hướng đi của tài khoản tôi không; nếu hợp, đưa ra 2-3 góc sáng tạo lại khác biệt, và viết góc bạn đề xuất nhất thành bản nháp có thể đăng ngay.`;
     const ns = createSession(selectedPersona || undefined);
     setSessions((prev) => { const u = [ns, ...prev]; saveSessions(u); return u; });
     setActiveSessionId(ns.id);
@@ -510,7 +510,7 @@ export default function App() {
     if (a && (a.content || a.thinking || a.steps.length)) {
       appendAssistant(sessionId, {
         role: 'assistant',
-        content: (a.content || '') + '\n\n_（已停止）_',
+        content: (a.content || '') + '\n\n_(đã dừng)_',
         thinking: a.thinking || undefined,
         activity: a.steps.join('\n') || undefined,
       });
@@ -576,7 +576,7 @@ export default function App() {
   }, [sessions]);
 
   const handleSessionDelete = useCallback((id: string) => {
-    if (!window.confirm('确定删除这条对话？')) return;
+    if (!window.confirm('Xoá cuộc trò chuyện này?')) return;
 
     const target = sessionsRef.current.find((s) => s.id === id);
     const wasRunning = Boolean(streamCtl.current[id]);
@@ -769,14 +769,14 @@ export default function App() {
         <div className="overlay">
           <div className="modal" style={{ width: 420, maxWidth: '100%', textAlign: 'center' }}>
             <div style={{ fontSize: 40 }}>👋</div>
-            <h2 style={{ margin: '12px 0 8px', fontSize: 20 }}>欢迎使用 Easel</h2>
+            <h2 style={{ margin: '12px 0 8px', fontSize: 20 }}>Chào mừng đến với Easel</h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.6 }}>
-              配置你的账号画像，生成的内容会更贴合你的风格、受众和平台调性。<br />
-              大约 2 分钟，也可以随时在侧栏「+ 新建画像」补配。
+              Thiết lập hồ sơ tài khoản để nội dung tạo ra sát hơn với phong cách, khán giả và giọng điệu nền tảng của bạn.<br />
+              Khoảng 2 phút, cũng có thể bổ sung sau bất cứ lúc nào ở thanh bên «+ Hồ sơ mới».
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 20, justifyContent: 'center' }}>
-              <button className="btn" onClick={dismissRecommend}>先用通用模式</button>
-              <button className="btn btn-primary" onClick={openWizard}>开始配置</button>
+              <button className="btn" onClick={dismissRecommend}>Dùng chế độ chung trước</button>
+              <button className="btn btn-primary" onClick={openWizard}>Bắt đầu thiết lập</button>
             </div>
           </div>
         </div>
