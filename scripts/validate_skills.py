@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 
@@ -14,7 +15,38 @@ ALLOWED_KEYS = {"name", "description", "layer", "metadata"}
 LAYERS = {"discover", "plan", "produce", "publish", "attribute", "general"}
 INTENTIONAL_NAME_MISMATCHES = {"skill-xhs-analyzer": "redbook"}
 KEY_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s*(.*))?$")
-TRIGGER_RE = re.compile(r"当用户|触发|使用时机|适用场景|用户说|用户问|用户需要|用于")
+# Trigger phrases a `description` must contain so the agent can route to the
+# skill. Matched case-insensitively on NFC-normalized text. Keep the Chinese
+# phrases until every SKILL.md has been translated (VN port, runbook 3.1).
+TRIGGER_PHRASES = (
+    # Vietnamese
+    "khi người dùng",
+    "người dùng nói",
+    "người dùng hỏi",
+    "người dùng cần",
+    "người dùng muốn",
+    "dùng khi",
+    "sử dụng khi",
+    "kích hoạt khi",
+    "áp dụng khi",
+    "áp dụng cho",
+    "dùng để",
+    "dùng cho",
+    "khi cần",
+    # Chinese (upstream, untranslated skills)
+    "当用户",
+    "触发",
+    "使用时机",
+    "适用场景",
+    "用户说",
+    "用户问",
+    "用户需要",
+    "用于",
+)
+TRIGGER_RE = re.compile(
+    "|".join(re.escape(unicodedata.normalize("NFC", phrase)) for phrase in TRIGGER_PHRASES),
+    re.IGNORECASE,
+)
 LEGACY_OUTPUT_DIRS = {
     "ai-image", "ai-music", "ai-video", "audio-denoise", "audio-editing",
     "audio-mix", "audio-visualizer", "auto-short-video", "auto-subtitle",
@@ -111,7 +143,7 @@ def validate(path: Path) -> list[str]:
     description = read_description(path)
     if not 80 <= len(description) <= 300:
         errors.append(f"description length must be 80..300 characters, got {len(description)}")
-    if not TRIGGER_RE.search(description):
+    if not TRIGGER_RE.search(unicodedata.normalize("NFC", description)):
         errors.append("description must state when the skill should trigger")
 
     folder = path.parent.name
