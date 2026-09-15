@@ -95,7 +95,7 @@ def _heal_openclaw_session(sk: str) -> None:
                 print(f"[session-heal] {p.name}: -{st['thinking_removed']} thinking / "
                       f"-{st['msgs_dropped']} empty", file=sys.stderr, flush=True)
     except Exception as e:
-        print(f"[session-heal] 跳过（{e}）", file=sys.stderr, flush=True)
+        print(f"[session-heal] bỏ qua ({e})", file=sys.stderr, flush=True)
 
 
 # 制作层/直接执行层/chat 超时统一走 easel/timeouts.py（CLI/Web/skill 三入口单一真相源）
@@ -123,11 +123,11 @@ _WHOAMI_CACHE: dict[str, tuple[float, dict]] = {}
 _WHOAMI_LOCK = threading.Lock()
 
 LOGIN_RUNNERS: dict[str, dict] = {
-    "kuaishou": {"name": "快手", "backend": "web", "wp": "kuaishou", "profile": "KuaishouProfile"},
-    "weixin-channels": {"name": "微信视频号", "backend": "web", "wp": "weixin-channels", "profile": "ChannelsProfile"},
-    "zhihu": {"name": "知乎", "backend": "web", "wp": "zhihu", "profile": "ZhihuProfile"},
-    "bilibili": {"name": "B站", "backend": "biliup"},
-    "douyin": {"name": "抖音", "backend": "douyin", "profile": "DouyinProfile"},
+    "kuaishou": {"name": "Kuaishou", "backend": "web", "wp": "kuaishou", "profile": "KuaishouProfile"},
+    "weixin-channels": {"name": "WeChat Channels", "backend": "web", "wp": "weixin-channels", "profile": "ChannelsProfile"},
+    "zhihu": {"name": "Zhihu", "backend": "web", "wp": "zhihu", "profile": "ZhihuProfile"},
+    "bilibili": {"name": "Bilibili", "backend": "biliup"},
+    "douyin": {"name": "Douyin", "backend": "douyin", "profile": "DouyinProfile"},
 }
 
 
@@ -156,38 +156,38 @@ def _short_drama_spec() -> dict:
     seen = set()
     optional = [key for key in optional if not (key["env"] in seen or seen.add(key["env"]))]
     return {
-        "label": "AI 短剧（生图必需 + 生视频/云配音可选）",
+        "label": "Phim ngắn AI (tạo ảnh bắt buộc + tạo video/lồng tiếng đám mây tuỳ chọn)",
         "settings": [],
         "providers": [{
             "id": "drama",
-            "name": "关键帧生图（必需）+ 视频生成与闭源配音（可选）",
+            "name": "Tạo ảnh khung hình chính (bắt buộc) + tạo video và lồng tiếng closed-source (tuỳ chọn)",
             "keys": [*image["providers"][0]["keys"], *optional],
         }],
     }
 
 SKILL_API_REQUIREMENTS: dict[str, dict] = {
     "ai-image-gen": _model_spec("image"),
-    "ecom-details-image": _model_spec("image", "电商配图（AI 生图）"),
+    "ecom-details-image": _model_spec("image", "Ảnh sản phẩm thương mại điện tử (AI tạo ảnh)"),
     "ai-video-gen": _model_spec("video"),
     "ai-music": _model_spec("music"),
-    "voice-clone": _model_spec("voice", "声音克隆 / 云端 TTS"),
+    "voice-clone": _model_spec("voice", "Nhân bản giọng nói / TTS đám mây"),
     # AI 短剧：编排 ai-image-gen(关键帧,必需) + ai-video-gen(生视频,可选,缺则退化图片短剧)。
     # 以生图为「已配置」基线（缺生图无法出关键帧）；生视频 key 同框可选填，也可在 ai-video-gen 卡片配。
     "short-drama": _short_drama_spec(),
     # 论文解读：MinerU 与生图均为可选（缺 MinerU 用 pdfplumber 兜底、缺生图用信息图/图表）。
     # 全 key 可选 → 不误报感叹号；但仍进注册表以便就地填 MINERU_API_TOKEN（无其它叶子 skill 承载它）。
     "paper-explainer": {
-        "label": "论文解读（MinerU / 生图 均可选）",
+        "label": "Giải thích bài báo khoa học (MinerU / tạo ảnh đều tuỳ chọn)",
         "providers": [
             {
                 "id": "paper",
-                "name": "MinerU 解析(可选, 缺则 pdfplumber) + 封面/概念生图(可选)",
+                "name": "Phân tích MinerU (tuỳ chọn, thiếu thì dùng pdfplumber) + tạo ảnh bìa/ý tưởng (tuỳ chọn)",
                 "keys": [
-                    _k("MINERU_API_TOKEN", "MinerU API Token（可选，缺则用 pdfplumber 兜底）",
+                    _k("MINERU_API_TOKEN", "MinerU API Token (tuỳ chọn, thiếu thì dùng pdfplumber thay thế)",
                        required=False),
-                    _k("IMG_API_KEY", "生图 API Key（可选，用于封面/概念图）", required=False,
+                    _k("IMG_API_KEY", "API Key tạo ảnh (tuỳ chọn, dùng cho ảnh bìa/ý tưởng)", required=False,
                        aliases=["OPENAI_API_KEY", "API_KEY"]),
-                    _k("IMG_BASE_URL", "生图 API 根地址（可选）", required=False, secret=False,
+                    _k("IMG_BASE_URL", "Base URL API tạo ảnh (tuỳ chọn)", required=False, secret=False,
                        aliases=["OPENAI_BASE_URL", "OPENAI_API_BASE", "BASE_URL"]),
                 ],
             },
@@ -459,12 +459,12 @@ def run_agent_sync(msg: str, timeout: int = TIMEOUT_DIRECT, session_id: str | No
     # 跨进程锁：同一会话同时刻只跑一个 openclaw，防并发 takeover 崩溃（rc=1）
     xlock = _CrossProcLock(sk)
     if not xlock.acquire(timeout=min(timeout, 300)):
-        return '⏳ 这个会话正在另一个窗口运行，请稍候再试'
+        return '⏳ Phiên này đang chạy ở cửa sổ khác, vui lòng thử lại sau'
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(PROJECT_ROOT), timeout=timeout + 30, env=proxy_env())
-        return clean_agent_output(r.stdout or '') or '（无输出）'
+        return clean_agent_output(r.stdout or '') or '(không có đầu ra)'
     except subprocess.TimeoutExpired:
-        return '⏱️ 请求超时'
+        return '⏱️ Yêu cầu quá thời gian chờ'
     except Exception as e:
         return f'❌ {e}'
     finally:
@@ -583,9 +583,9 @@ def _safe_output_path(rel: str) -> Path:
     full = (OUTPUTS_DIR / rel).resolve()
     root = OUTPUTS_DIR.resolve()
     if root != full and root not in full.parents:
-        raise HTTPException(403, '非法路径')
+        raise HTTPException(403, 'Đường dẫn không hợp lệ')
     if not full.is_file():
-        raise HTTPException(404, '文件不存在')
+        raise HTTPException(404, 'Tệp không tồn tại')
     return full
 
 
@@ -608,7 +608,7 @@ async def react_assets(path: str):
     base = (REACT_DIR / "assets").resolve()
     fp = (REACT_DIR / "assets" / path).resolve()
     if base != fp and base not in fp.parents:
-        raise HTTPException(403, "非法路径")
+        raise HTTPException(403, "Đường dẫn không hợp lệ")
     if not fp.is_file():
         raise HTTPException(404)
     return FileResponse(fp, headers={"Cache-Control": "public, max-age=31536000, immutable"})
@@ -619,7 +619,7 @@ async def static_file(path: str):
     base = STATIC_DIR.resolve()
     fp = (STATIC_DIR / path).resolve()
     if base != fp and base not in fp.parents:
-        raise HTTPException(403, "非法路径")
+        raise HTTPException(403, "Đường dẫn không hợp lệ")
     if not fp.is_file():
         raise HTTPException(404)
     # HTML entrypoints must not be cached: the intro page is edited in-place during local development.
@@ -641,7 +641,7 @@ async def api_personas():
 async def api_persona(name: str):
     text = load_profile_text(name)
     if not text:
-        raise HTTPException(404, "画像不存在")
+        raise HTTPException(404, "Hồ sơ không tồn tại")
     return {"name": name, "content": text}
 
 
@@ -652,13 +652,13 @@ def _valid_persona_name(name: str) -> bool:
 def _persona_file_path(name: str, filename: str) -> Path:
     """校验画像名/文件名，返回 profiles/<name>/<filename> 的安全路径。"""
     if not _valid_persona_name(name):
-        raise HTTPException(400, "画像名非法")
+        raise HTTPException(400, "Tên hồ sơ không hợp lệ")
     if not filename.endswith(".md") or "/" in filename or "\\" in filename or filename.startswith("."):
-        raise HTTPException(400, "文件名非法")
+        raise HTTPException(400, "Tên tệp không hợp lệ")
     pd = (PROFILES_DIR / name).resolve()
     fp = (pd / filename).resolve()
     if pd != fp.parent or PROFILES_DIR.resolve() not in pd.parents:
-        raise HTTPException(403, "非法路径")
+        raise HTTPException(403, "Đường dẫn không hợp lệ")
     return fp
 
 
@@ -666,7 +666,7 @@ def _persona_file_path(name: str, filename: str) -> Path:
 async def api_persona_files(name: str):
     """返回画像六维文件原文（按固定顺序 + 其余 .md），供在线编辑。"""
     if not profile_exists(name):
-        raise HTTPException(404, "画像不存在")
+        raise HTTPException(404, "Hồ sơ không tồn tại")
     pd = PROFILES_DIR / name
     ordered = list(_FILE_ORDER) + sorted(f.name for f in pd.glob("*.md") if f.name not in _FILE_ORDER)
     files = []
@@ -685,7 +685,7 @@ class PersonaFileRequest(BaseModel):
 async def api_persona_file_save(name: str, req: PersonaFileRequest):
     """保存画像单个维度文件（原子写）。"""
     if not profile_exists(name):
-        raise HTTPException(404, "画像不存在")
+        raise HTTPException(404, "Hồ sơ không tồn tại")
     fp = _persona_file_path(name, req.filename)
     tmp = fp.with_suffix(".md.tmp")
     tmp.write_text(req.content, encoding="utf-8")
@@ -697,10 +697,10 @@ async def api_persona_file_save(name: str, req: PersonaFileRequest):
 async def api_persona_delete(name: str):
     """删除整个画像目录。"""
     if not _valid_persona_name(name):
-        raise HTTPException(400, "画像名非法")
+        raise HTTPException(400, "Tên hồ sơ không hợp lệ")
     pd = (PROFILES_DIR / name).resolve()
     if PROFILES_DIR.resolve() not in pd.parents or not pd.is_dir():
-        raise HTTPException(404, "画像不存在")
+        raise HTTPException(404, "Hồ sơ không tồn tại")
     import shutil
     shutil.rmtree(pd)
     return {"ok": True, "deleted": name}
@@ -716,7 +716,7 @@ async def api_skill_detail(name: str):
     """单个 SKILL 详情：描述 + 正文 + API 需求与当前配置状态（脱敏）。"""
     full = find_skill(name)
     if full is None:
-        raise HTTPException(404, f"SKILL '{name}' 不存在")
+        raise HTTPException(404, f"SKILL '{name}' không tồn tại")
     desc, layer, body = _parse_skill_md(SKILLS_DIR / "openclaw" / full / "SKILL.md")
     needs_api = full in SKILL_API_REQUIREMENTS
     env = _read_env()
@@ -740,7 +740,7 @@ async def api_env_save(req: EnvUpdateRequest):
     """写 API key 到项目根 .env（仅允许注册表内 env 名）。返回更新后各 skill 的配置状态。"""
     bad = [k for k in (req.updates or {}) if k not in _ENV_ALLOWLIST]
     if bad:
-        raise HTTPException(400, f"不允许写入的变量：{', '.join(bad)}")
+        raise HTTPException(400, f"Biến không được phép ghi: {', '.join(bad)}")
     _write_env(req.updates or {})
     env = _read_env()
     return {
@@ -767,7 +767,7 @@ def _attachment_scope(session_id: str) -> str:
     """Map a browser session to a filesystem-safe, non-reversible inbox scope."""
     value = session_id.strip()
     if not value or len(value) > 256:
-        raise HTTPException(400, "无效的会话标识")
+        raise HTTPException(400, "Định danh phiên không hợp lệ")
     return hashlib.sha256(value.encode("utf-8")).hexdigest()[:20]
 
 
@@ -780,7 +780,7 @@ def _attachment_context(req: ChatRequest) -> str:
     if not req.attachments:
         return ""
     if not req.sessionId:
-        raise HTTPException(400, "附件必须绑定到会话")
+        raise HTTPException(400, "Tệp đính kèm phải gắn với một phiên")
 
     scope = _attachment_scope(req.sessionId)
     rows: list[str] = []
@@ -788,26 +788,26 @@ def _attachment_context(req: ChatRequest) -> str:
     for attachment in req.attachments:
         rel = Path(attachment.path)
         if rel.is_absolute() or ".." in rel.parts or len(rel.parts) != 4:
-            raise HTTPException(400, "附件路径无效")
+            raise HTTPException(400, "Đường dẫn tệp đính kèm không hợp lệ")
         if rel.parts[0] != "_inbox" or rel.parts[1] != scope:
-            raise HTTPException(403, "附件不属于当前会话")
+            raise HTTPException(403, "Tệp đính kèm không thuộc phiên hiện tại")
         normalized = rel.as_posix()
         if attachment.id != _attachment_id(scope, normalized):
-            raise HTTPException(403, "附件标识校验失败")
+            raise HTTPException(403, "Xác thực định danh tệp đính kèm thất bại")
         full = _safe_output_target(normalized)
         if not full.is_file():
-            raise HTTPException(404, f"附件不存在：{attachment.name}")
+            raise HTTPException(404, f"Tệp đính kèm không tồn tại: {attachment.name}")
         if normalized in seen:
             continue
         seen.add(normalized)
         rows.append(f"- outputs/{normalized}")
 
     return (
-        "〔系统附件清单，仅供本轮执行，不要向用户复述文件上传过程或内部路径〕\n"
-        "只允许使用下列当前会话附件；禁止扫描、枚举或猜测 outputs/_inbox 中的其他文件：\n"
+        "[Danh sách tệp đính kèm hệ thống, chỉ dùng cho lượt này; không thuật lại quá trình tải tệp hay đường dẫn nội bộ cho người dùng]\n"
+        "Chỉ được dùng các tệp đính kèm của phiên hiện tại liệt kê dưới đây; cấm quét, liệt kê hay đoán các tệp khác trong outputs/_inbox:\n"
         + "\n".join(rows)
-        + "\n需要纳入内容项目时，将清单内文件复制到 outputs/<项目>/assets/ 后再使用；"
-          "保留 inbox 原件，确保重试仍可复现。"
+        + "\nKhi cần đưa vào dự án nội dung, hãy sao chép tệp trong danh sách sang outputs/<dự án>/assets/ rồi mới dùng; "
+          "giữ nguyên bản gốc trong inbox để lần chạy lại vẫn tái hiện được."
     )
 
 
@@ -817,7 +817,7 @@ def _chat_message(req: ChatRequest) -> str:
     if context:
         message = f"{message}\n\n{context}" if message else context
     if not message:
-        raise HTTPException(400, "消息不能为空")
+        raise HTTPException(400, "Tin nhắn không được để trống")
     return chat_turn_message(message, req.persona)
 
 
@@ -1005,7 +1005,7 @@ async def api_chat_job_stream(turn_id: str, after: int = 0):
     # A stale browser-side pendingTurnId must fail promptly instead of receiving
     # heartbeats forever. The frontend can then recover from the final snapshot.
     if not _job_event_file(turn_id).is_file():
-        raise HTTPException(404, "对话任务记录不存在或已失效")
+        raise HTTPException(404, "Bản ghi tác vụ hội thoại không tồn tại hoặc đã hết hiệu lực")
 
     async def events():
         cursor = max(0, after)
@@ -1109,16 +1109,16 @@ async def api_chat_stream(req: ChatRequest):
         lock = _session_lock(sk)
         xlock = _CrossProcLock(sk)
         if lock.locked():
-            to_client("activity", "⏳ 这个会话上一条还在跑，排队等它结束再开始…")
+            to_client("activity", "⏳ Tin nhắn trước của phiên này vẫn đang chạy, xếp hàng chờ xong rồi mới bắt đầu…")
         await lock.acquire()
         # flock 可能阻塞（等另一进程/标签跑完），放线程池避免卡住事件循环
         got = await loop.run_in_executor(None, xlock.acquire, min(TIMEOUT_CHAT, 300))
         if not got:
             lock.release()
-            _save_turn(pk, "done", "这个会话正在另一个窗口运行，请稍候再试。", {
+            _save_turn(pk, "done", "Phiên này đang chạy ở cửa sổ khác, vui lòng thử lại sau。", {
                 "turn_id": turn_id, "clean_end": False, "stop_reason": "session_lock_timeout",
             })
-            to_client("activity", "⏳ 这个会话正在另一个窗口运行，请稍候再试")
+            to_client("activity", "⏳ Phiên này đang chạy ở cửa sổ khác, vui lòng thử lại sau")
             to_client("done", sessionKey=sk)
             client_q.put_nowait(CLIENT_DONE)
             try:
@@ -1139,10 +1139,10 @@ async def api_chat_stream(req: ChatRequest):
                 raw_path.unlink()
             except OSError:
                 pass
-            _save_turn(pk, "done", "❌ 启动失败，请重试", {
+            _save_turn(pk, "done", "❌ Khởi động thất bại, vui lòng thử lại", {
                 "turn_id": turn_id, "clean_end": False, "stop_reason": "spawn_failed",
             })
-            to_client("error", "❌ 启动失败，请重试")
+            to_client("error", "❌ Khởi động thất bại, vui lòng thử lại")
             to_client("done", sessionKey=sk)
             client_q.put_nowait(CLIENT_DONE)
             return
@@ -1164,10 +1164,10 @@ async def api_chat_stream(req: ChatRequest):
                     if "model-fetch] start" in c:
                         run_info["fetch_count"] += 1
                         fc = run_info["fetch_count"]
-                        _emit("activity", "🧠 正在思考…" if fc == 1 else f"🔧 调用工具后继续推理（第 {fc} 步）…")
+                        _emit("activity", "🧠 Đang suy nghĩ…" if fc == 1 else f"🔧 Gọi công cụ xong, tiếp tục suy luận (bước {fc})…")
                     elif "[agent]" in c and "delegat" in c.lower():
                         run_info["delegated"] = True
-                        _emit("activity", "🛠️ 制作中…")
+                        _emit("activity", "🛠️ Đang sản xuất…")
                     m = re.search(r"ended with stopReason=(\S+)", c)
                     if m:
                         run_info["stop_reason"] = m.group(1)
@@ -1192,8 +1192,8 @@ async def api_chat_stream(req: ChatRequest):
                     _QBRIDGE_DISABLED = True
                     _qbridge_warn_once(
                         "unsupported",
-                        "[question-bridge] 当前 OpenClaw 版本无 question RPC（需 2026.9.x+），"
-                        "已跳过 ask_user 选项卡片桥接，改用文字问答。")
+                        "[question-bridge] Phiên bản OpenClaw hiện tại không có question RPC (cần 2026.9.x+), "
+                        "đã bỏ qua cầu nối thẻ lựa chọn ask_user, chuyển sang hỏi đáp bằng văn bản.")
                     return
                 client = None
                 pushed: set[str] = set()
@@ -1206,8 +1206,8 @@ async def api_chat_stream(req: ChatRequest):
                     _QBRIDGE_DISABLED = True
                     _qbridge_warn_once(
                         "connect",
-                        f"[question-bridge] connect gateway failed，已停用桥接（本进程），"
-                        f"ask_user 改用文字问答: {e}")
+                        f"[question-bridge] connect gateway failed, đã tắt cầu nối (tiến trình này), "
+                        f"ask_user chuyển sang hỏi đáp bằng văn bản: {e}")
                     return
                 try:
                     while proc.poll() is None:
@@ -1219,8 +1219,8 @@ async def api_chat_stream(req: ChatRequest):
                             _QBRIDGE_DISABLED = True
                             _qbridge_warn_once(
                                 "unsupported",
-                                f"[question-bridge] 当前 OpenClaw 版本无 question RPC，"
-                                f"已停用 ask_user 选项卡片桥接（需 2026.9.x+）: {e}")
+                                f"[question-bridge] Phiên bản OpenClaw hiện tại không có question RPC, "
+                                f"đã tắt cầu nối thẻ lựa chọn ask_user (cần 2026.9.x+): {e}")
                             return
                         except Exception:
                             time.sleep(2)
@@ -1312,7 +1312,7 @@ async def api_chat_stream(req: ChatRequest):
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
                     timed_out = True
-                    to_client("error", "⏱️ 请求超时")
+                    to_client("error", "⏱️ Yêu cầu quá thời gian chờ")
                     break
                 try:
                     item = await asyncio.wait_for(q.get(), timeout=min(10, remaining))
@@ -1348,7 +1348,7 @@ async def api_chat_stream(req: ChatRequest):
                     to_client("token", clean)
                 elif rc not in (0, None):
                     err = clean_agent_output("".join(stdout_lines))[:200]
-                    to_client("error", f"❌ 执行失败（退出码 {rc}）{' — ' + err if err else ''}")
+                    to_client("error", f"❌ Thực thi thất bại (mã thoát {rc}){' — ' + err if err else ''}")
             # 收尾检测：即使已吐了内容，只要不是「正常收尾」就显式告知——
             # 否则被截断（触顶）/被杀（负载）/流被中断，都会被当成「清晰地答完了」，
             # 用户看到的就是「答一半突然停、也不说做完」（本 bug 根因）。
@@ -1357,22 +1357,22 @@ async def api_chat_stream(req: ChatRequest):
             if (emitted or run_info["thinking_chars"]) and sk not in _STOPPED_CHAT:
                 note = None
                 if sr and sr in ("max_tokens", "length", "model_length"):
-                    note = (f"\n\n---\n⚠️ 上面这条**被截断**了（stopReason={sr}，单条回复触顶）。"
-                            f"回我「继续」我接着写完，或让我把任务拆小一点。")
+                    note = (f"\n\n---\n⚠️ Câu trả lời trên **bị cắt ngắn** (stopReason={sr}, một phản hồi chạm trần). "
+                            f"Trả lời «tiếp tục» để tôi viết nốt, hoặc yêu cầu tôi chia nhỏ tác vụ.")
                 elif rc not in (0, None):
-                    note = (f"\n\n---\n⚠️ 生成**被中断**（退出码 {rc}，多半是超时或系统负载过高把进程杀了），"
-                            f"不是正常收尾。可以让我重试。")
+                    note = (f"\n\n---\n⚠️ Quá trình sinh nội dung **bị gián đoạn** (mã thoát {rc}, thường do quá thời gian chờ hoặc hệ thống quá tải làm tiến trình bị dừng), "
+                            f"không phải kết thúc bình thường. Bạn có thể yêu cầu tôi thử lại.")
                 elif sr == "tool_use":
-                    note = ("\n\n---\n⚠️ 我刚做完这一步、**正要执行下一步操作时中断了**"
-                            "（本轮以工具调用结尾却没能继续，前端把它当成答完了）。回我「继续」我接着做。")
+                    note = ("\n\n---\n⚠️ Tôi vừa xong bước này và **bị gián đoạn đúng lúc chuẩn bị thực hiện bước tiếp theo** "
+                            "(lượt này kết thúc bằng một lời gọi công cụ nhưng không tiếp tục được, giao diện coi như đã trả lời xong). Trả lời «tiếp tục» để tôi làm tiếp.")
                 elif run_info.get("last_ev") not in (None, "assistant_message_end"):
-                    note = ("\n\n---\n⚠️ 这条**可能没写完**——模型的输出/思考流被中断、没有正常收尾"
-                            "（多为网络或模型代理把长回复的流掐断了）。回我「继续」，或重试。")
+                    note = ("\n\n---\n⚠️ Câu trả lời này **có thể chưa viết xong** — luồng đầu ra/suy nghĩ của mô hình bị ngắt, không kết thúc bình thường "
+                            "(thường do mạng hoặc proxy mô hình cắt luồng của phản hồi dài). Trả lời «tiếp tục», hoặc thử lại.")
                 elif run_info.get("text_tail", "").rstrip()[-1:] in ("：", ":"):
                     # 正常收尾但正文停在冒号 = 模型"我要做X："后没接着做（多为要接工具/下一步却断了）。
                     # 用户实测「所有莫名停止都停在冒号」——这一条兜住这个模式。
-                    note = ("\n\n---\n⚠️ 我似乎停在了冒号处、没接着把后面的内容/操作做出来。"
-                            "回我「继续」我补上。")
+                    note = ("\n\n---\n⚠️ Có vẻ tôi đã dừng ở dấu hai chấm mà chưa làm tiếp nội dung/thao tác phía sau. "
+                            "Trả lời «tiếp tục» để tôi bổ sung.")
                 if note:
                     full_text.append(note)
                     to_client("token", note)
@@ -1466,7 +1466,7 @@ async def api_chat_stream(req: ChatRequest):
                 # 长时间无输出（等模型长回复 / 制作类长任务）→ 发心跳，让用户知道没卡死。
                 if time.monotonic() - idle_since >= 30:
                     yield {"event": "activity", "data": json.dumps(
-                        "⏳ 仍在处理中，未卡住…（复杂或制作类任务会花点时间）", ensure_ascii=False)}
+                        "⏳ Vẫn đang xử lý, không bị treo… (tác vụ phức tạp hoặc sản xuất sẽ mất thêm thời gian)", ensure_ascii=False)}
                 continue
             if item is CLIENT_DONE:
                 break
@@ -1594,7 +1594,7 @@ class SkillRequest(BaseModel):
 async def api_skill(req: SkillRequest):
     skill_full = find_skill(req.skill)
     if skill_full is None:
-        raise HTTPException(404, f"SKILL '{req.skill}' 不存在")
+        raise HTTPException(404, f"SKILL '{req.skill}' không tồn tại")
     prefix = _persona_prefix(req.persona)
     head = f"{prefix}\n\n" if prefix else ""
     message = f"{head}Hãy thực hiện /{skill_full}, nội dung như sau:\n\n{req.input}"
@@ -1659,9 +1659,9 @@ def _safe_output_target(rel: str, *, must_exist: bool = True) -> Path:
     full = (OUTPUTS_DIR / rel).resolve()
     root = OUTPUTS_DIR.resolve()
     if full == root or root not in full.parents:
-        raise HTTPException(403, '非法路径')
+        raise HTTPException(403, 'Đường dẫn không hợp lệ')
     if must_exist and not full.exists():
-        raise HTTPException(404, '不存在')
+        raise HTTPException(404, 'Không tồn tại')
     return full
 
 
@@ -1679,7 +1679,7 @@ async def api_output_delete(path: str):
     """删除内容库里的单个文件或整个项目目录。系统数据（_login/_analytics/日历/发布记录）受保护。"""
     full = _safe_output_target(path)
     if _is_protected(full):
-        raise HTTPException(403, '系统数据受保护，不可从内容库删除')
+        raise HTTPException(403, 'Dữ liệu hệ thống được bảo vệ, không thể xoá từ thư viện nội dung')
     is_dir = full.is_dir()
     try:
         if is_dir:
@@ -1687,7 +1687,7 @@ async def api_output_delete(path: str):
         else:
             full.unlink()
     except OSError as e:
-        raise HTTPException(500, f'删除失败：{e}')
+        raise HTTPException(500, f'Xoá thất bại: {e}')
     return {"ok": True, "deleted": path, "kind": "dir" if is_dir else "file"}
 
 
@@ -1706,16 +1706,16 @@ async def api_upload(
         name = Path(f.filename or "file").name
         ext = Path(name).suffix.lower()
         if ext not in UPLOAD_EXTS:
-            raise HTTPException(400, f'不支持的文件类型：{ext or name}')
+            raise HTTPException(400, f'Loại tệp không được hỗ trợ: {ext or name}')
         data = await f.read()
         if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
-            raise HTTPException(413, f'{name} 超过 {MAX_UPLOAD_MB}MB 上限')
+            raise HTTPException(413, f'{name} vượt quá giới hạn {MAX_UPLOAD_MB}MB')
         target = _unique_upload_path(dest, name)
         target.write_bytes(data)
         rel = f"_inbox/{scope}/{batch}/{target.name}"
         saved.append({"id": _attachment_id(scope, rel), "name": target.name, "path": rel})
     if not saved:
-        raise HTTPException(400, '没有文件')
+        raise HTTPException(400, 'Không có tệp')
     return {"ok": True, "files": saved}
 
 
@@ -1771,7 +1771,7 @@ def _login_status(platform: str) -> dict:
     if data['state'] in ('unknown', 'starting') and proc is not None:
         code = proc.poll()
         if code is not None:
-            data = {'state': 'error', 'message': f'登录程序异常退出（退出码 {code}），请查看 outputs/_login/{platform}.log'}
+            data = {'state': 'error', 'message': f'Chương trình đăng nhập thoát bất thường (mã thoát {code}), vui lòng xem outputs/_login/{platform}.log'}
     qr = LOGIN_DIR / f'{platform}.png'
     if qr.is_file():
         data['qr'] = f'_login/{platform}.png'
@@ -1801,10 +1801,10 @@ async def api_login_start(platform: str):
     """启动某平台登录：浏览器平台后台跑 QR runner，轮询到二维码就绪即返回。"""
     cfg = LOGIN_RUNNERS.get(platform)
     if not cfg:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     backend = cfg['backend']
     if backend == 'unsupported':
-        raise HTTPException(400, f"{cfg['name']} 暂不可用：{cfg.get('note', '')}")
+        raise HTTPException(400, f"{cfg['name']} tạm thời không khả dụng: {cfg.get('note', '')}")
     LOGIN_DIR.mkdir(parents=True, exist_ok=True)
     qr = LOGIN_DIR / f'{platform}.png'
     status = LOGIN_DIR / f'{platform}.json'
@@ -1855,7 +1855,7 @@ async def api_login_start(platform: str):
 @app.get("/api/login/{platform}/status")
 async def api_login_status(platform: str):
     if platform not in LOGIN_RUNNERS:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     s = _login_status(platform)
     if s.get('state') == 'success':
         # 登录刚成功 → 清掉登录前缓存的「未登录」whoami 结果，令下次 whoami 重新真校验；
@@ -1878,10 +1878,10 @@ async def api_login_sms(platform: str, req: SmsCodeRequest):
     收到的验证码提交到这里，runner 读走后填码提交，继续完成登录。
     """
     if platform not in LOGIN_RUNNERS:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     code = ''.join(ch for ch in (req.code or '') if ch.isdigit())
     if not (4 <= len(code) <= 8):
-        raise HTTPException(400, '验证码应为 4-8 位数字')
+        raise HTTPException(400, 'Mã xác thực phải gồm 4-8 chữ số')
     LOGIN_DIR.mkdir(parents=True, exist_ok=True)
     (LOGIN_DIR / f'{platform}.code').write_text(code, encoding='utf-8')
     return {'ok': True}
@@ -1893,7 +1893,7 @@ async def api_account_whoami(platform: str):
     带 TTL 进程内缓存（避免账号页+工作台重复起浏览器）；确认已登录则回写标记，令快速路径自愈。"""
     cfg = LOGIN_RUNNERS.get(platform)
     if not cfg:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     backend = cfg['backend']
     if backend == 'unsupported':
         return {'loggedIn': False, 'name': '', 'avatar': ''}
@@ -1916,7 +1916,7 @@ async def api_account_whoami(platform: str):
         proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
                                        capture_output=True, text=True, timeout=150)
     except subprocess.TimeoutExpired:
-        raise HTTPException(504, '校验超时（浏览器起不来或网络慢）')
+        raise HTTPException(504, 'Xác thực quá thời gian chờ (trình duyệt không khởi động được hoặc mạng chậm)')
     data = {'loggedIn': False, 'name': '', 'avatar': ''}
     confident = False   # 是否拿到「可信」校验结论（子进程正常跑出 JSON 且无 error 字段）
     for line in reversed((proc.stdout or '').strip().splitlines()):
@@ -1954,7 +1954,7 @@ async def api_logout(platform: str):
     """退出登录：删持久化浏览器 profile + 登录状态/二维码/头像文件（biliup 删 cookies.json）。"""
     cfg = LOGIN_RUNNERS.get(platform)
     if not cfg:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     deleted = []
     prof_name = cfg.get('profile')
     if prof_name:
@@ -1998,7 +1998,7 @@ async def api_analytics_platforms():
 async def api_analytics(platform: str):
     """抓取某平台已登录账号的创作数据（粉丝/获赞/作品 + 与上次快照的增长）。起 headless 浏览器，数秒。"""
     if platform not in ANALYTICS_PLATFORMS:
-        raise HTTPException(404, "该平台暂不支持数据抓取")
+        raise HTTPException(404, "Nền tảng này chưa hỗ trợ thu thập dữ liệu")
     # B站用 cookie 调 API（无浏览器 profile），单独走 bili_login stats；其余走 account_stats（Playwright）
     if platform == "bilibili":
         cmd = [sys.executable, str(SHARED_SCRIPTS / "bili_login.py"), "stats",
@@ -2010,7 +2010,7 @@ async def api_analytics(platform: str):
         proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
                                        capture_output=True, text=True, timeout=180)
     except subprocess.TimeoutExpired:
-        raise HTTPException(504, "抓取超时（浏览器起不来或网络慢）")
+        raise HTTPException(504, "Thu thập quá thời gian chờ (trình duyệt không khởi động được hoặc mạng chậm)")
     for line in reversed((proc.stdout or "").strip().splitlines()):
         line = line.strip()
         if line.startswith("{"):
@@ -2018,8 +2018,8 @@ async def api_analytics(platform: str):
                 return json.loads(line)
             except Exception:
                 continue
-    detail = (proc.stderr or "").strip().splitlines()[-1:] or ["未取到数据"]
-    raise HTTPException(502, f"未取到数据（可能未登录或平台改版）：{detail[0][:120]}")
+    detail = (proc.stderr or "").strip().splitlines()[-1:] or ["Không lấy được dữ liệu"]
+    raise HTTPException(502, f"Không lấy được dữ liệu (có thể chưa đăng nhập hoặc nền tảng đã thay đổi): {detail[0][:120]}")
 
 
 MEDIA_REQUIRED = {"douyin", "kuaishou", "weixin-channels", "bilibili"}
@@ -2068,9 +2068,9 @@ def _run_publish_bg(platform: str, cmd: list, title: str, body: str, cfg: dict,
         ok = proc.returncode == 0
         out, err = proc.stdout or '', proc.stderr or ''
     except subprocess.TimeoutExpired:
-        err = '发布超时（>900s）'
+        err = 'Đăng bài quá thời gian chờ (>900s)'
     except Exception as e:  # noqa: BLE001
-        err = f'发布进程异常：{e}'
+        err = f'Tiến trình đăng bài lỗi: {e}'
     try:
         with (OUTPUTS_DIR / '_publish.log').open('a', encoding='utf-8') as lf:
             lf.write(f"\n===== {time.strftime('%Y-%m-%d %H:%M:%S')} {platform}(async) ok={ok} =====\n")
@@ -2080,7 +2080,7 @@ def _run_publish_bg(platform: str, cmd: list, title: str, body: str, cfg: dict,
     # 脚本正常会写终态；异常/超时没写到时兜底补一个
     if _read_publish_status(platform)['state'] not in ('success', 'error'):
         _write_publish_status(status_file, 'success' if ok else 'error',
-                              '发布成功' if ok else ('\n'.join((err or out).strip().splitlines()[-4:]) or '发布失败'))
+                              'Đăng bài thành công' if ok else ('\n'.join((err or out).strip().splitlines()[-4:]) or 'Đăng bài thất bại'))
     try:
         code_file.unlink()
     except OSError:
@@ -2105,20 +2105,20 @@ def _start_async_publish(platform: str, cmd: list, title: str, body: str, cfg: d
         code_file.unlink()
     except OSError:
         pass
-    _write_publish_status(status_file, 'starting', '发布中…（若触发风控会要求短信验证）')
+    _write_publish_status(status_file, 'starting', 'Đang đăng… (nếu bị kiểm soát rủi ro sẽ yêu cầu xác thực SMS)')
     threading.Thread(target=_run_publish_bg,
                      args=(platform, cmd, title, body, cfg, status_file, code_file),
                      daemon=True).start()
     # 关键：**不返回 ok:true**——这只是「已启动」的应答，真正结果要靠轮询 /status。
     # 若这里给 ok:true，旧前端会把它当「已发布」立刻显示成功（假成功 bug，真机踩过）。
-    return {'async': True, 'pending': True, 'message': '发布已启动，请稍候…'}
+    return {'async': True, 'pending': True, 'message': 'Đã bắt đầu đăng bài, vui lòng chờ…'}
 
 
 @app.get("/api/publish/{platform}/status")
 async def api_publish_status(platform: str):
     """轮询异步发布状态：starting/sms_required/verifying/success/error。"""
     if platform not in LOGIN_RUNNERS:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     return {'mode': 'publish', **_read_publish_status(platform)}
 
 
@@ -2126,10 +2126,10 @@ async def api_publish_status(platform: str):
 async def api_publish_sms(platform: str, req: SmsCodeRequest):
     """发布触发短信墙时回填验证码（写发布 runner 轮询的一次性验证码文件）。"""
     if platform not in LOGIN_RUNNERS:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     code = ''.join(ch for ch in (req.code or '') if ch.isdigit())
     if not (4 <= len(code) <= 8):
-        raise HTTPException(400, '验证码应为 4-8 位数字')
+        raise HTTPException(400, 'Mã xác thực phải gồm 4-8 chữ số')
     PUBLISH_DIR.mkdir(parents=True, exist_ok=True)
     (PUBLISH_DIR / f'{platform}.code').write_text(code, encoding='utf-8')
     return {'ok': True}
@@ -2140,12 +2140,12 @@ async def api_publish(platform: str, req: PublishRequest):
     """一键发布：分发到对应 publisher 脚本真发（--exec）。二次确认在前端。"""
     cfg = LOGIN_RUNNERS.get(platform)
     if not cfg:
-        raise HTTPException(404, '未知平台')
+        raise HTTPException(404, 'Nền tảng không xác định')
     backend = cfg['backend']
     if backend == 'unsupported':
-        raise HTTPException(400, f"{cfg['name']} 暂不支持一键发布")
+        raise HTTPException(400, f"{cfg['name']} chưa hỗ trợ đăng bài một chạm")
     if not req.title.strip() and not req.body.strip():
-        raise HTTPException(400, '标题/正文不能为空')
+        raise HTTPException(400, 'Tiêu đề/nội dung không được để trống')
     imgs, vids = [], []
     for rel in req.media or []:
         full = _safe_output_path(rel)
@@ -2155,11 +2155,11 @@ async def api_publish(platform: str, req: PublishRequest):
         elif ext in IMAGE_EXTS:
             imgs.append(str(full))
     if platform in MEDIA_REQUIRED and not imgs and not vids:
-        raise HTTPException(400, f"{cfg['name']} 需附带图片或视频")
+        raise HTTPException(400, f"{cfg['name']} cần kèm ảnh hoặc video")
     if imgs and vids:
-        raise HTTPException(400, '同一条内容不能同时发图片和视频，请二选一')
+        raise HTTPException(400, 'Một nội dung không thể đăng đồng thời ảnh và video, vui lòng chọn một')
     if platform in VIDEO_ONLY_PUBLISH and not vids:
-        raise HTTPException(400, f"{cfg['name']} 只能发视频，请附带一个视频文件")
+        raise HTTPException(400, f"{cfg['name']} chỉ đăng được video, vui lòng kèm một tệp video")
     title = req.title.strip() or req.body.strip()[:20]
     tags = req.tags or ''
     py = sys.executable
@@ -2192,7 +2192,7 @@ async def api_publish(platform: str, req: PublishRequest):
         proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=_publish_env(),
                                        capture_output=True, text=True, timeout=600)
     except subprocess.TimeoutExpired:
-        raise HTTPException(504, '发布超时（媒体处理慢或流程卡住）')
+        raise HTTPException(504, 'Đăng bài quá thời gian chờ (xử lý media chậm hoặc luồng bị kẹt)')
     ok = proc.returncode == 0
     tail = (proc.stderr or proc.stdout or '').strip().splitlines()
     detail = '\n'.join(tail[-8:])
@@ -2214,7 +2214,7 @@ async def api_publish(platform: str, req: PublishRequest):
             _write_schedule(items)
         except Exception:
             pass
-    return {'ok': ok, 'message': '发布成功' if ok else '发布失败（见 detail）', 'detail': detail}
+    return {'ok': ok, 'message': 'Đăng bài thành công' if ok else 'Đăng bài thất bại (xem detail)', 'detail': detail}
 
 
 class ProfileBuildRequest(BaseModel):
@@ -2231,27 +2231,27 @@ async def api_profile_build(req: ProfileBuildRequest):
     """
     name = (req.name or '').strip()  # 自动去掉首尾空格
     if not name:
-        raise HTTPException(400, '画像名不能为空（去掉首尾空格后为空，请输入有效名称）')
+        raise HTTPException(400, 'Tên hồ sơ không được để trống (sau khi bỏ khoảng trắng đầu/cuối thì rỗng, vui lòng nhập tên hợp lệ)')
     if '/' in name or '\\' in name:
-        raise HTTPException(400, '画像名不能包含 / 或 \\ 字符，请改掉后重试')
+        raise HTTPException(400, 'Tên hồ sơ không được chứa ký tự / hoặc \\, vui lòng sửa rồi thử lại')
     if name.startswith(('.', '_')):
-        raise HTTPException(400, '画像名不能以 . 或 _ 开头，请换个开头')
+        raise HTTPException(400, 'Tên hồ sơ không được bắt đầu bằng . hoặc _, vui lòng đổi ký tự đầu')
     pd = PROFILES_DIR / name
     if pd.exists():
-        raise HTTPException(409, f'画像「{name}」已存在，请换一个名字')
+        raise HTTPException(409, f'Hồ sơ «{name}» đã tồn tại, vui lòng chọn tên khác')
     _write_baseline_profile(name, req.form or {})
     instruction = _form_to_instruction(name, req.form or {})
-    msg = (f"请执行 /skill-profile-builder 完善已存在的画像「{name}」。用户已通过表单提供以下信息，我已按此写好 profiles/{name}"
-           f"/ 的基线六维文件。请：①尽力抓取用户给的社媒链接分析已发内容/风格/受众（抓不到就降级，标注[待补充]，勿臆造）②据分析结果润色/补全各维度文件 ③给出一句话完成度摘要。表单信息如下：\n\n{instruction}")
+    msg = (f"Hãy chạy /skill-profile-builder để hoàn thiện hồ sơ đã có «{name}». Người dùng đã cung cấp thông tin qua biểu mẫu, tôi đã dựa vào đó viết sẵn 6 file cơ bản trong profiles/{name}"
+           f"/. Hãy: ① cố gắng thu thập các liên kết mạng xã hội người dùng cung cấp để phân tích nội dung đã đăng/phong cách/khán giả (không lấy được thì hạ cấp, đánh dấu [cần bổ sung], không bịa) ② dựa trên kết quả phân tích để trau chuốt/bổ sung từng file ③ tóm tắt mức độ hoàn thiện trong một câu. Thông tin biểu mẫu:\n\n{instruction}")
 
-    _write_profile_status(name, 'running', 'AI 正在分析并增强画像…')
+    _write_profile_status(name, 'running', 'AI đang phân tích và bổ sung hồ sơ…')
 
     def _enhance() -> None:
         try:
             log = run_agent_sync(msg, TIMEOUT_PRODUCE)
             _write_profile_status(name, 'done', log)
         except Exception as e:  # noqa: BLE001
-            _write_profile_status(name, 'failed', f'AI 增强失败（基线画像已可用）：{e}')
+            _write_profile_status(name, 'failed', f'AI bổ sung thất bại (hồ sơ cơ bản đã dùng được): {e}')
 
     threading.Thread(target=_enhance, daemon=True).start()
     # 基线已写、画像立即可用；增强在后台，前端轮询状态
@@ -2289,62 +2289,62 @@ async def api_profile_build_status(name: str):
 
 
 def _form_to_instruction(name: str, form: dict) -> str:
-    def g(k: str, default: str = '（未填）') -> str:
+    def g(k: str, default: str = '(chưa điền)') -> str:
         v = form.get(k)
         if isinstance(v, list):
-            return '、'.join(str(x) for x in v) if v else default
+            return ', '.join(str(x) for x in v) if v else default
         return str(v).strip() if v not in (None, '') else default
     links = form.get('links') or {}
-    links_txt = '\n'.join(f'  - {p}: {u}' for p, u in links.items() if u) or '  （未提供）'
-    return (f"画像名：{name}\n运营平台：{g('platforms')}\n起号状态：{g('accountStage')}"
-            f"\n社媒主页链接：\n{links_txt}\n想做的方向：{g('direction')}"
-            f"\n为什么做/我的优势：{g('reason')}\n运营目标：{g('goal')}"
-            f"\n想产出的形式：{g('formats')}\n喜欢看的内容/对标账号：{g('likes')}"
-            f"\n期望调性：{g('tone')}\n不做的内容/红线：{g('avoid')}\n")
+    links_txt = '\n'.join(f'  - {p}: {u}' for p, u in links.items() if u) or '  (chưa cung cấp)'
+    return (f"Tên hồ sơ: {name}\nNền tảng vận hành: {g('platforms')}\nGiai đoạn tài khoản: {g('accountStage')}"
+            f"\nLiên kết trang mạng xã hội:\n{links_txt}\nHướng muốn làm: {g('direction')}"
+            f"\nVì sao làm/thế mạnh của tôi: {g('reason')}\nMục tiêu vận hành: {g('goal')}"
+            f"\nDạng nội dung muốn sản xuất: {g('formats')}\nNội dung yêu thích/tài khoản tham chiếu: {g('likes')}"
+            f"\nGiọng điệu mong muốn: {g('tone')}\nNội dung không làm/lằn ranh đỏ: {g('avoid')}\n")
 
 
 def _write_baseline_profile(name: str, form: dict) -> None:
-    """从表单确定性生成六维基线文件。链接派生字段标 [待 AI 分析]。"""
+    """从表单确定性生成六维基线文件。链接派生字段标 [chờ AI phân tích]。"""
     pd = PROFILES_DIR / name
     pd.mkdir(parents=True, exist_ok=True)
 
     def g(k: str, default: str = '') -> str:
         v = form.get(k)
         if isinstance(v, list):
-            return '、'.join(str(x) for x in v)
+            return ', '.join(str(x) for x in v)
         return str(v).strip() if v not in (None, '') else default
-    direction = g('direction') or '[待补充]'
-    reason = g('reason') or '[待补充]'
+    direction = g('direction') or '[cần bổ sung]'
+    reason = g('reason') or '[cần bổ sung]'
     goal = g('goal')
     formats = g('formats')
-    tone = g('tone') or '[待分析]'
+    tone = g('tone') or '[cần phân tích]'
     likes = g('likes')
     avoid = g('avoid')
     platforms = form.get('platforms') or []
     links = form.get('links') or {}
     (pd / 'identity.md').write_text(
-        f"# 身份定位\n\n## 我是谁\n\n{direction}\n\n## 差异化\n\n{reason}\n\n## 内容方向\n\n{direction}"
-        f"{'（形式：' + formats + '）' if formats else ''}\n"
-        f"{'运营目标：' + goal if goal else ''}\n",
+        f"# Định vị tài khoản\n\n## Tôi là ai\n\n{direction}\n\n## Điểm khác biệt\n\n{reason}\n\n## Hướng nội dung\n\n{direction}"
+        f"{' (dạng: ' + formats + ')' if formats else ''}\n"
+        f"{'Mục tiêu vận hành: ' + goal if goal else ''}\n",
         encoding='utf-8')
     (pd / 'style.md').write_text(
-        f"# 内容风格\n\n## 语气\n\n{tone}\n\n## 开头结构\n\n[待 AI 分析已发内容]\n\n## 视觉风格\n\n[待 AI 分析]\n\n## 内容节奏\n\n{formats or '[待补充]'}\n\n## 标志性元素\n\n[待 AI 分析]\n",
+        f"# Phong cách nội dung\n\n## Giọng điệu\n\n{tone}\n\n## Cấu trúc mở đầu\n\n[chờ AI phân tích nội dung đã đăng]\n\n## Phong cách hình ảnh\n\n[chờ AI phân tích]\n\n## Nhịp nội dung\n\n{formats or '[cần bổ sung]'}\n\n## Yếu tố nhận diện\n\n[chờ AI phân tích]\n",
         encoding='utf-8')
     (pd / 'audience.md').write_text(
-        '# 目标受众\n\n## 核心人群\n\n[待 AI 分析/待补充]\n\n## 兴趣标签\n\n[待补充]\n\n## 痛点\n\n[待补充]\n\n## 互动特征\n\n[待 AI 分析已发内容]\n',
+        '# Đối tượng mục tiêu\n\n## Nhóm khách hàng cốt lõi\n\n[chờ AI phân tích/cần bổ sung]\n\n## Chủ đề quan tâm\n\n[cần bổ sung]\n\n## Nỗi đau\n\n[cần bổ sung]\n\n## Đặc điểm tương tác\n\n[chờ AI phân tích nội dung đã đăng]\n',
         encoding='utf-8')
     plat_lines = []
     for p in platforms:
         url = links.get(p, '')
-        plat_lines.append(f"## {p}\n\n主页：{url or '[待补充]'}\n粉丝量级 / 内容形式：[待补充]\n")
+        plat_lines.append(f"## {p}\n\nTrang chủ: {url or '[cần bổ sung]'}\nQuy mô người theo dõi / dạng nội dung: [cần bổ sung]\n")
     (pd / 'platforms.md').write_text(
-        '# 平台运营\n\n' + ('\n'.join(plat_lines) if plat_lines else '[待补充]\n'),
+        '# Nền tảng vận hành\n\n' + ('\n'.join(plat_lines) if plat_lines else '[cần bổ sung]\n'),
         encoding='utf-8')
     (pd / 'preferences.md').write_text(
-        f"# 偏好与红线\n\n## 要做的\n\n{direction}\n\n## 不做的\n\n{avoid or '[待补充]'}\n\n## 合规底线\n\n{avoid or '[待补充]'}\n",
+        f"# Ưu tiên và lằn ranh đỏ\n\n## Những việc nên làm\n\n{direction}\n\n## Những việc không làm\n\n{avoid or '[cần bổ sung]'}\n\n## Giới hạn tuân thủ\n\n{avoid or '[cần bổ sung]'}\n",
         encoding='utf-8')
     (pd / 'memory.md').write_text(
-        f"# 经验沉淀\n\n## 内容洞察\n\n{'喜欢的内容/对标：' + likes if likes else '[待 AI 分析已收藏/点赞]'}\n\n## 踩过的坑\n\n[待积累]\n",
+        f"# Kinh nghiệm tích luỹ\n\n## Nhận định về nội dung\n\n{'Nội dung yêu thích/tham chiếu: ' + likes if likes else '[chờ AI phân tích nội dung đã lưu/thích]'}\n\n## Bài học thất bại\n\n[cần tích luỹ]\n",
         encoding='utf-8')
 
 
@@ -2373,12 +2373,12 @@ TREND_SOURCES: dict[str, tuple[str, str | None]] = {
     "toutiao": ("https://60s.viki.moe/v2/toutiao", None),
 }
 TREND_LABELS = {
-    "weibo": "微博",
-    "douyin": "抖音",
-    "zhihu": "知乎",
-    "bilibili": "B站",
-    "baidu": "百度",
-    "toutiao": "头条",
+    "weibo": "Weibo",
+    "douyin": "Douyin",
+    "zhihu": "Zhihu",
+    "bilibili": "Bilibili",
+    "baidu": "Baidu",
+    "toutiao": "Toutiao",
 }
 _TREND_CACHE: dict[str, tuple[float, list]] = {}
 
@@ -2495,7 +2495,7 @@ async def api_schedule_create(req: ScheduleItem):
     st = req.status if req.status in SCHEDULE_STATUSES else "idea"
     item = {
         "id": uuid.uuid4().hex[:12],
-        "title": req.title.strip() or ("未命名活动" if kind == "event" else "未命名"),
+        "title": req.title.strip() or ("Sự kiện chưa đặt tên" if kind == "event" else "Chưa đặt tên"),
         "date": req.date,
         "platform": req.platform,
         "time": req.time,
@@ -2519,7 +2519,7 @@ async def api_schedule_update(sid: str, req: ScheduleItem):
         if it.get("id") == sid:
             kind = req.kind if req.kind in SCHEDULE_KINDS else it.get("kind", "content")
             it.update({
-                "title": req.title.strip() or it.get("title", "未命名"),
+                "title": req.title.strip() or it.get("title", "Chưa đặt tên"),
                 "date": req.date,
                 "platform": req.platform,
                 "time": req.time,
@@ -2532,7 +2532,7 @@ async def api_schedule_update(sid: str, req: ScheduleItem):
             })
             _write_schedule(items)
             return it
-    raise HTTPException(404, "排期不存在")
+    raise HTTPException(404, "Lịch đăng không tồn tại")
 
 
 @app.delete("/api/schedule/{sid}")
@@ -2540,7 +2540,7 @@ async def api_schedule_delete(sid: str):
     items = _read_schedule()
     new = [it for it in items if it.get("id") != sid]
     if len(new) == len(items):
-        raise HTTPException(404, "排期不存在")
+        raise HTTPException(404, "Lịch đăng không tồn tại")
     _write_schedule(new)
     return {"ok": True, "deleted": sid}
 
@@ -2598,7 +2598,7 @@ async def api_ideas_create(req: IdeaItem):
     st = req.status if req.status in IDEA_STATUSES else "pending"
     item = {
         "id": uuid.uuid4().hex[:12],
-        "title": req.title.strip() or "未命名选题",
+        "title": req.title.strip() or "Ý tưởng chưa đặt tên",
         "note": req.note,
         "source": req.source,
         "status": st,
@@ -2615,14 +2615,14 @@ async def api_ideas_update(iid: str, req: IdeaItem):
     for it in items:
         if it.get("id") == iid:
             it.update({
-                "title": req.title.strip() or it.get("title", "未命名选题"),
+                "title": req.title.strip() or it.get("title", "Ý tưởng chưa đặt tên"),
                 "note": req.note,
                 "source": req.source,
                 "status": req.status if req.status in IDEA_STATUSES else it.get("status", "pending"),
             })
             _write_ideas(items)
             return it
-    raise HTTPException(404, "选题不存在")
+    raise HTTPException(404, "Ý tưởng không tồn tại")
 
 
 @app.delete("/api/ideas/{iid}")
@@ -2630,7 +2630,7 @@ async def api_ideas_delete(iid: str):
     items = _read_ideas()
     new = [it for it in items if it.get("id") != iid]
     if len(new) == len(items):
-        raise HTTPException(404, "选题不存在")
+        raise HTTPException(404, "Ý tưởng không tồn tại")
     _write_ideas(new)
     return {"ok": True, "deleted": iid}
 
