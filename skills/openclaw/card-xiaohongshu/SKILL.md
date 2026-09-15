@@ -1,6 +1,10 @@
 ---
 name: card-xiaohongshu
-description: "把已有卡片文案渲染为 1080×1440 小红书竖版知识卡片组，并按 card-design 选择视觉风格。当用户说“渲染/制作小红书卡片、知识卡、滑动卡片组”时使用。整套笔记策划与文案用 xhs-note-creator；横版金句卡用 card-quote。"
+description: >-
+  Render văn bản thẻ có sẵn thành bộ thẻ kiến thức dọc 1080×1440 dạng lướt (3-9 thẻ, mỗi thẻ một
+  ý), chọn phong cách theo card-design. Dùng khi người dùng nói "render bộ thẻ", "làm thẻ kiến
+  thức", "thẻ carousel dọc". Lập kế hoạch + viết cả bài → xhs-note-creator; thẻ ngang →
+  card-quote.
 layer: produce
 ---
 

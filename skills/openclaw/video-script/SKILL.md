@@ -1,14 +1,10 @@
 ---
 name: video-script
-description: >
-  生成视频脚本，覆盖短视频（7-60秒）到中长视频（1-30分钟）全时长。
-  短视频：Hook 变体评分、分秒计时、字幕文案、封面方案。
-  中长视频：留存率优化、节奏中断点、前向钩子、章节结构。
-  适用于抖音、视频号、小红书视频、B站、YouTube 等平台。
-  当用户说"视频脚本"、"短视频脚本"、"抖音脚本"、"B站脚本"、
-  "视频号脚本"、"竖版视频"、"Reel 脚本"、"写个视频文案"时使用。
-  和 video-strategy 的区别：video-strategy 做视频内容规划和系列策划，
-  video-script 写具体某一条视频的脚本。
+description: >-
+  Viết kịch bản video ngắn 7-60 giây (Hook chấm điểm, bấm giờ theo giây, phụ đề, bìa) hay dài 1-30
+  phút (giữ chân, ngắt nhịp, hook dẫn tiếp, chương) cho TikTok, Reels, YouTube. Dùng khi người
+  dùng nói "kịch bản video", "kịch bản TikTok", "viết lời video". Kế hoạch series →
+  video-strategy.
 layer: produce
 ---
 

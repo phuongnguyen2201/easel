@@ -1,9 +1,10 @@
 ---
 name: copywriting
-description: >
-  国内带货转化营销文案：提炼卖点并产出种草、信息流广告、活动促销、电商详情页或落地页的标题、正文和 CTA。
-  当用户说“写种草/广告/活动/促销/详情页/落地页文案、提炼卖点、广告语”时使用。
-  整套小红书笔记用 xhs-note-creator；涨粉互动内容用 social-content；严格套 PAS/AIDA 等框架用 post-formatter。
+description: >-
+  Chắt lọc điểm bán, viết tiêu đề, thân, CTA bán hàng cho seeding, quảng cáo, khuyến mãi, trang
+  sản phẩm, landing page. Dùng khi người dùng nói "bài seeding", "viết quảng cáo", "mô tả sản
+  phẩm". Bài ảnh-chữ trọn bộ → xhs-note-creator, tăng follow → social-content, ép khung →
+  post-formatter.
 layer: produce
 ---
 

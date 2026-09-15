@@ -1,9 +1,10 @@
 ---
 name: novel-writer
-description: >
-  长篇小说/网文连载创作：从世界观、人设和三级大纲写到逐章正文，并用文件化状态维护伏笔、前情和跨章一致性。
-  当用户说“写小说/网文/盐选故事、连载、续写下一章、小说大纲、人物设定、世界观、黄金三章”时使用。
-  通用文章用 article-outline/social-content；单段改风格或润色用 style-transfer/text-polisher。
+description: >-
+  Viết tiểu thuyết/truyện dài kỳ: thế giới, nhân vật, dàn ý 3 cấp, từng chương (3 chương đầu giữ
+  chân); trạng thái lưu file giữ mạch ngầm, tiền truyện, nhất quán. Dùng khi người dùng nói "viết
+  truyện", "viết tiếp chương", "dàn ý truyện". Bài thường → social-content; một đoạn →
+  text-polisher.
 layer: produce
 ---
 

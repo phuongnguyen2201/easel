@@ -1,12 +1,9 @@
 ---
 name: text-condenser
 description: >-
-  字数裁剪/摘要：把长文本压缩到指定字数，保留核心信息。支持硬裁剪（严格字数）、
-  摘要（保留要点）、金句提取（只保留最精华的句子）三种模式。
-  特别适合从长文生成平台适配的短文。
-  使用时机：用户说"裁到 140 字"、"压缩一下"、"太长了"、"摘要"、"精简"、
-  "缩写"、"字数裁剪"、"帮我缩短"、"提炼要点"。
-  和 text-polisher 的区别：polisher 润色文案不改长度，condenser 压缩篇幅不做质量提升。
+  Cắt/tóm tắt văn bản về số chữ chỉ định, giữ ý cốt lõi, 3 chế độ: cắt cứng (đúng số chữ), tóm tắt
+  (giữ ý), trích câu đắt; ra bản ngắn vừa giới hạn nền tảng. Dùng khi người dùng nói "cắt còn 200
+  chữ", "dài quá", "rút gọn", "tóm tắt", "lọc ý chính". text-polisher trau chuốt không đổi độ dài.
 layer: produce
 ---
 

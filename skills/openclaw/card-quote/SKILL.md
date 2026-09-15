@@ -1,6 +1,10 @@
 ---
 name: card-quote
-description: "生成适合微博、知乎、公众号或 X/Twitter 分享的 16:9 横版金句卡和数据卡。当用户说“做金句卡、语录卡、数据卡、横版分享卡”时使用。小红书竖版知识卡用 card-xiaohongshu，竖版营销海报用 poster-hero。"
+description: >-
+  Sinh thẻ trích dẫn/thẻ số liệu ngang 16:9 (một câu hero hay cụm số chính) để chia sẻ trên
+  Facebook, Threads/X, LinkedIn. Dùng khi người dùng nói "làm thẻ trích dẫn", "thẻ quote", "thẻ số
+  liệu", "thẻ ngang chia sẻ". Thẻ kiến thức dọc → card-xiaohongshu; poster dọc marketing →
+  poster-hero.
 layer: produce
 ---
 

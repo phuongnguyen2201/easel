@@ -1,9 +1,10 @@
 ---
 name: ecom-details-image
 description: >-
-  生成电商商品视觉方案：主图概念、场景图、详情页视觉方向和 AI 生图 Prompt。
-  当用户说"商品主图""详情页视觉""电商配图方案""商品场景图""带货视觉""产品视觉方向""详情页设计"时使用。
-  本 SKILL 出视觉方案+生图 Prompt（策划）；实际抠白底图用 remove-bg，实际生成图片用 ai-image-gen。
+  Lập phương án ảnh sản phẩm thương mại điện tử: ý tưởng ảnh chính, ảnh bối cảnh, hướng ảnh trang
+  chi tiết và Prompt sinh ảnh AI. Dùng khi người dùng nói "ảnh chính sản phẩm", "ảnh trang chi
+  tiết", "phương án ảnh bán hàng". Chỉ lập kế hoạch; tách nền → remove-bg, sinh ảnh →
+  ai-image-gen.
 layer: produce
 ---
 

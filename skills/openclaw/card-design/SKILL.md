@@ -1,8 +1,10 @@
 ---
 name: card-design
-description: >
-  社媒卡片视觉设计系统：提供配色、中文字体层级、满画幅布局、品类骨架和死空白/密度质检，避免模板化 PPT 与廉价 AI 感。
-  当用户说“卡片难看、优化视觉、封面/海报设计、排版配色、卡片填不满、AI 味重”时使用；所有 card-*、poster-hero 等视觉产出应把它作为设计规范，而非最终渲染器。
+description: >-
+  Hệ thiết kế hình ảnh cho thẻ mạng xã hội: màu, phân cấp chữ, bố cục kín khung, khung xương theo
+  loại, soát khoảng trống chết; chống PPT mẫu, mùi AI rẻ tiền. Dùng khi người dùng nói "thẻ xấu
+  quá", "tối ưu hình ảnh", "màu và bố cục", "nhìn AI quá". Chuẩn cho card-*, poster-hero, không tự
+  render.
 layer: produce
 ---
 

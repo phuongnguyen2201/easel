@@ -1,6 +1,10 @@
 ---
 name: ai-image-gen
-description: "通用 AI 生图：文生图 / 图生图 / 图像变体。当用户说 AI 生图、AI 画图、文生图、图生图、生成图片、生成配图、图像生成、AI 出图、AI 作图、换图、改图、图像编辑、给我画一张、生成一张图 时使用。支持 OpenAI 兼容 API 与 apimart 异步 API，用户自备 API key。"
+description: >-
+  Sinh ảnh AI mọi chủ đề: chữ thành ảnh, ảnh thành ảnh, biến thể ảnh qua API tương thích OpenAI
+  hay API bất đồng bộ apimart, người dùng tự có API key. Dùng khi người dùng nói "tạo ảnh AI", "vẽ
+  giúp tôi một tấm", "sinh ảnh minh hoạ", "sửa ảnh bằng AI". Ảnh sản phẩm e-com →
+  ecom-details-image.
 layer: produce
 ---
 

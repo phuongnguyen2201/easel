@@ -1,6 +1,10 @@
 ---
 name: green-screen
-description: "绿幕抠像 / 换背景 / 合成：把绿幕（或蓝幕/指定色）拍摄的前景人物抠出来，合成到新背景——图片、视频、纯色或前景自身模糊。当用户说 绿幕、抠像、抠图换背景、去绿幕、chromakey、绿幕合成、换背景、蓝幕、把绿幕背景换掉、人物抠出来、绿布 时使用。基于 shared/scripts/chromakey.py（ffmpeg chromakey + despill）。与 video-reframe 区别：reframe 只改画幅不换背景；与 ai-image-gen 区别：那个生成新图，本 SKILL 处理已拍的绿幕素材。"
+description: >-
+  Tách nhân vật quay trên phông xanh/xanh dương, ghép vào nền mới: ảnh, video, màu đơn hay chính
+  tiền cảnh làm mờ. Dùng khi người dùng nói "tách phông xanh", "đổi nền video", "xoá phông xanh",
+  "chromakey". video-reframe chỉ đổi khung; ai-image-gen sinh ảnh mới, skill này xử lý phông xanh
+  đã quay.
 layer: produce
 ---
 

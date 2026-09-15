@@ -1,9 +1,9 @@
 ---
 name: multi-voice-dubbing
-description: >
-  多角色对话配音：按 cast 和逐行对白为不同角色分配音色与情绪，合成多声线音轨和带角色名字幕。
-  当用户说“多角色/双人/剧本/对话配音、多人对白、不同角色不同声音、有声剧配音”时使用。
-  单一公共音色用 tts-voiceover；克隆本人音色用 voice-clone；整部短剧制作由 short-drama 编排。
+description: >-
+  Lồng tiếng nhiều vai: cast gán giọng từng vai, mỗi dòng thoại có cảm xúc, ra track nhiều giọng +
+  phụ đề tên vai. Dùng khi người dùng nói "lồng tiếng hội thoại", "lồng tiếng hai người", "mỗi vai
+  một giọng". Một giọng → tts-voiceover; clone giọng → voice-clone; phim ngắn → short-drama.
 layer: produce
 ---
 

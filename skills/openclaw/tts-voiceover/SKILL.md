@@ -1,6 +1,10 @@
 ---
 name: tts-voiceover
-description: "文字转语音配音：把文案/脚本合成为 AI 语音口播、旁白、朗读音频。**配了 VOICE_PROVIDER 默认走闭源云 TTS（CosyVoice2 等，有情感、像真人），edge 仅无 key 时兜底**（edge 偏机械/AI 味）；同步输出分句 SRT 字幕、mp3/wav/m4a。合成后可与 BGM 混音或加到视频作旁白。当用户说“配音”“文字转语音”“TTS”“AI 配音”“口播语音”“旁白”“朗读”“把这段文字读出来”“生成语音”“语音合成”时使用。"
+description: >-
+  Chuyển văn bản thành giọng đọc AI (lời dẫn, thuyết minh, đọc bài): có VOICE_PROVIDER → TTS đám
+  mây giọng tự nhiên có cảm xúc; không key → edge-tts dự phòng (giọng máy hơn). Xuất mp3/wav/m4a +
+  SRT tách câu. Dùng khi người dùng nói "lồng tiếng AI", "TTS", "tạo giọng đọc", "đọc đoạn này
+  lên".
 layer: produce
 ---
 

@@ -1,6 +1,9 @@
 ---
 name: mindmap
-description: "思维导图：把 Markdown 大纲（标题层级 + 列表）渲染成可交互思维导图 HTML，可选导出 PNG。适合知识结构、内容框架、SWOT、脑图梳理。当用户说 思维导图、脑图、mindmap、知识导图、大纲图、把要点做成脑图、内容结构图、SWOT图、树状图 时使用。基于 shared/scripts/mindmap.py（markmap 自包含 HTML + Chromium 渲染 PNG）。与 chart-visualization/infographic 区别：那些做数据图表/信息图，本 SKILL 专做层级大纲思维导图。"
+description: >-
+  Render dàn ý Markdown thành sơ đồ tư duy HTML tương tác (markmap), tuỳ chọn xuất PNG (Chromium);
+  hợp cấu trúc kiến thức, khung nội dung, SWOT. Dùng khi người dùng nói "sơ đồ tư duy", "mindmap",
+  "sơ đồ cây", "vẽ sơ đồ ý chính". Biểu đồ số liệu/infographic → chart-visualization/infographic.
 layer: produce
 ---
 

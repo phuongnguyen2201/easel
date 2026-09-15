@@ -1,11 +1,10 @@
 ---
 name: social-content
 description: >-
-  通用多平台社媒内容（单条/兜底）：钩子文案、正文、标签策略和互动引导，主打**涨粉/互动/内容运营**，
-  支持微博/抖音/B站/知乎/公众号/X 等；平台不确定或要多平台一次成稿时的默认选择。
-  当用户说"写条微博""发个帖子""社媒文案""发什么内容""帮我写个帖""涨粉内容""互动内容"时使用。
-  边界：**小红书整套笔记/图文/种草**找 xhs-note-creator；**带货转化/卖点/详情页**找 copywriting；
-  **严格套 PAS/AIDA 框架排版**找 post-formatter。
+  Viết bài mạng xã hội cho Facebook, TikTok, YouTube, Zalo, mặc định khi chưa rõ nền tảng: hook,
+  thân, hashtag, CTA tương tác. Dùng khi người dùng nói "viết bài đăng", "viết caption", "bài tăng
+  follow". Bài ảnh-chữ trọn bộ → xhs-note-creator, bán hàng → copywriting, ép khung →
+  post-formatter.
 layer: produce
 ---
 

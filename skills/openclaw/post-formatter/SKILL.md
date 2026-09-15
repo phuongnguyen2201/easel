@@ -1,10 +1,9 @@
 ---
 name: post-formatter
-description: >
-  用 PAS、AIDA、BAB、STAR、SLAY 等经典框架将主题结构化为社媒帖子。
-  200-250 字、20 行以内、移动端友好排版。适用于公众号、知乎、微博、LinkedIn 等长文帖子。
-  当用户说"用 PAS 写"、"AIDA 框架"、"结构化帖子"、"套框架写"时使用。
-  和 social-content 的区别：post-formatter 严格套用营销框架，social-content 偏自由写作。
+description: >-
+  Cấu trúc chủ đề theo khung kinh điển PAS, AIDA, BAB, STAR, SLAY thành bài ngắn tối đa 20 dòng,
+  dễ đọc trên mobile, hợp bài chữ trên Facebook, LinkedIn, blog. Dùng khi người dùng nói "viết
+  theo PAS", "công thức AIDA", "viết theo khung". Khác social-content: viết tự do, không bó khung.
 layer: produce
 ---
 

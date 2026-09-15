@@ -1,9 +1,10 @@
 ---
 name: paper-explainer
-description: >
-  科研论文解读：解析 arXiv/PDF 的公式与图表，提炼问题、贡献、方法、关键图和结论，再产出 B站/视频号解读视频或知乎/公众号图文。
-  当用户说“论文解读、讲论文、论文转视频/图文、科研科普、arXiv、学术视频”时使用。
-  本 SKILL 从论文做内容；video-to-article 从视频做图文，doc-convert 只转换文档格式。
+description: >-
+  Giải thích bài báo khoa học từ arXiv/PDF (công thức, hình): rút vấn đề, đóng góp, phương pháp,
+  hình chính, kết luận → video giải thích hay bài ảnh-chữ. Dùng khi người dùng nói "giải thích
+  paper", "tóm tắt bài báo", "paper ra video". video-to-article từ video, doc-convert chỉ đổi định
+  dạng.
 layer: produce
 ---
 

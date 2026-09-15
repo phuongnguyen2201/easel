@@ -1,6 +1,9 @@
 ---
 name: chart-visualization
-description: "将数据可视化为图表。当用户需要生成柱状图、折线图、饼图、散点图、雷达图、桑基图、思维导图、流程图等图表时调用此技能，通过 curl 工具调用 AntV API 生成图表图片。产出静态图片 URL（25+ 类型）；要本地渲染的信息图/GIF 动画图表用 infographic，要 CSV/JSON→整页报告用 data-report"
+description: >-
+  Vẽ biểu đồ từ dữ liệu, 25+ loại: cột, đường, tròn, radar, sankey, sơ đồ tư duy, lưu đồ; gọi AntV
+  API qua mạng, trả URL ảnh tĩnh. Dùng khi người dùng nói "vẽ biểu đồ", "biểu đồ cột/tròn", "làm
+  chart". Infographic/GIF render cục bộ → infographic; báo cáo cả trang từ CSV/JSON → data-report.
 layer: produce
 ---
 

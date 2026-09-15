@@ -1,6 +1,10 @@
 ---
 name: voice-clone
-description: "上传本人语音样本克隆专属音色，再用它合成口播、旁白或带货语音。当用户说“声音克隆、克隆/复刻我的声音、用我的声音配音、定制专属音色”时使用，需要用户自备云端 provider 凭证。使用公共现成音色时改用 tts-voiceover。"
+description: >-
+  Tải mẫu giọng của chính người dùng để nhân bản giọng riêng qua provider đám mây (người dùng tự
+  có key), rồi tổng hợp lời dẫn, thuyết minh, giọng bán hàng bằng giọng đó. Dùng khi người dùng
+  nói "clone giọng", "nhân bản giọng tôi", "lồng tiếng bằng giọng tôi". Giọng có sẵn →
+  tts-voiceover.
 layer: produce
 ---
 

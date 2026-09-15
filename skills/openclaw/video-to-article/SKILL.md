@@ -1,6 +1,10 @@
 ---
 name: video-to-article
-description: "把口播、讲座、直播或 Vlog 转录并改写成小红书笔记、公众号文章或知乎内容，同时抽帧配图。当用户说“视频转图文/文章/笔记、视频扒文案、口播转文章、视频内容复用”时使用。只生成字幕文件用 auto-subtitle；翻译已有字幕用 subtitle-translate。"
+description: >-
+  Bóc băng video nói, bài giảng, livestream, vlog rồi viết lại thành bài Facebook, blog, bài
+  ảnh-chữ, kèm trích khung hình làm ảnh minh hoạ. Dùng khi người dùng nói "chuyển video thành bài
+  viết", "viết bài từ video", "bóc băng". Chỉ phụ đề → auto-subtitle, dịch phụ đề →
+  subtitle-translate.
 layer: produce
 ---
 

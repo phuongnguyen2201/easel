@@ -1,6 +1,9 @@
 ---
 name: image-enhance
-description: "图片增强 / 放大 / 变清晰：高质量放大（Lanczos 2x/4x）+ 去噪 + 锐化 + 自动对比度/饱和度，改善偏糊、偏暗、噪点多的图片。当用户说 图片放大、图片变清晰、提高清晰度、图片增强、去噪点、锐化、图片太糊了、放大到高清、提升画质、优化图片、图片调亮调色 时使用。基于 shared/scripts/img_enhance.py（Pillow+OpenCV）。注意：这是传统增强非 AI 超分，凭空生成细节请用 ai-image-gen 图生图。与 image-editing 区别：那个做缩放/裁切/水印等常规操作，本 SKILL 专做画质提升。"
+description: >-
+  Nâng chất ảnh mờ/tối/nhiễu: phóng to 2x/4x, khử nhiễu, làm nét, tự động tương phản/bão hoà. Dùng
+  khi người dùng nói "ảnh bị mờ", "làm nét ảnh", "phóng to không vỡ", "chỉnh sáng ảnh". Không phải
+  AI siêu phân giải: vẽ thêm chi tiết → ai-image-gen; resize/cắt/watermark → image-editing.
 layer: produce
 ---
 

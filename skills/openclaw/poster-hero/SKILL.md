@@ -1,6 +1,10 @@
 ---
 name: poster-hero
-description: "生成 1080×1920 竖版营销海报，包含大标题、核心卖点和可选二维码，适合产品发布、活动宣传与朋友圈传播。当用户说“做竖版营销海报、活动宣传图、朋友圈海报、产品发布海报”时使用。横版金句卡用 card-quote，小红书知识卡用 card-xiaohongshu。"
+description: >-
+  Sinh poster marketing dọc 1080×1920: tiêu đề lớn, điểm bán chính, QR tuỳ chọn; cho ra mắt sản
+  phẩm, quảng bá sự kiện, chia sẻ story/feed. Dùng khi người dùng nói "làm poster dọc", "poster sự
+  kiện", "poster ra mắt", "ảnh story". Thẻ ngang → card-quote; thẻ kiến thức dọc →
+  card-xiaohongshu.
 layer: produce
 ---
 

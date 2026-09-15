@@ -1,9 +1,9 @@
 ---
 name: clipify
 description: >-
-  从长视频中自动提取精彩片段，切成独立短视频，支持 16:9→9:16 竖版转制和逐字字幕烧录。
-  当用户说"视频切片""提取精彩片段""长视频切短""切成短视频""高光剪辑""逐字字幕""转竖版短视频"时使用。
-  和 video-highlights 的区别：clipify 专做英文口播找笑点+动态人脸 pan；video-highlights 更通用（中文/直播皆可），静态转竖版更稳。
+  Tự trích clip hay (điểm gây cười) từ video dài nói tiếng Anh, chuyển dọc 9:16 với pan bám mặt,
+  đốt phụ đề từng chữ. Dùng khi người dùng nói "cắt clip từ video dài", "trích đoạn hay", "phụ đề
+  từng chữ". video-highlights tổng quát hơn (mọi ngôn ngữ/livestream), chuyển dọc tĩnh ổn hơn.
 layer: produce
 ---
 

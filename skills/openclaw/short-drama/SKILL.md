@@ -1,9 +1,9 @@
 ---
 name: short-drama
-description: >
-  制作多集 AI 微短剧：建立剧集圣经和角色参考，完成分集剧本、逐镜 I2V、对白审计、配音字幕 BGM 与成片，保持跨镜跨集一致性。
-  当用户说“AI/横屏/竖屏/微短剧、拍短剧、分集剧本、连续剧情视频、做几集短剧”时使用。
-  单条非剧情视频用 auto-short-video；只写单条脚本用 video-script；只生成一个视频片段用 ai-video-gen。
+description: >-
+  Làm phim ngắn AI nhiều tập: kinh thánh phim, kịch bản, ảnh→video từng cảnh, lồng tiếng + phụ đề,
+  nhất quán nhân vật xuyên tập. Dùng khi người dùng nói "phim ngắn AI", "kịch bản từng tập", "phim
+  nhiều tập". Video đơn → auto-short-video, chỉ kịch bản → video-script, một đoạn → ai-video-gen.
 layer: produce
 ---
 

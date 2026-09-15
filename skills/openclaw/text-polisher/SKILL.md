@@ -1,11 +1,10 @@
 ---
 name: text-polisher
-description: >
-  文本润色打磨：七轮聚焦扫描（清晰度/语气/价值感/证据/具体性/情感/风险）
-  + 去 AI 感改写（砍填充短语、打破公式化结构、主动语态、变化节奏）。
-  当用户说"帮我改一下"、"润色"、"文案打磨"、"编辑文案"、
-  "去 AI 感"、"太像 AI 了"、"改自然"、"校对"、"文案优化"时使用。
-  合并了原 copy-editing（系统化编辑）和 stop-slop（去 AI 感）的能力。
+description: >-
+  Trau chuốt văn bản: 7 vòng quét tập trung (rõ ràng/giọng/giá trị/bằng chứng/cụ thể/cảm xúc/rủi
+  ro) + khử mùi AI (cắt câu đệm, phá cấu trúc công thức, câu chủ động, đổi nhịp), kèm bảng điểm.
+  Dùng khi người dùng nói "sửa giúp tôi", "trau chuốt", "nghe AI quá", "cho tự nhiên hơn", "soát
+  lỗi".
 layer: produce
 ---
 

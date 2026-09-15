@@ -72,56 +72,56 @@
 
 | Skill | 功能介绍 |
 |---|---|
-| `ai-image-gen` | 通用 AI 生图：文生图 / 图生图 / 图像变体。 |
-| `ai-music` | AI 音乐 / BGM 生成：给短视频、社媒内容生成原创背景音乐 / 配乐 / 纯音乐。通过可插拔 provider（阿里 DashScope / Suno 类第三方 API）文生音乐，异步提交→轮询→下载，产物可再裁剪/归一化或加到视频。 |
-| `ai-video-gen` | AI 视频生成：文生视频 / 图生视频 / 数字人首帧驱动。通过可插拔 provider（通义万相 Wan / 火山 Seedance / 快手可灵 / OpenAI 兼容）异步生成视频，需要配置相应生成服务。 |
-| `audio-denoise` | 音频降噪：去除录音中的背景噪声、电流声、风噪、嗡嗡声。 |
-| `audio-editing` | 通用音频处理：音频剪辑/裁剪、格式转码（mp3/wav/m4a/aac）、音量归一化、从视频提取音轨、多段拼接、淡入淡出、变速（保音高）。 |
-| `audio-mix` | 音频混合 / 混音：把旁白口播 + 背景音乐 + 音效混成一轨，BGM 自动循环补足并可闪避（旁白说话时自动压低 BGM 保证人声清晰）。 |
-| `audio-visualizer` | 音频可视化视频：把纯音频（播客片段、音乐、口播金句、电台）渲染成带动态波形/频谱的视频，配封面和标题，好发到抖音/B站/视频号等只收视频的平台。 |
-| `auto-short-video` | 一句话主题 → 成品短视频：自动串联 文案→配图/AI视频→配音→字幕→BGM→合成，把 Easel 制作层零件编排成一条'一键出片'流水线。单条视频、口播/资讯向，画面默认逐句配图 + Ken Burns 缓动，需要动态时才逐段图生视频。 |
-| `auto-subtitle` | 自动字幕 / 语音转字幕：把音频或视频里的语音识别成字幕文件（SRT/ASS/TXT/JSON），可选把字幕烧录进视频。 |
-| `beat-sync-video` | 音乐卡点视频 / 踩点视频：检测背景音乐的节拍，让图片或片段在节拍点上切换，配推进/白闪特效，做出燃系'卡点'短视频。 |
-| `card-design` | 社媒卡片视觉设计系统：提供配色、中文字体层级、满画幅布局、品类骨架和死空白/密度质检，避免模板化 PPT 与廉价 AI 感。 |
-| `card-quote` | 生成适合微博、知乎、公众号或 X/Twitter 分享的 16:9 横版金句卡和数据卡。 |
-| `card-xiaohongshu` | 把已有卡片文案渲染为 1080×1440 小红书竖版知识卡片组，并按 card-design 选择视觉风格。 |
-| `chart-visualization` | 将数据可视化为图表。当用户需要生成柱状图、折线图、饼图、散点图、雷达图、桑基图、思维导图、流程图等图表时调用此技能，通过 curl 工具调用 AntV API 生成图表图片。产出静态图片 URL（25+ 类型）。 |
-| `clipify` | 从长视频中自动提取精彩片段，切成独立短视频，支持 16:9→9:16 竖版转制和逐字字幕烧录。 |
-| `comparison-card` | 对比图/一图流：生成 A vs B 参数对比图、优劣势对比表、产品参数一图流。 用 HTML+CSS 渲染成可截图的视觉卡片，适合小红书/微博等平台分享。 |
-| `copywriting` | 国内带货转化营销文案：提炼卖点并产出种草、信息流广告、活动促销、电商详情页或落地页的标题、正文和 CTA。 |
-| `data-report` | 把 CSV、Excel 或 JSON 数据生成包含 KPI、图表和洞察的完整可视化报告页。 |
-| `doc-convert` | 把 Markdown 文稿排版并转换为 HTML、可打印 PDF 或长图 PNG。 |
-| `ecom-details-image` | 生成电商商品视觉方案：主图概念、场景图、详情页视觉方向和 AI 生图 Prompt。 |
-| `green-screen` | 绿幕抠像 / 换背景 / 合成：把绿幕（或蓝幕/指定色）拍摄的前景人物抠出来，合成到新背景——图片、视频、纯色或前景自身模糊。 |
-| `image-editing` | 通用图像处理加工：改尺寸/缩放、裁剪、补边适配平台尺寸、格式转换（png/jpg/webp）、 压缩到目标大小、加文字或图片水印、圆角、多图拼接、生成缩略图、读图片信息。 基于 image_ops.py 确定性处理。 |
-| `image-enhance` | 图片增强 / 放大 / 变清晰：高质量放大（Lanczos 2x/4x）+ 去噪 + 锐化 + 自动对比度/饱和度，改善偏糊、偏暗、噪点多的图片。 |
-| `infographic` | 将数据或文字内容转化为可视化信息图，支持静态（AntV）和动画 GIF 两种模式。当用户需要制作信息图、数据可视化、流程图、对比图、动画图表、GIF 图表、思维导图、SWOT 分析图时调用。本地渲染信息图/GIF 动画。 |
-| `meme-generator` | 表情包 / Meme 生成：给图片加经典上下大字（白字黑边）做梗图，或在图上/下加配文条做反应图（'当…的时候'格式）。中英文都支持，自动换行和字号自适应。 |
-| `mindmap` | 思维导图：把 Markdown 大纲（标题层级 + 列表）渲染成可交互思维导图 HTML，可选导出 PNG。适合知识结构、内容框架、SWOT、脑图梳理。 |
-| `multi-voice-dubbing` | 多角色对话配音：按 cast 和逐行对白为不同角色分配音色与情绪，合成多声线音轨和带角色名字幕。 |
-| `novel-writer` | 长篇小说/网文连载创作：从世界观、人设和三级大纲写到逐章正文，并用文件化状态维护伏笔、前情和跨章一致性。 |
-| `paper-explainer` | 科研论文解读：解析 arXiv/PDF 的公式与图表，提炼问题、贡献、方法、关键图和结论，再产出 B站/视频号解读视频或知乎/公众号图文。 |
-| `post-formatter` | 用 PAS、AIDA、BAB、STAR、SLAY 等经典框架将主题结构化为社媒帖子。 200-250 字、20 行以内、移动端友好排版。适用于公众号、知乎、微博、LinkedIn 等长文帖子。 |
-| `poster-hero` | 生成 1080×1920 竖版营销海报，包含大标题、核心卖点和可选二维码，适合产品发布、活动宣传与朋友圈传播。 |
-| `remove-bg` | 图片去背景 / 抠图 / 换背景：用 AI 语义分割把主体从背景抠出，输出透明 PNG，或直接换成纯色（电商白底）/ 新场景背景。无需绿幕。 |
-| `short-drama` | 制作多集 AI 微短剧：建立剧集圣经和角色参考，完成分集剧本、逐镜 I2V、对白审计、配音字幕 BGM 与成片，保持跨镜跨集一致性。 |
-| `slideshow-video` | 图片相册 → 视频：把一组图片做成带 Ken Burns 缓慢缩放、图间转场、背景音乐和逐图字幕的视频，自动适配平台画幅（竖版/方形/横版）。 |
-| `social-content` | 通用多平台社媒内容（单条/兜底）：钩子文案、正文、标签策略和互动引导，主打涨粉/互动/内容运营， 支持微博/抖音/B站/知乎/公众号/X 等；平台不确定或要多平台一次成稿时的默认选择。 |
-| `style-transfer` | 文案风格迁移：把一段文案从一种风格改写成另一种风格（严肃→搞笑、书面→口语、文艺→直白、正式→社交媒体感）， 支持风格参考（给一段目标风格的示例文本）。 |
-| `subtitle-translate` | 字幕翻译 / 双语字幕：把已有字幕（SRT/VTT/ASS）翻译成目标语言，生成双语（原文+译文）或纯译文字幕，并可软挂载 / 硬烧录进视频。 |
-| `text-condenser` | 字数裁剪/摘要：把长文本压缩到指定字数，保留核心信息。支持硬裁剪（严格字数）、 摘要（保留要点）、金句提取（只保留最精华的句子）三种模式。 特别适合从长文生成平台适配的短文。 |
-| `text-polisher` | 文本润色打磨：七轮聚焦扫描（清晰度/语气/价值感/证据/具体性/情感/风险） + 去 AI 感改写（砍填充短语、打破公式化结构、主动语态、变化节奏）。 |
-| `tts-voiceover` | 文字转语音配音：把文案/脚本合成为 AI 语音口播、旁白、朗读音频。配了 VOICE_PROVIDER 默认走闭源云 TTS（CosyVoice2 等，有情感、像真人），edge 仅无 key 时兜底（edge 偏机械/AI 味）；同步输出分句 SRT 字幕、mp3/wav/m4a。 |
-| `video-chapters` | 视频章节 / 时间戳目录：给中长视频自动生成章节划分和时间戳目录，用于 B站分P/YouTube 章节/视频描述区，方便观众跳转、提升完播。 |
-| `video-editing` | 用自然语言指令剪辑视频：裁剪、拼接、变速、跳切去静音、文字覆盖、横竖比转换、抽帧封面、转 GIF、压缩、加 BGM/水印。 |
-| `video-highlights` | 长视频 / 直播录像高光切片：从一条长视频里找出高光片段，切成多条独立短视频，可选转竖版 9:16 + 加字幕。找点两种方式——音频能量峰值（情绪高涨/欢呼/大声处）或转录后由内容判断挑金句段。 |
-| `video-intro-outro` | 视频片头 / 片尾：生成带标题、副标题、logo、关注引导的片头卡片和片尾卡片，并拼接到主视频（硬切或淡入淡出转场）。 |
-| `video-reframe` | 智能转换视频画幅，支持 9:16/16:9/1:1、模糊背景填充、焦点裁切和人脸居中裁切。 |
-| `video-script` | 生成视频脚本，覆盖短视频（7-60秒）到中长视频（1-30分钟）全时长。 短视频：Hook 变体评分、分秒计时、字幕文案、封面方案。 中长视频：留存率优化、节奏中断点、前向钩子、章节结构。 适用于抖音、视频号、小红书视频、B站、YouTube 等平台。 |
-| `video-strategy` | 视频制作策略与工具选型：AI 视频生成模型对比、视频脚本结构设计、制作流程规划，覆盖产品演示/解说/社媒短视频场景。 |
-| `video-to-article` | 把口播、讲座、直播或 Vlog 转录并改写成小红书笔记、公众号文章或知乎内容，同时抽帧配图。 |
-| `voice-clone` | 上传本人语音样本克隆专属音色，再用它合成口播、旁白或带货语音。 |
-| `xhs-note-creator` | 小红书内容总入口：生成标题、正文、caption、hashtags，以及 3-9 张图文卡片或短视频分镜，覆盖素材分析、卖点评估、去 AI 味和质检。 |
+| `ai-image-gen` | Sinh ảnh AI mọi chủ đề: chữ thành ảnh, ảnh thành ảnh theo lệnh chỉnh sửa và biến thể từ một ảnh, qua API tương thích OpenAI hoặc API bất đồng bộ apimart với API key của người dùng, xuất vào outputs/. |
+| `ai-music` | Sinh nhạc nền/BGM gốc (không lời hoặc có hát) cho video ngắn và nội dung mạng xã hội từ mô tả phong cách qua provider cắm được (MUSIC_PROVIDER): gửi bất đồng bộ, poll rồi tải về, sau đó cắt, chuẩn hoá hay gắn vào video. |
+| `ai-video-gen` | Sinh video mới bằng AI từ 0: chữ→video, ảnh→video (làm ảnh động), người ảo dẫn từ khung đầu; gọi bất đồng bộ qua provider cắm được (VIDEO_PROVIDER trong .env) với API key của người dùng, xuất video vào outputs/. |
+| `audio-denoise` | Khử ồn bản ghi âm: lọc tiếng nền, tiếng rè điện, gió, ù bằng chuỗi filter ffmpeg (afftdn/highpass/lowpass, tuỳ chọn RNNoise) theo 3 mức, xử lý cả audio lẫn track tiếng của video, kèm báo cáo trước–sau. |
+| `audio-editing` | Xử lý âm thanh chung qua audio_ops.py: cắt đoạn, đổi định dạng mp3/wav/m4a/aac, chuẩn hoá âm lượng, tách audio từ video, nối nhiều đoạn, fade in/out, đổi tốc độ giữ cao độ; xuất file mới vào outputs/, giữ bản gốc. |
+| `audio-mix` | Trộn lời dẫn, nhạc nền và hiệu ứng thành một track audio thuần qua audio_mix.py: BGM tự lặp cho đủ dài lời dẫn, ducking tự hạ nhạc khi có giọng nói, hiệu ứng đặt theo mốc giây, xuất mp3/wav/m4a. |
+| `audio-visualizer` | Render audio thuần (podcast, nhạc, câu nói hay, radio) thành video mp4 có sóng/phổ động (cqt/bars/waves/spectrum) kèm ảnh bìa và tiêu đề qua audio_viz.py để đăng lên các nền tảng chỉ nhận video. |
+| `auto-short-video` | Từ một câu chủ đề tự nối lời → ảnh minh hoạ/AI video → giọng đọc → phụ đề → BGM → ghép thành một video ngắn hoàn chỉnh dạng nói/tin tức; hình mặc định ảnh theo từng câu + Ken Burns, chỉ ảnh→video ở cảnh cần chuyển động. |
+| `auto-subtitle` | Nhận dạng giọng nói trong file audio hoặc video thành file phụ đề SRT/ASS/TXT/JSON qua asr.py (faster-whisper), tự tách âm thanh từ video, tuỳ chọn đốt phụ đề cứng vào video bằng ffmpeg. |
+| `beat-sync-video` | Dựng video bắt nhịp nhạc qua beatsync.py (librosa): phát hiện beat của nhạc nền, chuyển ảnh hoặc clip đúng điểm nhịp kèm hiệu ứng zoom/nháy trắng, tự lặp tư liệu khi thiếu, xuất video kèm báo cáo BPM và số đoạn. |
+| `card-design` | Hệ thiết kế hình ảnh cho thẻ mạng xã hội: bảng màu, phân cấp chữ, bố cục kín khung, khung xương theo loại thẻ, kiểm khoảng trống chết/mật độ; tránh PPT mẫu và mùi AI rẻ tiền, là quy chuẩn chung cho card-* và poster-hero. |
+| `card-quote` | Sinh thẻ trích dẫn hoặc thẻ số liệu ngang 16:9 (một câu hero hay một cụm số liệu chính) để chia sẻ trên Facebook, Threads/X, LinkedIn, render từ HTML thành ảnh theo phong cách đã chọn trong card-design. |
+| `card-xiaohongshu` | Render văn bản thẻ có sẵn thành bộ thẻ kiến thức dọc 1080×1440 dạng lướt (thẻ bìa, thẻ thân, thẻ chốt; 3-9 thẻ, mỗi thẻ một ý), chọn phong cách theo card-design và kiểm khoảng trống chết sau khi render. |
+| `chart-visualization` | Vẽ biểu đồ từ dữ liệu đầu vào với 25+ loại (cột, đường, tròn, phân tán, radar, sankey, sơ đồ tư duy, lưu đồ, bảng) bằng cách gọi AntV API qua mạng với curl, trả về URL ảnh tĩnh chèn ngay dạng Markdown. |
+| `clipify` | Tự tìm điểm gây cười trong video nói tiếng Anh, cắt thành các video ngắn độc lập, chuyển 16:9→9:16 bằng pan bám mặt người đang nói hoặc chia đôi màn hình, rồi đốt phụ đề theo từng chữ kiểu opus/karaoke/minimal. |
+| `comparison-card` | Làm ảnh so sánh A vs B kiểu "một ảnh nói hết" cho 2-4 đối tượng: bảng thông số, ưu–nhược, thông số sản phẩm với bố cục table/versus/pros_cons, render HTML+CSS thành thẻ chụp được, chia sẻ Facebook/Threads. |
+| `copywriting` | Viết văn bản bán hàng chuyển đổi: chắt lọc điểm bán theo FAB rồi ra tiêu đề, thân bài, CTA kèm phương án thay thế cho bài seeding, quảng cáo feed, khuyến mãi, trang chi tiết sản phẩm và landing page. |
+| `data-report` | Sinh trang báo cáo trực quan hoàn chỉnh từ CSV/Excel/JSON gồm thẻ KPI, 2-4 biểu đồ, bảng dữ liệu và 3-5 insight; report.py tính mọi số liệu từ dữ liệu thật, xuất HTML tự chứa và render được thành ảnh dài chia sẻ. |
+| `doc-convert` | Dàn trang và chuyển bản thảo Markdown thành HTML sạch, PDF A4 in được hoặc ảnh dài PNG chỉnh được bề rộng bằng doc_convert.py (python-markdown + Chromium) để lưu trữ, gửi đi hay đăng nơi không hỗ trợ Markdown. |
+| `ecom-details-image` | Lập phương án hình ảnh sản phẩm thương mại điện tử: ý tưởng ảnh chính, ảnh bối cảnh, hướng hình ảnh trang chi tiết và Prompt sinh ảnh AI, mặc định 5 ảnh chính + 7-9 ảnh trang chi tiết cùng một phong cách khoá chung. |
+| `green-screen` | Tách nhân vật quay trên phông xanh (hoặc xanh dương/màu chỉ định) rồi ghép vào nền mới là ảnh, video, màu đơn hay chính tiền cảnh làm mờ qua chromakey.py (ffmpeg chromakey + despill), giữ nguyên âm thanh gốc. |
+| `image-editing` | Gia công ảnh có sẵn một cách tất định bằng image_ops.py: resize, cắt, pad theo tỉ lệ nền tảng, đổi định dạng png/jpg/webp, nén về dung lượng đích, watermark chữ/ảnh, bo góc, ghép nhiều ảnh, thu nhỏ, đọc thông tin ảnh. |
+| `image-enhance` | Nâng chất lượng ảnh mờ, tối, nhiễu bằng img_enhance.py (Pillow + OpenCV): phóng to Lanczos 2x/4x, khử nhiễu, làm nét, tự động tương phản và bão hoà; tăng cường truyền thống, không phải AI siêu phân giải. |
+| `infographic` | Biến dữ liệu/văn bản thành infographic render cục bộ theo hai chế độ: tĩnh AntV với 50+ mẫu danh sách, lưu đồ, so sánh, SWOT xuất được SVG; hoặc GIF động kiểu đua cột, số chạy, tiến độ, đường mọc qua gif_chart.py. |
+| `meme-generator` | Làm meme/ảnh chế từ ảnh có sẵn bằng meme_ops.py (Pillow): chữ lớn trắng viền đen trên/dưới kiểu kinh điển, hoặc thêm dải chữ trên/dưới kiểu ảnh phản ứng, tự xuống dòng và chỉnh cỡ chữ, xuất jpg/png. |
+| `mindmap` | Render dàn ý Markdown (cấp tiêu đề + danh sách) thành sơ đồ tư duy HTML tương tác bằng mindmap.py (markmap, một file HTML), tuỳ chọn xuất PNG qua Chromium; hợp cấu trúc kiến thức, khung nội dung, SWOT. |
+| `multi-voice-dubbing` | Lồng tiếng hội thoại nhiều vai: theo dàn nhân vật (cast) và từng dòng thoại gán giọng cùng cảm xúc cho mỗi vai, tổng hợp một track nhiều giọng kèm phụ đề có tên vai, làm lời dẫn cho video hoặc trộn thêm BGM. |
+| `novel-writer` | Viết tiểu thuyết/truyện dài kỳ từ thế giới quan, nhân vật, dàn ý 3 cấp tới từng chương, chú trọng ba chương đầu giữ chân; trạng thái lưu thành file để giữ mạch ngầm, tiền truyện và nhất quán giữa các chương. |
+| `paper-explainer` | Giải thích bài báo khoa học: đọc arXiv/PDF kể cả công thức và hình, rút vấn đề, đóng góp, phương pháp, hình chính, kết luận rồi làm video giải thích (slide, lồng tiếng, phụ đề) hoặc bài ảnh-chữ, trung thành với bản gốc. |
+| `post-formatter` | Cấu trúc chủ đề theo khung kinh điển (PAS, AIDA, BAB, STAR, SLAY) thành bài đăng ngắn tối đa 20 dòng, dễ đọc trên mobile: hook mở đầu, dòng lật ngược, thân theo từng giai đoạn của khung, câu kêu gọi tương tác cuối bài. |
+| `poster-hero` | Sinh poster marketing dọc 1080×1920 gồm tiêu đề lớn, 3-5 điểm bán chính, CTA và mã QR tuỳ chọn, nền có gu theo phong cách card-design, phục vụ ra mắt sản phẩm, quảng bá sự kiện và chia sẻ story/feed. |
+| `remove-bg` | Tách chủ thể khỏi nền ảnh bằng phân đoạn AI (rembg, remove_bg.py) mà không cần phông xanh: xuất PNG trong suốt, thay nền trắng cho ảnh sản phẩm thương mại điện tử, nền màu hoặc ghép vào cảnh nền mới. |
+| `short-drama` | Làm phim ngắn AI nhiều tập: dựng kinh thánh phim và ảnh tham chiếu nhân vật, viết kịch bản từng tập, ảnh→video từng cảnh, kiểm thoại, lồng tiếng + phụ đề + BGM, ra thành phẩm, giữ nhất quán giữa các cảnh và các tập. |
+| `slideshow-video` | Ghép một bộ ảnh có sẵn thành video với hiệu ứng Ken Burns, chuyển cảnh giữa ảnh, nhạc nền và phụ đề từng ảnh, tự khớp khung hình dọc/vuông/ngang; dựa trên slideshow.py (ffmpeg tất định), xuất video vào outputs/. |
+| `social-content` | Viết nội dung mạng xã hội theo định dạng gốc của Facebook, TikTok, YouTube, Zalo: hook, thân bài, chiến lược hashtag, kêu gọi tương tác kèm 2-3 biến thể, thiên về tăng follow; mặc định khi chưa rõ nền tảng. |
+| `style-transfer` | Đổi phong cách một đoạn văn bản mà giữ nguyên ý cốt lõi (nghiêm túc → hài, văn viết → văn nói, văn hoa → thẳng, trang trọng → giọng mạng xã hội), có thể học từ mẫu phong cách đích, kèm tóm tắt thay đổi. |
+| `subtitle-translate` | Dịch phụ đề có sẵn (SRT/VTT/ASS) sang ngôn ngữ đích, xuất bản song ngữ (gốc + dịch) hoặc chỉ bản dịch, gắn mềm hoặc đốt cứng vào video; LLM dịch từng dòng, subtitle_ops.py xử lý timeline, định dạng và đốt. |
+| `text-condenser` | Nén văn bản dài về số chữ chỉ định mà vẫn giữ ý cốt lõi theo ba chế độ: cắt cứng đúng số chữ (script kiểm đếm), tóm tắt giữ ý chính, trích câu đắt nhất; kèm báo cáo nén và danh sách ý đã giữ. |
+| `text-polisher` | Trau chuốt văn bản qua 7 vòng quét tập trung (rõ ràng, giọng, giá trị, bằng chứng, cụ thể, cảm xúc, rủi ro) và khử mùi AI (cắt câu đệm, phá cấu trúc công thức, câu chủ động, đổi nhịp), xuất bản sửa kèm bảng điểm. |
+| `tts-voiceover` | Chuyển văn bản thành giọng đọc AI cho lời dẫn, thuyết minh, đọc bài: có VOICE_PROVIDER thì đi TTS đám mây giọng tự nhiên có cảm xúc, không key thì edge-tts dự phòng (giọng máy hơn); xuất mp3/wav/m4a kèm SRT tách câu. |
+| `video-chapters` | Tự chia chương và lập mục lục timestamp cho video trung/dài (chương YouTube, phần mô tả video) để người xem nhảy nhanh, tăng tỉ lệ xem hết; asr.py bóc băng có timeline, LLM chia và đặt tên chương theo chuyển đề tài. |
+| `video-editing` | Dựng một video bằng lệnh ngôn ngữ tự nhiên qua video_ops.py (ffmpeg): cắt, ghép, đổi tốc độ, jump-cut bỏ khoảng lặng, chèn chữ, đổi tỉ lệ ngang/dọc, trích khung làm bìa, ra GIF, nén, thêm BGM/watermark. |
+| `video-highlights` | Tìm highlight trong video dài hoặc bản ghi livestream theo đỉnh năng lượng âm thanh hoặc bóc băng rồi chọn câu đắt, cắt thành nhiều video ngắn qua highlight_cut.py (librosa), tuỳ chọn chuyển dọc 9:16 và thêm phụ đề. |
+| `video-intro-outro` | Tạo thẻ mở đầu và kết thúc cho video (tiêu đề, tiêu đề phụ, logo, kêu gọi theo dõi/đăng ký) rồi nối vào video chính bằng cắt cứng hoặc chuyển cảnh fade, toàn bộ qua intro_outro.py (ffmpeg). |
+| `video-reframe` | Đổi khung hình video thông minh sang 9:16/16:9/1:1 qua reframe.py theo ba cách: nền mờ lấp không viền đen, cắt theo tiêu điểm, cắt giữ mặt ở giữa nhờ nhận diện khuôn mặt; xuất video kèm báo cáo chiến lược đã dùng. |
+| `video-script` | Viết kịch bản video từ ngắn 7-60 giây (biến thể Hook có chấm điểm, bấm giờ theo giây, lời phụ đề, phương án bìa) tới trung/dài 1-30 phút (tối ưu giữ chân, điểm ngắt nhịp, hook dẫn tiếp, cấu trúc chương). |
+| `video-strategy` | Lập chiến lược sản xuất video và chọn công cụ: so sánh model AI tạo video, thiết kế cấu trúc kịch bản, quy cách từng nền tảng và quy trình sản xuất cho demo sản phẩm, video giải thích, video ngắn mạng xã hội. |
+| `video-to-article` | Bóc băng video nói, bài giảng, livestream, vlog rồi viết lại có cấu trúc thành bài Facebook, blog hay bài ảnh-chữ (tiêu đề, đề mục, câu đắt, hashtag), kèm trích khung hình tại mốc thời gian phù hợp làm ảnh minh hoạ. |
+| `voice-clone` | Tải mẫu giọng của chính người dùng lên provider đám mây (tự có key) để nhân bản giọng riêng, rồi tổng hợp lời dẫn, thuyết minh hay giọng bán hàng bằng giọng đó; chỉ nhân bản giọng mà người dùng có quyền sử dụng. |
+| `xhs-note-creator` | Sinh trọn bộ bài đăng ảnh-chữ từ chủ đề và tư liệu: tiêu đề, thân bài, caption, hashtag cùng 3-9 thẻ ảnh dọc hoặc phân cảnh video ngắn, có phân tích tư liệu, đánh giá điểm bán, khử mùi AI và kiểm chất lượng. |
 
 ## 📣 发布层
 
