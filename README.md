@@ -116,8 +116,8 @@ Easel 围绕五个连续工作流展开：**发现**适合账号的热点与机�
 ## 🖼️ 真实产物
 
 这些文件来自 Easel 的实际工作流，主页中也有同一批案例的分类展示。
-README 的品牌图、海报、案例图片和视频统一保存在 `assets/readme/`；产品主页使用独立的
-`web/static/showcase/` 素材，其中视频保持为 6 秒轻量预览。
+README 的品牌图、海报、案例图片和视频统一保存在 `assets/readme/`。（Bản VN: trang giới thiệu
+`/onepage` và `web/static/showcase/` đã chuyển vào `retired/web-static/`.）
 
 ### 📚 论文解读与知识卡片
 

@@ -598,11 +598,6 @@ async def index():
     return FileResponse(STATIC_DIR / "index.html", media_type="text/html", headers=no_cache)
 
 
-@app.get("/onepage")
-async def onepage():
-    return FileResponse(STATIC_DIR / "onepage.html", media_type="text/html")
-
-
 @app.get("/assets/{path:path}")
 async def react_assets(path: str):
     base = (REACT_DIR / "assets").resolve()

@@ -9,7 +9,7 @@ any route.
 
 | Prefix | Purpose | Notes |
 |---|---|---|
-| `/`, `/onepage`, `/assets/*`, `/static/*` | React `frontend/dist` if built, else legacy `web/static/index.html` | Path-traversal guarded |
+| `/`, `/assets/*`, `/static/*` | React `frontend/dist` if built, else legacy `web/static/index.html` | Path-traversal guarded. `/onepage` (trang giới thiệu TQ) đã retire vào `retired/web-static/` cùng `main.html`, `showcase/` |
 | `/api/status`, `/api/personas`, `/api/persona/{name}[/files|/file]` | Gateway check, profile CRUD | `PUT …/file` atomic write; `DELETE` removes the directory |
 | `/api/skills`, `/api/skill/{name}`, `/api/env` | Skill list/detail with masked key status; write keys to `.env` | Writes limited to `_ENV_ALLOWLIST` |
 | `/api/chat/stream`, `/api/chat/last/{id}`, `/api/chat/jobs/{turn}/stream`, `/api/chat/stop`, `/api/chat/question/*` | SSE chat, recovery, stop, ask_user bridge | See `agent_docs/architecture.md` |
