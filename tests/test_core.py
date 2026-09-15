@@ -395,9 +395,9 @@ def test_persona_prefix_scopes_memory_to_selected_profile(tmp_path, monkeypatch)
 
     prefix = persona.persona_prefix("画像A")
 
-    assert "当前使用的画像是「画像A」" in prefix
+    assert "Hồ sơ (profile) tôi đang dùng là «画像A»" in prefix
     assert "profiles/画像A/memory.md" in prefix
-    assert "不要使用工作区全局 MEMORY.md" in prefix
+    assert "không dùng MEMORY.md toàn cục" in prefix
 
 
 def test_persona_gate_low_score_warns_but_never_blocks_publish():

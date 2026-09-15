@@ -11,7 +11,6 @@
 from __future__ import annotations
 
 import argparse
-import os
 import subprocess
 import sys
 import time
@@ -21,6 +20,7 @@ from easel.commands.doctor import cmd_doctor
 from easel.commands.gateway import cmd_gateway
 from easel.commands.ping import cmd_ping
 from easel.commands.skill import cmd_skill
+from easel.env import proxy_env
 from easel.persona import list_personas as _list_personas
 from easel.persona import persona_prefix
 from easel.timeouts import TIMEOUT_CHAT
@@ -29,15 +29,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROFILES_DIR = PROJECT_ROOT / "profiles"
 PROFILE = "easel"
 
-
-def _proxy_env() -> dict[str, str]:
-    """返回带外网代理的环境变量（保护内网直连）。"""
-    env = os.environ.copy()
-    env.setdefault("EASEL_ROOT", str(PROJECT_ROOT))
-    env.setdefault("http_proxy", os.environ.get("EASEL_PROXY", ""))
-    env.setdefault("https_proxy", os.environ.get("EASEL_PROXY", ""))
-    env.setdefault("no_proxy", "localhost,127.0.0.1,*.xiaohongshu.com,*.devops.xiaohongshu.com,10.*")
-    return env
 
 CYAN = "\033[0;36m"
 GREEN = "\033[0;32m"
@@ -120,7 +111,7 @@ def cmd_chat(_args) -> int:
     if prefix:
         cmd += ["--message", prefix]
 
-    result = subprocess.run(cmd, cwd=str(PROJECT_ROOT), env=_proxy_env())
+    result = subprocess.run(cmd, cwd=str(PROJECT_ROOT), env=proxy_env())
 
     return result.returncode
 
@@ -160,7 +151,7 @@ def main(argv: list[str] | None = None) -> int:
     # web
     def cmd_web(args):
         port = getattr(args, "port", 7860)
-        env = _proxy_env()
+        env = proxy_env()
         env["EASEL_PORT"] = str(port)
         subprocess.run(
             [sys.executable, str(PROJECT_ROOT / "web" / "app.py")],

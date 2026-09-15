@@ -62,9 +62,9 @@ def persona_prefix(name: str | None) -> str:
     """
     if name and profile_exists(name):
         return (
-            f"我当前使用的画像是「{name}」。"
-            f"本会话的账号长期记忆仅使用 profiles/{name}/memory.md，"
-            "不要使用工作区全局 MEMORY.md 作为账号记忆。"
+            f"Hồ sơ (profile) tôi đang dùng là «{name}». "
+            f"Bộ nhớ dài hạn của tài khoản trong phiên này chỉ dùng profiles/{name}/memory.md; "
+            "không dùng MEMORY.md toàn cục của workspace làm bộ nhớ tài khoản."
         )
     return ""
 
@@ -75,11 +75,16 @@ def persona_prefix(name: str | None) -> str:
 # 把最关键的反射每轮在消息末尾重申一次（放末尾借近因效应），成本极低，
 # 显著提升后续轮次的 SKILL 命中率。仅用于对话入口；单跑某个 SKILL 不必加。
 TURN_REMINDER = (
-    "〔内部提醒·非用户所说，勿复述、勿回显〕本轮动手前先查技能库："
-    "有对应或相邻的 SKILL 就读进来、按它的流程/数据源/工具做，别凭记忆或通用知识裸做；"
-    "五层（含制作层：图文/图/视频/成片/长稿等）都由你自己按对应 SKILL 产出成品文件到 outputs/；"
-    "问「我的账号/帖子/粉丝/最近发了啥」先查已登录账号、别回问用户要账号名；"
-    "要发到公开平台的文案/评论绝不写入密钥/内部地址/代理/路径/env 名等敏感信息，也别随手自曝「由 AI 生成/某工具做的」。"
+    "[Nhắc nội bộ · không phải lời người dùng, không nhắc lại, không hiển thị] "
+    "Trước khi làm gì trong lượt này, tra kho kỹ năng trước: "
+    "có SKILL tương ứng hoặc gần nhất thì đọc vào và làm theo quy trình/nguồn dữ liệu/công cụ của nó, "
+    "không làm chay theo trí nhớ hay kiến thức chung; "
+    "cả năm tầng (kể cả tầng sản xuất: bài ảnh-chữ/ảnh/video/thành phẩm/bài dài…) "
+    "đều do bạn tự tạo ra file thành phẩm vào outputs/ theo SKILL tương ứng; "
+    "hỏi «tài khoản/bài đăng/người theo dõi/gần đây đăng gì» thì tra tài khoản đã đăng nhập trước, "
+    "đừng hỏi ngược người dùng tên tài khoản; "
+    "nội dung/bình luận sẽ đăng lên nền tảng công khai tuyệt đối không ghi khóa bí mật/địa chỉ nội bộ/proxy/đường dẫn/tên biến env "
+    "hay thông tin nhạy cảm khác, và đừng tự tiết lộ «do AI tạo/làm bằng công cụ X»."
 )
 
 

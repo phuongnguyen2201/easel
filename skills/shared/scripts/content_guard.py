@@ -47,6 +47,21 @@ def _p(pat: str, flags: int = 0) -> "re.Pattern[str]":
     return re.compile(pat, flags)
 
 
+# Danh sách host nội bộ không được lộ ra nội dung công khai (fail-closed khi --exec).
+# Mặc định rỗng — điền tên miền nội bộ của bạn (khớp chính xác, không phân biệt hoa/thường),
+# ví dụ: ["gateway.internal.example.vn", "maas.corp.example.com"].
+INTERNAL_HOSTS: list[str] = []
+
+
+def _internal_host_patterns(hosts: list[str]) -> list[tuple[str, str, "re.Pattern[str]", str]]:
+    """Mỗi host → một pattern internal-host (med)."""
+    return [
+        ("internal-host", "med", _p(r"\b" + re.escape(h.strip().lower()) + r"\b", re.I),
+         f"tên miền nội bộ {h.strip()}")
+        for h in hosts if h and h.strip()
+    ]
+
+
 SECRET_PATTERNS: list[tuple[str, str, "re.Pattern[str]", str]] = [
     # ── 凭证 / 密钥 ──
     ("api-key", "high", _p(r"\bsk-[A-Za-z0-9_\-]{16,}\b"), "疑似 API key（sk- 开头）"),
@@ -55,11 +70,7 @@ SECRET_PATTERNS: list[tuple[str, str, "re.Pattern[str]", str]] = [
      "键值形式的密钥/令牌"),
     ("api-key", "high", _p(r"(?i)\bBearer\s+[A-Za-z0-9/_\-\.]{12,}"), "Bearer 令牌"),
     # ── 内部域名 / 服务地址 ──
-    ("internal-host", "med", _p(r"\bmaas\.devops\.(?:xiaohongshu|rednote)\.(?:com|life)\b"),
-     "内部 MaaS 域名"),
-    ("internal-host", "med", _p(r"\bwebide-gateway\.devops\.xiaohongshu\.com\b"), "内部 WebIDE 域名"),
-    ("internal-host", "med", _p(r"\b[a-z0-9\-]+\.devops\.(?:xiaohongshu|rednote)\.(?:com|life)\b"),
-     "内部 devops 域名"),
+    *_internal_host_patterns(INTERNAL_HOSTS),
     ("internal-host", "low", _p(r"\bcodewiz\b", re.I), "内部代理标识"),
     ("internal-host", "med", _p(r"\bapi-version=[0-9]"), "API 版本查询串（内部接口特征）"),
     # ── 代理 / 私网 IP ──
@@ -321,8 +332,7 @@ def cmd_selftest(_a) -> int:
         ("api-key sk", "我的 key 是 sk-ABCDefgh12345678ijkl 记得保密"),
         ("kv secret", "配置 api_key=abcd1234efgh5678"),
         ("bearer", "Authorization: Bearer abcdef1234567890xyz"),
-        ("maas host", "调用 https://maas.devops.xiaohongshu.com/openai 出图"),
-        ("webide", "打开 webide-gateway.devops.xiaohongshu.com/xxx"),
+        *[(f"internal host {h}", f"gọi https://{h}/api để xuất ảnh") for h in INTERNAL_HOSTS],
         ("proxy ip", "代理设成 10.140.24.177:3128 就行"),
         ("port 3128", "端口 :3128 是代理"),
         ("path mnt", "产物在 /mnt/tidal-alsh01/dataset/xxx"),

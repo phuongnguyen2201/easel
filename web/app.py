@@ -34,6 +34,8 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+from easel.env import proxy_env
+from easel.gateway_port import gateway_url
 from easel.openclaw_cmd import openclaw_base_cmd
 from easel.persona import load_profile_text, persona_prefix, chat_turn_message, profile_exists, _FILE_ORDER
 from easel.timeouts import TIMEOUT_CHAT, TIMEOUT_DIRECT, TIMEOUT_PRODUCE
@@ -121,7 +123,6 @@ _WHOAMI_CACHE: dict[str, tuple[float, dict]] = {}
 _WHOAMI_LOCK = threading.Lock()
 
 LOGIN_RUNNERS: dict[str, dict] = {
-    "xiaohongshu": {"name": "小红书", "backend": "xhs", "profile": "XiaohongshuProfile"},
     "kuaishou": {"name": "快手", "backend": "web", "wp": "kuaishou", "profile": "KuaishouProfile"},
     "weixin-channels": {"name": "微信视频号", "backend": "web", "wp": "weixin-channels", "profile": "ChannelsProfile"},
     "zhihu": {"name": "知乎", "backend": "web", "wp": "zhihu", "profile": "ZhihuProfile"},
@@ -322,21 +323,11 @@ def clean_agent_output(raw: str) -> str:
     return '\n'.join(lines).strip()
 
 
-def _proxy_env() -> dict[str, str]:
-    """返回带外网代理的环境变量（保护内网直连）。"""
-    env = os.environ.copy()
-    env.setdefault('EASEL_ROOT', str(PROJECT_ROOT))
-    env.setdefault('http_proxy', os.environ.get('EASEL_PROXY', ''))
-    env.setdefault('https_proxy', os.environ.get('EASEL_PROXY', ''))
-    env.setdefault('no_proxy', 'localhost,127.0.0.1,*.xiaohongshu.com,*.devops.xiaohongshu.com,10.*')
-    return env
-
-
 def _publish_env() -> dict[str, str]:
-    """发布子进程 env：在 _proxy_env 基础上禁用脚本侧日历自动记录——
+    """发布子进程 env：在 proxy_env 基础上禁用脚本侧日历自动记录——
     发布页由 web 自己回流 _schedule.json，脚本再记一次会重复。对话页 Agent 直跑
     脚本时不经过这里，flag 未设 → 脚本自动记录（见 calendar_ops.record_publish）。"""
-    env = _proxy_env()
+    env = proxy_env()
     env['EASEL_CALENDAR_AUTORECORD'] = '0'
     return env
 
@@ -470,7 +461,7 @@ def run_agent_sync(msg: str, timeout: int = TIMEOUT_DIRECT, session_id: str | No
     if not xlock.acquire(timeout=min(timeout, 300)):
         return '⏳ 这个会话正在另一个窗口运行，请稍候再试'
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(PROJECT_ROOT), timeout=timeout + 30, env=_proxy_env())
+        r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(PROJECT_ROOT), timeout=timeout + 30, env=proxy_env())
         return clean_agent_output(r.stdout or '') or '（无输出）'
     except subprocess.TimeoutExpired:
         return '⏱️ 请求超时'
@@ -482,7 +473,7 @@ def run_agent_sync(msg: str, timeout: int = TIMEOUT_DIRECT, session_id: str | No
 
 def check_gateway() -> bool:
     try:
-        with urllib.request.urlopen('http://127.0.0.1:18789/healthz', timeout=3) as response:
+        with urllib.request.urlopen(gateway_url(), timeout=3) as response:
             return response.status == 200
     except (OSError, urllib.error.URLError):
         return False
@@ -1108,7 +1099,7 @@ async def api_chat_stream(req: ChatRequest):
             "--thinking", THINKING_LEVEL,
             "--timeout", str(TIMEOUT_CHAT), "--message", message,
         ]
-        env = _proxy_env()
+        env = proxy_env()
         env["OPENCLAW_RAW_STREAM"] = "1"
         env["OPENCLAW_RAW_STREAM_PATH"] = str(raw_path)
 
@@ -1604,7 +1595,9 @@ async def api_skill(req: SkillRequest):
     skill_full = find_skill(req.skill)
     if skill_full is None:
         raise HTTPException(404, f"SKILL '{req.skill}' 不存在")
-    message = f"{_persona_prefix(req.persona)}请执行 /{skill_full}，内容如下：\n\n{req.input}"
+    prefix = _persona_prefix(req.persona)
+    head = f"{prefix}\n\n" if prefix else ""
+    message = f"{head}Hãy thực hiện /{skill_full}, nội dung như sau:\n\n{req.input}"
     # 统一给足超时：制作类 SKILL（生视频/多镜合成）可能跑很久，取安全上界
     timeout = TIMEOUT_PRODUCE
     loop = asyncio.get_event_loop()
@@ -1846,7 +1839,7 @@ async def api_login_start(platform: str):
         _WHOAMI_CACHE.pop(platform, None)
     log_path = LOGIN_DIR / f'{platform}.log'
     log_file = log_path.open('a', encoding='utf-8')
-    proc = subprocess.Popen(cmd, cwd=str(PROJECT_ROOT), env=_proxy_env(),
+    proc = subprocess.Popen(cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
                             stdout=log_file, stderr=subprocess.STDOUT)
     log_file.close()
     LOGIN_PROCESSES[platform] = proc
@@ -1920,7 +1913,7 @@ async def api_account_whoami(platform: str):
         cmd = [sys.executable, str(SHARED_SCRIPTS / 'web_publisher.py'), 'whoami',
                '--platform', cfg['wp']]
     try:
-        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=_proxy_env(),
+        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
                                        capture_output=True, text=True, timeout=150)
     except subprocess.TimeoutExpired:
         raise HTTPException(504, '校验超时（浏览器起不来或网络慢）')
@@ -1988,7 +1981,7 @@ async def api_logout(platform: str):
 
 
 # 归因层：可抓创作数据的平台（走 Playwright 登录态；bilibili 用 biliup cookies 不在此列）
-ANALYTICS_PLATFORMS = {"xiaohongshu", "douyin", "kuaishou", "zhihu", "weixin-channels", "bilibili"}
+ANALYTICS_PLATFORMS = {"douyin", "kuaishou", "zhihu", "weixin-channels", "bilibili"}
 
 
 @app.get("/api/analytics/platforms")
@@ -2011,10 +2004,10 @@ async def api_analytics(platform: str):
         cmd = [sys.executable, str(SHARED_SCRIPTS / "bili_login.py"), "stats",
                "--cookie", str(PROJECT_ROOT / "cookies.json")]
     else:
-        # 代理策略由 account_stats.py 按平台自定（xhs 直连、其它走 env），后端照常传 _proxy_env
+        # 代理策略由 account_stats.py 按平台自定（xhs 直连、其它走 env），后端照常传 proxy_env
         cmd = [sys.executable, str(SHARED_SCRIPTS / "account_stats.py"), "fetch", "--platform", platform]
     try:
-        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=_proxy_env(),
+        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
                                        capture_output=True, text=True, timeout=180)
     except subprocess.TimeoutExpired:
         raise HTTPException(504, "抓取超时（浏览器起不来或网络慢）")
@@ -2029,7 +2022,7 @@ async def api_analytics(platform: str):
     raise HTTPException(502, f"未取到数据（可能未登录或平台改版）：{detail[0][:120]}")
 
 
-MEDIA_REQUIRED = {"xiaohongshu", "douyin", "kuaishou", "weixin-channels", "bilibili"}
+MEDIA_REQUIRED = {"douyin", "kuaishou", "weixin-channels", "bilibili"}
 VIDEO_ONLY_PUBLISH = {"douyin", "weixin-channels", "bilibili"}   # 只能发视频的平台
 
 
@@ -2170,11 +2163,7 @@ async def api_publish(platform: str, req: PublishRequest):
     title = req.title.strip() or req.body.strip()[:20]
     tags = req.tags or ''
     py = sys.executable
-    if platform == 'xiaohongshu':
-        base = [py, str(SHARED_SCRIPTS / 'xhs_publish.py')]
-        cmd = base + ['publish-video', '--no-proxy', '--video', vids[0]] if vids else base + ['publish', '--no-proxy', '--images', ','.join(imgs)]
-        cmd += ['--title', title, '--content', req.body, '--tags', tags, '--exec']
-    elif platform == 'bilibili':
+    if platform == 'bilibili':
         # B站投稿：直接调 biliup CLI（需 cookies.json，PATH 上有 biliup）。必须视频；
         # tid=36「知识」；B站投稿必须≥1 标签，无则兜底「日常」。
         bili_tag = tags.replace('#', '').replace('，', ',').strip().strip(',') or '日常'
@@ -2563,7 +2552,7 @@ async def api_schedule_context(days: int = 14):
     cmd = [sys.executable, str(SHARED_SCRIPTS / "calendar_ops.py"),
            "--data", str(SCHEDULE_FILE), "context", "--days", str(max(1, min(days, 90)))]
     try:
-        proc = subprocess.run(cmd, cwd=str(PROJECT_ROOT), env=_proxy_env(),
+        proc = subprocess.run(cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
                               capture_output=True, text=True, timeout=20)
         return json.loads(proc.stdout) if proc.returncode == 0 and proc.stdout.strip() else {}
     except Exception:

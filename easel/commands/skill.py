@@ -12,13 +12,13 @@
 
 from __future__ import annotations
 
-import os
 import re
 import subprocess
 import sys
 import time
 from pathlib import Path
 
+from easel.env import proxy_env
 from easel.openclaw_cmd import openclaw_base_cmd
 from easel.persona import persona_prefix, profile_exists
 from easel.timeouts import TIMEOUT_PRODUCE
@@ -79,16 +79,6 @@ def _check_profile_exists(name: str) -> bool:
     return False
 
 
-def _proxy_env() -> dict[str, str]:
-    """返回带外网代理的环境变量（保护内网直连）。"""
-    env = os.environ.copy()
-    env.setdefault("EASEL_ROOT", str(PROJECT_ROOT))
-    env.setdefault("http_proxy", os.environ.get("EASEL_PROXY", ""))
-    env.setdefault("https_proxy", os.environ.get("EASEL_PROXY", ""))
-    env.setdefault("no_proxy", "localhost,127.0.0.1,*.xiaohongshu.com,*.devops.xiaohongshu.com,10.*")
-    return env
-
-
 def _run_via_openclaw(message: str, timeout: int = 300) -> int:
     """统一通过 OpenClaw agent 执行。"""
     session_key = f"skill-{int(time.time() * 1000)}"
@@ -104,7 +94,7 @@ def _run_via_openclaw(message: str, timeout: int = 300) -> int:
     try:
         result = subprocess.run(cmd, capture_output=True, text=True,
                                 cwd=str(PROJECT_ROOT), timeout=timeout + 30,
-                                env=_proxy_env())
+                                env=proxy_env())
     except subprocess.TimeoutExpired:
         print("⏱️ 请求超时", file=sys.stderr)
         return 124
@@ -152,7 +142,9 @@ def cmd_skill(args) -> int:
     # 构造消息——发给 OpenClaw，让它按 AGENTS.md 规则处理
     content = _resolve_input(args.input)
 
-    message = f"{persona_prefix(args.profile)}请执行 /{skill_full}，内容如下：\n\n{content}"
+    prefix = persona_prefix(args.profile)
+    head = f"{prefix}\n\n" if prefix else ""
+    message = f"{head}Hãy thực hiện /{skill_full}, nội dung như sau:\n\n{content}"
 
     # 统一给足超时：制作类 SKILL（生视频/多镜合成）可能跑很久，取安全上界
     timeout = TIMEOUT_PRODUCE

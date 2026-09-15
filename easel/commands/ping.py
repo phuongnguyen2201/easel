@@ -2,25 +2,17 @@
 
 from __future__ import annotations
 
-import os
 import subprocess
 import urllib.error
 import urllib.request
 
+from easel.env import proxy_env
+from easel.gateway_port import gateway_port, gateway_url
 from easel.openclaw_cmd import openclaw_base_cmd
 
 GREEN = "\033[0;32m"
 RED = "\033[0;31m"
 NC = "\033[0m"
-
-
-def _proxy_env() -> dict[str, str]:
-    """返回带外网代理的环境变量（保护内网直连）。"""
-    env = os.environ.copy()
-    env.setdefault("http_proxy", os.environ.get("EASEL_PROXY", ""))
-    env.setdefault("https_proxy", os.environ.get("EASEL_PROXY", ""))
-    env.setdefault("no_proxy", "localhost,127.0.0.1,*.xiaohongshu.com,*.devops.xiaohongshu.com,10.*")
-    return env
 
 
 def _step(label: str, cmd: list[str], timeout: int = 30,
@@ -53,11 +45,12 @@ def cmd_ping(_args) -> int:
 
     # Step 1: Gateway healthz
     try:
-        with urllib.request.urlopen("http://127.0.0.1:18789/healthz", timeout=10) as response:
+        with urllib.request.urlopen(gateway_url(), timeout=10) as response:
             gateway_ok = response.status == 200
     except (OSError, urllib.error.URLError):
         gateway_ok = False
-    print(f"  {'Step 1: Gateway healthz (localhost:18789)':<50s} "
+    step1 = f"Step 1: Gateway healthz (localhost:{gateway_port()})"
+    print(f"  {step1:<50s} "
           f"{GREEN if gateway_ok else RED}{'OK' if gateway_ok else 'FAIL'}{NC}")
     all_ok &= gateway_ok
 
@@ -71,7 +64,7 @@ def cmd_ping(_args) -> int:
         "Step 2: OpenClaw agent via Gateway (say PONG)",
         oc_cmd,
         timeout=60,
-        env=_proxy_env(),
+        env=proxy_env(),
     )
 
     print()
