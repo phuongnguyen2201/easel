@@ -43,10 +43,10 @@ def _warn(label: str, ok: bool, detail: str = "") -> bool:
 
 
 def _node_version_ok(strict: bool) -> bool:
-    """检查 Node.js 版本。
+    """Kiểm tra phiên bản Node.js.
 
-    strict=True 对齐 openclaw@latest（2026.9.x）的引擎：>=24.16.0 <25 || >=26.1.0（25.x/26.0 被排除）。
-    strict=False 用于已装较旧 OpenClaw（<=2026.6.x，引擎 ^20.10 || ^22.11 || >=24）的宽松下限 >=20.10。
+    strict=True khớp engine của openclaw@latest (2026.9.x): >=24.16.0 <25 || >=26.1.0 (loại 25.x/26.0).
+    strict=False dùng cho OpenClaw cũ đã cài (<=2026.6.x, engine ^20.10 || ^22.11 || >=24), ngưỡng nới >=20.10.
     """
     try:
         result = subprocess.run(
@@ -129,13 +129,13 @@ def _skills_synced() -> bool:
 
 
 def _env_key_valid() -> bool:
-    """Check .env 配置了可用的认证。
+    """Kiểm tra .env có cấu hình xác thực dùng được.
 
-    以下任一通道满足即可：
-    - 标准 API key：ANTHROPIC_API_KEY
-    - Anthropic-compatible 服务：EASEL_LLM_API_KEY + EASEL_LLM_BASE_URL
+    Chỉ cần thoả một trong các kênh:
+    - API key chuẩn: ANTHROPIC_API_KEY
+    - Dịch vụ Anthropic-compatible: EASEL_LLM_API_KEY + EASEL_LLM_BASE_URL
 
-    ping 才是权威连通性测试；这里只做静态配置存在性检查。
+    ping mới là kiểm tra kết nối chính thức; ở đây chỉ kiểm tra cấu hình có tồn tại.
     """
     env_file = PROJECT_ROOT / ".env"
     if not env_file.is_file():
@@ -180,14 +180,14 @@ def _env_key_valid() -> bool:
 
 
 def cmd_doctor(_args) -> int:
-    print("Easel — 环境检查\n")
+    print("Easel — Kiểm tra môi trường\n")
     all_ok = True
 
     # 1. Runtime prerequisites
     all_ok &= _check("Python >= 3.10", _python_version_ok(),
-                      "请安装 Python 3.10 或更高版本")
+                      "Hãy cài Python 3.10 trở lên")
     all_ok &= _check("Python venv module", _venv_available(),
-                      "Debian/Ubuntu 请安装 python3-venv")
+                      "Debian/Ubuntu: hãy cài python3-venv")
     # openclaw 版本决定 Node 引擎要求：2026.9.x 需要 Node 24.16+，较旧版本沿用 >=20.10 的宽松下限。
     # 未装 openclaw 时按 setup 的默认安装目标（openclaw@latest）从严要求 24.16+。
     oc_ver = _openclaw_version()
@@ -195,34 +195,34 @@ def cmd_doctor(_args) -> int:
     node_floor = "24.16" if node_strict else "20.10"
     has_node = shutil.which("node") is not None
     node_ok = _node_version_ok(node_strict)
-    node_detail = (f"请安装 Node.js >= {node_floor}: https://nodejs.org/" if not has_node
-                   else f"Node.js 版本不满足当前 OpenClaw 要求，请升级到 >= {node_floor}: https://nodejs.org/")
+    node_detail = (f"Hãy cài Node.js >= {node_floor}: https://nodejs.org/" if not has_node
+                   else f"Phiên bản Node.js không đạt yêu cầu của OpenClaw hiện tại, hãy nâng lên >= {node_floor}: https://nodejs.org/")
     all_ok &= _check(f"Node.js >= {node_floor}", node_ok, node_detail)
     all_ok &= _check("FFmpeg", shutil.which("ffmpeg") is not None,
-                      "媒体处理需要 FFmpeg；请安装后重试")
+                      "Xử lý media cần FFmpeg; hãy cài rồi thử lại")
 
     # 2. openclaw command + 版本
     has_openclaw = shutil.which("openclaw") is not None
     all_ok &= _check("openclaw command", has_openclaw,
-                      "请安装 openclaw: npm i -g openclaw")
+                      "Hãy cài openclaw: npm i -g openclaw")
     if has_openclaw:
         min_str = ".".join(map(str, MIN_OPENCLAW))
-        ver_str = ".".join(map(str, oc_ver)) if oc_ver else "未知"
+        ver_str = ".".join(map(str, oc_ver)) if oc_ver else "không rõ"
         oc_ver_ok = oc_ver is not None and oc_ver >= MIN_OPENCLAW
         all_ok &= _check(
             f"OpenClaw >= {min_str}", oc_ver_ok,
-            f"当前 {ver_str}，过旧会有 provider/schema 兼容问题；请升级：npm i -g openclaw@latest",
+            f"Hiện tại {ver_str}, bản quá cũ sẽ lỗi tương thích provider/schema; hãy nâng cấp: npm i -g openclaw@latest",
         )
 
     for module in ("fastapi", "uvicorn", "sse_starlette", "multipart"):
         all_ok &= _check(f"Python package: {module}", _module_available(module),
-                          "运行 pip install -e . 安装 Easel 运行依赖")
+                          "Chạy pip install -e . để cài phụ thuộc của Easel")
 
     frontend_ready = (PROJECT_ROOT / "web" / "frontend" / "dist" / "index.html").is_file()
     all_ok &= _check("Web frontend build", frontend_ready,
-                      "运行 cd web/frontend && npm ci && npm run build")
+                      "Chạy cd web/frontend && npm ci && npm run build")
     all_ok &= _check("Playwright Chromium", _chromium_available(),
-                      "运行 python3 -m playwright install chromium")
+                      "Chạy python3 -m playwright install chromium")
 
     # 3. .env file with valid key
     # Không tính vào all_ok: các kênh đăng nhập như claude-cli / OAuth giữ
@@ -237,12 +237,12 @@ def cmd_doctor(_args) -> int:
     # 4. OpenClaw gateway running
     gw_ok = _gateway_healthy()
     all_ok &= _check(f"OpenClaw gateway (localhost:{gateway_port()})", gw_ok,
-                      "运行 python -m easel gateway start")
+                      "Chạy python -m easel gateway start")
 
     # 5. Skills synced
     synced = _skills_synced()
     all_ok &= _check("Skills synced", synced,
-                      "重新运行 setup.ps1（Windows）或 bash openclaw/sync.sh（Linux/macOS）")
+                      "Chạy lại setup.ps1 (Windows) hoặc bash openclaw/sync.sh (Linux/macOS)")
 
     # 6. Key project files
     gateway_label = "scripts/gateway.ps1" if os.name == "nt" else "scripts/gateway.sh"
@@ -257,8 +257,8 @@ def cmd_doctor(_args) -> int:
 
     print()
     if all_ok:
-        print(f"{GREEN}✓ 环境就绪{NC} — 运行 python -m easel ping 验证连通性")
+        print(f"{GREEN}✓ Môi trường sẵn sàng{NC} — chạy python -m easel ping để kiểm tra kết nối")
     else:
-        print(f"{YELLOW}⚠ 有未满足项{NC} — 请按上述提示修复后重试")
+        print(f"{YELLOW}⚠ Còn mục chưa đạt{NC} — sửa theo gợi ý trên rồi thử lại")
 
     return 0 if all_ok else 1

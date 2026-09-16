@@ -78,15 +78,15 @@ def test_resolve_input_image_path(tmp_path):
     p = tmp_path / "pic.png"
     p.write_bytes(b"\x89PNG\r\n")
     out = cli_skill._resolve_input(str(p))
-    assert "请处理这个图片" in out and str(p) in out
+    assert "Hãy xử lý ảnh này" in out and str(p) in out
 
 
 def test_resolve_input_binary_media_path(tmp_path):
-    # 音视频/二进制不能 read_text，应走"请处理这个文件"分支而非崩溃
+    # Âm thanh/video/nhị phân không read_text được, phải đi nhánh "Hãy xử lý tệp này" thay vì crash
     p = tmp_path / "clip.mp4"
     p.write_bytes(b"\x00\x01\x02\xff\xfe")
     out = cli_skill._resolve_input(str(p))
-    assert "请处理这个文件" in out
+    assert "Hãy xử lý tệp này" in out
 
 
 def test_resolve_input_text_file(tmp_path):

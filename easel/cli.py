@@ -1,11 +1,11 @@
-"""Easel CLI — 社媒内容工作流整合层。
+"""Easel CLI — lớp tích hợp quy trình nội dung mạng xã hội.
 
-用法：
-    easel chat                              # 新会话（选画像后进入）
-    easel doctor                            # 检查环境
-    easel gateway {start|stop|status}       # 管理 gateway
-    easel ping                              # 连通性测试
-    easel skill <name> -i "..." -p <画像>   # 运行 SKILL
+Cách dùng:
+    easel chat                              # phiên mới (chọn hồ sơ rồi vào)
+    easel doctor                            # kiểm tra môi trường
+    easel gateway {start|stop|status}       # quản lý gateway
+    easel ping                              # kiểm tra kết nối
+    easel skill <name> -i "..." -p <hồ sơ>  # chạy SKILL
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def cmd_chat(_args) -> int:
     """启动 Easel 交互对话（每次新会话）。"""
 
     print()
-    print(f"  {CYAN}Easel{NC} — 社媒内容工作流")
+    print(f"  {CYAN}Easel{NC} — Quy trình nội dung mạng xã hội")
     print()
 
     # ---- 选择画像 ----
@@ -49,7 +49,7 @@ def cmd_chat(_args) -> int:
     selected_persona = None
 
     if personas:
-        print("  选择用户画像：")
+        print("  Chọn hồ sơ (profile):")
         for i, name in enumerate(personas, 1):
             identity = PROFILES_DIR / name / "identity.md"
             desc = ""
@@ -60,11 +60,11 @@ def cmd_chat(_args) -> int:
                         desc = f"  — {line[:50]}"
                         break
             print(f"    {i}) {name}{desc}")
-        print(f"    0) 不使用画像（通用模式）")
+        print(f"    0) Không dùng hồ sơ (chế độ chung)")
         print()
 
         try:
-            choice = input("  请选择 [0]: ").strip()
+            choice = input("  Chọn [0]: ").strip()
         except (EOFError, KeyboardInterrupt):
             print()
             return 0
@@ -80,15 +80,15 @@ def cmd_chat(_args) -> int:
 
     # ---- 每次新会话 ----
     if selected_persona:
-        print(f"\n  {GREEN}✓{NC} 画像: {selected_persona}")
+        print(f"\n  {GREEN}✓{NC} Hồ sơ: {selected_persona}")
     else:
-        print(f"\n  {YELLOW}→{NC} 通用模式")
+        print(f"\n  {YELLOW}→{NC} Chế độ chung")
 
     session_key = f"easel-{time.strftime('%m%d-%H%M%S')}"
 
-    print(f"  {DIM}会话: {session_key}{NC}")
-    print(f"  {DIM}切换历史会话: 对话中输入 /session{NC}")
-    print(f"  {CYAN}Ctrl+C{NC} 退出")
+    print(f"  {DIM}Phiên: {session_key}{NC}")
+    print(f"  {DIM}Đổi sang phiên cũ: gõ /session trong cuộc trò chuyện{NC}")
+    print(f"  {CYAN}Ctrl+C{NC} để thoát")
     print()
 
     cmd = [
@@ -119,33 +119,33 @@ def cmd_chat(_args) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="easel",
-        description="Easel — 社媒内容工作流整合层 CLI",
+        description="Easel — CLI quy trình nội dung mạng xã hội",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
     # chat
-    p_chat = sub.add_parser("chat", help="交互对话（新会话）")
+    p_chat = sub.add_parser("chat", help="Trò chuyện tương tác (phiên mới)")
     p_chat.set_defaults(func=cmd_chat)
 
     # doctor
-    p_doctor = sub.add_parser("doctor", help="检查环境")
+    p_doctor = sub.add_parser("doctor", help="Kiểm tra môi trường")
     p_doctor.set_defaults(func=cmd_doctor)
 
     # gateway
-    p_gw = sub.add_parser("gateway", help="管理 OpenClaw gateway")
+    p_gw = sub.add_parser("gateway", help="Quản lý OpenClaw gateway")
     p_gw.add_argument("action", choices=["start", "stop", "restart", "status", "logs"],
                        default="status", nargs="?")
     p_gw.set_defaults(func=cmd_gateway)
 
     # ping
-    p_ping = sub.add_parser("ping", help="连通性测试")
+    p_ping = sub.add_parser("ping", help="Kiểm tra kết nối")
     p_ping.set_defaults(func=cmd_ping)
 
     # skill
-    p_skill = sub.add_parser("skill", help="运行 SKILL（自动路由）")
-    p_skill.add_argument("name", help="SKILL 名称")
-    p_skill.add_argument("--input", "-i", required=True, help="输入内容")
-    p_skill.add_argument("--profile", "-p", default=None, help="用户画像名称")
+    p_skill = sub.add_parser("skill", help="Chạy SKILL (tự định tuyến)")
+    p_skill.add_argument("name", help="Tên SKILL")
+    p_skill.add_argument("--input", "-i", required=True, help="Nội dung đầu vào")
+    p_skill.add_argument("--profile", "-p", default=None, help="Tên hồ sơ")
     p_skill.set_defaults(func=cmd_skill)
 
     # web
@@ -160,8 +160,8 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
 
-    p_web = sub.add_parser("web", help="启动 Web UI")
-    p_web.add_argument("--port", type=int, default=7860, help="端口（默认 7860）")
+    p_web = sub.add_parser("web", help="Chạy giao diện web")
+    p_web.add_argument("--port", type=int, default=7860, help="Cổng (mặc định 7860)")
     p_web.set_defaults(func=cmd_web)
 
     args = parser.parse_args(argv)

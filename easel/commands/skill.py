@@ -1,13 +1,13 @@
-"""easel skill — 运行 SKILL，统一通过 OpenClaw agent 处理。
+"""easel skill — chạy SKILL, xử lý thống nhất qua OpenClaw agent.
 
-所有 SKILL 请求都发给 OpenClaw agent，由 OpenClaw 根据 AGENTS.md 的规则
-读对应 SKILL 自己执行、并凝练 Profile。
-这样无论从 chat / skill / web 哪个入口进来，逻辑都是一致的。
+Mọi yêu cầu SKILL đều gửi cho OpenClaw agent; OpenClaw theo quy tắc trong AGENTS.md
+tự đọc SKILL tương ứng để thực hiện và cô đọng Profile.
+Nhờ vậy dù vào từ chat / skill / web thì logic đều như nhau.
 
-用法：
-    easel skill check-compliance -i "文案文本"
-    easel skill check-compliance -i "文案" -p 科技数码达人
-    easel skill produce-shortdrama -i "30秒短剧需求"
+Cách dùng:
+    easel skill check-compliance -i "nội dung bài"
+    easel skill check-compliance -i "nội dung" -p quan-cafe-demo
+    easel skill produce-shortdrama -i "yêu cầu phim ngắn 30 giây"
 """
 
 from __future__ import annotations
@@ -57,12 +57,12 @@ def _resolve_input(raw_input: str) -> str:
     if is_file:
         suffix = p.suffix.lower()
         if suffix in (".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"):
-            return f"请处理这个图片：{p.resolve()}"
+            return f"Hãy xử lý ảnh này: {p.resolve()}"
         # 音视频/二进制文件不能 read_text（会 UnicodeDecodeError），只传路径
         if suffix in (".mp3", ".mp4", ".wav", ".mov", ".m4a", ".flac", ".aac",
                       ".ogg", ".webm", ".mkv", ".avi", ".pdf", ".zip",
                       ".gz", ".tar", ".7z", ".rar"):
-            return f"请处理这个文件：{p.resolve()}"
+            return f"Hãy xử lý tệp này: {p.resolve()}"
         return p.read_text(encoding="utf-8")
     return raw_input
 
@@ -73,9 +73,9 @@ def _check_profile_exists(name: str) -> bool:
         return True
     available = [d.name for d in PROFILES_DIR.iterdir()
                  if d.is_dir() and not d.name.startswith("_")]
-    print(f"[easel] ERROR: 画像 '{name}' 不存在", file=sys.stderr)
+    print(f"[easel] ERROR: hồ sơ '{name}' không tồn tại", file=sys.stderr)
     if available:
-        print(f"  可用画像: {', '.join(available)}", file=sys.stderr)
+        print(f"  Hồ sơ hiện có: {', '.join(available)}", file=sys.stderr)
     return False
 
 
@@ -96,7 +96,7 @@ def _run_via_openclaw(message: str, timeout: int = 300) -> int:
                                 cwd=str(PROJECT_ROOT), timeout=timeout + 30,
                                 env=proxy_env())
     except subprocess.TimeoutExpired:
-        print("⏱️ 请求超时", file=sys.stderr)
+        print("⏱️ Yêu cầu quá thời gian chờ", file=sys.stderr)
         return 124
     except Exception as e:  # noqa: BLE001 — 兜底，避免裸崩堆栈（与 web 行为一致）
         print(f"❌ {e}", file=sys.stderr)
@@ -129,8 +129,8 @@ def cmd_skill(args) -> int:
     skill_full = _find_skill(skill_name)
 
     if skill_full is None:
-        print(f"[easel] ERROR: SKILL '{skill_name}' 不存在")
-        print("  可用 SKILL:")
+        print(f"[easel] ERROR: SKILL '{skill_name}' không tồn tại")
+        print("  SKILL hiện có:")
         for name in _list_all_skills():
             print(f"    {name}")
         return 1
@@ -151,7 +151,7 @@ def cmd_skill(args) -> int:
 
     print(f"[easel] SKILL: {skill_full}")
     if args.profile:
-        print(f"[easel] 画像: {args.profile}")
+        print(f"[easel] Hồ sơ: {args.profile}")
     print("─" * 50)
 
     return _run_via_openclaw(message, timeout=timeout)

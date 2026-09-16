@@ -40,7 +40,7 @@ def _step(label: str, cmd: list[str], timeout: int = 30,
 
 
 def cmd_ping(_args) -> int:
-    print("[easel] 连通性测试\n")
+    print("[easel] Kiểm tra kết nối\n")
     all_ok = True
 
     # Step 1: Gateway healthz
@@ -69,8 +69,8 @@ def cmd_ping(_args) -> int:
 
     print()
     if all_ok:
-        print(f"{GREEN}✓ 全部通过{NC}")
+        print(f"{GREEN}✓ Tất cả đều đạt{NC}")
     else:
-        print(f"{RED}✗ 有步骤失败{NC} — 请运行 python -m easel doctor 检查环境")
+        print(f"{RED}✗ Có bước thất bại{NC} — chạy python -m easel doctor để kiểm tra môi trường")
 
     return 0 if all_ok else 1
