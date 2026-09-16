@@ -407,11 +407,13 @@ def test_persona_gate_low_score_warns_but_never_blocks_publish():
 
 
 def test_persona_skill_prioritizes_positioning_and_caps_cross_niche_scores():
+    # Chuỗi khớp theo bản tiếng Việt của SKILL.md (runbook 3.9, commit 2eaa523).
+    # Sửa lại nếu đổi cách diễn đạt bảng trọng số hoặc mức trần điểm.
     skill = (PROJECT_ROOT / "skills/openclaw/skill-persona-check/SKILL.md").read_text()
-    assert "账号定位与内容赛道" in skill and "| 30% |" in skill
-    assert "内容形式一致性" in skill and "目标受众匹配" in skill
-    assert "总分最高 59" in skill
-    assert "publish_allowed` 始终为 `true" in skill
+    assert "Định vị kênh và ngách nội dung" in skill and "| 30% |" in skill
+    assert "Nhất quán hình thức nội dung" in skill and "Khớp khán giả mục tiêu" in skill
+    assert "tổng điểm tối đa 59" in skill
+    assert "`publish_allowed` luôn là `true`" in skill
 
 
 # ---- Web: 输出树结构（相对路径 + kind）----
