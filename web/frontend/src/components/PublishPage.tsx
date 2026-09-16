@@ -12,23 +12,33 @@ interface PublishPageProps {
   persona: string;
 }
 
-// 平台列表须与后端 LOGIN_RUNNERS 对齐（有登录/发布链路的才列）——微博/公众号无 publisher，不列
-const PLATFORMS: { key: string; label: string; titleLimit?: number; bodyLimit: number; hint: string }[] = [
-  { key: 'xiaohongshu', label: 'Xiaohongshu', titleLimit: 20, bodyLimit: 1000, hint: 'Tiêu đề ≤20, nội dung ≤1000, thiên về cảm xúc + hashtag' },
-  { key: 'douyin', label: 'Douyin', titleLimit: 55, bodyLimit: 55, hint: 'Caption ≤55, vài chữ đầu là móc câu' },
-  { key: 'kuaishou', label: 'Kuaishou', titleLimit: 30, bodyLimit: 1000, hint: 'Video hoặc ảnh (bài ảnh), tiêu đề ≤30, cần kèm media' },
-  { key: 'weixin-channels', label: 'WeChat Channels', bodyLimit: 1000, hint: 'Cần kèm video, mô tả ngắn + hashtag, đăng nhập bằng quét mã WeChat' },
-  { key: 'zhihu', label: 'Zhihu', bodyLimit: 5000, hint: 'Bài dài/câu trả lời, trình bày rõ logic' },
-  { key: 'bilibili', label: 'Bilibili', titleLimit: 80, bodyLimit: 2000, hint: 'Cần kèm video, tiêu đề ≤80, mô tả ≤2000, mặc định đăng vào mục «Kiến thức»' },
-];
-const LABEL2KEY = Object.fromEntries(PLATFORMS.map((p) => [p.label, p.key]));
+// Danh sách nền tảng lấy từ /api/accounts (nguồn sự thật: LOGIN_RUNNERS trong web/app.py).
+// Các trường mediaRequired/videoOnly/titleLimit/bodyLimit/hint do backend trả thêm từ runbook 5.
+type PublishAccount = AccountItem & {
+  mediaRequired?: boolean;
+  videoOnly?: boolean;
+  titleLimit?: number | null;
+  bodyLimit?: number | null;
+  hint?: string;
+};
+type PlatformMeta = {
+  key: string; label: string; titleLimit?: number; bodyLimit: number; hint: string;
+  mediaRequired: boolean; videoOnly: boolean;
+};
+const DEFAULT_BODY_LIMIT = 5000;
 
-// 能一键发布的平台（有后端 publisher）
-const PUBLISHABLE = new Set(['xiaohongshu', 'douyin', 'kuaishou', 'weixin-channels', 'zhihu', 'bilibili']);
-// 必须附带媒体的平台（无媒体发不了）
-const MEDIA_REQUIRED = new Set(['xiaohongshu', 'douyin', 'kuaishou', 'weixin-channels', 'bilibili']);
-// 只能发视频的平台（抖音/视频号/B站：图文不走此链路，必须视频）
-const VIDEO_ONLY = new Set(['douyin', 'weixin-channels', 'bilibili']);
+function toPlatform(a: PublishAccount): PlatformMeta {
+  return {
+    key: a.platform,
+    label: a.name,
+    titleLimit: a.titleLimit ?? undefined,
+    bodyLimit: a.bodyLimit ?? DEFAULT_BODY_LIMIT,
+    hint: a.hint || a.note || '',
+    mediaRequired: !!a.mediaRequired,
+    videoOnly: !!a.videoOnly,
+  };
+}
+
 const VIDEO_RE = /\.(mp4|mov|webm|mkv|avi|m4v|flv|ts)$/i;
 
 function parseSections(text: string): Record<string, string> {
@@ -39,6 +49,7 @@ function parseSections(text: string): Record<string, string> {
 }
 
 type PubState = { status: 'publishing' | 'ok' | 'fail'; msg: string };
+type PublishResultWithUrl = { url?: string };
 
 export default function PublishPage({ persona }: PublishPageProps) {
   const draft0 = loadPublishDraft();
@@ -56,12 +67,16 @@ export default function PublishPage({ persona }: PublishPageProps) {
   const adaptCtl = useRef<AbortController | null>(null);
 
   // 发布相关
-  const [accounts, setAccounts] = useState<AccountItem[]>([]);
+  const [accounts, setAccounts] = useState<PublishAccount[]>([]);
+  const [accountsLoaded, setAccountsLoaded] = useState(false);
   const [mediaFiles, setMediaFiles] = useState<OutputFile[]>([]);
   const [selectedMedia, setSelectedMedia] = useState<string[]>([]);
   const [showPicker, setShowPicker] = useState(false);
   const [pub, setPub] = useState<Record<string, PubState>>({});
   const [publishing, setPublishing] = useState(false);
+  // Hộp xác nhận trong trang, thay hộp confirm của trình duyệt: Chrome tự trả "huỷ" khi tab
+  // đang ở nền, mà kiểm tra trước chạy lâu nên người dùng hay chuyển tab → bấm xong đứng im.
+  const [confirmTargets, setConfirmTargets] = useState<PlatformMeta[] | null>(null);
   // 发布时的短信验证窗口（抖音风控条件触发；没触发就不弹）
   const [pubSms, setPubSms] = useState<{ platform: string; name: string; state: string; message: string } | null>(null);
   const [pubSmsCode, setPubSmsCode] = useState('');
@@ -76,7 +91,14 @@ export default function PublishPage({ persona }: PublishPageProps) {
 
   // 登录态 + 可选媒体列表
   useEffect(() => {
-    fetchAccounts().then(setAccounts).catch(() => { /* 忽略 */ });
+    fetchAccounts().then((list) => {
+      const items = list as PublishAccount[];
+      setAccounts(items);
+      setAccountsLoaded(true);
+      // Bản nháp cũ có thể còn key nền tảng đã gỡ (xiaohongshu, douyin…) → bỏ đi.
+      const known = new Set(items.filter((a) => a.supported).map((a) => a.platform));
+      setPlatforms((prev) => prev.filter((k) => known.has(k)));
+    }).catch(() => { setAccountsLoaded(true); });
     fetchOutputs().then((roots) => {
       const files: OutputFile[] = [];
       const walk = (n: OutputFile) => {
@@ -89,7 +111,11 @@ export default function PublishPage({ persona }: PublishPageProps) {
     }).catch(() => { /* 忽略 */ });
   }, []);
 
+  const PLATFORMS: PlatformMeta[] = accounts.filter((a) => a.supported).map(toPlatform);
+  const metaOf = (key: string) => PLATFORMS.find((p) => p.key === key);
   const loginOf = (key: string) => accounts.find((a) => a.platform === key)?.loggedIn ?? false;
+  const mediaRule = PLATFORMS.filter((p) => p.mediaRequired || p.videoOnly)
+    .map((p) => `${p.label}: ${p.videoOnly ? 'bắt buộc video' : 'bắt buộc ảnh/video'}`).join('; ');
 
   const toggle = (k: string) =>
     setPlatforms((prev) => prev.includes(k) ? prev.filter((x) => x !== k) : [...prev, k]);
@@ -113,6 +139,7 @@ export default function PublishPage({ persona }: PublishPageProps) {
   const adapt = () => {
     if (empty || platforms.length === 0 || adapting) return;
     const sel = PLATFORMS.filter((p) => platforms.includes(p.key));
+    const LABEL2KEY = Object.fromEntries(PLATFORMS.map((p) => [p.label, p.key]));
     const prompt =
       `Hãy chạy /skill-content-repurposing: chuyển thể nội dung dưới đây cho các nền tảng: ${sel.map((p) => p.label).join(', ')}.` +
       `Bắt buộc tham khảo platform-specs và công thức chuyển thể của SKILL đó, bám sát định dạng, giọng điệu và số chữ gốc của từng nền tảng.\n` +
@@ -175,9 +202,9 @@ export default function PublishPage({ persona }: PublishPageProps) {
   // D. 一键发布（真发布，二次确认）
   const publishAll = async () => {
     if (empty || publishing || checking) return;
-    const targets = PLATFORMS.filter((p) => platforms.includes(p.key) && PUBLISHABLE.has(p.key));
+    const targets = PLATFORMS.filter((p) => platforms.includes(p.key));
     if (targets.length === 0) {
-      showToast('Nền tảng đã chọn chưa hỗ trợ đăng một chạm (Bilibili dùng «Sao chép» hoặc biliup trong terminal)');
+      showToast('Chưa chọn nền tảng nào hỗ trợ đăng một chạm');
       return;
     }
     setChecking(true);
@@ -188,23 +215,27 @@ export default function PublishPage({ persona }: PublishPageProps) {
     } finally {
       setChecking(false);
     }
-    const okToSend = window.confirm(
-      `Đã chạy kiểm tra trước khi đăng, kết quả hiển thị trên trang. Điểm persona chỉ để nhắc, không chặn đăng.\n\n` +
-      `Sắp [ĐĂNG THẬT] lên: ${targets.map((t) => t.label).join(', ')}.\n` +
-      `Nội dung sẽ được đăng công khai lên tài khoản của bạn, tiếp tục?`);
-    if (!okToSend) return;
+    setConfirmTargets(targets);
+  };
 
+  const cancelPublish = () => {
+    setConfirmTargets(null);
+    showToast('Đã huỷ đăng bài');
+  };
+
+  const doPublish = async (targets: PlatformMeta[]) => {
+    setConfirmTargets(null);
     setPublishing(true);
     for (const t of targets) {
       if (!loginOf(t.key)) {
         setPub((r) => ({ ...r, [t.key]: { status: 'fail', msg: 'Chưa đăng nhập · vào trang Tài khoản để đăng nhập' } }));
         continue;
       }
-      if (MEDIA_REQUIRED.has(t.key) && selectedMedia.length === 0) {
+      if (t.mediaRequired && selectedMedia.length === 0) {
         setPub((r) => ({ ...r, [t.key]: { status: 'fail', msg: 'Cần kèm ảnh/video' } }));
         continue;
       }
-      if (VIDEO_ONLY.has(t.key) && !selectedMedia.some((p) => VIDEO_RE.test(p))) {
+      if (t.videoOnly && !selectedMedia.some((p) => VIDEO_RE.test(p))) {
         setPub((r) => ({ ...r, [t.key]: { status: 'fail', msg: `${t.label} chỉ đăng được video, hãy chọn một video từ thư viện nội dung` } }));
         continue;
       }
@@ -215,10 +246,11 @@ export default function PublishPage({ persona }: PublishPageProps) {
           // 抖音：异步发布，轮询状态；风控触发短信墙时弹输入框（条件触发，没触发就直接跑完）
           await pollAsyncPublish(t.key, t.label);
         } else {
+          const url = (res as PublishResultWithUrl).url;
           setPub((r) => ({
             ...r,
             [t.key]: res.ok
-              ? { status: 'ok', msg: 'Đã đăng ✅' }
+              ? { status: 'ok', msg: url ? `Đã đăng ✅ ${url}` : 'Đã đăng ✅' }
               : { status: 'fail', msg: res.detail || res.message || 'Đăng bài thất bại' },
           }));
         }
@@ -284,12 +316,12 @@ export default function PublishPage({ persona }: PublishPageProps) {
     const d = new Date();
     await createSchedule({
       title: title.trim() || effective(key).slice(0, 20), date: d.toISOString().slice(0, 10),
-      platform: PLATFORMS.find((p) => p.key === key)?.label || '', time: '', status: 'draft', note: effective(key),
+      platform: metaOf(key)?.label || '', time: '', status: 'draft', note: effective(key),
     });
     showToast('Đã lưu nháp và thêm vào lịch hôm nay');
   };
 
-  const canPublish = platforms.some((k) => PUBLISHABLE.has(k));
+  const canPublish = platforms.some((k) => !!metaOf(k));
 
   return (
     <div className="publish-page">
@@ -311,6 +343,10 @@ export default function PublishPage({ persona }: PublishPageProps) {
 
         <label className="field-label">Nền tảng đăng</label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {!accountsLoaded && <span className="pv-hint">Đang tải danh sách nền tảng…</span>}
+          {accountsLoaded && PLATFORMS.length === 0 && (
+            <span className="pv-hint">Chưa có nền tảng nào hỗ trợ đăng bài. Kiểm tra trang Tài khoản.</span>
+          )}
           {PLATFORMS.map((p) => (
             <button key={p.key} className={`chip ${platforms.includes(p.key) ? 'active' : ''}`}
               onClick={() => toggle(p.key)}>{p.label}</button>
@@ -319,7 +355,7 @@ export default function PublishPage({ persona }: PublishPageProps) {
 
         <label className="field-label" style={{ marginTop: 14 }}>
           Media đính kèm {selectedMedia.length > 0 && <span className="pv-badge">{selectedMedia.length} tệp</span>}
-          <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: 12 }}>(Xiaohongshu/Douyin/Kuaishou/WeChat Channels/Bilibili bắt buộc, chọn từ thư viện nội dung; Douyin, WeChat Channels, Bilibili phải là video)</span>
+          <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: 12 }}>({mediaRule ? `${mediaRule}; ` : 'Tuỳ chọn; '}chọn từ thư viện nội dung, ảnh và video không đăng cùng lúc)</span>
         </label>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
           <button className="btn btn-sm" onClick={() => setShowPicker((v) => !v)}>
@@ -360,11 +396,11 @@ export default function PublishPage({ persona }: PublishPageProps) {
           <button className="btn btn-sm" disabled={empty || checking || adapting} onClick={check}>
             <IconCheck size={14} /> {checking ? 'Đang kiểm tra…' : 'Kiểm tra trước khi đăng'}
           </button>
-          <button className="btn btn-sm" disabled={empty} onClick={() => addToCalendar(platforms[0] || 'xiaohongshu')}>
+          <button className="btn btn-sm" disabled={empty} onClick={() => addToCalendar(platforms[0] || PLATFORMS[0]?.key || '')}>
             <IconCalendar size={14} /> Lưu nháp và lên lịch
           </button>
           <button className="btn btn-sm btn-primary" disabled={empty || publishing || checking || !canPublish}
-            title={canPublish ? 'Đăng thật lên các nền tảng đã đăng nhập' : 'Nền tảng đã chọn không có đăng một chạm (Bilibili dùng biliup trong terminal)'}
+            title={canPublish ? 'Đăng thật lên các nền tảng đã đăng nhập' : 'Chọn ít nhất một nền tảng hỗ trợ đăng một chạm'}
             onClick={publishAll}>
             <IconPublish size={14} /> {publishing ? 'Đang đăng…' : 'Đăng một chạm'}
           </button>
@@ -391,7 +427,6 @@ export default function PublishPage({ persona }: PublishPageProps) {
           const titleOver = p.titleLimit != null && title.length > p.titleLimit;
           const isEdit = editing === p.key;
           const ps = pub[p.key];
-          const publishable = PUBLISHABLE.has(p.key);
           const logged = loginOf(p.key);
           return (
             <div key={p.key} className={`card pv-card pv-${p.key}`}>
@@ -399,9 +434,9 @@ export default function PublishPage({ persona }: PublishPageProps) {
                 <span className="pv-plat">
                   {p.label}
                   {overrides[p.key] != null && <span className="pv-badge">Bản AI</span>}
-                  {publishable && (logged
+                  {logged
                     ? <span className="pv-badge pv-badge-ok">Đã đăng nhập</span>
-                    : <span className="pv-badge">Chưa đăng nhập</span>)}
+                    : <span className="pv-badge">Chưa đăng nhập</span>}
                 </span>
                 <span className={`pv-count ${over ? 'over' : ''}`}>{text.length}/{p.bodyLimit}</span>
               </div>
@@ -437,6 +472,28 @@ export default function PublishPage({ persona }: PublishPageProps) {
       </div>
 
       {toast && <div className="toast ok"><span className="toast-icon">✓</span>{toast}</div>}
+
+      {confirmTargets && (
+        <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) cancelPublish(); }}>
+          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 420 }}>
+            <h3 style={{ margin: '0 0 8px' }}>Xác nhận đăng thật</h3>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '0 0 8px' }}>
+              Đã chạy kiểm tra trước khi đăng, kết quả hiển thị trên trang. Điểm persona chỉ để nhắc, không chặn đăng.
+            </p>
+            <p style={{ fontSize: 14, margin: '0 0 14px' }}>
+              Sắp <b>ĐĂNG THẬT</b> lên: {confirmTargets.map((t) => t.label).join(', ')}.<br />
+              Nội dung sẽ được đăng công khai lên tài khoản của bạn.
+              {selectedMedia.length > 0 && <><br />Kèm {selectedMedia.length} tệp media.</>}
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn-sm btn-ghost" onClick={cancelPublish}>Huỷ</button>
+              <button className="btn btn-sm btn-primary" autoFocus onClick={() => doPublish(confirmTargets)}>
+                <IconPublish size={14} /> Đăng ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {pubSms && (
         <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) setPubSms(null); }}>
