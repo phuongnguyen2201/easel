@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { buildProfile, profileBuildStatus } from '../lib/api';
 
-const PLATFORMS = ['小红书', '抖音', 'B站', '视频号', '公众号', '微博', '知乎'];
+// Nền tảng người dùng đang vận hành (để phân tích hồ sơ), không phụ thuộc adapter đăng bài.
+const PLATFORMS = ['Facebook', 'TikTok', 'YouTube', 'Instagram', 'Zalo', 'Threads', 'LinkedIn', 'Website/Blog'];
 const TONES = ['Chuyên nghiệp nghiêm túc', 'Nhẹ nhàng hài hước', 'Gần gũi đời thường', 'Sắc sảo châm biếm', 'Ấm áp chữa lành', 'Thực dụng hữu ích'];
 
 interface OnboardingWizardProps {

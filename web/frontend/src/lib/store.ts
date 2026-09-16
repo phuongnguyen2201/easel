@@ -73,7 +73,7 @@ function readMigratedLocalValue(key: string, suffix: string): string | null {
 }
 
 const PUBLISH_DEFAULT: PublishDraft = {
-  title: '', body: '', platforms: ['xiaohongshu', 'douyin'], overrides: {}, tags: '',
+  title: '', body: '', platforms: [], overrides: {}, tags: '',
 };
 export function loadPublishDraft(): PublishDraft {
   try {

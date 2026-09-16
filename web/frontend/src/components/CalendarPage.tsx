@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { fetchSchedule, createSchedule, updateSchedule, deleteSchedule, fetchScheduleContext } from '../lib/api';
+import { fetchSchedule, createSchedule, updateSchedule, deleteSchedule, fetchScheduleContext, fetchAccounts } from '../lib/api';
 import type { ScheduleItem, ScheduleInput, ScheduleContext } from '../lib/api';
 import { IconCalendar, IconTrash, IconChevron } from './icons';
 
@@ -14,7 +14,9 @@ const EVENT_TYPES = ['Ngày lễ', 'TMĐT', 'Sự kiện nền tảng', 'Ngành'
 const SOURCE_LABEL: Record<string, string> = {
   chat: 'Trang trò chuyện', 'publish-page': 'Trang đăng bài', manual: 'Thủ công', scheduler: 'Lên lịch',
 };
-const PLATFORMS = ['小红书', '抖音', 'B站', '微信视频号', '快手', '公众号', '微博', '知乎'];
+// Nền tảng lên lịch: tên từ /api/accounts (khớp cfg['name'] mà web/calendar_ops ghi vào _schedule.json)
+// cộng các nền tảng VN dự kiến chưa có adapter, để vẫn lên kế hoạch được.
+const PLANNED_PLATFORMS = ['Facebook Page', 'TikTok', 'YouTube', 'Zalo OA', 'Instagram', 'Threads'];
 const WEEKDAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 type Filter = 'all' | 'content' | 'event';
 
@@ -34,6 +36,13 @@ export default function CalendarPage() {
   const [items, setItems] = useState<ScheduleItem[]>([]);
   const [editing, setEditing] = useState<ScheduleItem | null>(null);   // 现有项
   const [form, setForm] = useState<ScheduleInput | null>(null);        // 弹窗表单（null=关闭）
+  const [accountNames, setAccountNames] = useState<string[]>([]);
+  useEffect(() => {
+    fetchAccounts().then((list) => setAccountNames(list.map((a) => a.name))).catch(() => {});
+  }, []);
+  // Giữ nền tảng của mục đang sửa dù không còn trong danh sách (dữ liệu cũ, vd tên TQ).
+  const PLATFORMS = Array.from(new Set([...accountNames, ...PLANNED_PLATFORMS,
+    ...(form?.platform ? [form.platform] : [])]));
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<Filter>('all');
   const [ctx, setCtx] = useState<ScheduleContext | null>(null);
