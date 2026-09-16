@@ -1,7 +1,7 @@
 # Easel Skill 能力地图
 
 > 本文档按 Easel 的内容工作流分层介绍当前技能库。每个条目对应 `skills/openclaw/` 中一个可用的 `SKILL.md`。
-> 当前共 **101 个 Skill**；这里只说明各 Skill 负责什么，具体输入、输出和执行流程请查看对应目录。
+> 当前共 **102 个 Skill**；这里只说明各 Skill 负责什么，具体输入、输出和执行流程请查看对应目录。
 
 ## 🗺️ 分层总览
 
@@ -11,7 +11,7 @@
 | 🔭 发现层 | 9 | 发现热点、趋势、行业变化、竞品动态和内容机会。 |
 | 🧭 策划层 | 16 | 把机会转化为定位、选题、结构、排期和可执行方案。 |
 | 🎨 创作层 | 50 | 完成文字、视觉、音频、视频和复合内容的实际制作。 |
-| 📣 发布层 | 10 | 完成平台适配、质量检查、排期、互动和真实发布。 |
+| 📣 发布层 | 11 | 完成平台适配、质量检查、排期、互动和真实发布。 |
 | 📊 归因层 | 10 | 记录内容表现，分析数据与评论，并把结论用于下一轮策略。 |
 
 ## 🧱 基础能力
@@ -131,6 +131,7 @@
 |---|---|
 | `skill-community-ops` | Vận hành bình luận và ứng phó khủng hoảng sau đăng: mẫu trả lời phân tầng theo 5 loại bình luận kèm quy tắc xử lý theo mức, khai thác đề tài từ bình luận; có sự cố thì phân cấp, dự thảo tuyên bố, thống nhất phát ngôn. |
 | `skill-content-repurposing` | Tách một bài gốc (bài viết, kịch bản video, bản ghi livestream) theo tháp trụ cột – phái sinh – vi nội dung rồi viết lại thành nội dung bản địa cho từng nền tảng như Facebook, TikTok, YouTube, Zalo, kèm thứ tự đăng. |
+| `skill-facebook-page-upload` | Đăng bài lên Trang Facebook qua Meta Graph API (bài chữ, một ảnh, album, video, hashtag): đăng nhập thiết bị bằng mã QR, chạy thử trước rồi mới `--exec`, qua content_guard, ghi lịch và manifest sau khi đăng. |
 | `skill-persona-check` | Kiểm tra nhất quán persona và tone thương hiệu của nội dung so với hồ sơ (Profile) về định vị, ngách, hình thức, khán giả, phong cách, sở thích; chấm điểm, chỉ rõ điểm lệch kèm gợi ý sửa, chỉ cảnh báo không chặn đăng. |
 | `skill-publish-checklist` | Kiểm đủ trước khi đăng: rà từng mục tiêu đề, ảnh bìa, hashtag, định dạng, nhãn tuân thủ, link, CTA có đủ chưa, kết luận đăng được hay chưa kèm danh sách mục còn thiếu và cách bổ sung. |
 | `skill-publish-notify` | Đẩy thông báo sau khi đăng: thành công hay thất bại đều gửi kết quả (trạng thái, tiêu đề, nền tảng, link) tới Telegram, Slack, webhook bất kỳ hoặc bot nhóm Feishu/DingTalk/WeCom; thuần script, không phụ thuộc ngoài. |

@@ -23,6 +23,7 @@ dependencies = [
     # cryptography không âm thầm lọt vào (mới nhất trên PyPI: 50.0.1).
     "websocket-client>=1.7,<2",
     "cryptography>=42,<51",
+    "segno>=1.6,<2",              # QR đăng nhập thiết bị (facebook_publish.py login)
 ]
 
 [project.optional-dependencies]

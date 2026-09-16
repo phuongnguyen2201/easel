@@ -124,7 +124,16 @@ _WHOAMI_LOCK = threading.Lock()
 
 # Runbook 4.3: rỗng hoá — các runner nền tảng TQ đã gỡ sang retired/.
 # Giai đoạn 5 đăng ký adapter VN tại đây (xem runbook 5.1 mục 3).
-LOGIN_RUNNERS: dict[str, dict] = {}
+# backend 'graph' = facebook_publish.py (agent_docs/adapter-facebook-page.md).
+LOGIN_RUNNERS: dict[str, dict] = {
+    "facebook-page": {
+        "name": "Facebook Page", "backend": "graph", "script": "facebook_publish.py",
+        "profile": "FacebookPageProfile",
+        "mediaRequired": False, "videoOnly": False,
+        "titleLimit": 255, "bodyLimit": 63206,
+        "hint": "Đăng qua Meta Graph API, cần quyền quản trị Trang",
+    },
+}
 
 NO_ADAPTER_MESSAGE = "Chức năng {feature} chưa có adapter cho nền tảng Việt Nam."
 
@@ -195,6 +204,20 @@ SKILL_API_REQUIREMENTS: dict[str, dict] = {
                 ],
             },
         ],
+    },
+    # Đăng Trang Facebook: đăng nhập thiết bị cần App ID + Client token (không cần app secret).
+    "skill-facebook-page-upload": {
+        "label": "Đăng Trang Facebook (Meta Graph API)",
+        "providers": [{
+            "id": "facebook-page",
+            "name": "Ứng dụng Meta — Đăng nhập thiết bị",
+            "keys": [
+                _k("FB_APP_ID", "App ID của ứng dụng Meta", secret=False),
+                _k("FB_CLIENT_TOKEN", "Client token (Cài đặt ứng dụng → Nâng cao)"),
+                _k("FB_PAGE_ID", "ID Trang mặc định (tuỳ chọn)", required=False, secret=False),
+                _k("FB_GRAPH_VERSION", "Phiên bản Graph API (tuỳ chọn, vd v23.0)", required=False, secret=False),
+            ],
+        }],
     },
 }
 
@@ -1789,16 +1812,50 @@ async def api_accounts():
         {'platform': pf, 'name': cfg['name'], 'backend': cfg['backend'],
          'supported': cfg['backend'] != 'unsupported',
          'loggedIn': _account_logged_in(pf, cfg),
-         'note': cfg.get('note', '')}
+         'note': cfg.get('note', ''),
+         'mediaRequired': bool(cfg.get('mediaRequired')), 'videoOnly': bool(cfg.get('videoOnly')),
+         'titleLimit': cfg.get('titleLimit'), 'bodyLimit': cfg.get('bodyLimit'),
+         'hint': cfg.get('hint', '')}
         for pf, cfg in LOGIN_RUNNERS.items()
     ]
 
 
 @app.post("/api/login/{platform}")
 async def api_login_start(platform: str):
-    """启动某平台登录：浏览器平台后台跑 QR runner，轮询到二维码就绪即返回。"""
-    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
-    _raise_no_adapter("đăng nhập")
+    """启动某平台登录：后台跑 QR runner，轮询到二维码就绪即返回。"""
+    cfg = LOGIN_RUNNERS.get(platform)
+    if not cfg:
+        raise HTTPException(404, 'Nền tảng không xác định')
+    backend = cfg['backend']
+    if backend != 'graph':
+        _raise_no_adapter("đăng nhập")
+    LOGIN_DIR.mkdir(parents=True, exist_ok=True)
+    qr = LOGIN_DIR / f'{platform}.png'
+    status = LOGIN_DIR / f'{platform}.json'
+    for f in (qr, status):
+        try:
+            f.unlink()
+        except OSError:
+            pass
+    old = LOGIN_PROCESSES.get(platform)
+    if old is not None and old.poll() is None:
+        old.terminate()
+    cmd = [sys.executable, str(SHARED_SCRIPTS / cfg['script']), 'login',
+           '--qr-out', str(qr), '--status-file', str(status), '--timeout', str(LOGIN_TIMEOUT)]
+    with _WHOAMI_LOCK:
+        _WHOAMI_CACHE.pop(platform, None)
+    log_path = LOGIN_DIR / f'{platform}.log'
+    log_file = log_path.open('a', encoding='utf-8')
+    proc = subprocess.Popen(cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
+                            stdout=log_file, stderr=subprocess.STDOUT)
+    log_file.close()
+    LOGIN_PROCESSES[platform] = proc
+    for _ in range(50):
+        await asyncio.sleep(0.5)
+        s = _login_status(platform)
+        if s['qr'] or s['state'] in ('qr_ready', 'success', 'error', 'expired'):
+            return {'mode': 'qr', **s}
+    return {'mode': 'qr', **_login_status(platform)}
 
 
 @app.get("/api/login/{platform}/status")
@@ -1858,6 +1915,8 @@ async def api_account_whoami(platform: str):
         cmd = [sys.executable, str(SHARED_SCRIPTS / 'xhs_publish.py'), 'whoami', '--no-proxy']
     elif backend == 'douyin':
         cmd = [sys.executable, str(SHARED_SCRIPTS / 'douyin_publish.py'), 'whoami']
+    elif backend == 'graph':
+        cmd = [sys.executable, str(SHARED_SCRIPTS / cfg['script']), 'whoami']
     else:
         cmd = [sys.executable, str(SHARED_SCRIPTS / 'web_publisher.py'), 'whoami',
                '--platform', cfg['wp']]
@@ -2063,8 +2122,73 @@ async def api_publish_sms(platform: str, req: SmsCodeRequest):
 @app.post("/api/publish/{platform}")
 async def api_publish(platform: str, req: PublishRequest):
     """一键发布：分发到对应 publisher 脚本真发（--exec）。二次确认在前端。"""
-    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
-    _raise_no_adapter("đăng bài")
+    cfg = LOGIN_RUNNERS.get(platform)
+    if not cfg:
+        raise HTTPException(404, 'Nền tảng không xác định')
+    if cfg['backend'] != 'graph':
+        _raise_no_adapter("đăng bài")
+    if not req.title.strip() and not req.body.strip():
+        raise HTTPException(400, 'Tiêu đề/nội dung không được để trống')
+    imgs, vids = [], []
+    for rel in req.media or []:
+        full = _safe_output_path(rel)
+        ext = full.suffix.lower()
+        if ext in VIDEO_EXTS:
+            vids.append(str(full))
+        elif ext in IMAGE_EXTS:
+            imgs.append(str(full))
+    if cfg.get('mediaRequired') and not imgs and not vids:
+        raise HTTPException(400, f"{cfg['name']} cần kèm ảnh hoặc video")
+    if imgs and vids:
+        raise HTTPException(400, 'Một nội dung không thể đăng đồng thời ảnh và video, vui lòng chọn một')
+    if cfg.get('videoOnly') and not vids:
+        raise HTTPException(400, f"{cfg['name']} chỉ đăng được video, vui lòng kèm một tệp video")
+    title = req.title.strip() or req.body.strip()[:20]   # chỉ dùng cho _schedule.json
+    cmd = [sys.executable, str(SHARED_SCRIPTS / cfg['script']), 'publish',
+           '--content', req.body, '--tags', req.tags or '', '--exec']
+    if req.title.strip():   # không tự bịa tiêu đề từ body — Facebook sẽ lặp chữ
+        cmd += ['--title', req.title.strip()]
+    if vids:
+        cmd += ['--video', vids[0]]
+    elif imgs:
+        cmd += ['--images', ','.join(imgs)]
+    try:
+        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=_publish_env(),
+                                       capture_output=True, text=True, timeout=600)
+    except subprocess.TimeoutExpired:
+        raise HTTPException(504, 'Đăng bài quá thời gian chờ (xử lý media chậm hoặc luồng bị kẹt)')
+    ok = proc.returncode == 0
+    tail = (proc.stderr or proc.stdout or '').strip().splitlines()
+    detail = '\n'.join(tail[-8:])
+    url = ''
+    for line in reversed((proc.stdout or '').strip().splitlines()):
+        if line.strip().startswith('{'):
+            try:
+                url = json.loads(line).get('url', '') or ''
+            except Exception:
+                pass
+            break
+    try:
+        with (OUTPUTS_DIR / '_publish.log').open('a', encoding='utf-8') as lf:
+            lf.write(f"\n===== {time.strftime('%Y-%m-%d %H:%M:%S')} {platform} rc={proc.returncode} ok={ok} =====\n")
+            lf.write('CMD: ' + ' '.join(cmd[:3]) + ' …\n')
+            lf.write('STDOUT:\n' + (proc.stdout or '')[-2000:] + '\n')
+            lf.write('STDERR:\n' + (proc.stderr or '')[-2000:] + '\n')
+    except Exception:
+        pass
+    if ok:
+        try:
+            items = _read_schedule()
+            items.append({'id': uuid.uuid4().hex[:12], 'title': title,
+                          'date': time.strftime('%Y-%m-%d'), 'platform': cfg['name'],
+                          'time': time.strftime('%H:%M'), 'status': 'published',
+                          'note': req.body[:200], 'kind': 'content', 'url': url,
+                          'source': 'publish-page'})
+            _write_schedule(items)
+        except Exception:
+            pass
+    return {'ok': ok, 'message': 'Đăng bài thành công' if ok else 'Đăng bài thất bại (xem detail)',
+            'detail': detail, 'url': url}
 
 
 class ProfileBuildRequest(BaseModel):

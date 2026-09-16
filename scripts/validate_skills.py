@@ -62,7 +62,9 @@ LEGACY_OUTPUT_DIRS = {
 # RỖNG từ runbook 4.2 — toàn bộ 7 script đăng của nền tảng TQ đã chuyển sang retired/.
 # Giai đoạn 5 nạp lại theo TỪNG adapter VN, giữ nguyên 2 marker:
 #   "skills/shared/scripts/<platform>_publish.py": ("content_guard.guard_or_die", 'add_argument("--exec"'),
-PUBLISH_SCRIPT_CONTRACTS: dict[str, tuple[str, ...]] = {}
+PUBLISH_SCRIPT_CONTRACTS: dict[str, tuple[str, ...]] = {
+    "skills/shared/scripts/facebook_publish.py": ("content_guard.guard_or_die", 'add_argument("--exec"'),
+}
 OUTPUT_SCAN_SUFFIXES = {".md", ".py", ".sh"}
 GENERIC_OUTPUT_DIRS = {"xhs", "test", "tmp", "temp", "demo", "output", "outputs", "result", "results"}
 ROOT_OUTPUT_FILE_RE = re.compile(
