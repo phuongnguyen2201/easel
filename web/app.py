@@ -122,13 +122,16 @@ WHOAMI_TTL = 600  # 秒
 _WHOAMI_CACHE: dict[str, tuple[float, dict]] = {}
 _WHOAMI_LOCK = threading.Lock()
 
-LOGIN_RUNNERS: dict[str, dict] = {
-    "kuaishou": {"name": "Kuaishou", "backend": "web", "wp": "kuaishou", "profile": "KuaishouProfile"},
-    "weixin-channels": {"name": "WeChat Channels", "backend": "web", "wp": "weixin-channels", "profile": "ChannelsProfile"},
-    "zhihu": {"name": "Zhihu", "backend": "web", "wp": "zhihu", "profile": "ZhihuProfile"},
-    "bilibili": {"name": "Bilibili", "backend": "biliup"},
-    "douyin": {"name": "Douyin", "backend": "douyin", "profile": "DouyinProfile"},
-}
+# Runbook 4.3: rỗng hoá — các runner nền tảng TQ đã gỡ sang retired/.
+# Giai đoạn 5 đăng ký adapter VN tại đây (xem runbook 5.1 mục 3).
+LOGIN_RUNNERS: dict[str, dict] = {}
+
+NO_ADAPTER_MESSAGE = "Chức năng {feature} chưa có adapter cho nền tảng Việt Nam."
+
+
+def _raise_no_adapter(feature: str) -> None:
+    """Trả HTTP 501 cho các route phụ thuộc adapter nền tảng chưa được xây."""
+    raise HTTPException(501, NO_ADAPTER_MESSAGE.format(feature=feature))
 
 
 def _k(env, label, required=True, secret=True, aliases=None):
@@ -1794,57 +1797,8 @@ async def api_accounts():
 @app.post("/api/login/{platform}")
 async def api_login_start(platform: str):
     """启动某平台登录：浏览器平台后台跑 QR runner，轮询到二维码就绪即返回。"""
-    cfg = LOGIN_RUNNERS.get(platform)
-    if not cfg:
-        raise HTTPException(404, 'Nền tảng không xác định')
-    backend = cfg['backend']
-    if backend == 'unsupported':
-        raise HTTPException(400, f"{cfg['name']} tạm thời không khả dụng: {cfg.get('note', '')}")
-    LOGIN_DIR.mkdir(parents=True, exist_ok=True)
-    qr = LOGIN_DIR / f'{platform}.png'
-    status = LOGIN_DIR / f'{platform}.json'
-    for f in (qr, status):
-        try:
-            f.unlink()
-        except OSError:
-            pass
-    if backend == 'xhs':
-        cmd = [sys.executable, str(SHARED_SCRIPTS / 'xhs_publish.py'), 'login', '--no-proxy',
-               '--qr-out', str(qr), '--status-file', str(status), '--timeout', str(LOGIN_TIMEOUT)]
-    elif backend == 'biliup':
-        # B站：TV 端扫码登录 API 生成二维码 + 写 biliup cookie（biliup login 需真终端，前端用不了）
-        cmd = [sys.executable, str(SHARED_SCRIPTS / 'bili_login.py'), 'login',
-               '--qr-out', str(qr), '--status-file', str(status),
-               '--cookie', str(PROJECT_ROOT / 'cookies.json'), '--timeout', str(LOGIN_TIMEOUT)]
-    elif backend == 'douyin':
-        code_file = LOGIN_DIR / f'{platform}.code'
-        try:
-            code_file.unlink()
-        except OSError:
-            pass
-        cmd = [sys.executable, str(SHARED_SCRIPTS / 'douyin_publish.py'), 'login',
-               '--qr-out', str(qr), '--status-file', str(status),
-               '--sms-code-file', str(code_file), '--timeout', str(LOGIN_TIMEOUT)]
-    else:
-        cmd = [sys.executable, str(SHARED_SCRIPTS / 'web_publisher.py'), 'login-qr',
-               '--platform', cfg['wp'], '--qr-out', str(qr), '--status-file', str(status),
-               '--timeout', str(LOGIN_TIMEOUT)]
-    # 新登录开始 → 清掉旧的 whoami 缓存（登录前可能缓存了「未登录」），避免登录成功后仍读到旧结果
-    with _WHOAMI_LOCK:
-        _WHOAMI_CACHE.pop(platform, None)
-    log_path = LOGIN_DIR / f'{platform}.log'
-    log_file = log_path.open('a', encoding='utf-8')
-    proc = subprocess.Popen(cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
-                            stdout=log_file, stderr=subprocess.STDOUT)
-    log_file.close()
-    LOGIN_PROCESSES[platform] = proc
-    for _ in range(50):
-        await asyncio.sleep(0.5)
-        s = _login_status(platform)
-        if s['qr'] or s['state'] in ('qr_ready', 'success', 'error', 'expired'):
-            return {'mode': 'qr', **s}
-    s = _login_status(platform)
-    return {'mode': 'qr', **s}
+    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
+    _raise_no_adapter("đăng nhập")
 
 
 @app.get("/api/login/{platform}/status")
@@ -1982,39 +1936,15 @@ ANALYTICS_PLATFORMS = {"douyin", "kuaishou", "zhihu", "weixin-channels", "bilibi
 @app.get("/api/analytics/platforms")
 async def api_analytics_platforms():
     """列出支持抓数据的平台 + 各自登录态（前端据此渲染平台选择器）。"""
-    return [
-        {"platform": pf, "name": LOGIN_RUNNERS.get(pf, {}).get("name", pf),
-         "loggedIn": _account_logged_in(pf, LOGIN_RUNNERS.get(pf, {}))}
-        for pf in LOGIN_RUNNERS if pf in ANALYTICS_PLATFORMS
-    ]
+    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
+    _raise_no_adapter("thu thập dữ liệu tài khoản")
 
 
 @app.get("/api/analytics/{platform}")
 async def api_analytics(platform: str):
     """抓取某平台已登录账号的创作数据（粉丝/获赞/作品 + 与上次快照的增长）。起 headless 浏览器，数秒。"""
-    if platform not in ANALYTICS_PLATFORMS:
-        raise HTTPException(404, "Nền tảng này chưa hỗ trợ thu thập dữ liệu")
-    # B站用 cookie 调 API（无浏览器 profile），单独走 bili_login stats；其余走 account_stats（Playwright）
-    if platform == "bilibili":
-        cmd = [sys.executable, str(SHARED_SCRIPTS / "bili_login.py"), "stats",
-               "--cookie", str(PROJECT_ROOT / "cookies.json")]
-    else:
-        # 代理策略由 account_stats.py 按平台自定（xhs 直连、其它走 env），后端照常传 proxy_env
-        cmd = [sys.executable, str(SHARED_SCRIPTS / "account_stats.py"), "fetch", "--platform", platform]
-    try:
-        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=proxy_env(),
-                                       capture_output=True, text=True, timeout=180)
-    except subprocess.TimeoutExpired:
-        raise HTTPException(504, "Thu thập quá thời gian chờ (trình duyệt không khởi động được hoặc mạng chậm)")
-    for line in reversed((proc.stdout or "").strip().splitlines()):
-        line = line.strip()
-        if line.startswith("{"):
-            try:
-                return json.loads(line)
-            except Exception:
-                continue
-    detail = (proc.stderr or "").strip().splitlines()[-1:] or ["Không lấy được dữ liệu"]
-    raise HTTPException(502, f"Không lấy được dữ liệu (có thể chưa đăng nhập hoặc nền tảng đã thay đổi): {detail[0][:120]}")
+    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
+    _raise_no_adapter("thu thập dữ liệu tài khoản")
 
 
 MEDIA_REQUIRED = {"douyin", "kuaishou", "weixin-channels", "bilibili"}
@@ -2133,83 +2063,8 @@ async def api_publish_sms(platform: str, req: SmsCodeRequest):
 @app.post("/api/publish/{platform}")
 async def api_publish(platform: str, req: PublishRequest):
     """一键发布：分发到对应 publisher 脚本真发（--exec）。二次确认在前端。"""
-    cfg = LOGIN_RUNNERS.get(platform)
-    if not cfg:
-        raise HTTPException(404, 'Nền tảng không xác định')
-    backend = cfg['backend']
-    if backend == 'unsupported':
-        raise HTTPException(400, f"{cfg['name']} chưa hỗ trợ đăng bài một chạm")
-    if not req.title.strip() and not req.body.strip():
-        raise HTTPException(400, 'Tiêu đề/nội dung không được để trống')
-    imgs, vids = [], []
-    for rel in req.media or []:
-        full = _safe_output_path(rel)
-        ext = full.suffix.lower()
-        if ext in VIDEO_EXTS:
-            vids.append(str(full))
-        elif ext in IMAGE_EXTS:
-            imgs.append(str(full))
-    if platform in MEDIA_REQUIRED and not imgs and not vids:
-        raise HTTPException(400, f"{cfg['name']} cần kèm ảnh hoặc video")
-    if imgs and vids:
-        raise HTTPException(400, 'Một nội dung không thể đăng đồng thời ảnh và video, vui lòng chọn một')
-    if platform in VIDEO_ONLY_PUBLISH and not vids:
-        raise HTTPException(400, f"{cfg['name']} chỉ đăng được video, vui lòng kèm một tệp video")
-    title = req.title.strip() or req.body.strip()[:20]
-    tags = req.tags or ''
-    py = sys.executable
-    if platform == 'bilibili':
-        # B站投稿：直接调 biliup CLI（需 cookies.json，PATH 上有 biliup）。必须视频；
-        # tid=36「知识」；B站投稿必须≥1 标签，无则兜底「日常」。
-        bili_tag = tags.replace('#', '').replace('，', ',').strip().strip(',') or '日常'
-        cmd = ['biliup', '-u', str(PROJECT_ROOT / 'cookies.json'), 'upload', vids[0],
-               '--title', title[:80], '--tid', '36', '--copyright', '1', '--tag', bili_tag]
-        if req.body.strip():
-            cmd += ['--desc', req.body[:2000]]
-    elif platform == 'douyin':
-        base = [py, str(SHARED_SCRIPTS / 'douyin_publish.py')]
-        cmd = base + ['publish-video', '--video', vids[0]] if vids else base + ['publish', '--images', ','.join(imgs)]
-        cmd += ['--title', title, '--content', req.body, '--tags', tags, '--exec']
-        # 抖音发布可能触发风控短信墙——异步跑 + 状态/验证码文件，前端轮询到 sms_required 时弹输入框
-        PUBLISH_DIR.mkdir(parents=True, exist_ok=True)
-        status_file = PUBLISH_DIR / 'douyin.json'
-        code_file = PUBLISH_DIR / 'douyin.code'
-        cmd += ['--status-file', str(status_file), '--sms-code-file', str(code_file)]
-        return _start_async_publish(platform, cmd, title, req.body, cfg, status_file, code_file)
-    else:
-        cmd = [py, str(SHARED_SCRIPTS / 'web_publisher.py'), 'publish',
-               '--platform', cfg['wp'], '--title', title, '--desc', req.body,
-               '--tags', tags, '--exec']
-        media = vids[0] if vids else (imgs[0] if imgs else None)
-        if media:
-            cmd += ['--media', media]
-    try:
-        proc = await asyncio.to_thread(subprocess.run, cmd, cwd=str(PROJECT_ROOT), env=_publish_env(),
-                                       capture_output=True, text=True, timeout=600)
-    except subprocess.TimeoutExpired:
-        raise HTTPException(504, 'Đăng bài quá thời gian chờ (xử lý media chậm hoặc luồng bị kẹt)')
-    ok = proc.returncode == 0
-    tail = (proc.stderr or proc.stdout or '').strip().splitlines()
-    detail = '\n'.join(tail[-8:])
-    try:
-        with (OUTPUTS_DIR / '_publish.log').open('a', encoding='utf-8') as lf:
-            lf.write(f"\n===== {time.strftime('%Y-%m-%d %H:%M:%S')} {platform} rc={proc.returncode} ok={ok} =====\n")
-            lf.write('CMD: ' + ' '.join(cmd) + '\n')
-            lf.write('STDOUT:\n' + (proc.stdout or '')[-2000:] + '\n')
-            lf.write('STDERR:\n' + (proc.stderr or '')[-2000:] + '\n')
-    except Exception:
-        pass
-    if ok:
-        try:
-            items = _read_schedule()
-            items.append({'id': uuid.uuid4().hex[:12], 'title': title,
-                          'date': time.strftime('%Y-%m-%d'), 'platform': cfg['name'],
-                          'time': time.strftime('%H:%M'), 'status': 'published',
-                          'note': req.body[:200], 'kind': 'content', 'source': 'publish-page'})
-            _write_schedule(items)
-        except Exception:
-            pass
-    return {'ok': ok, 'message': 'Đăng bài thành công' if ok else 'Đăng bài thất bại (xem detail)', 'detail': detail}
+    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
+    _raise_no_adapter("đăng bài")
 
 
 class ProfileBuildRequest(BaseModel):
@@ -2420,26 +2275,8 @@ def _fetch_platform(pf: str) -> list[dict]:
 
 @app.get("/api/trends")
 async def api_trends(platforms: str = "weibo,douyin,zhihu", limit: int = 12):
-    pfs = [p.strip() for p in platforms.split(",") if p.strip() in TREND_SOURCES]
-    now = time.time()
-    loop = asyncio.get_event_loop()
-    result = []
-    for pf in pfs:
-        c = _TREND_CACHE.get(pf)
-        if c and now - c[0] < 300:
-            items = c[1]
-        else:
-            items = await loop.run_in_executor(None, _fetch_platform, pf)
-            if items:
-                _TREND_CACHE[pf] = (now, items)
-            elif c:
-                items = c[1]
-        result.append({
-            "platform": pf,
-            "label": TREND_LABELS.get(pf, pf),
-            "items": items[:max(1, min(limit, 30))],
-        })
-    return {"trends": result, "updated": int(now)}
+    # Runbook 4.3: nền tảng TQ đã gỡ; bật lại khi có adapter VN (Giai đoạn 5).
+    _raise_no_adapter("xu hướng / hot list")
 
 
 SCHEDULE_FILE = OUTPUTS_DIR / "_schedule.json"
