@@ -29,7 +29,8 @@ import social_stats as ss  # noqa: E402
 PROJECT_ROOT = Path(os.environ.get("EASEL_ROOT") or Path(__file__).resolve().parents[4])
 DEFAULT_DATA = PROJECT_ROOT / "outputs" / "_analytics" / "publish-log.json"
 LEGACY_DATA = PROJECT_ROOT / "outputs" / "publish-log.json"
-CST = timezone(timedelta(hours=8))
+# Giờ Việt Nam (UTC+7, không có giờ mùa hè); upstream dùng UTC+8.
+VN_TZ = timezone(timedelta(hours=7))
 METRIC_KEYS = ("views", "likes", "comments", "shares")
 
 
@@ -66,7 +67,7 @@ def atomic_write(path: Path, data: dict) -> None:
 
 
 def _now_iso() -> str:
-    return datetime.now(CST).replace(microsecond=0).isoformat()
+    return datetime.now(VN_TZ).replace(microsecond=0).isoformat()
 
 
 def _parse_dt(s: str):
