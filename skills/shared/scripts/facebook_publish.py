@@ -405,7 +405,11 @@ def _device_flow(a, graph: Graph, env: dict[str, str], status: str | None) -> tu
     from output_paths import validate_output_path
     qr_path = validate_output_path(a.qr_out, allow_system=True, create_parent=True)
     render_qr(verification_target(uri, user_code), qr_path)
-    message = f"Quét mã hoặc mở {uri.replace('https://', '')} và nhập mã: {user_code}"
+    # Ưu tiên nhập mã trên máy tính: quét QR bằng iPhone mở màn hình "Log in with Facebook"
+    # của app Facebook và báo "Given URL is not allowed by the Application configuration".
+    host = uri.replace("https://", "").rstrip("/")
+    message = (f"Trên máy tính, mở {host} và nhập mã: {user_code} "
+               f"(quét QR bằng điện thoại có thể lỗi trên iPhone)")
     print(message, file=sys.stderr)
     write_status(status, "qr_ready", message, qr=f"_login/{qr_path.name}")
 

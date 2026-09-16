@@ -1,6 +1,6 @@
 # Adapter design — facebook-page (runbook 5, step 1)
 
-Status: implemented (script, skill, web registration, tests); not yet run against a live Meta app.
+Status: implemented and tested live on 2026-09-16 (Page "Alpha Signals"): device login from a desktop browser, publish text / 2-photo album / video, calendar + manifest records. Web Accounts login/logout: in test.
 Additions vs. the original design: `pages [--set-default ID]` subcommand, `publish --offline`, default Graph version `v23.0`. Platform code `facebook-page`, script
 `skills/shared/scripts/facebook_publish.py`, skill `skill-facebook-page-upload`.
 
@@ -52,20 +52,29 @@ Device flow (External, developers.facebook.com/docs/facebook-login/for-devices):
 3. `GET /me?fields=id,name,picture` and `GET /me/accounts?fields=id,name,access_token,picture`
    → Page tokens.
 
-**Open risk (must verify first):** the scope must contain permissions approved
-for the app. Whether `pages_show_list`, `pages_manage_posts`,
-`pages_read_engagement` are grantable through device login was not confirmed
-from the docs page. Test with an app in Development mode and a Page the app
-admin manages before writing the runner. Fallback if refused: `login --token`
-(paste a user token from Graph API Explorer; the runner skips steps 1–2 and
-does step 3) — same state file, no QR.
+**Resolved (tested 2026-09-16):** device login grants `pages_show_list`,
+`pages_manage_posts`, `pages_read_engagement` once all three are added to the
+app's "Manage everything on your Page" use case. If `pages_manage_posts` is
+missing from the use case, facebook.com/device shows "Invalid Scopes:
+pages_manage_posts". If no Page is ticked in the consent dialog, `/me/accounts`
+is empty and the runner exits with "chưa quản trị Trang nào". Fallback kept:
+`login --token` (user token from Graph API Explorer; skips steps 1–2).
+
+**Known issue — iPhone QR scan (observed 2026-09-16):** scanning the QR with an
+iPhone opens Safari, which hands off to the Facebook app's "Log in with
+Facebook" sheet and fails with "Given URL is not allowed by the Application
+configuration … add a valid native platform". The app is server-side and has
+no iOS bundle, so do not add an iOS platform to fix this. Primary path is now
+typing the code at facebook.com/device in a desktop browser; the QR stays as a
+secondary path. The `qr_ready` message says so. Typing
+`m.facebook.com/device` manually in mobile Safari is untested.
 
 ### State mapping
 
 | login_state | When | `message` (Vietnamese, user-facing) | Files |
 |---|---|---|---|
 | `starting` | runner started, before `/device/login` returns | `Đang tạo mã đăng nhập Facebook…` | `.json` |
-| `qr_ready` | code received; QR written | `Quét mã hoặc mở facebook.com/device, nhập mã: <user_code>` | `.png`, `.json` |
+| `qr_ready` | code received; QR written | `Trên máy tính, mở www.facebook.com/device và nhập mã: <user_code> (quét QR bằng điện thoại có thể lỗi trên iPhone)` | `.png`, `.json` |
 | `scanned` | not used — Meta gives no "opened" signal, only pending | — | — |
 | `sms_required` / `verifying` | not used — 2FA happens on facebook.com | — | — |
 | `verifying` (optional) | token received, fetching `/me/accounts` | `Đang lấy danh sách Trang…` | — |
