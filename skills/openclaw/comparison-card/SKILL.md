@@ -7,106 +7,106 @@ description: >-
 layer: produce
 ---
 
-# 对比图 / 一图流
+# Ảnh so sánh / một ảnh nói hết
 
-> 生成 A vs B 可视化对比卡片，一张截图说清楚差异，适合社媒分享。
+> Tạo thẻ so sánh trực quan A vs B, một ảnh chụp là thấy rõ khác biệt, hợp để chia sẻ mạng xã hội.
 
-> ⚠️ **生成前先读 [card-design](../card-design/SKILL.md) 设计系统**（锁配色/字体层级/填满画幅/去 AI 廉价感）。对比图用「对比表」骨架（左右双栏、≥5 对比行、行高一致），避免渐变、emoji、底部死空白。
+> ⚠️ **Trước khi tạo phải đọc hệ thống thiết kế [card-design](../card-design/SKILL.md)** (khoá bảng màu/cấp bậc font/lấp đầy khung hình/khử cảm giác AI rẻ tiền). Ảnh so sánh dùng bộ khung "bảng so sánh" (hai cột trái phải, ≥5 dòng so sánh, chiều cao dòng đồng nhất), tránh gradient, emoji, khoảng trắng chết ở đáy.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| `items` | 是 | 要对比的 2-4 个对象（名称） |
-| `dimensions` | 否 | 对比维度列表（如价格、性能、功能等）；不指定则自动提取 |
-| `data` | 否 | 结构化对比数据（JSON/表格）；不提供则由 SKILL 调研填充 |
-| `layout` | 否 | 布局模式：`table`（默认）/ `versus` / `pros_cons` |
-| `size` | 否 | 尺寸预设：`xiaohongshu`(1080x1440) / `weibo`(1080x1080) / `wechat`(1080x1920) / `auto` |
-| `style` | 否 | 视觉风格：走 **card-design 风格库**（瑞士极简/杂志编辑/高奢黑金…），不指定则按内容品类/Profile 选一个立场 |
-| `winner` | 否 | 是否标注胜出项：`true` / `false`（默认 `false`） |
+| `items` | Có | 2-4 đối tượng cần so sánh (tên) |
+| `dimensions` | Không | Danh sách tiêu chí so sánh (giá, hiệu năng, tính năng...); không nêu thì tự trích |
+| `data` | Không | Dữ liệu so sánh có cấu trúc (JSON/bảng); không đưa thì SKILL tự tra và điền |
+| `layout` | Không | Kiểu bố cục: `table` (mặc định) / `versus` / `pros_cons` |
+| `size` | Không | Preset kích thước: `xiaohongshu`(1080x1440) / `weibo`(1080x1080) / `wechat`(1080x1920) / `auto` |
+| `style` | Không | Phong cách thị giác: lấy từ **thư viện phong cách card-design** (Swiss tối giản/tạp chí biên tập/đen vàng cao cấp...), không nêu thì chọn theo loại nội dung/Profile |
+| `winner` | Không | Có đánh dấu mục thắng hay không: `true` / `false` (mặc định `false`) |
 
-### 布局模式说明
+### Giải thích các kiểu bố cục
 
-| 模式 | 描述 | 适用场景 |
+| Kiểu | Mô tả | Trường hợp dùng |
 |------|------|----------|
-| `table` | 经典参数对比表，行=维度，列=对象 | 多维度、多参数的产品对比 |
-| `versus` | 左右对称 VS 布局，中间分割线 | 两个对象的直观对比 |
-| `pros_cons` | 优劣势分栏，绿色优势/红色劣势 | 单一产品的优劣分析 |
+| `table` | Bảng thông số kinh điển, hàng = tiêu chí, cột = đối tượng | So sánh sản phẩm nhiều tiêu chí, nhiều thông số |
+| `versus` | Bố cục VS đối xứng trái phải, có đường chia ở giữa | So sánh trực quan hai đối tượng |
+| `pros_cons` | Chia cột ưu/nhược, xanh cho ưu, đỏ cho nhược | Phân tích ưu nhược của một sản phẩm |
 
-## 输出
+## Đầu ra
 
-- 完整的 HTML 文件，可在浏览器打开并截图
-- 卡片尺寸固定（px），截图即所见
-- 写入 `outputs/` 目录
+- File HTML hoàn chỉnh, mở được bằng trình duyệt và chụp màn hình
+- Kích thước thẻ cố định (px), chụp ra đúng như nhìn thấy
+- Ghi vào thư mục `outputs/<chủ đề>/`
 
-## 执行步骤
+## Các bước thực hiện
 
-### Step 1 — 解析对比需求
+### Step 1 - Phân tích yêu cầu so sánh
 
-1. 确认对比对象（2-4 个）
-2. 确认对比维度：
-   - 用户指定了 → 直接用
-   - 用户没指定 → 根据对象类型自动推断常见对比维度（如手机：价格/屏幕/芯片/电池/摄像头）
-3. 确认布局模式和尺寸
+1. Chốt các đối tượng so sánh (2-4 cái)
+2. Chốt tiêu chí so sánh:
+   - Người dùng đã nêu → dùng luôn
+   - Người dùng không nêu → tự suy ra tiêu chí phổ biến theo loại đối tượng (ví dụ điện thoại: giá/màn hình/chip/pin/camera)
+3. Chốt kiểu bố cục và kích thước
 
-### Step 2 — 数据收集与整理
+### Step 2 - Thu thập và sắp xếp dữ liệu
 
-如果用户提供了完整数据：
-- 直接结构化为对比矩阵
+Nếu người dùng đã đưa đủ dữ liệu:
+- Cấu trúc hoá thẳng thành ma trận so sánh
 
-如果用户只给了对象名，没给数据：
-- 用 WebSearch 查询各对象的关键参数
-- 交叉验证数据准确性（至少 2 个来源）
-- 标注数据来源
+Nếu người dùng chỉ đưa tên đối tượng, không đưa dữ liệu:
+- Dùng WebSearch tra thông số then chốt của từng đối tượng
+- Đối chiếu chéo để kiểm độ chính xác (ít nhất 2 nguồn)
+- Ghi rõ nguồn dữ liệu
 
-将数据整理为标准矩阵：
+Sắp dữ liệu thành ma trận chuẩn:
 ```json
 {
   "items": ["A", "B"],
   "dimensions": [
-    {"name": "价格", "values": ["¥2999", "¥3499"], "winner": "A"},
-    {"name": "性能", "values": ["骁龙 8 Gen3", "A17 Pro"], "winner": "B"}
+    {"name": "Giá", "values": ["9.990.000d", "12.990.000d"], "winner": "A"},
+    {"name": "Hiệu năng", "values": ["Snapdragon 8 Gen3", "A17 Pro"], "winner": "B"}
   ]
 }
 ```
 
-### Step 3 — 生成 HTML 卡片
+### Step 3 - Dựng thẻ HTML
 
-1. 读取 `references/comparison-template.html` 作为基础模板
-2. 根据 `layout` 模式选择布局结构
-3. 填充数据到模板
-4. **应用 card-design 选定风格的配色/字体**（锁 spec，全表一致；不自造配色）
-5. 设置卡片尺寸（`size` 参数）
-6. 如果 `winner` 为 true，用视觉标记（高亮/皇冠图标）标注胜出项
+1. Đọc `references/comparison-template.html` làm template gốc
+2. Chọn cấu trúc bố cục theo kiểu `layout`
+3. Đổ dữ liệu vào template
+4. **Áp bảng màu/font của phong cách card-design đã chọn** (khoá spec, cả bảng đồng nhất; không tự chế màu)
+5. Đặt kích thước thẻ (tham số `size`)
+6. Nếu `winner` là true, đánh dấu mục thắng bằng chỉ dấu thị giác (highlight/icon vương miện)
 
-### Step 4 — 视觉优化
+### Step 4 - Tinh chỉnh thị giác
 
-- 确保文字不溢出单元格
-- 数值类数据右对齐，文本类左对齐
-- 胜出项用 card-design 选定风格的**强调色**高亮，劣势项用中性灰（不写死某个绿）
-- 底部加数据来源说明和日期
-- 遵守 card-design 铁律：禁蓝紫科技渐变、禁 emoji 当图标、填满不留死空白
+- Bảo đảm chữ không tràn khỏi ô
+- Dữ liệu dạng số canh phải, dạng chữ canh trái
+- Mục thắng highlight bằng **màu nhấn** của phong cách card-design đã chọn, mục yếu dùng xám trung tính (không hard-code một màu xanh lá nào)
+- Thêm phần ghi nguồn dữ liệu và ngày ở đáy thẻ
+- Tuân thủ luật sắt của card-design: cấm gradient công nghệ xanh tím, cấm dùng emoji làm icon, lấp đầy khung không chừa khoảng trắng chết
 
-### Step 5 — 写入文件
+### Step 5 - Ghi file
 
-将 HTML 写入 `outputs/` 目录，文件名格式：`{A}_vs_{B}_对比_{日期}.html`
+Ghi HTML vào thư mục `outputs/<chủ đề>/assets/`, tên file theo mẫu: `{A}_vs_{B}_so-sanh_{ngay}.html`
 
-### Step 6 — 渲染出图（勿手动截图）
+### Step 6 - Render ra ảnh (đừng chụp màn hình thủ công)
 
-用共享脚本自动渲染成图：
+Dùng script dùng chung để render tự động:
 
 ```bash
 python skills/shared/scripts/render_card.py \
-  --html outputs/主题名/assets/A_vs_B_对比.html \
-  --out outputs/主题名/A_vs_B_对比.png \
+  --html "outputs/<chủ đề>/assets/A_vs_B_so-sanh.html" \
+  --out "outputs/<chủ đề>/A_vs_B_so-sanh.png" \
   --full-page --width 1080 --height 1440
 ```
 
-尺寸按 Profile 匹配的平台预设调整（默认小红书 1080×1440）。脚本用 playwright+chromium，对 CDN/字体有界超时不卡死；首次需 `pip install playwright && playwright install chromium`。
+Kích thước chỉnh theo preset nền tảng khớp với Profile (mặc định Xiaohongshu 1080x1440). Script dùng playwright+chromium, có timeout cho CDN/font nên không treo; lần đầu cần `pip install playwright && playwright install chromium`.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `style.md` 读取品牌配色，替换模板默认色；从 `identity.md` 读取账号名作为水印；从 `platforms.md` 读取主力平台，自动匹配尺寸
-- **无 Profile**：使用默认清新风格配色，无水印，默认小红书尺寸（1080x1440）
+- **Có Profile**: đọc bảng màu thương hiệu từ `style.md` để thay màu mặc định của template; đọc tên kênh từ `identity.md` làm watermark; đọc nền tảng chủ lực từ `platforms.md` để tự khớp kích thước
+- **Không có Profile**: dùng bảng màu tươi sáng mặc định, không watermark, kích thước mặc định Xiaohongshu (1080x1440)
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

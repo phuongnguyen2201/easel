@@ -8,76 +8,76 @@ description: >-
 layer: produce
 ---
 
-# 信息图制作
+# Làm infographic
 
-> 将数据或文字内容转化为可视化信息图，支持静态 AntV 信息图和动画 GIF 两种输出模式
+> Biến dữ liệu hoặc nội dung chữ thành infographic trực quan, hỗ trợ hai chế độ xuất: infographic AntV tĩnh và GIF động
 
-## 与其他图表 SKILL 的区别
+## Khác gì các SKILL biểu đồ khác
 
-都能"生成图表"，但机制与产物不同，按需求路由：
+Đều "sinh biểu đồ" được, nhưng cơ chế và sản phẩm khác nhau, định tuyến theo nhu cầu:
 
-- **infographic（本 SKILL）** = 本地渲染。两种产物：静态**信息图**（AntV DSL，列表/流程/对比/层级 HTML→SVG）+ **GIF 动画图表**（matplotlib 逐帧→GIF）。
-- **chart-visualization** = 调 AntV 远程 API，产出**单张静态图片 URL**（25+ 类型），最快拿到单图。
-- **data-report** = 输入 CSV/Excel/JSON，产出**整页可视化报告**（KPI 卡 + 多图 + 洞察 + 表格）。
+- **infographic (SKILL này)** = render cục bộ. Hai loại sản phẩm: **infographic** tĩnh (AntV DSL, danh sách/lưu đồ/so sánh/phân cấp HTML→SVG) + **biểu đồ GIF động** (matplotlib dựng từng khung→GIF).
+- **chart-visualization** = gọi API AntV từ xa, cho ra **URL một ảnh tĩnh** (hơn 25 kiểu), nhanh nhất khi chỉ cần một ảnh.
+- **data-report** = nhận CSV/Excel/JSON, cho ra **báo cáo trực quan cả trang** (thẻ KPI + nhiều biểu đồ + insight + bảng).
 
-**两模式边界**：要**静态矢量信息图**（可导出 SVG、模板丰富）→ 模式 A；要**会动的 GIF**（发社媒/朋友圈的动图，如条形竞赛、数字滚动、进度动画、折线生长）→ 模式 B。
+**Ranh giới hai chế độ**: cần **infographic vector tĩnh** (xuất được SVG, nhiều mẫu) → chế độ A; cần **GIF biết chuyển động** (ảnh động đăng mạng xã hội/story, như đua cột, số chạy, tiến độ, đường mọc) → chế độ B.
 
-## 输入
+## Đầu vào
 
-用户提供的文字内容、数据、或主题描述。可以是结构化数据（CSV/JSON）、自然语言描述、或简单的数字罗列。
+Nội dung chữ, dữ liệu hoặc mô tả chủ đề do người dùng đưa. Có thể là dữ liệu có cấu trúc (CSV/JSON), mô tả bằng ngôn ngữ tự nhiên, hoặc chỉ là một dãy số liệt kê.
 
-## 输出
+## Đầu ra
 
-- 静态模式：`outputs/主题名/infographic.html`（浏览器打开，可导出 SVG）
-- 动画模式：`outputs/主题名/chart.gif`（`scripts/gif_chart.py` 直接产出可发社媒的 GIF）
+- Chế độ tĩnh: `outputs/<chủ đề>/infographic.html` (mở bằng trình duyệt, xuất được SVG)
+- Chế độ động: `outputs/<chủ đề>/chart.gif` (`scripts/gif_chart.py` cho ra thẳng GIF đăng mạng xã hội được)
 
-## 执行步骤
+## Các bước thực hiện
 
-### 第一步：确认输出模式
+### Bước 1: Chốt chế độ xuất
 
-询问用户选择输出格式：
+Hỏi người dùng chọn định dạng đầu ra:
 
-1. **静态信息图**（AntV Infographic）— 列表、流程、对比、层级、关系图等 50+ 模板，矢量渲染，可导出 SVG
-2. **动画 GIF**（`scripts/gif_chart.py`）— 条形竞赛 / 数字滚动 / 进度 / 折线生长 4 类爆款动画，直接产出 GIF
+1. **Infographic tĩnh** (AntV Infographic) - hơn 50 mẫu: danh sách, lưu đồ, so sánh, phân cấp, sơ đồ quan hệ; render vector, xuất được SVG
+2. **GIF động** (`scripts/gif_chart.py`) - 4 kiểu animation viral: đua cột / số chạy / tiến độ / đường mọc, cho ra thẳng GIF
 
-如用户需求明确（如"做个条形竞赛动图"或"做个流程图"），直接选择对应模式，无需确认。
+Nếu yêu cầu đã rõ (kiểu "làm ảnh động đua cột" hay "làm cái lưu đồ"), chọn luôn chế độ tương ứng, khỏi hỏi lại.
 
-### 第二步：分析内容与选择图表
+### Bước 2: Phân tích nội dung và chọn biểu đồ
 
-分析用户输入，提取关键信息结构（标题、描述、数据项等）。选择合适的模板/图表类型。
+Phân tích đầu vào của người dùng, rút ra cấu trúc thông tin chính (tiêu đề, mô tả, các mục dữ liệu...). Chọn mẫu/kiểu biểu đồ phù hợp.
 
-**关键：必须尊重用户输入的语言。用户用中文输入，所有文本必须是中文。**
+**Mấu chốt: phải tôn trọng ngôn ngữ người dùng nhập. Người dùng nhập tiếng Việt thì mọi chữ trên hình phải là tiếng Việt.**
 
-### 第三步：渲染
+### Bước 3: Render
 
-- **模式 A（静态 AntV）** → 读 `references/antv-templates.md`：DSL 语法规则、模板选择指南、可用模板列表、HTML 渲染模板。生成 HTML 保存到 `outputs/`，告知路径。
+- **Chế độ A (AntV tĩnh)** → đọc `references/antv-templates.md`: quy tắc cú pháp DSL, hướng dẫn chọn mẫu, danh sách mẫu khả dụng, mẫu render HTML. Sinh HTML lưu vào `outputs/`, rồi báo đường dẫn.
 
-- **模式 B（动画 GIF）** → 调 `scripts/gif_chart.py <子命令>`，无需手写动画代码。子命令按图型：
+- **Chế độ B (GIF động)** → gọi `scripts/gif_chart.py <lệnh con>`, không cần tự viết code animation. Lệnh con theo kiểu biểu đồ:
 
-  | 子命令 | 用途 | 数据 JSON 结构 |
+  | Lệnh con | Dùng cho | Cấu trúc JSON của dữ liệu |
   |--------|------|----------------|
-  | `bar-race` | 条形竞赛（排名随时间变化，数据可视化爆款） | `{"title","times":[...],"series":{"名称":[数值×时间]}}` |
-  | `count-up` | 数字滚动增长（KPI 从 0 涨到目标） | `{"title","items":[{"label","value","suffix"}]}` 或 `{"label","value"}` |
-  | `progress` | 进度动画（`--style ring`/`bar`） | `{"label","value","max","color"}` |
-  | `line-grow` | 折线逐步生长 | `{"title","x":[...],"series":{"名称":[数值]}}` |
+  | `bar-race` | Đua cột (thứ hạng đổi theo thời gian, món viral của data viz) | `{"title","times":[...],"series":{"tên":[giá trị theo từng mốc]}}` |
+  | `count-up` | Số chạy tăng dần (KPI từ 0 lên mục tiêu) | `{"title","items":[{"label","value","suffix"}]}` hoặc `{"label","value"}` |
+  | `progress` | Animation tiến độ (`--style ring`/`bar`) | `{"label","value","max","color"}` |
+  | `line-grow` | Đường gấp khúc mọc dần | `{"title","x":[...],"series":{"tên":[giá trị]}}` |
 
-  通用参数：`--output x.gif`、`--data f.json`（`-` 读 stdin，省略用内置示例）、`--title`、`--width`（默认 900）、`--height`、`--fps`（默认 20）、`--duration`（秒，默认 4）。
+  Tham số chung: `--output x.gif`, `--data f.json` (`-` là đọc stdin, bỏ trống thì dùng ví dụ có sẵn), `--title`, `--width` (mặc định 900), `--height`, `--fps` (mặc định 20), `--duration` (giây, mặc định 4).
 
-  典型调用（先写数据到临时 JSON，再调脚本）：
+  Cách gọi điển hình (ghi dữ liệu ra JSON tạm trước, rồi gọi script):
   ```bash
   python skills/openclaw/infographic/scripts/gif_chart.py bar-race --data data.json \
-    --output outputs/城市增长/柱状竞速.gif --width 900 --duration 5
+    --output outputs/tang-truong-do-thi/dua-cot.gif --width 900 --duration 5
   ```
-  脚本自动设置中文字体、Agg 后端、自适应调色板控体积。自检：`python skills/openclaw/infographic/scripts/gif_chart.py --selftest`。
+  Script tự đặt font chữ, backend Agg, bảng màu thích ứng để ghìm dung lượng. Tự kiểm tra: `python skills/openclaw/infographic/scripts/gif_chart.py --selftest`.
 
-## 目录结构
+## Cấu trúc thư mục
 
 ```
 infographic/
-├── SKILL.md                    本文件（执行流程 + references 指针）
+├── SKILL.md                    File này (quy trình chạy + con trỏ tới references)
 ├── scripts/
-│   └── gif_chart.py            模式 B：动画 GIF 运行时（matplotlib+Pillow，4 子命令）
+│   └── gif_chart.py            Chế độ B: runtime GIF động (matplotlib+Pillow, 4 lệnh con)
 └── references/
-    ├── antv-templates.md       模式 A：静态 AntV 信息图完整规范
-    └── gif-charts.md           模式 B：图表选择/数据格式参考
+    ├── antv-templates.md       Chế độ A: đặc tả đầy đủ infographic AntV tĩnh
+    └── gif-charts.md           Chế độ B: tham khảo cách chọn biểu đồ/định dạng dữ liệu
 ```

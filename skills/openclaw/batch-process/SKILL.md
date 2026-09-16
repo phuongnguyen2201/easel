@@ -7,66 +7,66 @@ description: >-
 layer: general
 ---
 
-# 批量处理（目录级）
+# Xử lý hàng loạt (theo thư mục)
 
-> 对整个目录的图片/视频/音频统一套用同一操作。走 `skills/shared/scripts/batch_process.py`，
-> 逐个委派给对应确定性脚本（image_ops / video_ops / audio_ops）。
+> Áp cùng một thao tác cho toàn bộ ảnh/video/audio trong một thư mục. Chạy qua `skills/shared/scripts/batch_process.py`,
+> uỷ thác lần lượt cho script xác định tương ứng (image_ops / video_ops / audio_ops).
 
-> 单文件处理见 image-editing / video-editing / audio-editing；本 SKILL 是它们的**目录批量版**。
+> Xử lý một file xem image-editing / video-editing / audio-editing; SKILL này là **bản chạy hàng loạt theo thư mục** của chúng.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 目录 | 是 | 待处理文件所在目录 |
-| 类型 | 是 | `image` / `video` / `audio`（决定用哪个 ops 脚本 + 文件筛选） |
-| 操作 | 是 | ops 子命令（如 resize/compress/watermark/aspect/convert/normalize） |
-| 操作参数 | 视操作 | 写在 `--` 之后，原样透传给 ops 脚本 |
+| Thư mục | Có | Thư mục chứa file cần xử lý |
+| Loại | Có | `image` / `video` / `audio` (quyết định dùng script ops nào + cách lọc file) |
+| Thao tác | Có | Subcommand của ops (như resize/compress/watermark/aspect/convert/normalize) |
+| Tham số thao tác | Tuỳ thao tác | Viết sau `--`, truyền nguyên xi sang script ops |
 
-## 输出（默认 `<目录>/batch_out/`）
+## Đầu ra (mặc định `<thư mục>/batch_out/`)
 
-- 处理后的同名文件；报告成功/失败数。
+- File sau xử lý giữ nguyên tên; báo số file thành công/thất bại.
 
-## 执行
+## Thực thi
 
-脚本路径（相对项目根）：`skills/shared/scripts/batch_process.py`（`run -h` / `list -h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/batch_process.py` (`run -h` / `list -h`).
 
 ```bash
-# 先预览会处理哪些文件
+# Xem trước sẽ xử lý những file nào
 python skills/shared/scripts/batch_process.py list --dir imgs --type image
 
-# 批量压缩图片到 500KB
+# Nén hàng loạt ảnh xuống 500KB
 python skills/shared/scripts/batch_process.py run --dir imgs --type image --op compress \
   --out-dir out -- --max-kb 500
 
-# 批量加水印
+# Gắn watermark hàng loạt
 python skills/shared/scripts/batch_process.py run --dir imgs --type image --op watermark \
-  -- --text "@我的账号" --position bottom-right
+  -- --text "@kênh của tôi" --position bottom-right
 
-# 批量视频转竖版 9:16
+# Chuyển hàng loạt video sang dọc 9:16
 python skills/shared/scripts/batch_process.py run --dir clips --type video --op aspect \
   --out-dir out -- --ratio 9:16 --mode pad
 
-# 批量音频转 mp3（改扩展名用 --ext）
+# Chuyển hàng loạt audio sang mp3 (đổi phần mở rộng bằng --ext)
 python skills/shared/scripts/batch_process.py run --dir raw --type audio --op convert \
   --out-dir out --ext .mp3 -- --bitrate 192k
 ```
 
-## 可用操作（透传给 ops 脚本，`<脚本> <op> -h` 看参数）
+## Thao tác khả dụng (truyền sang script ops, xem tham số bằng `<script> <op> -h`)
 
-- **image**（image_ops）：resize / crop / pad / convert / compress / watermark / round / thumbnail
-- **video**（video_ops）：compress / aspect / watermark / speed / gif / frame
-- **audio**（audio_ops）：convert / normalize / denoise / fade / speed / trim
+- **image** (image_ops): resize / crop / pad / convert / compress / watermark / round / thumbnail
+- **video** (video_ops): compress / aspect / watermark / speed / gif / frame
+- **audio** (audio_ops): convert / normalize / denoise / fade / speed / trim
 
-## 规则
+## Quy tắc
 
-1. 先 `list` 预览文件范围，确认无误再 `run`。
-2. `--` 之后的参数原样透传给 ops 脚本；不确定参数先跑单文件版（image-editing 等）验证一次。
-3. 改输出格式用 `--ext`（如 `.mp3`/`.png`），否则沿用原扩展名。
-4. 批处理串行执行（避免高负载）；量大时耐心等，失败文件会单独列出不中断整体。
-5. 默认输出到 `<目录>/batch_out/`，不覆盖原文件。
+1. Chạy `list` xem trước phạm vi file, chắc chắn đúng rồi mới `run`.
+2. Tham số sau `--` truyền nguyên xi sang script ops; chưa chắc tham số thì chạy bản một file (image-editing...) kiểm chứng một lần.
+3. Đổi định dạng đầu ra bằng `--ext` (như `.mp3`/`.png`), nếu không sẽ giữ phần mở rộng gốc.
+4. Xử lý hàng loạt chạy tuần tự (tránh quá tải); số lượng lớn thì chờ, file lỗi được liệt kê riêng chứ không làm dừng cả lượt.
+5. Mặc định xuất ra `<thư mục>/batch_out/`, không ghi đè file gốc.
 
-## 参考来源
+## Nguồn tham khảo
 
-复用项目既有确定性脚本（image_ops/video_ops/audio_ops），本 SKILL 只做目录遍历 + 逐文件
-委派 + 结果汇总，不重复实现处理逻辑。
+Tái dùng script xác định sẵn có của dự án (image_ops/video_ops/audio_ops), SKILL này chỉ duyệt thư mục + uỷ thác từng
+file + tổng hợp kết quả, không cài lại logic xử lý.

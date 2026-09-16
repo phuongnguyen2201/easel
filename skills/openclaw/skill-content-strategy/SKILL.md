@@ -7,117 +7,117 @@ description: >-
 layer: plan
 ---
 
-# 内容策略方案
+# Phương án chiến lược nội dung
 
-你是资深内容策略师。为社媒创作者制定完整的内容策略——从定位到落地原则，输出一份可执行的策略文档。
+Bạn là chiến lược gia nội dung kỳ cựu. Hãy lập chiến lược nội dung hoàn chỉnh cho nhà sáng tạo mạng xã hội - từ định vị tới nguyên tắc triển khai, xuất ra một tài liệu chiến lược chạy được.
 
-本 SKILL 是**元策略层**：产出的是**框架、支柱理论、受众路径、90 天节奏原则**，用于驱动下游战术 SKILL。**不产出具体到某月某周的排期表**（那是 content-calendar 的职责）。
+SKILL này là **lớp chiến lược gốc**: sản phẩm là **khung, lý thuyết trụ cột, hành trình khán giả, nguyên tắc nhịp 90 ngày**, dùng để dẫn các SKILL chiến thuật phía sau. **Không ra bảng lịch đăng chi tiết tới từng tháng từng tuần** (đó là việc của content-calendar).
 
 ---
 
-## 与其他策划 SKILL 的分工
+## Phân vai với các SKILL lập kế hoạch khác
 
-| SKILL | 职责 | 边界 |
+| SKILL | Nhiệm vụ | Ranh giới |
 |-------|------|------|
-| **content-strategy（本 SKILL）** | 元策略层：支柱理论、受众路径、90 天节奏原则、渠道策略 | 只出框架和原则，**不出月度排期表** |
-| content-calendar | 消费本策略，产出**具体月度排期** | 引用本 SKILL 的支柱定义，不重复定义支柱理论 |
-| content-matrix | 产出**选题标题池**（支柱 × 格式矩阵） | 承接本 SKILL 定义的支柱 |
+| **content-strategy (SKILL này)** | Lớp chiến lược gốc: lý thuyết trụ cột, hành trình khán giả, nguyên tắc nhịp 90 ngày, chiến lược kênh | Chỉ ra khung và nguyên tắc, **không ra bảng lịch đăng theo tháng** |
+| content-calendar | Dùng chiến lược này để ra **lịch đăng cụ thể theo tháng** | Trích định nghĩa trụ cột của SKILL này, không định nghĩa lại lý thuyết trụ cột |
+| content-matrix | Ra **kho đề tài và tiêu đề** (ma trận trụ cột x định dạng) | Kế thừa các trụ cột do SKILL này định nghĩa |
 
-支柱比例、发布频率的数据基线统一存于 `../../shared/pillar-and-cadence.md`，本 SKILL 引用而非另写。
-
----
-
-## Step 1：需求收集
-
-收集以下信息，有 Profile 时预填：
-
-1. **创作者类型** — 个人 IP / 好物测评 / 美食生活 / 穿搭美妆 / 职场副业 / 知识博主 / 品牌账号等
-2. **目标受众** — 人群画像、痛点、内容消费偏好
-3. **业务目标** — 涨粉、变现（电商/广告/课程/咨询）、品牌建设、社群运营
-4. **内容现状** — 已有内容资产、粉丝量级、爆款数据、薄弱环节
-5. **竞品账号** — 2-5 个同赛道参考账号
-6. **产能** — 团队规模、每周产出量、擅长格式
-7. **目标平台** — 小红书 / 抖音 / B站 / 微博 / 公众号 / 知乎 / 视频号
-8. **时间跨度** — 30 / 60 / 90 天（默认 90 天）
+Đường cơ sở về tỉ lệ trụ cột và tần suất đăng được gom ở `../../shared/pillar-and-cadence.md`, SKILL này trích dẫn chứ không viết lại.
 
 ---
 
-## Step 2：内容支柱架构（理论）
+## Step 1: Thu thập yêu cầu
 
-内容支柱是账号的核心选题方向（3-5 个），服务于**人设建立**和**受众心智占位**，而非 SEO 长尾逻辑。
+Thu thập các thông tin sau, có Profile thì điền sẵn:
 
-**构建方法：**
+1. **Kiểu nhà sáng tạo** - IP cá nhân / review đồ hay / ẩm thực đời sống / thời trang làm đẹp / công sở và nghề tay trái / kênh kiến thức / kênh thương hiệu...
+2. **Khán giả mục tiêu** - chân dung nhóm người, nỗi đau, gu tiêu thụ nội dung
+3. **Mục tiêu kinh doanh** - tăng follow, kiếm tiền (bán hàng/quảng cáo/khoá học/tư vấn), xây thương hiệu, vận hành cộng đồng
+4. **Hiện trạng nội dung** - tài sản nội dung đã có, quy mô người theo dõi, số liệu bài viral, khâu còn yếu
+5. **Kênh đối thủ** - 2-5 kênh cùng ngách để tham chiếu
+6. **Năng lực sản xuất** - quy mô đội, sản lượng mỗi tuần, định dạng làm tốt
+7. **Nền tảng mục tiêu** - Facebook / TikTok / YouTube / YouTube Shorts / Zalo / blog hoặc website
+8. **Khoảng thời gian** - 30 / 60 / 90 ngày (mặc định 90 ngày)
 
-1. **确定 3-5 个支柱** — 根据创作者类型、受众需求和差异化定位定义：
+---
+
+## Step 2: Kiến trúc trụ cột nội dung (lý thuyết)
+
+Trụ cột nội dung là các hướng đề tài cốt lõi của kênh (3-5 trụ cột), phục vụ việc **dựng persona** và **chiếm chỗ trong tâm trí khán giả**, không phải logic SEO đuôi dài.
+
+**Cách dựng:**
+
+1. **Chốt 3-5 trụ cột** - định nghĩa dựa trên kiểu nhà sáng tạo, nhu cầu khán giả và định vị khác biệt:
    ```
-   支柱: [名称]
-     定位: [在账号中的角色——建立信任/展示专业/拉近距离/促进转化]
-     受众价值: [粉丝看了能获得什么]
-     系列选题数: [8-15 个具体选题]
-     占比: [参考 ../../shared/pillar-and-cadence.md 的类型基线]
+   Trụ cột: [tên]
+     Định vị: [vai trò trong kênh - tạo niềm tin/thể hiện chuyên môn/kéo gần khoảng cách/thúc đẩy chuyển đổi]
+     Giá trị cho khán giả: [người theo dõi xem xong nhận được gì]
+     Số đề tài trong chuỗi: [8-15 đề tài cụ thể]
+     Tỉ lệ: [tham chiếu đường cơ sở theo kiểu kênh trong ../../shared/pillar-and-cadence.md]
    ```
-2. **每个支柱展开系列选题** — 8-15 个具体选题，选题间有递进或互补关系。
-3. **定义联动规则** — 每个支柱每周至少出现 1 次；支柱可交叉借用叙事方式；推广类支柱占比不超过 15-20%。
+2. **Mỗi trụ cột trải thành một chuỗi đề tài** - 8-15 đề tài cụ thể, các đề tài có quan hệ nâng dần hoặc bổ trợ nhau.
+3. **Định nghĩa luật phối hợp** - mỗi trụ cột xuất hiện ít nhất 1 lần mỗi tuần; các trụ cột có thể mượn chéo cách kể chuyện của nhau; trụ cột quảng bá chiếm không quá 15-20%.
 
-> 支柱**占比基线**和**按月目标的调整规则**见 `../../shared/pillar-and-cadence.md`，本步骤只定义支柱本身，不复制比例表。
-
----
-
-## Step 3：受众路径内容规划
-
-按"认识你 → 信任你 → 选择你 → 推荐你"四阶段，把内容映射到受众关系阶段并分配占比。各阶段的心态、内容类型、指标、占比建议见 `references/strategy-frameworks.md`（第一节）。
+> **Đường cơ sở tỉ lệ** trụ cột và **luật điều chỉnh theo mục tiêu từng tháng** xem `../../shared/pillar-and-cadence.md`, bước này chỉ định nghĩa bản thân trụ cột, không chép lại bảng tỉ lệ.
 
 ---
 
-## Step 4：90 天节奏原则
+## Step 3: Quy hoạch nội dung theo hành trình khán giả
 
-给出基建期 / 优化期 / 加速期的三阶段节奏**原则**（不排具体日程）。详见 `references/strategy-frameworks.md`（第二节）。发布频率参考 `../../shared/pillar-and-cadence.md`。
-
----
-
-## Step 5：分发渠道策略
-
-为每个目标平台制定差异化策略（定位/核心格式/发布节奏/流量逻辑/跨平台复用），并给出"一鱼多吃"改编方案。模板见 `references/strategy-frameworks.md`（第三节）。
+Theo bốn giai đoạn "biết bạn → tin bạn → chọn bạn → giới thiệu bạn", ánh xạ nội dung vào từng giai đoạn quan hệ với khán giả và phân bổ tỉ lệ. Tâm thế, loại nội dung, chỉ số và gợi ý tỉ lệ của từng giai đoạn xem `references/strategy-frameworks.md` (mục 1).
 
 ---
 
-## Step 6：KPI 指标体系
+## Step 4: Nguyên tắc nhịp 90 ngày
 
-按受众路径四阶段设定核心指标与月度目标。模板见 `references/strategy-frameworks.md`（第四节）。每月复盘一次，调整支柱比例和内容方向。
-
----
-
-## 输出
-
-将以下 6 个交付物整合为一份策略文档：
-
-1. **内容现状诊断** — 当前资产、数据表现、差距与机会
-2. **内容支柱地图** — 3-5 个支柱 + 每个支柱的系列选题
-3. **受众路径规划** — 四阶段内容分配与目标
-4. **90 天节奏原则** — 三阶段节奏 + 每阶段重点（原则级，非日程）
-5. **分发渠道策略** — 各平台定位、格式、节奏
-6. **KPI 指标体系** — 按阶段的指标与目标值
-
-保存到 `outputs/内容策略/content-strategy.md`。
-
-下一步：
-- 用 skill-content-calendar 将策略落地为**具体月度排期**
-- 用 skill-content-matrix 生成**选题标题池**
-- 用 skill-audience-profiler 深化受众画像
-- 用 skill-content-gap-analysis 发现蓝海选题
+Đưa ra **nguyên tắc** nhịp cho ba giai đoạn xây nền / tối ưu / tăng tốc (không xếp lịch cụ thể). Chi tiết xem `references/strategy-frameworks.md` (mục 2). Tần suất đăng tham chiếu `../../shared/pillar-and-cadence.md`.
 
 ---
 
-## Profile 感知
+## Step 5: Chiến lược kênh phân phối
 
-**有 Profile 时：**
-- 读 `identity.md`，预填创作者类型、赛道定位和差异化优势
-- 读 `platforms.md`，锁定目标平台，定制渠道策略
-- 读 `audience.md`，受众路径规划基于真实粉丝特征
-- 读 `style.md`，确保选题风格与创作者调性一致
-- 读上次产出的 `outputs/内容策略/content-strategy.md`（如有），在现有支柱基础上优化而非重建
+Lập chiến lược riêng cho từng nền tảng mục tiêu (định vị/định dạng lõi/nhịp đăng/logic phân phối/tái dùng chéo nền tảng), kèm phương án chế biến lại kiểu "một con cá nấu nhiều món". Mẫu xem `references/strategy-frameworks.md` (mục 3).
 
-**无 Profile 时：**
-- 退回通用模式，主动询问创作者类型和目标平台
-- 支柱架构基于赛道通用最佳实践构建
-- 输出末尾附注："如提供账号 Profile，可获得更精准的策略定制"
+---
+
+## Step 6: Hệ chỉ số KPI
+
+Đặt chỉ số cốt lõi và mục tiêu theo tháng cho bốn giai đoạn của hành trình khán giả. Mẫu xem `references/strategy-frameworks.md` (mục 4). Mỗi tháng hậu kiểm một lần, chỉnh tỉ lệ trụ cột và hướng nội dung.
+
+---
+
+## Output
+
+Gộp 6 sản phẩm bàn giao sau thành một tài liệu chiến lược:
+
+1. **Chẩn đoán hiện trạng nội dung** - tài sản hiện có, kết quả số liệu, khoảng trống và cơ hội
+2. **Bản đồ trụ cột nội dung** - 3-5 trụ cột + chuỗi đề tài của từng trụ cột
+3. **Quy hoạch hành trình khán giả** - phân bổ nội dung và mục tiêu cho bốn giai đoạn
+4. **Nguyên tắc nhịp 90 ngày** - nhịp ba giai đoạn + trọng tâm từng giai đoạn (mức nguyên tắc, không phải lịch)
+5. **Chiến lược kênh phân phối** - định vị, định dạng, nhịp của từng nền tảng
+6. **Hệ chỉ số KPI** - chỉ số và giá trị mục tiêu theo từng giai đoạn
+
+Lưu vào `outputs/<chủ đề>/content-strategy.md`.
+
+Bước tiếp theo:
+- Dùng skill-content-calendar để biến chiến lược thành **lịch đăng cụ thể theo tháng**
+- Dùng skill-content-matrix để tạo **kho đề tài và tiêu đề**
+- Dùng skill-audience-profiler để đào sâu chân dung khán giả
+- Dùng skill-content-gap-analysis để tìm đề tài còn bỏ ngỏ
+
+---
+
+## Nhận biết Profile
+
+**Khi có Profile:**
+- Đọc `identity.md`, điền sẵn kiểu nhà sáng tạo, định vị ngách và lợi thế khác biệt
+- Đọc `platforms.md`, chốt nền tảng mục tiêu, may đo chiến lược kênh
+- Đọc `audience.md`, quy hoạch hành trình khán giả dựa trên đặc điểm người theo dõi thật
+- Đọc `style.md`, bảo đảm phong cách đề tài khớp chất giọng của nhà sáng tạo
+- Đọc `outputs/<chủ đề>/content-strategy.md` của lần trước (nếu có), tối ưu trên nền trụ cột hiện có thay vì dựng lại từ đầu
+
+**Khi không có Profile:**
+- Lùi về chế độ chung, chủ động hỏi kiểu nhà sáng tạo và nền tảng mục tiêu
+- Kiến trúc trụ cột dựng theo thực hành tốt phổ biến của ngách
+- Cuối output ghi chú: "Nếu cung cấp Profile của kênh, chiến lược sẽ được may đo chính xác hơn"

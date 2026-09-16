@@ -8,91 +8,91 @@ description: >-
 layer: produce
 ---
 
-# 文案风格迁移
+# Chuyển phong cách bài viết
 
-> 把文案从一种风格改写成另一种风格，保留核心语义，只改表达方式。
+> Viết lại bài từ phong cách này sang phong cách khác, giữ nguyên ý cốt lõi, chỉ đổi cách diễn đạt.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| `text` | 是 | 待改写的原文 |
-| `target_style` | 是 | 目标风格（见预设风格列表，或自由描述） |
-| `style_reference` | 否 | 一段目标风格的示例文本，用于学习风格特征 |
-| `preserve_keywords` | 否 | 必须保留的关键词/术语列表 |
-| `intensity` | 否 | 迁移强度：`light`（微调语气）/ `medium`（默认）/ `full`（彻底改写） |
+| `text` | Có | Bài gốc cần viết lại |
+| `target_style` | Có | Phong cách đích (xem danh sách phong cách dựng sẵn, hoặc mô tả tự do) |
+| `style_reference` | Không | Một đoạn mẫu của phong cách đích, dùng để học đặc trưng phong cách |
+| `preserve_keywords` | Không | Danh sách từ khoá/thuật ngữ bắt buộc giữ nguyên |
+| `intensity` | Không | Mức chuyển: `light` (chỉnh nhẹ giọng) / `medium` (mặc định) / `full` (viết lại hẳn) |
 
-### 预设风格
+### Phong cách dựng sẵn
 
-> 详见 `references/style-rules.md`，含完整执行清单。
+> Chi tiết ở `references/style-rules.md`, có checklist thực thi đầy đủ.
 
-| 风格 key | 名称 | 核心规则 | 句式特征 | 禁止事项 |
+| key phong cách | Tên | Quy tắc cốt lõi | Đặc trưng câu | Điều cấm |
 |----------|------|---------|---------|---------|
-| `humorous` | 搞笑 | 每 3-4 句至少一个梗点/夸张/自嘲 | 短句为主，反转节奏 | 不用"哈哈哈"、不解释梗 |
-| `colloquial` | 口语 | 去掉所有书面连词，用"嗯""就是""反正" | ≤15字/句，多用问句和感叹 | 不用"综上""此外""因此" |
-| `literary` | 文艺 | 意象化表达，用比喻代替直述 | 长短交替，有留白 | 不堆砌形容词 |
-| `sharp` | 犀利 | 直接下判断，不留余地 | 短促有力，多用句号 | 不用"可能""也许""个人觉得" |
-| `professional` | 专业 | 术语准确，逻辑链完整 | 并列/递进结构清晰 | 不用口语化表达 |
-| `healing` | 治愈 | 温暖共情，"你"开头的句子多 | 中等句长，节奏舒缓 | 不用反讽/批判 |
-| `sarcastic` | 毒舌 | 一针见血指出问题，不留面子 | 极短句+反问 | 不人身攻击 |
-| `social_media` | 社交媒体感 | emoji+口语+互动句式 | 分行多，每行≤20字 | 不写长段落 |
-| `custom` | 自定义 | 需提供 `style_reference` | — | — |
+| `humorous` | Hài hước | Cứ 3-4 câu ít nhất một cú meme/phóng đại/tự trào | Chủ yếu câu ngắn, nhịp bẻ lái | Không viết "haha", không giải thích meme |
+| `colloquial` | Văn nói | Bỏ hết liên từ văn viết, dùng "ừ thì", "kiểu", "nói chung" | <=15 chữ/câu, nhiều câu hỏi và cảm thán | Không dùng "tóm lại", "ngoài ra", "do đó" |
+| `literary` | Văn hoa | Diễn đạt bằng hình ảnh, dùng ví von thay cho nói thẳng | Câu dài ngắn xen kẽ, có khoảng lặng | Không chất đống tính từ |
+| `sharp` | Sắc bén | Kết luận thẳng, không chừa đường lùi | Ngắn gọn dứt khoát, nhiều dấu chấm | Không dùng "có thể", "chắc là", "mình nghĩ" |
+| `professional` | Chuyên môn | Thuật ngữ chính xác, chuỗi logic đầy đủ | Cấu trúc song song/tăng tiến rõ ràng | Không dùng lối nói văn nói |
+| `healing` | Chữa lành | Ấm áp đồng cảm, nhiều câu mở đầu bằng "bạn" | Câu dài vừa, nhịp chậm rãi | Không mỉa mai/phê phán |
+| `sarcastic` | Đanh đá | Chỉ trúng vấn đề, không giữ thể diện | Câu cực ngắn + câu hỏi tu từ | Không công kích cá nhân |
+| `social_media` | Chất mạng xã hội | emoji + văn nói + câu kéo tương tác | Xuống dòng nhiều, mỗi dòng <=20 chữ | Không viết đoạn dài |
+| `custom` | Tự định nghĩa | Cần cung cấp `style_reference` | - | - |
 
-## 输出
+## Đầu ra
 
-- 改写后的文案（纯文本）
-- 风格变更摘要（改了哪些维度：用词、句式、语气、修辞、节奏）
-- 写入 `outputs/` 目录，文件名含原风格和目标风格标识
+- Bài đã viết lại (văn bản thuần)
+- Tóm tắt thay đổi phong cách (đã đổi những chiều nào: từ ngữ, kiểu câu, giọng điệu, tu từ, nhịp)
+- Ghi vào `outputs/<chủ đề>/`, tên file có ký hiệu phong cách gốc và phong cách đích
 
-## 执行步骤
+## Các bước thực hiện
 
-### Step 1 — 风格分析
+### Step 1 - Phân tích phong cách
 
-分析原文的风格特征，识别以下维度：
-- **用词层**：正式/口语、抽象/具体、术语密度
-- **句式层**：长短句比例、主被动、复句/简单句
-- **语气层**：客观/主观、冷峻/热情、距离感
-- **修辞层**：比喻、排比、反问、夸张等手法的使用频率
-- **节奏层**：段落长度、停顿感、信息密度
+Phân tích đặc trưng phong cách của bài gốc, nhận diện các chiều sau:
+- **Tầng từ ngữ**: trang trọng/văn nói, trừu tượng/cụ thể, mật độ thuật ngữ
+- **Tầng kiểu câu**: tỉ lệ câu dài/câu ngắn, chủ động/bị động, câu phức/câu đơn
+- **Tầng giọng điệu**: khách quan/chủ quan, lạnh lùng/nhiệt tình, khoảng cách với người đọc
+- **Tầng tu từ**: tần suất dùng ví von, điệp cấu trúc, câu hỏi tu từ, phóng đại
+- **Tầng nhịp**: độ dài đoạn, cảm giác ngắt nghỉ, mật độ thông tin
 
-### Step 2 — 目标风格建模
+### Step 2 - Dựng mô hình phong cách đích
 
-如果提供了 `style_reference`：
-- 用同样维度分析参考文本，提取风格特征向量
-- 识别参考文本的标志性手法（如特定句式、口头禅、节奏模式）
+Nếu có `style_reference`:
+- Phân tích văn bản mẫu theo cùng các chiều đó, rút ra vector đặc trưng phong cách
+- Nhận diện thủ pháp đặc trưng của văn bản mẫu (kiểu câu riêng, câu cửa miệng, mẫu nhịp)
 
-如果使用预设风格：
-- 加载预设风格的特征定义
+Nếu dùng phong cách dựng sẵn:
+- Nạp định nghĩa đặc trưng của phong cách đó
 
-### Step 3 — 迁移改写
+### Step 3 - Viết lại theo phong cách mới
 
-按迁移强度执行改写：
-1. 逐段处理，保证语义完整性
-2. 按优先级调整：语气 → 用词 → 句式 → 修辞 → 节奏
-3. 保留 `preserve_keywords` 中指定的关键词不变
-4. 保持原文的信息完整度（不增不减核心信息）
+Viết lại theo mức chuyển đã chọn:
+1. Xử lý từng đoạn, bảo đảm trọn ý
+2. Chỉnh theo thứ tự ưu tiên: giọng điệu -> từ ngữ -> kiểu câu -> tu từ -> nhịp
+3. Giữ nguyên các từ khoá liệt kê trong `preserve_keywords`
+4. Giữ đủ lượng thông tin của bài gốc (không thêm không bớt ý cốt lõi)
 
-### Step 4 — 一致性校验
+### Step 4 - Kiểm tra nhất quán
 
-- 检查全文风格是否统一（避免前后风格不一致）
-- 检查核心信息是否保留完整
-- 检查 `preserve_keywords` 是否全部保留
-- 如果迁移后文意偏移超过阈值，回退该段重写
+- Kiểm tra phong cách toàn bài có đồng nhất không (tránh đầu một kiểu cuối một kiểu)
+- Kiểm tra thông tin cốt lõi có còn đủ không
+- Kiểm tra `preserve_keywords` đã giữ đủ chưa
+- Nếu ý bị lệch quá ngưỡng sau khi chuyển, quay lại viết lại đoạn đó
 
-### Step 5 — 输出变更摘要
+### Step 5 - Xuất tóm tắt thay đổi
 
-列出改写涉及的风格维度变化，让用户了解改了什么：
+Liệt kê các chiều phong cách đã thay đổi để người dùng biết đã sửa những gì:
 ```
-风格迁移: 正式 → 口语化
-- 用词: 书面语替换为日常用词 (12处)
-- 句式: 长复句拆为短句 (8处)
-- 语气: 增加语气词和互动感 (6处)
-- 修辞: 移除排比，增加口语化比喻 (3处)
+Chuyển phong cách: trang trọng -> văn nói
+- Từ ngữ: thay từ văn viết bằng từ đời thường (12 chỗ)
+- Kiểu câu: tách câu phức dài thành câu ngắn (8 chỗ)
+- Giọng điệu: thêm từ đệm và cảm giác tương tác (6 chỗ)
+- Tu từ: bỏ điệp cấu trúc, thêm ví von kiểu nói chuyện (3 chỗ)
 ```
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `style.md` 读取账号的惯用风格偏好，作为目标风格的微调参考；从 `identity.md` 读取品牌调性，确保改写后仍符合品牌边界
-- **无 Profile**：直接按用户指定的目标风格改写，不做品牌约束
+- **Có Profile**: đọc `style.md` để lấy phong cách quen dùng của kênh, làm mốc tinh chỉnh phong cách đích; đọc `identity.md` để lấy tông thương hiệu, bảo đảm bài viết lại vẫn nằm trong ranh giới thương hiệu
+- **Không có Profile**: viết lại thẳng theo phong cách đích người dùng chỉ định, không ràng buộc thương hiệu
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

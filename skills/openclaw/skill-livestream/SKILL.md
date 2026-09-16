@@ -7,83 +7,83 @@ description: >-
 layer: plan
 ---
 
-# 直播策划 + 话术
+# Kế hoạch livestream + kịch bản nói
 
-> 为直播生成完整方案，覆盖主题策划、流程编排、全场话术脚本，适配带货/知识/娱乐多场景。
+> Sinh phương án livestream trọn gói: lên chủ đề, dựng flow, viết kịch bản nói cả buổi; hợp cho livestream bán hàng/chia sẻ kiến thức/giải trí.
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Mô tả |
 |------|------|------|
-| 直播类型 | 是 | 带货直播 / 知识分享 / 娱乐互动 / 品牌活动 |
-| 直播主题 | 否 | 未指定时根据赛道和热点推荐 |
-| 直播时长 | 否 | 预计时长（默认 2 小时） |
-| 商品/内容清单 | 否 | 带货需商品列表，知识直播需分享主题 |
-| 目标平台 | 否 | 抖音 / 快手 / 视频号 / 淘宝直播 / 小红书（有 Profile 时自动提取） |
+| Loại livestream | Có | Bán hàng / chia sẻ kiến thức / giải trí tương tác / sự kiện thương hiệu |
+| Chủ đề livestream | Không | Chưa chỉ định thì gợi ý theo ngách và trend |
+| Thời lượng livestream | Không | Thời lượng dự kiến (mặc định 2 giờ) |
+| Danh sách sản phẩm/nội dung | Không | Bán hàng cần danh sách sản phẩm, livestream kiến thức cần chủ đề chia sẻ |
+| Nền tảng mục tiêu | Không | Facebook / TikTok / YouTube / Zalo (có Profile thì tự lấy) |
 
-## 输出
+## Đầu ra
 
-按 `references/output-template.md` 的骨架生成完整方案（基本信息 / 准备清单 / 流程时间表 / 全场话术脚本 / 互动策划 / 应急预案 / 数据关注点），保存到 `outputs/主题名/livestream-plan.md`。
+Sinh phương án đầy đủ theo khung trong `references/output-template.md` (thông tin cơ bản / checklist chuẩn bị / timeline flow / kịch bản nói cả buổi / kế hoạch tương tác / phương án ứng phó sự cố / chỉ số cần theo dõi), lưu vào `outputs/<chủ đề>/livestream-plan.md`.
 
-## 执行步骤
+## Các bước thực hiện
 
-领域知识（流程架构、各类型话术结构、互动形式库、应急预案、准备清单）统一见 `references/livestream-playbook.md`，按需加载。
+Kiến thức chuyên môn (khung flow, cấu trúc kịch bản nói theo từng loại, thư viện hình thức tương tác, phương án ứng phó sự cố, checklist chuẩn bị) gom hết trong `references/livestream-playbook.md`, cần thì nạp.
 
-1. **确认直播类型和场景**
-   - 识别类型（带货/知识/娱乐/品牌），明确其核心目标（见 playbook 第一节）
-   - 用户未指定主题时，根据赛道定位和近期热点推荐 3 个主题选项
+1. **Chốt loại livestream và bối cảnh**
+   - Nhận diện loại (bán hàng/kiến thức/giải trí/thương hiệu), làm rõ mục tiêu cốt lõi (xem playbook mục 1)
+   - Người dùng chưa chọn chủ đề thì gợi ý 3 phương án theo định vị ngách và trend gần đây
 
-2. **流程架构设计**
-   - 按 playbook 第一节的"波浪式结构"设计整体节奏
-   - 带货直播额外规划商品上架顺序（引流款→利润款→福利款→压轴款）
+2. **Thiết kế khung flow**
+   - Dựng nhịp tổng thể theo "cấu trúc sóng" ở playbook mục 1
+   - Livestream bán hàng thì lên thêm thứ tự đưa sản phẩm lên (hàng kéo traffic→hàng lợi nhuận→hàng ưu đãi→hàng chốt sổ)
 
-3. **开场白设计**
-   - 前 30 秒抓人，含打招呼+自我介绍、亮点预告、互动指令
-   - 按平台特性调整节奏（见 playbook 第二节）
+3. **Thiết kế lời mở màn**
+   - 30 giây đầu phải giữ chân, gồm chào hỏi + giới thiệu bản thân, hé lộ điểm hấp dẫn, ra lệnh tương tác
+   - Chỉnh nhịp theo đặc tính từng nền tảng (xem playbook mục 2)
 
-4. **主体话术编写**
-   - 按直播类型套用对应话术结构（带货/知识/娱乐，见 playbook 第三节）
+4. **Viết kịch bản nói phần chính**
+   - Áp cấu trúc kịch bản nói theo loại livestream (bán hàng/kiến thức/giải trí, xem playbook mục 3)
 
-5. **互动环节设计**
-   - 规划 3-5 个互动节点穿插主体，每个配完整话术（见 playbook 第四节）
+5. **Thiết kế các chặng tương tác**
+   - Cài 3-5 điểm tương tác xen vào phần chính, mỗi điểm kèm kịch bản nói đầy đủ (xem playbook mục 4)
 
-6. **过渡语和节奏控制**
-   - 设计环节过渡语，标注节奏/情绪/动作提示（见 playbook 第五节）
+6. **Câu chuyển đoạn và kiểm soát nhịp**
+   - Viết câu chuyển giữa các chặng, ghi chú gợi ý nhịp/cảm xúc/hành động (xem playbook mục 5)
 
-7. **收尾和引导关注**
-   - 最后 10-15 分钟：总结、预告、引导关注、感谢；带货加福利冲刺（见 playbook 第六节）
+7. **Kết buổi và dẫn dắt theo dõi**
+   - 10-15 phút cuối: tổng kết, hé lộ buổi sau, mời theo dõi, cảm ơn; bán hàng thì thêm cú nước rút ưu đãi (xem playbook mục 6)
 
-8. **应急预案编写**
-   - 冷场/负面评论/技术故障/翻车的应对话术（见 playbook 第七节）
+8. **Viết phương án ứng phó sự cố**
+   - Kịch bản nói khi lặng sóng/bình luận tiêu cực/lỗi kỹ thuật/lỡ miệng (xem playbook mục 7)
 
-9. **开播前准备清单**
-   - 设备/内容/平台/团队/状态五类（见 playbook 第八节）
+9. **Checklist trước giờ live**
+   - Năm nhóm: thiết bị/nội dung/nền tảng/ê-kíp/trạng thái (xem playbook mục 8)
 
-10. **输出交付**
-    - 按输出模板生成完整方案；话术口语化，标注时间节点、动作提示、情绪提示
+10. **Xuất bản giao**
+    - Sinh phương án đầy đủ theo mẫu đầu ra; kịch bản nói phải đời thường, ghi rõ mốc thời gian, gợi ý hành động, gợi ý cảm xúc
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读 `identity.md` 调整话术风格和语气
-- 读 `audience.md` 定制互动方式和话题选择
-- 读 `platforms.md` 适配平台规则和节奏
-- 读 `style.md` 使话术语言风格一致
-- 从 `identity.md`/`preferences.md` 提取变现/商业化信息，优化转化环节设计
+**Khi có Profile:**
+- Đọc `identity.md` để chỉnh phong cách và giọng của kịch bản nói
+- Đọc `audience.md` để may đo cách tương tác và chọn chủ đề
+- Đọc `platforms.md` để khớp quy tắc và nhịp của nền tảng
+- Đọc `style.md` cho ngôn ngữ kịch bản nói đồng nhất
+- Lấy thông tin kiếm tiền/thương mại hoá từ `identity.md`/`preferences.md` để tối ưu chặng chuyển đổi
 
-**无 Profile 时：**
-- 话术用通用口语风格，流程用通用模板
-- 询问关键信息（赛道、人设、目标受众）补充上下文
-- 附注"提供 Profile 可获得更贴合人设的话术风格"
+**Khi không có Profile:**
+- Kịch bản nói dùng giọng đời thường chung, flow dùng mẫu chung
+- Hỏi các thông tin then chốt (ngách, persona, khán giả mục tiêu) để bù bối cảnh
+- Ghi chú "cung cấp Profile sẽ có phong cách kịch bản nói bám sát persona hơn"
 
-## 规则
+## Quy tắc
 
-1. 话术必须口语化，避免书面语和官方说辞
-2. 每段话术不超过 200 字，保持直播即时感
-3. 催单话术不可虚假宣传（禁止"全网最低价"等绝对化用语）
-4. 带货话术需符合广告法，不使用违禁词
-5. 流程设计必须有弹性，标注可延长/缩短的环节
-6. 互动环节不少于 3 个，间隔不超过 30 分钟
-7. 话术中标注明确时间节点，方便主播和场控对表
+1. Kịch bản nói bắt buộc đời thường, tránh văn viết và lời lẽ hành chính
+2. Mỗi đoạn kịch bản nói không quá 200 chữ, giữ cảm giác tức thời của livestream
+3. Lời thúc chốt đơn không được quảng cáo sai sự thật (cấm từ tuyệt đối kiểu "giá rẻ nhất thị trường")
+4. Kịch bản bán hàng phải đúng luật quảng cáo, không dùng từ cấm
+5. Flow phải có độ co giãn, ghi rõ chặng nào kéo dài/rút ngắn được
+6. Ít nhất 3 chặng tương tác, cách nhau không quá 30 phút
+7. Kịch bản nói phải ghi mốc thời gian rõ ràng để host và người điều phối khớp giờ
 
-> 自研溯源与参考方向见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và hướng tham khảo xem `EASEL-META.md` cùng thư mục.

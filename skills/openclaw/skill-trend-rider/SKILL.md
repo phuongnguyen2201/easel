@@ -7,144 +7,144 @@ description: >-
 layer: plan
 ---
 
-# 蹭热点方案
+# Phương án bắt trend
 
-> 给一个热点事件，结合创作者定位，输出具体的蹭热点内容方案。
+> Đưa vào một sự kiện đang nóng, kết hợp định vị của nhà sáng tạo, xuất phương án nội dung bắt trend cụ thể.
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Mô tả |
 |------|------|------|
-| 热点事件 | 是 | 热点话题/事件描述或关键词 |
-| 目标平台 | 否 | 发布平台（有 Profile 时自动提取） |
-| 创作者赛道 | 否 | 如"科技数码"、"美妆"（有 Profile 时自动提取） |
+| Sự kiện nóng | Có | Mô tả chủ đề/sự kiện nóng hoặc từ khoá |
+| Nền tảng mục tiêu | Không | Nền tảng đăng bài (có Profile thì tự lấy) |
+| Ngách của nhà sáng tạo | Không | Ví dụ "công nghệ số", "làm đẹp" (có Profile thì tự lấy) |
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 蹭热点方案
+# Phương án bắt trend
 
-## 热点概况
-- 热点事件: {事件名}
-- 热度等级: {S/A/B/C 级}
-- 生命周期: {爆发期/高峰期/衰退期/长尾期}
-- 预计热度窗口: {剩余 X 小时/天}
+## Tổng quan trend
+- Sự kiện nóng: {tên sự kiện}
+- Mức độ nóng: {hạng S/A/B/C}
+- Vòng đời: {bùng nổ/đỉnh/suy giảm/đuôi dài}
+- Cửa sổ nóng dự kiến: {còn X giờ/ngày}
 
-## 关联度判断
-- 与创作者赛道的关联度: {高/中/低/无}
-- 关联分析: {为什么相关或不相关}
-- 蹭热点可行性: {适合蹭/勉强可蹭/不建议蹭}
+## Đánh giá độ liên quan
+- Độ liên quan với ngách của nhà sáng tạo: {cao/trung bình/thấp/không}
+- Phân tích liên quan: {vì sao liên quan hoặc không liên quan}
+- Tính khả thi khi bắt trend: {nên bắt/miễn cưỡng bắt được/không nên bắt}
 
-## 内容方案（3 个角度）
+## Phương án nội dung (3 góc vào)
 
-### 方案 A: {角度名}（推荐指数: ★★★★★）
-- 切入角度: {具体怎么切}
-- 内容形式: {图文/短视频/直播/thread}
-- 标题候选:
-  1. {标题 A1}
-  2. {标题 A2}
-  3. {标题 A3}
-- 内容大纲: {3-5 个要点}
-- 制作时间: {预估}
-- 预期效果: {流量预期和互动类型}
+### Phương án A: {tên góc vào} (mức khuyến nghị: ★★★★★)
+- Góc vào: {vào cụ thể thế nào}
+- Hình thức nội dung: {ảnh + chữ/video ngắn/livestream/thread}
+- Tiêu đề ứng viên:
+  1. {tiêu đề A1}
+  2. {tiêu đề A2}
+  3. {tiêu đề A3}
+- Dàn ý nội dung: {3-5 ý chính}
+- Thời gian sản xuất: {ước tính}
+- Hiệu quả kỳ vọng: {dự kiến lưu lượng và kiểu tương tác}
 
-### 方案 B: {角度名}（推荐指数: ★★★★☆）
-{同上结构}
+### Phương án B: {tên góc vào} (mức khuyến nghị: ★★★★☆)
+{cấu trúc như trên}
 
-### 方案 C: {角度名}（推荐指数: ★★★☆☆）
-{同上结构}
+### Phương án C: {tên góc vào} (mức khuyến nghị: ★★★☆☆)
+{cấu trúc như trên}
 
-## 发布策略
-- 最佳发布时间: {具体时间窗口}
-- 平台选择: {首发平台 + 分发顺序}
-- 标签策略: {推荐话题标签}
+## Chiến lược đăng bài
+- Thời điểm đăng tốt nhất: {khung giờ cụ thể}
+- Chọn nền tảng: {nền tảng đăng đầu + thứ tự phân phối}
+- Chiến lược hashtag: {hashtag chủ đề khuyến nghị}
 
-## 风险提醒
-- {风险点 1}: {规避建议}
-- {风险点 2}: {规避建议}
+## Cảnh báo rủi ro
+- {rủi ro 1}: {đề xuất né tránh}
+- {rủi ro 2}: {đề xuất né tránh}
 
-## 不蹭的理由（关联度低时输出）
-{为什么不建议蹭 + 替代建议}
+## Lý do không bắt (xuất khi độ liên quan thấp)
+{vì sao không nên bắt + đề xuất thay thế}
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **热点解析**
-   - 解析热点事件的核心信息：事件主体、起因、发展、争议点
-   - 判断热点类型：社会事件、娱乐八卦、行业动态、政策变化、节日节点、突发事件
-   - 评估热点生命周期阶段：
-     - 爆发期（0-4 小时）：速度优先，抢首发
-     - 高峰期（4-24 小时）：角度优先，做差异化
-     - 衰退期（1-3 天）：深度优先，做总结/反思
-     - 长尾期（3 天+）：复盘优先，提炼方法论
-   - 评估热度等级：S 级（全网刷屏）、A 级（行业热议）、B 级（圈层讨论）、C 级（小范围关注）
+1. **Bóc tách trend**
+   - Bóc thông tin cốt lõi của sự kiện: chủ thể, nguyên nhân, diễn biến, điểm gây tranh cãi
+   - Xác định loại trend: sự kiện xã hội, chuyện showbiz, tin ngành, thay đổi chính sách, dịp lễ, sự kiện bất ngờ
+   - Đánh giá giai đoạn vòng đời của trend:
+     - Bùng nổ (0-4 giờ): ưu tiên tốc độ, giành đăng sớm nhất
+     - Đỉnh (4-24 giờ): ưu tiên góc vào, làm khác biệt
+     - Suy giảm (1-3 ngày): ưu tiên chiều sâu, làm tổng kết/suy ngẫm
+     - Đuôi dài (3 ngày+): ưu tiên hậu kiểm, rút ra phương pháp luận
+   - Đánh giá mức độ nóng: hạng S (phủ khắp mạng), hạng A (cả ngành bàn tán), hạng B (bàn trong một giới), hạng C (chỉ một nhóm nhỏ quan tâm)
 
-2. **关联度评估**
-   - 分析热点与创作者赛道的交集：是否有自然关联、能否专业解读
-   - 关联度分级：
-     - 高关联：热点本身属于创作者赛道（如科技博主评测新手机发布）
-     - 中关联：热点可从创作者角度解读（如职场博主解读裁员新闻）
-     - 低关联：需要强行关联（如美食博主蹭航天热点）
-     - 无关联：完全不搭边，蹭了反而减分
-   - 关联度低于"中"时，明确建议不蹭，并说明原因
+2. **Đánh giá độ liên quan**
+   - Phân tích giao điểm giữa trend và ngách của nhà sáng tạo: có liên quan tự nhiên không, có bình luận chuyên môn được không
+   - Phân mức độ liên quan:
+     - Liên quan cao: trend nằm ngay trong ngách của nhà sáng tạo (như blogger công nghệ đánh giá điện thoại mới ra mắt)
+     - Liên quan trung bình: trend có thể nhìn từ góc của nhà sáng tạo (như blogger công sở phân tích tin sa thải)
+     - Liên quan thấp: phải gán ghép gượng ép (như blogger ẩm thực bắt trend hàng không vũ trụ)
+     - Không liên quan: hoàn toàn không dính, bắt vào còn bị trừ điểm
+   - Khi độ liên quan thấp hơn "trung bình", nói rõ là không nên bắt và giải thích lý do
 
-3. **切入角度挖掘**
-   - 运用 6 种蹭热点角度模型：
-     - **专业解读**：从专业视角分析热点（适合知识型创作者）
-     - **经验关联**：分享自己与热点相关的亲身经历（适合人设型创作者）
-     - **工具/方法论**：借热点引出实用方法论（适合干货型创作者）
-     - **反向观点**：提出与主流不同的观点（适合争议型创作者，风险高）
-     - **情绪共鸣**：表达与大众一致的情绪（适合情感型创作者）
-     - **延伸联想**：从热点延伸到更大话题（适合深度型创作者）
-   - 根据创作者定位，筛选最匹配的 3 个角度
+3. **Đào góc vào**
+   - Dùng 6 mô hình góc vào khi bắt trend:
+     - **Phân tích chuyên môn**: nhìn trend từ góc chuyên môn (hợp nhà sáng tạo kiểu kiến thức)
+     - **Nối với trải nghiệm**: kể trải nghiệm thật của mình liên quan tới trend (hợp nhà sáng tạo mạnh về persona)
+     - **Công cụ/phương pháp luận**: mượn trend để dẫn ra phương pháp dùng được (hợp nhà sáng tạo kiểu kiến thức thực chiến)
+     - **Quan điểm ngược**: nêu quan điểm khác dòng chính (hợp nhà sáng tạo kiểu gây tranh luận, rủi ro cao)
+     - **Đồng cảm cảm xúc**: nói lên cảm xúc chung với số đông (hợp nhà sáng tạo kiểu cảm xúc)
+     - **Liên tưởng mở rộng**: từ trend mở ra chủ đề lớn hơn (hợp nhà sáng tạo kiểu chiều sâu)
+   - Theo định vị của nhà sáng tạo, lọc ra 3 góc vào khớp nhất
 
-4. **内容方案生成**
-   - 为每个角度生成完整方案：
-     - 内容形式选择：根据平台特性和角度匹配最佳形式
-     - 标题候选：每个方案 3 个标题，覆盖不同情绪钩子
-     - 内容大纲：3-5 个核心要点，确保逻辑完整
-     - 制作时间估算：根据形式复杂度给出预估
-   - 3 个方案按推荐指数排序，综合考虑关联度、制作难度、预期效果
+4. **Sinh phương án nội dung**
+   - Sinh phương án đầy đủ cho từng góc vào:
+     - Chọn hình thức nội dung: theo đặc tính nền tảng và góc vào để khớp hình thức tốt nhất
+     - Tiêu đề ứng viên: mỗi phương án 3 tiêu đề, phủ các hook cảm xúc khác nhau
+     - Dàn ý nội dung: 3-5 ý cốt lõi, bảo đảm logic trọn vẹn
+     - Ước tính thời gian sản xuất: dựa vào độ phức tạp của hình thức để đưa con số dự kiến
+   - 3 phương án xếp theo mức khuyến nghị, cân nhắc chung độ liên quan, độ khó sản xuất, hiệu quả kỳ vọng
 
-5. **发布策略规划**
-   - 根据热点生命周期确定最佳发布时间窗口
-   - 多平台分发策略：首发平台、二次分发顺序、各平台内容适配
-   - 话题标签策略：官方话题标签 + 长尾标签组合
+5. **Lập chiến lược đăng bài**
+   - Theo vòng đời của trend để chốt khung giờ đăng tốt nhất
+   - Chiến lược phân phối đa nền tảng: nền tảng đăng đầu, thứ tự phân phối lại, cách chỉnh nội dung cho từng nền tảng
+   - Chiến lược hashtag: hashtag chủ đề chính thức + tổ hợp hashtag đuôi dài
 
-6. **风险评估**
-   - 逐条排查风险点：
-     - 政治敏感性：是否涉及政策、国际关系、意识形态
-     - 法律风险：是否涉及未定性的事件、侵权、隐私
-     - 舆论反转：事件是否可能反转导致翻车
-     - 道德争议：蹭该热点是否会引发"吃人血馒头"质疑
-     - 平台规则：是否触碰平台内容红线
-   - 每个风险点附带具体规避建议
+6. **Đánh giá rủi ro**
+   - Rà từng điểm rủi ro:
+     - Nhạy cảm chính trị: có dính chính sách, quan hệ quốc tế, hệ tư tưởng không
+     - Rủi ro pháp lý: có dính sự việc chưa có kết luận, vi phạm bản quyền, quyền riêng tư không
+     - Dư luận lật ngược: sự việc có thể lật ngược khiến bài đăng phản tác dụng không
+     - Tranh cãi đạo đức: bắt trend này có bị nghi là "ăn theo nỗi đau người khác" không
+     - Quy định nền tảng: có chạm lằn ranh đỏ về nội dung của nền tảng không
+   - Mỗi điểm rủi ro kèm đề xuất né tránh cụ thể
 
-7. **输出交付**
-   - 按输出格式生成完整方案
-   - 关联度判定为"无"时，跳过方案生成，直接输出"不蹭的理由"并建议替代方向
+7. **Bàn giao kết quả**
+   - Sinh phương án đầy đủ theo định dạng đầu ra
+   - Khi độ liên quan bị chấm là "không", bỏ qua phần sinh phương án, xuất thẳng "Lý do không bắt" và gợi ý hướng thay thế
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `identity.md` 获取赛道定位，精确判断热点关联度
-- 读取 `audience.md` 获取粉丝画像，评估粉丝对该热点的关注度
-- 读取 `style.md` 匹配内容形式和表达方式
-- 读取 `platforms.md` 确定首发平台和分发策略
-- 读取 `tone.md`（如有）确保标题和大纲语气一致
+**Khi có Profile:**
+- Đọc `identity.md` để lấy định vị ngách, chấm độ liên quan chính xác
+- Đọc `audience.md` để lấy hồ sơ (Profile) khán giả, đánh giá mức quan tâm của họ với trend này
+- Đọc `style.md` để khớp hình thức nội dung và cách diễn đạt
+- Đọc `platforms.md` để chốt nền tảng đăng đầu và chiến lược phân phối
+- Đọc `tone.md` (nếu có) để bảo đảm tiêu đề và dàn ý đồng giọng
 
-**无 Profile 时：**
-- 关联度评估退回通用模式，要求用户自行提供赛道信息
-- 内容方案不做平台特化，给出通用版本
-- 提示"提供 Profile 可获得更精准的关联度判断和角度匹配"
+**Khi không có Profile:**
+- Đánh giá độ liên quan lùi về chế độ chung, yêu cầu người dùng tự cung cấp thông tin ngách
+- Phương án nội dung không đặc thù hoá theo nền tảng, đưa bản dùng chung
+- Nhắc "cung cấp Profile sẽ có đánh giá độ liên quan và khớp góc vào chính xác hơn"
 
-## 规则
+## Quy tắc
 
-1. 关联度为"无"时必须建议不蹭，不可强行生成方案
-2. 每个方案的标题必须包含热点关键词，确保搜索可见
-3. 风险提醒必须诚实，不可为了让用户蹭热点而淡化风险
-4. 涉及负面事件（灾难/事故/逝世）的热点，禁止推荐"情绪共鸣"以外的切入角度
-5. 标注时效性紧迫度，爆发期热点需提醒用户"现在就做"
-6. 方案之间的角度不可重复，必须提供真正不同的切入点
+1. Khi độ liên quan là "không" thì bắt buộc khuyên không bắt, không được cố sinh phương án
+2. Tiêu đề của mỗi phương án phải chứa từ khoá của trend, bảo đảm tìm kiếm thấy được
+3. Cảnh báo rủi ro phải trung thực, không được làm nhẹ rủi ro để người dùng chịu bắt trend
+4. Trend dính sự việc tiêu cực (thiên tai/tai nạn/người mất), cấm gợi ý góc vào nào ngoài "đồng cảm cảm xúc"
+5. Ghi rõ mức gấp về thời gian, trend đang bùng nổ phải nhắc người dùng "làm ngay bây giờ"
+6. Các phương án không được trùng góc vào, phải đưa ra những điểm vào thực sự khác nhau
 
-> 自研溯源与参考方向见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và hướng tham khảo xem `EASEL-META.md` cùng thư mục.

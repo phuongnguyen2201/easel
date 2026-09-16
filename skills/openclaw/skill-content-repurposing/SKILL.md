@@ -3,109 +3,109 @@ name: skill-content-repurposing
 description: >-
   Tách một bài rồi viết lại cho Facebook/TikTok/YouTube/Zalo theo định dạng và giọng bản địa từng
   nơi. Dùng khi người dùng nói "một bài đăng nhiều nơi", "chuyển bài này sang TikTok", "tái sử
-  dụng nội dung". skill-cross-platform-diff chỉ so khác biệt, đăng thật dùng
-  skill-cross-platform-publish.
+  dụng nội dung". skill-cross-platform-diff chỉ so khác biệt; skill này viết lại nội dung, không
+  đăng.
 layer: publish
 ---
 
-# 跨平台内容改编
+# Chuyển nội dung sang nhiều nền tảng
 
-> 将一篇长内容拆解为多平台原生素材，根据各平台特性适配格式、长度与语气，实现「一次创作，全域分发」。
+> Bóc một bài dài thành tư liệu bản địa cho nhiều nền tảng, chỉnh định dạng, độ dài và giọng theo đặc tính từng nơi, để "viết một lần, đăng khắp nơi".
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供源内容，支持以下形式：
+Người dùng đưa nội dung nguồn ngay trong prompt, hỗ trợ các dạng sau:
 
-- **文本**：直接提供社媒帖子、公众号文章、视频脚本等文本
-- **URL**：提供内容链接（通过 WebFetch 抓取）
-- **视频/音频转录稿**：提供短视频口播稿或直播文字版
-- **混合**：源内容 + 指定目标平台
+- **Văn bản**: dán thẳng bài mạng xã hội, bài dài trên Facebook hay blog/website, kịch bản video...
+- **URL**: đưa link nội dung (dùng WebFetch để lấy về)
+- **Bản bóc băng video/audio**: đưa lời video nói của video ngắn hoặc bản chữ của livestream
+- **Kết hợp**: nội dung nguồn + chỉ định nền tảng đích
 
-示例 prompt：
+Prompt ví dụ:
 ```
 Execute /skill-content-repurposing
-源内容：<B站视频脚本>
-目标平台：小红书、抖音、微博
+Nội dung nguồn: <kịch bản video YouTube>
+Nền tảng đích: Facebook, TikTok, YouTube
 ```
 
-## 输出
+## Đầu ra
 
-输出包含两部分：
+Đầu ra gồm hai phần:
 
-### 1. 改编计划
+### 1. Kế hoạch chuyển đổi
 
 ```json
 {
   "source_type": "blog_post",
   "source_word_count": 2000,
   "core_elements": {
-    "thesis": "核心论点",
-    "key_points": ["要点1", "要点2", "要点3"],
-    "quotable_lines": ["金句1", "金句2"],
-    "data_points": ["数据1"]
+    "thesis": "luận điểm cốt lõi",
+    "key_points": ["ý chính 1", "ý chính 2", "ý chính 3"],
+    "quotable_lines": ["câu đắt 1", "câu đắt 2"],
+    "data_points": ["số liệu 1"]
   },
-  "target_platforms": ["twitter", "linkedin", "xiaohongshu"],
+  "target_platforms": ["facebook", "tiktok", "youtube"],
   "total_pieces": 8
 }
 ```
 
-### 2. 各平台改编内容
+### 2. Nội dung đã chuyển cho từng nền tảng
 
-每个平台输出独立的、符合该平台原生格式的内容。具体转换规则参见 `references/conversion-recipes.md`。
+Mỗi nền tảng ra một bản riêng, đúng định dạng bản địa của nơi đó. Luật chuyển đổi cụ thể xem `references/conversion-recipes.md`.
 
-## 内容金字塔
+## Kim tự tháp nội dung
 
-本 SKILL 遵循三层内容金字塔方法论：
+SKILL này theo phương pháp kim tự tháp nội dung ba tầng:
 
-| 层级 | 说明 | 示例 |
+| Tầng | Mô tả | Ví dụ |
 |------|------|------|
-| **支柱内容 (Pillar)** | 深度长内容 | B站长视频、公众号长文、播客、直播回放 |
-| **衍生内容 (Derivative)** | 中等长度，提取支柱内容的子主题 | 小红书图文、知乎回答、抖音口播脚本 |
-| **微内容 (Micro)** | 短小精悍，单点突破 | 微博热评、抖音15秒、小红书封面金句卡 |
+| **Nội dung trụ cột (Pillar)** | Nội dung dài, chuyên sâu | Video dài trên YouTube, bài dài trên Facebook hay blog, podcast, bản ghi livestream |
+| **Nội dung phái sinh (Derivative)** | Độ dài vừa, tách chủ đề con từ nội dung trụ cột | Bài ảnh trên Facebook, bài trả lời trên blog/diễn đàn, kịch bản video nói TikTok |
+| **Nội dung vi mô (Micro)** | Ngắn gọn sắc bén, đánh một điểm | Bình luận nổi trên Facebook, TikTok 15 giây, thẻ câu đắt làm ảnh bìa |
 
-一篇支柱内容可衍生 15–25 个跨平台素材。SKILL 根据源内容类型自动规划金字塔拆解方案。
+Một bài trụ cột có thể đẻ ra 15-25 tư liệu cho các nền tảng. SKILL tự lên phương án bóc tách kim tự tháp theo loại nội dung nguồn.
 
-## 执行步骤
+## Các bước thực thi
 
-1. **识别源内容类型**
-   - 判断源内容属于支柱层的哪种类型（B站视频 / 公众号文章 / 直播 / 播客）
-   - 统计字数、段落数，评估内容密度
+1. **Nhận diện loại nội dung nguồn**
+   - Xác định nội dung nguồn thuộc loại nào của tầng trụ cột (video YouTube / bài dài trên Facebook, blog / livestream / podcast)
+   - Đếm số chữ, số đoạn, đánh giá mật độ nội dung
 
-2. **提取核心元素**
-   - 提炼核心论点（thesis）
-   - 提取 3–5 个关键要点（key points）
-   - 标记可引用金句（quotable lines）
-   - 抓取数据点和案例（data points）
+2. **Rút các yếu tố cốt lõi**
+   - Chắt ra luận điểm cốt lõi (thesis)
+   - Rút 3-5 ý chính (key points)
+   - Đánh dấu các câu đắt trích được (quotable lines)
+   - Nhặt số liệu và ví dụ thực tế (data points)
 
-3. **映射目标平台**
-   - 有 Profile：从 Profile 的 `platforms` 字段读取目标平台列表
-   - 无 Profile：使用用户指定的平台，或默认为 小红书 + 抖音 + 微博
-   - 根据 `references/platform-specs.md` 确定每个平台的格式要求
+3. **Ánh xạ nền tảng đích**
+   - Có Profile: đọc danh sách nền tảng đích từ trường `platforms` của Profile
+   - Không có Profile: dùng nền tảng người dùng chỉ định, hoặc mặc định Facebook + TikTok + YouTube
+   - Theo `references/platform-specs.md` để chốt yêu cầu định dạng của từng nền tảng
 
-4. **逐平台生成改编内容**
-   - 根据 `references/conversion-recipes.md` 中的转换配方执行改编
-   - 每条内容必须是该平台的**原生内容**——不是简单截断或复制粘贴
-   - 适配长度限制、语气风格、标签策略、格式规范
+4. **Sinh nội dung chuyển đổi cho từng nền tảng**
+   - Làm theo công thức chuyển đổi trong `references/conversion-recipes.md`
+   - Mỗi bài phải là **nội dung bản địa** của nền tảng đó - không phải cắt ngắn hay copy-paste
+   - Chỉnh theo giới hạn độ dài, giọng điệu, chiến lược hashtag, chuẩn định dạng
 
-5. **输出排期建议**
-   - 建议各平台的发布顺序和时间间隔
-   - 原则：支柱内容先发 → 衍生内容次日起陆续发 → 微内容穿插填充
+5. **Đưa ra gợi ý lịch đăng**
+   - Gợi ý thứ tự đăng và khoảng cách thời gian giữa các nền tảng
+   - Nguyên tắc: đăng nội dung trụ cột trước → nội dung phái sinh rải dần từ hôm sau → nội dung vi mô chèn vào các khoảng trống
 
-## 改编原则
+## Nguyên tắc chuyển đổi
 
-- **平台原生**：每条内容读起来像是专门为该平台写的，不是机械裁剪
-- **核心一致**：所有改编内容传达同一核心信息，不跑题不矛盾
-- **独立成立**：每条内容单独阅读也完整有价值，不依赖用户看过源内容
-- **格式适配**：严格遵守各平台的长度、格式、标签规则（见 `references/platform-specs.md`）
+- **Bản địa với nền tảng**: mỗi bài đọc lên phải như được viết riêng cho nơi đó, không phải cắt gọt máy móc
+- **Cốt lõi thống nhất**: mọi bản chuyển đổi truyền cùng một thông điệp cốt lõi, không lạc đề, không mâu thuẫn
+- **Đứng một mình được**: đọc riêng từng bài vẫn trọn vẹn và có giá trị, không cần người đọc đã xem nội dung nguồn
+- **Hợp định dạng**: tuân thủ chặt luật độ dài, định dạng và hashtag của từng nền tảng (xem `references/platform-specs.md`)
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：
-  - 从 `platforms` 字段读取目标平台列表，自动确定改编方向
-  - 从 `tone` / `voice` 字段读取语气风格，统一应用到所有改编内容
-  - 从 `audience` 字段读取目标受众，调整内容深度和表达方式
-  - 从 `hashtag_strategy` 字段读取标签偏好
-- **无 Profile**：
-  - 要求用户指定目标平台（未指定则默认 小红书 + 抖音 + 微博）
-  - 使用通用专业语气
-  - 提示："如提供账号 Profile（含平台和受众信息），可获得更精准的改编效果"
+- **Có Profile**:
+  - Đọc danh sách nền tảng đích từ trường `platforms`, tự chốt hướng chuyển đổi
+  - Đọc giọng điệu từ trường `tone` / `voice`, áp đồng nhất cho mọi bản chuyển đổi
+  - Đọc khán giả mục tiêu từ trường `audience`, chỉnh độ sâu và cách diễn đạt
+  - Đọc thói quen dùng hashtag từ trường `hashtag_strategy`
+- **Không có Profile**:
+  - Yêu cầu người dùng chỉ định nền tảng đích (không chỉ định thì mặc định Facebook + TikTok + YouTube)
+  - Dùng giọng chuyên nghiệp phổ thông
+  - Nhắc: "Nếu đưa Profile của kênh (có thông tin nền tảng và khán giả), bản chuyển đổi sẽ sát hơn nhiều"

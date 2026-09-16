@@ -8,126 +8,126 @@ description: >-
 layer: discover
 ---
 
-# 平台算法动态追踪
+# Theo dõi biến động thuật toán nền tảng
 
-> 聚合中文社媒平台的算法更新、推荐机制变化与流量规则调整，输出结构化简报。
+> Tổng hợp cập nhật thuật toán, thay đổi cơ chế đề xuất và điều chỉnh quy tắc phân phối của các nền tảng mạng xã hội Trung Quốc, xuất bản tin có cấu trúc.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| platforms | 否 | 目标平台列表（默认全部 6 个：抖音/小红书/B站/微博/知乎/视频号） |
-| time_range | 否 | 时间范围："近一周" / "近一月" / "近三月"（默认"近一月"） |
-| focus | 否 | 关注方向："流量分发" / "内容审核" / "变现规则" / "全部"（默认"全部"） |
+| platforms | Không | Danh sách nền tảng cần theo dõi (mặc định đủ 6: Douyin/Xiaohongshu/Bilibili/Weibo/Zhihu/Video Channels) |
+| time_range | Không | Khoảng thời gian: "1 tuần gần đây" / "1 tháng gần đây" / "3 tháng gần đây" (mặc định "1 tháng gần đây") |
+| focus | Không | Hướng quan tâm: "phân phối traffic" / "kiểm duyệt nội dung" / "quy tắc kiếm tiền" / "tất cả" (mặc định "tất cả") |
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 平台算法动态简报
-更新日期: {date}
-覆盖平台: {platforms}
-时间范围: {time_range}
-关注方向: {focus}
+# Bản tin biến động thuật toán nền tảng
+Ngày cập nhật: {date}
+Nền tảng bao phủ: {platforms}
+Khoảng thời gian: {time_range}
+Hướng quan tâm: {focus}
 
-## {平台名}
-### 近期变化
-- **{变化标题}**: {具体说明}（来源: {source}，时间: {date}）
+## {tên nền tảng}
+### Thay đổi gần đây
+- **{tiêu đề thay đổi}**: {mô tả cụ thể} (nguồn: {source}, thời gian: {date})
 - ...
 
-### 对创作者的影响
-- {影响说明}
+### Tác động tới nhà sáng tạo
+- {mô tả tác động}
 
-### 应对建议
-- {可操作的建议}
+### Khuyến nghị ứng phó
+- {khuyến nghị làm được ngay}
 
-（每个目标平台各一节，结构相同）
+(mỗi nền tảng một mục, cấu trúc giống nhau)
 
-## 跨平台趋势
-- {多个平台共同出现的规则变化方向}
+## Xu hướng xuyên nền tảng
+- {hướng thay đổi quy tắc xuất hiện ở nhiều nền tảng cùng lúc}
 
-## 信息来源
-- [{来源标题}]({URL})
+## Nguồn thông tin
+- [{tiêu đề nguồn}]({URL})
 - ...
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-### 第一步：确定范围
+### Bước 1: Xác định phạm vi
 
-- 解析输入参数，确定目标平台列表、时间范围和关注方向
-- 有 Profile 时读取 `profiles/<画像>/platforms.md`，优先覆盖创作者活跃平台
-- 无 Profile 时覆盖全部 6 个平台
+- Phân tích tham số đầu vào, chốt danh sách nền tảng, khoảng thời gian và hướng quan tâm
+- Có Profile thì đọc `profiles/<hồ sơ>/platforms.md`, ưu tiên phủ các nền tảng nhà sáng tạo đang hoạt động
+- Không có Profile thì phủ đủ 6 nền tảng
 
-### 第二步：多维度搜索 — 平台官方与创作者社区
+### Bước 2: Tìm kiếm đa chiều - kênh chính thức của nền tảng và cộng đồng nhà sáng tạo
 
-对每个目标平台，执行 2-3 组 web_search 查询：
+Với mỗi nền tảng, chạy 2-3 nhóm truy vấn web_search:
 
-- `"{平台名} 算法 更新 {当前年}"`
-- `"{平台名} 推荐机制 变化 创作者"`
-- `"{平台名} 流量 规则 最新"`
+- `"{tên nền tảng} thuật toán cập nhật {năm hiện tại}"`
+- `"{tên nền tảng} cơ chế đề xuất thay đổi nhà sáng tạo"`
+- `"{tên nền tảng} quy tắc phân phối mới nhất"`
 
-若 focus 非"全部"，追加定向查询：
-- 流量分发：`"{平台名} 流量池 分发 调整"`
-- 内容审核：`"{平台名} 内容审核 规则 变化"`
-- 变现规则：`"{平台名} 变现 政策 更新"`
+Nếu focus khác "tất cả", thêm truy vấn định hướng:
+- Phân phối traffic: `"{tên nền tảng} vòng phân phối điều chỉnh"`
+- Kiểm duyệt nội dung: `"{tên nền tảng} quy tắc kiểm duyệt nội dung thay đổi"`
+- Quy tắc kiếm tiền: `"{tên nền tảng} chính sách kiếm tiền cập nhật"`
 
-读取 `references/platform-sources.md` 获取各平台官方来源 URL 和搜索模板。
+Đọc `references/platform-sources.md` để lấy URL nguồn chính thức của từng nền tảng và mẫu truy vấn.
 
-### 第三步：第三方信息源搜索
+### Bước 3: Tìm kiếm nguồn tin bên thứ ba
 
-补充行业视角，执行以下查询：
+Bổ sung góc nhìn ngành, chạy các truy vấn sau:
 
-- `"社媒平台 算法 变化 {当前年}"` 限定 newrank.cn / woshipm.com / 36kr.com
-- `"{平台名} 创作者 吐槽 算法"` — 捕捉社区讨论中的实际感知
-- `"中国社交媒体 推荐算法 趋势"` — 获取跨平台综合分析
+- `"nền tảng mạng xã hội thuật toán thay đổi {năm hiện tại}"` giới hạn trong newrank.cn / woshipm.com / 36kr.com
+- `"{tên nền tảng} nhà sáng tạo than phiền thuật toán"` - bắt cảm nhận thực tế trong thảo luận cộng đồng
+- `"mạng xã hội Trung Quốc thuật toán đề xuất xu hướng"` - lấy phân tích tổng hợp xuyên nền tảng
 
-### 第四步：抓取与提取
+### Bước 4: Thu thập và trích xuất
 
-对第二步和第三步中相关度最高的 3-5 个结果（每平台），执行 web_fetch：
+Với 3-5 kết quả liên quan nhất ở bước 2 và bước 3 (mỗi nền tảng), chạy web_fetch:
 
-- 提取具体的算法变化描述、生效时间、官方声明原文
-- 读取 `references/algorithm-vocabulary.md` 辅助理解平台专有术语
-- 区分信息来源层级：
-  - **官方确认**：平台官方公告、创作者中心通知
-  - **行业报道**：新榜、36kr 等媒体报道
-  - **社区感知**：创作者社区讨论、个人观察（标注为未经证实）
+- Trích mô tả cụ thể của thay đổi thuật toán, thời điểm hiệu lực, nguyên văn thông báo chính thức
+- Đọc `references/algorithm-vocabulary.md` để hiểu thuật ngữ riêng của từng nền tảng
+- Phân tầng nguồn thông tin:
+  - **Xác nhận chính thức**: thông báo chính thức của nền tảng, thông báo trong trung tâm nhà sáng tạo
+  - **Báo ngành**: bài đưa tin của Newrank, 36kr và các trang tương tự
+  - **Cảm nhận cộng đồng**: thảo luận trong cộng đồng nhà sáng tạo, quan sát cá nhân (ghi rõ là chưa kiểm chứng)
 
-### 第五步：合成简报
+### Bước 5: Tổng hợp bản tin
 
-将提取的信息按平台聚合为结构化简报：
+Gom thông tin đã trích theo từng nền tảng thành bản tin có cấu trúc:
 
-1. **逐平台整理**：按时间倒序列出每个变化，附来源 URL 和日期
-2. **影响分析**：每条变化对创作者的具体影响（流量、内容策略、变现）
-3. **应对建议**：针对每条变化给出可操作的调整建议
-4. **跨平台趋势**：识别多个平台共同出现的规则变化方向（如"短视频平台集体提升完播率权重"）
-5. **信息来源汇总**：列出所有引用的 URL
+1. **Sắp theo từng nền tảng**: liệt kê từng thay đổi theo thời gian giảm dần, kèm URL nguồn và ngày
+2. **Phân tích tác động**: mỗi thay đổi ảnh hưởng cụ thể gì tới nhà sáng tạo (lượt tiếp cận, chiến lược nội dung, kiếm tiền)
+3. **Khuyến nghị ứng phó**: với mỗi thay đổi, đưa ra điều chỉnh làm được ngay
+4. **Xu hướng xuyên nền tảng**: nhận diện hướng thay đổi quy tắc xuất hiện ở nhiều nền tảng (ví dụ "các nền tảng video ngắn đồng loạt tăng trọng số tỉ lệ xem hết")
+5. **Tổng hợp nguồn**: liệt kê toàn bộ URL đã trích dẫn
 
-### 第六步：输出
+### Bước 6: Xuất kết quả
 
-将简报保存到 `outputs/` 目录。
+Lưu bản tin vào thư mục `outputs/<chủ đề>/`.
 
-## 规则
+## Quy tắc
 
-1. **每条声明必须附来源 URL** — 无来源的信息不纳入简报
-2. **区分确认与传闻** — 官方公告标注"已确认"，社区讨论标注"未经证实/社区反馈"
-3. **标注时间** — 每条变化注明发生时间；6 个月以前的变化归入"背景信息"而非"近期变化"
-4. **不预测未来** — 只报告已发生的变化，不推测平台接下来会怎么调整
-5. **如实报告空结果** — 某平台未发现近期变化时明确写"未发现近期算法变化"，不编造
+1. **Mỗi khẳng định phải kèm URL nguồn** - thông tin không có nguồn thì không đưa vào bản tin
+2. **Tách xác nhận khỏi tin đồn** - thông báo chính thức ghi "đã xác nhận", thảo luận cộng đồng ghi "chưa kiểm chứng / phản hồi cộng đồng"
+3. **Ghi mốc thời gian** - mỗi thay đổi ghi rõ thời điểm xảy ra; thay đổi cũ hơn 6 tháng xếp vào "thông tin nền" chứ không phải "thay đổi gần đây"
+4. **Không dự đoán tương lai** - chỉ báo cáo thay đổi đã xảy ra, không suy đoán nền tảng sẽ điều chỉnh tiếp thế nào
+5. **Báo trung thực khi không có kết quả** - nền tảng nào không thấy thay đổi gần đây thì ghi rõ "không thấy thay đổi thuật toán gần đây", không bịa
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `profiles/<画像>/platforms.md` 确定创作者活跃平台，优先覆盖这些平台
-- 影响分析结合创作者的内容类型（如"你主做知识科普，完播率权重提升对你有利"）
-- 应对建议针对创作者的具体情况定制
-- 非活跃平台仅提供摘要级信息
+**Khi có Profile:**
+- Đọc `profiles/<hồ sơ>/platforms.md` để xác định nền tảng nhà sáng tạo đang hoạt động, ưu tiên phủ các nền tảng này
+- Phân tích tác động gắn với loại nội dung của nhà sáng tạo (ví dụ "bạn làm nội dung kiến thức, trọng số tỉ lệ xem hết tăng là có lợi cho bạn")
+- Khuyến nghị ứng phó may đo theo tình huống cụ thể của nhà sáng tạo
+- Nền tảng không hoạt động thì chỉ đưa thông tin mức tóm tắt
 
-**无 Profile 时：**
-- 6 个平台均等覆盖
-- 影响分析面向通用创作者群体
-- 应对建议保持通用性，不做个性化判断
+**Khi không có Profile:**
+- Phủ đều cả 6 nền tảng
+- Phân tích tác động hướng tới nhóm nhà sáng tạo nói chung
+- Khuyến nghị ứng phó giữ tính tổng quát, không phán đoán cá nhân hoá
 
-## 自研说明
+## Ghi chú tự phát triển
 
-> 与 skill-cross-platform-diff 的区别：cross-platform-diff 分析平台间的**静态特征**差异，本 SKILL 追踪**动态规则**变化。
-> 自研溯源与核心差异化见同目录 `EASEL-META.md`。
+> Khác với skill-cross-platform-diff: cross-platform-diff phân tích khác biệt **đặc điểm tĩnh** giữa các nền tảng, SKILL này theo dõi thay đổi **quy tắc động**.
+> Nguồn gốc tự phát triển và khác biệt cốt lõi xem `EASEL-META.md` cùng thư mục.

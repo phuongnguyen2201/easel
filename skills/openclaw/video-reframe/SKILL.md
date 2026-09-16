@@ -7,67 +7,67 @@ description: >-
 layer: produce
 ---
 
-# 视频画幅智能转换（竖横互转）
+# Đổi khung hình video thông minh (dọc ngang qua lại)
 
-> 把视频转到目标宽高比，三种策略可选。全部走 `skills/shared/scripts/reframe.py`，
-> **不要手拼 crop/overlay 滤镜**——脚本已算好裁切尺寸、焦点边界、偶数对齐、音轨保留。
+> Đưa video về tỉ lệ khung hình đích, có ba chiến lược để chọn. Tất cả chạy qua `skills/shared/scripts/reframe.py`,
+> **đừng tự ghép filter crop/overlay bằng tay** - script đã tính sẵn kích thước cắt, biên tiêu điểm, căn số chẵn, giữ audio.
 
-| 模式 | 效果 | 适用 |
+| Chế độ | Hiệu quả | Dùng khi |
 |------|------|------|
-| `blur`（默认） | 原画完整居中 + 放大模糊的自身作背景，**无黑边** | 横转竖最常用，画面不丢内容 |
-| `crop` | 按焦点位置裁到目标比例，**无黑边但裁边缘** | 主体明确、想铺满屏幕 |
-| `smart` | cv2 检测人脸 → 以人脸中位位置为焦点裁切 | 口播/人物视频横转竖 |
+| `blur` (mặc định) | Giữ nguyên khung gốc căn giữa + phóng to làm mờ chính nó làm nền, **không viền đen** | Hay dùng nhất khi chuyển ngang sang dọc, không mất nội dung |
+| `crop` | Cắt theo vị trí tiêu điểm về tỉ lệ đích, **không viền đen nhưng mất rìa** | Chủ thể rõ ràng, muốn phủ kín màn hình |
+| `smart` | cv2 phát hiện khuôn mặt → lấy vị trí trung vị của mặt làm tiêu điểm để cắt | Video nói/video có người, chuyển ngang sang dọc |
 
-> 需要逐镜头动态追踪人脸做 pan 见 **clipify**；只想加黑边/居中裁见 **video-editing** `aspect`。
+> Cần bám mặt động theo từng cảnh để pan thì xem **clipify**; chỉ muốn thêm viền đen/cắt giữa thì xem **video-editing** `aspect`.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 视频文件 | 是 | 要转换的视频（没给就问） |
-| 目标比例 | 是 | `9:16` / `16:9` / `1:1` / `4:5` / `3:4` / `4:3` / `21:9` |
-| 模式 | 否 | `blur`（默认）/ `crop` / `smart` |
-| 焦点 | 否 | crop 模式下主体不在中间时用 `--focus-x`（0 左 1 右） |
+| File video | Có | Video cần chuyển (chưa đưa thì hỏi) |
+| Tỉ lệ đích | Có | `9:16` / `16:9` / `1:1` / `4:5` / `3:4` / `4:3` / `21:9` |
+| Chế độ | Không | `blur` (mặc định) / `crop` / `smart` |
+| Tiêu điểm | Không | Ở chế độ crop, khi chủ thể không nằm giữa thì dùng `--focus-x` (0 trái 1 phải) |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 转换后视频（`*-<比例>.mp4`）
-- 报告：源→目标尺寸、比例、所用策略、人脸焦点（smart 时）
+- Video sau khi chuyển (`*-<tỉ lệ>.mp4`)
+- Báo cáo: kích thước nguồn → đích, tỉ lệ, chiến lược đã dùng, tiêu điểm khuôn mặt (khi dùng smart)
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/reframe.py`（`reframe -h` 看参数）。
+Đường dẫn script (tương đối gốc dự án): `skills/shared/scripts/reframe.py` (`reframe -h` để xem tham số).
 
 ```bash
-# 横版转竖版，模糊背景填充（最稳，画面不丢）
-python skills/shared/scripts/reframe.py reframe -i <视频> \
-  -o outputs/主题名/<名>-9x16.mp4 --ratio 9:16 --mode blur
+# Chuyển ngang sang dọc, lấp nền mờ (ổn nhất, không mất khung hình)
+python skills/shared/scripts/reframe.py reframe -i <video> \
+  -o "outputs/<chủ đề>/<tên>-9x16.mp4" --ratio 9:16 --mode blur
 
-# 焦点裁切，主体偏右时把焦点拉到 0.65
-python skills/shared/scripts/reframe.py reframe -i <视频> \
-  -o outputs/主题名/<名>-9x16.mp4 --ratio 9:16 --mode crop --focus-x 0.65
+# Cắt theo tiêu điểm, chủ thể lệch phải thì kéo tiêu điểm về 0.65
+python skills/shared/scripts/reframe.py reframe -i <video> \
+  -o "outputs/<chủ đề>/<tên>-9x16.mp4" --ratio 9:16 --mode crop --focus-x 0.65
 
-# 人脸感知裁切（口播/人物视频）
-python skills/shared/scripts/reframe.py reframe -i <视频> \
-  -o outputs/主题名/<名>-9x16.mp4 --ratio 9:16 --mode smart
+# Cắt theo nhận diện khuôn mặt (video nói/video có người)
+python skills/shared/scripts/reframe.py reframe -i <video> \
+  -o "outputs/<chủ đề>/<tên>-9x16.mp4" --ratio 9:16 --mode smart
 ```
-`--size WxH` 可强制最终分辨率（默认按比例与源分辨率推算，如 1280x720 → 720x1280）。
+`--size WxH` ép được độ phân giải cuối (mặc định suy ra từ tỉ lệ và độ phân giải nguồn, ví dụ 1280x720 → 720x1280).
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：默认目标比例按 `platforms.md` 主平台（抖音/小红书竖版 9:16，B站横版 16:9，
-  朋友圈/ins 方形 1:1）；口播/人物类账号默认 `smart` 模式。
-- 无 Profile：默认 `blur` 模式 + 询问目标平台/比例。
+- Có Profile: tỉ lệ đích mặc định lấy theo nền tảng chính trong `platforms.md` (Douyin/Xiaohongshu dọc 9:16, Bilibili ngang 16:9,
+  WeChat Moments/ins vuông 1:1); kênh dạng video nói/có người mặc định chế độ `smart`.
+- Không có Profile: mặc định chế độ `blur` + hỏi nền tảng/tỉ lệ đích.
 
-## 规则
+## Quy tắc
 
-1. 拿不准选哪种：横转竖优先 `blur`（不丢画面）；主体明确且想铺满用 `crop`；人物口播用 `smart`。
-2. `smart` 未检出人脸时自动退化为居中裁切，并在报告里说明。
-3. 音轨自动保留（copy），不重编码音频。
-4. 输出分辨率强制偶数对齐（H.264 要求），无需手动处理。
-5. 产物统一进 `outputs/主题名/`。
+1. Không chắc chọn cái nào: chuyển ngang sang dọc thì ưu tiên `blur` (không mất khung hình); chủ thể rõ và muốn phủ kín thì dùng `crop`; người nói trước ống kính thì dùng `smart`.
+2. Khi `smart` không phát hiện được khuôn mặt thì tự lùi về cắt giữa, và ghi rõ trong báo cáo.
+3. Audio tự động được giữ (copy), không encode lại âm thanh.
+4. Độ phân giải đầu ra bị ép căn số chẵn (yêu cầu của H.264), không cần xử lý tay.
+5. Sản phẩm đều nằm trong `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-模糊背景填充（blurred bars）是竖屏适配的主流做法；人脸感知裁切参考 AI-Youtube-Shorts-Generator
-思路，用 OpenCV Haar 级联检测人脸中位位置定焦点。把裁切几何与边界钳制封装成确定性脚本。
+Lấp nền mờ (blurred bars) là cách làm phổ biến khi thích ứng màn dọc; cắt theo nhận diện khuôn mặt tham khảo ý tưởng của
+AI-Youtube-Shorts-Generator, dùng OpenCV Haar cascade tìm vị trí trung vị khuôn mặt để định tiêu điểm. Hình học cắt và kẹp biên được đóng gói thành script xác định.

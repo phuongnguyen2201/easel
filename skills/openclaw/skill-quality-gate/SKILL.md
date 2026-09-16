@@ -7,21 +7,21 @@ description: >-
 layer: publish
 ---
 
-# 发布前质量关卡
+# Cửa chất lượng trước khi đăng
 
-> 一个 SKILL 完成两道把关：合规风险检测 + 产物质量审核。
+> Một SKILL lo trọn hai cửa kiểm: dò rủi ro tuân thủ + soát chất lượng sản phẩm.
 
-## 输入
+## Đầu vào
 
-用户提供待检查内容：文本、图片路径、视频路径、或混合。
-可选：目标发布平台。
+Người dùng đưa nội dung cần kiểm: văn bản, đường dẫn ảnh, đường dẫn video, hoặc trộn lẫn.
+Tuỳ chọn: nền tảng định đăng.
 
-## 输出
+## Đầu ra
 
 ```json
 {
-  "overall_verdict": "✅ 可发布 | ⚠️ 需修改 | ❌ 不达标",
-  "platform": "平台名或 generic",
+  "overall_verdict": "✅ đăng được | ⚠️ cần sửa | ❌ không đạt",
+  "platform": "tên nền tảng hoặc generic",
   "compliance": {
     "risk_level": "low|medium|high",
     "issues": [{ "type": "", "severity": "", "text": "", "reason": "", "suggestion": "" }],
@@ -31,43 +31,43 @@ layer: publish
     "score": "✅|⚠️|❌",
     "dimensions": [{ "name": "", "score": "", "note": "" }]
   },
-  "top_fixes": ["修改建议1", "修改建议2", "修改建议3"]
+  "top_fixes": ["đề xuất sửa 1", "đề xuất sửa 2", "đề xuất sửa 3"]
 }
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-### 第一关：合规检测
+### Cửa một: dò tuân thủ
 
-1. 读取内容（文本和/或图片）
-2. 加载通用合规规则 → `references/general-rules.md`
-3. 根据 Profile 或用户指定的平台加载对应规则：
-   - 小红书 → `references/platform-xiaohongshu.md`
-   - 抖音 → `references/platform-douyin.md`
-   - B站 → `references/platform-bilibili.md`
-   - 无平台 → 仅通用规则
-4. 逐项检测：绝对化用语、医疗违规、违禁内容、平台特有限制
-5. 汇总合规结果
+1. Đọc nội dung (văn bản và/hoặc ảnh)
+2. Nạp bộ quy tắc tuân thủ chung → `references/general-rules.md`
+3. Theo Profile hoặc nền tảng người dùng chỉ định mà nạp bộ quy tắc tương ứng (các bộ hiện có đều là quy định của nền tảng Trung Quốc):
+   - Xiaohongshu → `references/platform-xiaohongshu.md`
+   - Douyin → `references/platform-douyin.md`
+   - Bilibili → `references/platform-bilibili.md`
+   - Không có nền tảng → chỉ dùng quy tắc chung
+4. Dò từng mục: từ tuyệt đối, vi phạm quy định y tế, nội dung cấm, hạn chế riêng của nền tảng (danh sách từ nhạy cảm và luật quảng cáo trong references là của Trung Quốc)
+5. Tổng hợp kết quả tuân thủ
 
-### 第二关：质量审核
+### Cửa hai: soát chất lượng
 
-1. 识别产物类型（文本/图片/视频）
-2. 按维度逐项检查 → `references/review-dimensions.md`
-3. 给出三级结论 → `references/review-levels.md`
-   - ✅ 通过：可直接发布
-   - ⚠️ 有瑕疵：建议微调后发布
-   - ❌ 不达标：需返工
-4. 如结论为 ❌，按 `references/rework-rules.md` 给出返工指引
+1. Nhận diện loại sản phẩm (văn bản/ảnh/video)
+2. Kiểm từng chiều → `references/review-dimensions.md`
+3. Đưa kết luận ba mức → `references/review-levels.md`
+   - ✅ Đạt: đăng được luôn
+   - ⚠️ Có tì vết: nên chỉnh nhẹ rồi đăng
+   - ❌ Không đạt: phải làm lại
+4. Nếu kết luận là ❌, theo `references/rework-rules.md` mà đưa hướng dẫn làm lại
 
-### 综合判定
+### Phán định tổng hợp
 
-- 合规高风险 → 整体 ❌ 不达标
-- 质量审核为 ❌（返工级）→ 整体 ❌ 不达标
-- 合规低风险 + 质量 ✅ → 整体 ✅ 可发布
-- 其他组合 → 整体 ⚠️ 需修改
-- 输出 Top 3 优先修改建议
+- Tuân thủ rủi ro cao → tổng thể ❌ không đạt
+- Soát chất lượng ra ❌ (mức phải làm lại) → tổng thể ❌ không đạt
+- Tuân thủ rủi ro thấp + chất lượng ✅ → tổng thể ✅ đăng được
+- Các tổ hợp còn lại → tổng thể ⚠️ cần sửa
+- Xuất Top 3 đề xuất sửa ưu tiên
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：读取 platform 加载平台规则、检查风格适配
-- **无 Profile**：仅通用合规检查 + 通用质量标准
+- **Có Profile**: đọc platform để nạp quy tắc nền tảng, kiểm mức hợp phong cách
+- **Không có Profile**: chỉ kiểm tuân thủ chung + tiêu chuẩn chất lượng chung

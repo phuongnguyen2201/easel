@@ -8,150 +8,150 @@ description: >-
 layer: discover
 ---
 
-# 竞品内容分析
+# Phân tích nội dung đối thủ
 
-> 对同赛道竞品账号做全维度内容拆解：选题分布、发布节奏、爆款规律、格式偏好、互动模式，找出差异化机会，输出可落地的行动建议。
+> Mổ xẻ nội dung kênh đối thủ cùng ngách trên mọi khía cạnh: phân bố đề tài, nhịp đăng, quy luật viral, định dạng ưa dùng, cách tương tác; tìm cơ hội khác biệt và đưa ra việc làm được ngay.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供以下信息（部分可选）：
+Người dùng cung cấp các thông tin sau trong prompt (một phần là tuỳ chọn):
 
-- **必需**：竞品账号名称或链接（1–5 个）、用户所在赛道/细分领域
-- **可选**：目标平台（小红书/抖音/B站/微博/知乎等）、分析侧重点（选题/格式/涨粉/变现等）、自己的账号名（用于对比）
+- **Bắt buộc**: tên hoặc link kênh đối thủ (1-5 kênh), ngách/lĩnh vực của người dùng
+- **Tuỳ chọn**: nền tảng mục tiêu (Facebook/TikTok/YouTube/Zalo...), trọng tâm phân tích (đề tài/định dạng/tăng người theo dõi/kiếm tiền...), tên kênh của chính mình (để đối chiếu)
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 竞品内容分析报告
-日期: {date}
-赛道: {niche}
-分析平台: {platforms}
-竞品数: {N}
+# Báo cáo phân tích nội dung đối thủ
+Ngày: {date}
+Ngách: {niche}
+Nền tảng phân tích: {platforms}
+Số đối thủ: {N}
 
-## 竞品账号画像卡
-（每个竞品一张卡片）
-- 账号名 / 平台 / 粉丝量级 / 简介定位
-- 内容方向关键词 / 更新频率 / 主力格式
-- 代表作 Top3（标题 + 数据 + 拆解）
+## Thẻ hồ sơ kênh đối thủ
+(mỗi đối thủ một thẻ)
+- Tên kênh / nền tảng / quy mô người theo dõi / định vị trong phần giới thiệu
+- Từ khoá hướng nội dung / tần suất đăng / định dạng chủ lực
+- Top 3 bài tiêu biểu (tiêu đề + số liệu + mổ xẻ)
 
-## 选题分布
-各竞品的内容主题分类与占比
+## Phân bố đề tài
+Phân loại chủ đề nội dung và tỉ trọng của từng đối thủ
 
-## 格式与节奏
-内容形式（图文/短视频/直播/轮播/合集）占比 + 发布频率与时间规律
+## Định dạng và nhịp đăng
+Tỉ trọng hình thức nội dung (bài ảnh/video ngắn/livestream/carousel/tuyển tập) + tần suất và quy luật giờ đăng
 
-## 爆款拆解
-近期高互动内容的共性分析：标题模式、封面特征、内容结构、情绪钩子
+## Mổ xẻ bài viral
+Phân tích điểm chung của nội dung tương tác cao gần đây: mẫu tiêu đề, đặc điểm ảnh bìa, cấu trúc nội dung, hook cảm xúc
 
-## 互动模式
-评论/点赞/收藏/转发的比例特征 + 评论区运营策略
+## Cách tương tác
+Đặc điểm tỉ lệ bình luận/thích/lưu/chia sẻ + chiến lược vận hành phần bình luận
 
-## 热点借势分析
-竞品如何跟热点、借势频率、效果评估
+## Phân tích bắt trend
+Đối thủ bắt trend thế nào, tần suất bắt trend, đánh giá hiệu quả
 
-## SWOT 分析
-每个主要竞品的内容层面 SWOT
+## Phân tích SWOT
+SWOT ở tầng nội dung cho từng đối thủ chính
 
-## 差异化机会
-竞品未覆盖/做得弱的选题、格式、人设、受众缺口
+## Cơ hội khác biệt
+Đề tài, định dạng, persona, khoảng trống khán giả mà đối thủ chưa phủ hoặc làm còn yếu
 
-## 行动建议
-按优先级排列的具体行动项，每条引用数据支撑
+## Việc cần làm
+Các việc cụ thể xếp theo độ ưu tiên, mỗi việc dẫn số liệu làm căn cứ
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-### 1. 收集上下文
+### 1. Thu thập bối cảnh
 
-确认以下信息，缺失的主动追问：
-- 竞品账号列表（名称或链接）
-- 用户赛道 / 细分领域
-- 目标平台（默认覆盖竞品所在的全部平台）
-- 分析侧重（默认全维度）
+Xác nhận các thông tin sau, thiếu gì thì chủ động hỏi:
+- Danh sách kênh đối thủ (tên hoặc link)
+- Ngách / lĩnh vực nhỏ của người dùng
+- Nền tảng mục tiêu (mặc định phủ mọi nền tảng đối thủ đang có mặt)
+- Trọng tâm phân tích (mặc định đủ mọi khía cạnh)
 
-### 2. 竞品账号画像
+### 2. Hồ sơ kênh đối thủ
 
-对每个竞品账号建立基础画像。数据采集方法与各平台反爬降级方案参照 [data-collection.md](references/data-collection.md)：
-- 用 `web_fetch` 抓取账号主页信息（账号简介、粉丝量级、作品数）；被反爬拦截时降级到 `web_search` 取公开信息
-- 提取定位关键词、内容方向、人设特征
-- 记录粉丝量级区间、账号活跃度
-- 拿不到的数据（播放/完播/粉丝增量等创作者后台数据）如实标注"无公开数据"，不编造精确值
+Lập hồ sơ cơ bản cho từng kênh đối thủ. Cách thu thập dữ liệu và phương án dự phòng khi bị chặn crawl ở từng nền tảng xem [data-collection.md](references/data-collection.md):
+- Dùng `web_fetch` lấy thông tin trang kênh (giới thiệu, quy mô người theo dõi, số bài đăng); bị chặn crawl thì lùi về `web_search` để lấy thông tin công khai
+- Trích từ khoá định vị, hướng nội dung, đặc điểm persona
+- Ghi khoảng quy mô người theo dõi, mức độ hoạt động của kênh
+- Dữ liệu không lấy được (lượt xem/tỉ lệ xem hết/mức tăng người theo dõi và các số liệu trong trang quản trị nhà sáng tạo) thì ghi thẳng "không có dữ liệu công khai", không bịa con số chính xác
 
-### 3. 选题与主题分析
+### 3. Phân tích đề tài và chủ đề
 
-梳理竞品近期内容（尽量覆盖近 30–90 天）：
-- 按主题归类，统计各主题占比
-- 识别核心选题方向（常青选题 vs 热点选题 vs 个人经历）
-- 标注高频关键词和话题标签
+Rà nội dung gần đây của đối thủ (cố gắng phủ 30-90 ngày gần nhất):
+- Gom theo chủ đề, tính tỉ trọng từng chủ đề
+- Nhận diện hướng đề tài cốt lõi (đề tài thường xanh vs đề tài bắt trend vs trải nghiệm cá nhân)
+- Đánh dấu từ khoá và hashtag xuất hiện nhiều
 
-### 4. 内容格式与发布节奏
+### 4. Định dạng nội dung và nhịp đăng
 
-分析竞品的格式偏好和发布规律（更新频率指标与涨粉节奏推断方法参照 [viral-patterns.md](references/viral-patterns.md)）：
-- 格式分布：图文 / 短视频 / 中长视频 / 直播 / 图片轮播 / 合集
-- 发布频率：日更 / 周几更 / 不规律
-- 发布时间段：集中在哪些时段
-- 平台适配：同一内容在不同平台的差异化处理
+Phân tích định dạng ưa dùng và quy luật đăng của đối thủ (chỉ số tần suất đăng và cách suy ra nhịp tăng người theo dõi xem [viral-patterns.md](references/viral-patterns.md)):
+- Phân bố định dạng: bài ảnh / video ngắn / video dài vừa / livestream / carousel ảnh / tuyển tập
+- Tần suất đăng: hằng ngày / vài lần mỗi tuần / không đều
+- Khung giờ đăng: dồn vào những khung nào
+- Thích ứng nền tảng: cùng một nội dung được xử lý khác nhau ra sao trên từng nền tảng
 
-### 5. 爆款内容拆解
+### 5. Mổ xẻ nội dung viral
 
-爆款判定、拆解维度与"爆款密码"反推方法参照 [viral-patterns.md](references/viral-patterns.md)。筛选互动量显著高于均值的内容（≥账号中位数 3–5 倍），逐条拆解：
-- **标题/封面**：用了什么钩子？（数字、悬念、痛点、反常识、情绪词）
-- **内容结构**：开头留人方式、中间节奏、结尾引导互动的手法
-- **选题时机**：是否踩中热点、节日、平台活动
-- **格式特征**：时长、图片数、排版、字体、BGM 等
+Cách xác định bài viral, các chiều mổ xẻ và cách truy ngược "công thức viral" xem [viral-patterns.md](references/viral-patterns.md). Lọc nội dung có tương tác vượt hẳn mức trung bình (>= 3-5 lần trung vị của kênh), mổ xẻ từng bài:
+- **Tiêu đề/ảnh bìa**: dùng hook gì? (con số, gợi tò mò, điểm đau, phản trực giác, từ ngữ cảm xúc)
+- **Cấu trúc nội dung**: cách giữ chân ở đoạn mở, nhịp ở giữa, cách dẫn dắt tương tác ở đoạn kết
+- **Thời điểm chọn đề tài**: có trúng trend, dịp lễ, chiến dịch của nền tảng không
+- **Đặc điểm định dạng**: thời lượng, số ảnh, cách trình bày, font chữ, BGM...
 
-### 6. 互动模式分析
+### 6. Phân tích cách tương tác
 
-分析竞品内容的互动特征：
-- 互动结构：点赞/评论/收藏/转发的比例分布
-- 评论区特征：用户主要在讨论什么、情绪倾向
-- 博主互动：是否回复评论、回复风格、置顶评论策略
-- 收藏型 vs 传播型：哪些内容被收藏多（工具向），哪些被转发多（情绪向）
+Phân tích đặc điểm tương tác của nội dung đối thủ:
+- Cấu trúc tương tác: phân bố tỉ lệ thích/bình luận/lưu/chia sẻ
+- Đặc điểm phần bình luận: khán giả bàn chuyện gì là chính, xu hướng cảm xúc ra sao
+- Chủ kênh tương tác: có trả lời bình luận không, phong cách trả lời, chiến lược ghim bình luận
+- Kiểu được lưu vs kiểu được lan truyền: nội dung nào được lưu nhiều (thiên công cụ), nội dung nào được chia sẻ nhiều (thiên cảm xúc)
 
-### 7. 热点借势分析
+### 7. Phân tích bắt trend
 
-用 `web_fetch` 调用热搜 API（参照 [hotlist-apis.md](../../shared/hotlist-apis.md)）获取当前各平台热点，然后：
-- 对比竞品近期内容与热搜话题的重合度
-- 分析竞品追热点的频率、速度、角度
-- 评估追热点内容 vs 常规内容的互动差异
-- 识别竞品擅长借势的热点类型（社会事件/行业动态/平台梗/节日）
+Dùng `web_fetch` gọi API bảng tìm kiếm nóng (xem [hotlist-apis.md](../../shared/hotlist-apis.md)) để lấy trend hiện tại của từng nền tảng, rồi:
+- So mức trùng khớp giữa nội dung gần đây của đối thủ và các chủ đề đang nóng
+- Phân tích tần suất, tốc độ và góc tiếp cận khi đối thủ bắt trend
+- Đánh giá chênh lệch tương tác giữa nội dung bắt trend và nội dung thường
+- Nhận diện loại trend mà đối thủ bắt tốt (sự kiện xã hội/tin ngành/meme của nền tảng/dịp lễ)
 
-### 8. SWOT 分析
+### 8. Phân tích SWOT
 
-对每个主要竞品做内容层面的 SWOT：
-- **S（优势）**：内容质量、更新频率、人设辨识度、粉丝粘性
-- **W（劣势）**：格式单一、选题窄、互动少、更新不稳定
-- **O（机会）**：未覆盖的受众需求、新兴平台/格式、赛道空白
-- **T（威胁）**：该竞品对用户的直接竞争压力点
+Làm SWOT ở tầng nội dung cho từng đối thủ chính:
+- **S (điểm mạnh)**: chất lượng nội dung, tần suất đăng, độ nhận diện persona, độ gắn bó của người theo dõi
+- **W (điểm yếu)**: định dạng đơn điệu, đề tài hẹp, ít tương tác, đăng không đều
+- **O (cơ hội)**: nhu cầu khán giả chưa ai đáp ứng, nền tảng/định dạng mới nổi, khoảng trống trong ngách
+- **T (thách thức)**: những điểm đối thủ này gây sức ép cạnh tranh trực tiếp lên người dùng
 
-### 9. 差异化机会挖掘
+### 9. Đào cơ hội khác biệt
 
-基于以上分析，找出可切入的差异化方向：
-- 选题空白：竞品没做但受众有需求的主题
-- 格式差异：竞品集中做图文，可以用短视频突围（反之亦然）
-- 人设差异：竞品偏专业严肃，可以走亲和真实路线（反之亦然）
-- 受众细分：竞品覆盖大众，可以深耕更垂直的人群
-- 平台差异：竞品主攻某平台，可以在另一平台建立优势
+Dựa trên phân tích trên, tìm hướng khác biệt có thể chen vào:
+- Khoảng trống đề tài: chủ đề đối thủ chưa làm nhưng khán giả có nhu cầu
+- Khác biệt định dạng: đối thủ dồn vào bài ảnh thì mình dùng video ngắn để phá vây (và ngược lại)
+- Khác biệt persona: đối thủ thiên chuyên môn nghiêm túc thì mình đi hướng gần gũi chân thật (và ngược lại)
+- Chia nhỏ khán giả: đối thủ phủ đại chúng thì mình đào sâu nhóm hẹp hơn
+- Khác biệt nền tảng: đối thủ dồn sức vào một nền tảng thì mình dựng lợi thế ở nền tảng khác
 
-### 10. 输出行动建议
+### 10. Xuất việc cần làm
 
-汇总为可落地的行动清单：
-- 每条建议标注优先级（高/中/低）和预期效果
-- 引用具体竞品数据作为支撑（"竞品 A 用 XX 格式获得了 XX 互动"）
-- 区分速赢（本周可做）和长线布局（需要持续积累）
-- 建议与用户自身定位和风格匹配
+Gom thành danh sách việc làm được ngay:
+- Mỗi việc ghi độ ưu tiên (cao/trung bình/thấp) và hiệu quả kỳ vọng
+- Dẫn số liệu cụ thể của đối thủ làm căn cứ ("đối thủ A dùng định dạng XX đạt XX tương tác")
+- Tách việc thắng nhanh (tuần này làm được) và việc dài hạn (cần tích luỹ liên tục)
+- Đề xuất phải khớp với định vị và phong cách của chính người dùng
 
-参照 [analysis-templates.md](references/analysis-templates.md) 输出竞争矩阵。
+Xem [analysis-templates.md](references/analysis-templates.md) để xuất ma trận cạnh tranh.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile 时**：
-  - 读取 `identity.md`：获取用户定位和差异化，精准匹配竞品梯度
-  - 读取 `platforms.md`：聚焦用户实际运营的平台，分析该平台上的竞品表现
-  - 读取 `style.md`：在行动建议中匹配用户的内容风格和调性偏好
-  - 读取 `audience.md`（如有）：用受众画像优化差异化机会分析
-  - 分析结论中直接对标用户账号，给出"你 vs 竞品"的对比
-- **无 Profile 时**：
-  - 退回通用模式，要求用户手动提供赛道和竞品信息
-  - 分析覆盖全平台，不做平台特化
-  - 附注"如提供账号 Profile 可获得更精准的竞品对标和差异化建议"
+- **Khi có Profile**:
+  - Đọc `identity.md`: lấy định vị và điểm khác biệt của người dùng, ghép đúng tầm đối thủ
+  - Đọc `platforms.md`: tập trung vào nền tảng người dùng đang vận hành thật, phân tích màn thể hiện của đối thủ trên nền tảng đó
+  - Đọc `style.md`: khớp việc cần làm với phong cách nội dung và tone người dùng thích
+  - Đọc `audience.md` (nếu có): dùng hồ sơ khán giả để tinh chỉnh phần phân tích cơ hội khác biệt
+  - Trong kết luận, đối chiếu thẳng với kênh của người dùng, đưa ra bảng so "bạn vs đối thủ"
+- **Khi không có Profile**:
+  - Lùi về chế độ tổng quát, yêu cầu người dùng tự cung cấp thông tin ngách và đối thủ
+  - Phân tích phủ mọi nền tảng, không chuyên biệt hoá theo nền tảng
+  - Ghi chú "cung cấp Profile của kênh sẽ có đối chiếu đối thủ và đề xuất khác biệt chính xác hơn"

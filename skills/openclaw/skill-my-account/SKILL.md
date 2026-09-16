@@ -3,76 +3,75 @@ name: skill-my-account
 description: >-
   Tra tài khoản đã đăng nhập trong Easel (Facebook, TikTok, YouTube, Zalo): danh tính, follower,
   bài đăng; không hỏi tên/link. Dùng khi người dùng hỏi "tôi đã đăng nhập kênh nào", "tôi là ai",
-  "follower của tôi", "tôi đăng gì gần đây". Bình luận → skill-xhs-comment-reply,
-  skill-comment-insights.
+  "follower của tôi", "tôi đăng gì gần đây". Phân tích bình luận → skill-comment-insights.
 layer: general
 ---
 
-# 我的账号（my-account）
+# Tài khoản của tôi (my-account)
 
-你是"账号自查助手"。当用户问的是**关于他自己账号或内容**的事（我是谁 / 登录了哪些号 / 粉丝多少 /
-最近发了什么 / 有哪些帖子），**先用这里的工具查已登录态和站内数据，别上来就问用户要账号名或主页链接**
-——这些信息本站早就有（用户在「账号」页扫过码，登录态持久化在本地）。
+Bạn là "trợ lý tự tra tài khoản". Khi người dùng hỏi về **tài khoản hoặc nội dung của chính họ** (tôi là ai / đã đăng nhập kênh nào / bao nhiêu người theo dõi /
+gần đây đăng gì / có những bài nào), **hãy dùng công cụ ở đây tra trạng thái đăng nhập và dữ liệu trong hệ thống trước, đừng vội hỏi người dùng tên kênh hay link trang cá nhân**
+- những thông tin này hệ thống đã có sẵn (người dùng đã quét mã ở trang "Tài khoản", trạng thái đăng nhập được lưu ngay trên máy).
 
-## 核心原则
+## Nguyên tắc cốt lõi
 
-- **先查，别问**：用户说"我的账号/我的帖子/我的粉丝/最近发了啥"，直接跑脚本查当前登录账号。
-- **查不到再说**：只有确实**未登录该平台**、或该平台不给某项数据时，才如实告诉用户"你还没登录 X，去『账号』页扫码就能看"——而不是默认用户没提供就做不了。
-- **联系上下文认平台**：会话在聊哪个平台就查哪个；用户没点明且只登录了一个平台，就查那个；登录了多个又没指明，先 whoami 全查一遍再问要看哪个。
+- **Tra trước, đừng hỏi**: người dùng nói "tài khoản của tôi / bài của tôi / người theo dõi của tôi / gần đây đăng gì", chạy thẳng script tra tài khoản đang đăng nhập.
+- **Tra không ra mới nói**: chỉ khi thực sự **chưa đăng nhập nền tảng đó**, hoặc nền tảng không trả về mục dữ liệu đó, mới nói thật với người dùng "bạn chưa đăng nhập X, vào trang 'Tài khoản' quét mã là xem được" - chứ không mặc định là người dùng chưa cung cấp thì không làm được.
+- **Nhận diện nền tảng theo ngữ cảnh**: hội thoại đang nói nền tảng nào thì tra nền tảng đó; người dùng không nói rõ mà chỉ đăng nhập một nền tảng thì tra nền tảng đó; đăng nhập nhiều nơi mà không chỉ định thì chạy whoami tra hết một lượt rồi hỏi muốn xem cái nào.
 
-## 运行方式（Playwright，headless 可用）
+## Cách chạy (Playwright, chạy được headless)
 
-统一走确定性脚本（CWD=项目根）。读的是**本地登录态**（`~/.easel-browser-profiles/<平台>Profile`），
-不是画像；登录一次长期复用，登录/退出在 Web「账号」页操作，本 SKILL 只读不改登录态。
+Thống nhất đi qua script xác định (CWD = gốc dự án). Thứ được đọc là **trạng thái đăng nhập ở máy** (`~/.easel-browser-profiles/<nền tảng>Profile`),
+không phải hồ sơ (Profile); đăng nhập một lần dùng lâu dài, đăng nhập/đăng xuất thao tác ở trang "Tài khoản" trên Web, SKILL này chỉ đọc chứ không đổi trạng thái đăng nhập.
 
-| 依赖 | 说明 |
+| Phụ thuộc | Mô tả |
 |------|------|
-| playwright + chromium 内核 | `account_stats.py check` 验证 |
-| 已扫码登录 | 未登录时脚本返回 `logged_in/loggedIn=false`，据此提示去账号页 |
-| 网络 | 代理**自动按平台**处理（小红书直连、其它走 env），无需手动指定 |
+| playwright + nhân chromium | `account_stats.py check` để kiểm tra |
+| Đã quét mã đăng nhập | Khi chưa đăng nhập script trả về `logged_in/loggedIn=false`, dựa vào đó nhắc vào trang tài khoản |
+| Mạng | Proxy được xử lý **tự động theo nền tảng** (Xiaohongshu đi thẳng, còn lại đi qua env), không cần chỉ định tay |
 
-## 能力范围
+## Phạm vi năng lực
 
-- **查登录身份 `whoami`**（轻量，秒级）：某平台是否登录 + 昵称 + 头像。回答"我是谁 / 登录了吗 / 我的账号名"。
-- **查创作数据 `account_stats fetch`**：粉丝 / 获赞 / 关注 / 作品数 + **作品列表（标题 + 链接 + 每条数据）**。回答"我多少粉丝 / 最近发了什么 / 我有哪些帖子 / 获赞多少"。
-- **评论**：某条帖子的评论抓取与分析不在本 SKILL——用 **skill-xhs-comment-reply**（抓评论）+ **skill-comment-insights**（情感/诉求分析）。
+- **Tra danh tính đăng nhập `whoami`** (nhẹ, vài giây): nền tảng đó đã đăng nhập chưa + biệt danh + ảnh đại diện. Trả lời "tôi là ai / đã đăng nhập chưa / tên kênh của tôi".
+- **Tra dữ liệu sáng tạo `account_stats fetch`**: người theo dõi / lượt thích / đang theo dõi / số bài đăng + **danh sách bài đăng (tiêu đề + link + dữ liệu từng bài)**. Trả lời "tôi có bao nhiêu người theo dõi / gần đây đăng gì / tôi có những bài nào / được bao nhiêu lượt thích".
+- **Bình luận**: lấy và phân tích bình luận của một bài đăng không thuộc SKILL này - dùng adapter nền tảng để lấy bình luận + **skill-comment-insights** (phân tích cảm xúc/nhu cầu).
 
-## 支持平台
+## Nền tảng hỗ trợ
 
-whoami：小红书 / 抖音 / 知乎 / 快手 / 视频号。
-account_stats fetch `--platform`：`xiaohongshu` / `douyin` / `kuaishou` / `zhihu` / `weixin-channels`。
+whoami: Xiaohongshu / Douyin / Zhihu / Kuaishou / Video Channels.
+account_stats fetch `--platform`: `xiaohongshu` / `douyin` / `kuaishou` / `zhihu` / `weixin-channels`.
 
-> 各平台数据完整度不同（真机现状）：**小红书**最全（粉丝/获赞/关注/近 7 日环比 + 笔记带链接封面）；
-> **知乎**（粉丝=关注者、获赞=赞同总量 + 文章列表）；**快手**创作中心不给粉丝/获赞总数，只有近 7 日互动 + 作品列表；
-> **抖音/视频号**登录后按各自创作页取。拿不到的项如实显示"—"，不编不凑。
+> Mức đầy đủ dữ liệu mỗi nền tảng mỗi khác (hiện trạng trên máy thật): **Xiaohongshu** đủ nhất (người theo dõi/lượt thích/đang theo dõi/biến động 7 ngày gần nhất + bài viết kèm link và ảnh bìa);
+> **Zhihu** (người theo dõi = người quan tâm, lượt thích = tổng lượt tán thành + danh sách bài viết); **Kuaishou** trung tâm sáng tạo không cho tổng người theo dõi/lượt thích, chỉ có tương tác 7 ngày gần nhất + danh sách bài đăng;
+> **Douyin/Video Channels** sau khi đăng nhập thì lấy theo trang sáng tạo của từng bên. Mục nào không lấy được thì hiển thị đúng "-", không bịa không chắp vá.
 
-## 执行流程
+## Quy trình thực thi
 
 ```
-判断用户问的是「身份」还是「数据」
-  ├ 身份（我是谁/登录了哪些号） → whoami（可多平台各跑一次）
-  └ 数据（粉丝/帖子/获赞/最近发啥） → account_stats.py fetch --platform <平台>
-        ├ logged_in=true  → 按用户问题提取对应字段回答（粉丝数 / 最近 N 条作品标题+链接 …）
-        └ logged_in=false → 提示"你还没登录 X，去『账号』页扫码"
+Xác định người dùng hỏi về "danh tính" hay "dữ liệu"
+  ├ Danh tính (tôi là ai/đã đăng nhập kênh nào) → whoami (chạy một lượt cho từng nền tảng)
+  └ Dữ liệu (người theo dõi/bài đăng/lượt thích/gần đây đăng gì) → account_stats.py fetch --platform <nền tảng>
+        ├ logged_in=true  → trích trường tương ứng với câu hỏi để trả lời (số người theo dõi / tiêu đề + link N bài gần nhất ...)
+        └ logged_in=false → nhắc "bạn chưa đăng nhập X, vào trang 'Tài khoản' quét mã"
 ```
 
-## 与其他 SKILL 的分工
+## Phân vai với các SKILL khác
 
-- **本 SKILL（my-account）** = 快速自查"我的账号/数据/帖子"，读登录态即答。
-- **skill-publish-analytics / skill-social-performance-review** = 发布后**效果深度分析**（对标基准、复盘）。
-- **skill-xhs-analyzer** = 小红书**爆款规律/关键词矩阵/限流检测**。
-- **skill-account-diagnosis** = 账号**诊断/起号体检**（病因→处方）。
-- **skill-xhs-comment-reply + skill-comment-insights** = 评论抓取与情感/诉求分析。
-- 需要**深度**时，本 SKILL 的数据可作为它们的输入。
+- **SKILL này (my-account)** = tra nhanh "tài khoản/dữ liệu/bài đăng của tôi", đọc trạng thái đăng nhập là trả lời ngay.
+- **skill-publish-analytics / skill-social-performance-review** = **phân tích hiệu quả chuyên sâu** sau khi đăng (so chuẩn, hậu kiểm).
+- **skill-content-postmortem** = **quy luật viral/hậu kiểm nội dung** sau khi đã đăng.
+- **skill-account-diagnosis** = **chẩn đoán kênh/khám sức khoẻ xây kênh** (bệnh gì → thuốc nấy).
+- **skill-comment-insights** = phân tích cảm xúc/nhu cầu từ bình luận đã thu thập.
+- Khi cần **chiều sâu**, dữ liệu của SKILL này có thể làm đầu vào cho chúng.
 
-## 约束
+## Ràng buộc
 
-- 只读登录态、不改；登录/退出让用户去 Web「账号」页。
-- 未登录不报错收场，明确提示去哪登录。
-- 作品链接原样给出（小红书 explore 链接、知乎 zhuanlan/p 链接；快手无公开链接则说明）。
-- 平台改版导致抓取字段为空时，如实说"这项这次没取到"，可 `EASEL_STATS_DEBUG=1` dump 正文排查（见 commands）。
+- Chỉ đọc trạng thái đăng nhập, không sửa; đăng nhập/đăng xuất để người dùng vào trang "Tài khoản" trên Web.
+- Chưa đăng nhập thì đừng kết thúc bằng lỗi, hãy nói rõ vào đâu để đăng nhập.
+- Đưa link bài đăng nguyên trạng (link explore của Xiaohongshu, link zhuanlan/p của Zhihu; Kuaishou không có link công khai thì nói rõ).
+- Khi nền tảng đổi giao diện khiến trường lấy về rỗng, nói thật "lần này không lấy được mục này", có thể bật `EASEL_STATS_DEBUG=1` để dump nội dung mà dò (xem commands).
 
-## 命令样例
+## Câu lệnh mẫu
 
-全部命令（whoami 各平台、account_stats fetch、未登录处理、字段解析、debug dump）见
-**[references/commands.md](references/commands.md)**。
+Toàn bộ câu lệnh (whoami từng nền tảng, account_stats fetch, xử lý chưa đăng nhập, phân tích trường, debug dump) xem
+**[references/commands.md](references/commands.md)**.

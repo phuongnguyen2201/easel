@@ -7,146 +7,146 @@ description: >-
 layer: general
 ---
 
-# 模板库
+# Thư viện mẫu
 
-> 保存、复用、管理内容模板 — 把成功经验变成可复制的结构
+> Lưu, tái dùng, quản lý mẫu nội dung - biến kinh nghiệm thành công thành cấu trúc lặp lại được
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| action | 是 | 操作类型：`save` / `use` / `list` / `edit` / `delete` / `get` |
-| template_name | 视操作 | 模板名称（save / use / edit / delete / get 时必填） |
-| source_file | 否 | 要保存为模板的源文件路径（save 操作时使用） |
-| source_text | 否 | 要保存为模板的文本内容（save 操作时，与 source_file 二选一） |
-| category | 否 | 模板分类：`xiaohongshu` / `weibo` / `douyin` / `zhihu` / `wechat` / `x` / `general` |
-| variables | 否 | 模板变量的填充值，JSON 格式（use 操作时使用） |
-| topic | 否 | 使用模板时的主题/话题（use 操作时使用） |
-| profile_name | 否 | 绑定画像名称（有 Profile 上下文时自动填入） |
+| action | Có | Loại thao tác: `save` / `use` / `list` / `edit` / `delete` / `get` |
+| template_name | Tuỳ thao tác | Tên mẫu (bắt buộc với save / use / edit / delete / get) |
+| source_file | Không | Đường dẫn file nguồn cần lưu thành mẫu (dùng khi save) |
+| source_text | Không | Nội dung văn bản cần lưu thành mẫu (khi save, chọn một trong hai với source_file) |
+| category | Không | Phân loại mẫu: `xiaohongshu` / `weibo` / `douyin` / `zhihu` / `wechat` / `x` / `general` |
+| variables | Không | Giá trị điền cho biến của mẫu, dạng JSON (dùng khi use) |
+| topic | Không | Chủ đề/đề tài khi dùng mẫu (dùng khi use) |
+| profile_name | Không | Tên hồ sơ (Profile) được gắn (tự điền khi có ngữ cảnh Profile) |
 
-## 输出
+## Đầu ra
 
-### save 操作
+### Thao tác save
 
 ```markdown
-## 模板已保存
+## Đã lưu mẫu
 
-**名称**: {template_name}
-**分类**: {category}
-**存储位置**: templates/{category}/{template_name}.md
+**Tên**: {template_name}
+**Phân loại**: {category}
+**Nơi lưu**: templates/{category}/{template_name}.md
 
-### 提取的模板结构
-| 部分 | 结构描述 | 可变区域 |
+### Cấu trúc mẫu đã trích
+| Phần | Mô tả cấu trúc | Vùng thay đổi được |
 |------|----------|----------|
-| 标题 | 数字 + 痛点提问 | {{title_number}}, {{pain_point}} |
-| 开头 | 反常识钩子 | {{hook_statement}} |
-| 正文 | 3 段式（问题-方案-证据） | {{problem}}, {{solution}}, {{evidence}} |
-| 结尾 | 行动号召 + 互动引导 | {{cta}}, {{question}} |
+| Tiêu đề | Con số + câu hỏi chạm nỗi đau | {{title_number}}, {{pain_point}} |
+| Mở đầu | Hook ngược lẽ thường | {{hook_statement}} |
+| Thân bài | Ba đoạn (vấn đề - giải pháp - bằng chứng) | {{problem}}, {{solution}}, {{evidence}} |
+| Kết | Kêu gọi hành động + dẫn tương tác | {{cta}}, {{question}} |
 
-### 模板变量
-共提取 {n} 个变量，下次使用时填入具体内容即可。
+### Biến của mẫu
+Trích được {n} biến, lần sau dùng chỉ cần điền nội dung cụ thể.
 ```
 
-### use 操作
+### Thao tác use
 
 ```markdown
-## 模板应用结果
+## Kết quả áp mẫu
 
-**使用模板**: {template_name}
-**主题**: {topic}
+**Mẫu dùng**: {template_name}
+**Chủ đề**: {topic}
 
 ---
 
-{根据模板结构 + 变量填充生成的内容}
+{nội dung sinh ra từ cấu trúc mẫu + các biến đã điền}
 
 ---
 
-> 基于模板 `{template_name}` 生成，可进一步调整。
+> Sinh từ mẫu `{template_name}`, có thể chỉnh tiếp.
 ```
 
-### list 操作
+### Thao tác list
 
 ```markdown
-## 模板库
+## Thư viện mẫu
 
-**总数**: {n} 个模板
+**Tổng số**: {n} mẫu
 
-### 按分类
+### Theo phân loại
 
-#### 小红书 ({n1} 个)
-| 模板名 | 说明 | 变量数 | 使用次数 | 创建日期 |
+#### Xiaohongshu ({n1} mẫu)
+| Tên mẫu | Mô tả | Số biến | Lượt dùng | Ngày tạo |
 |--------|------|--------|----------|----------|
-| 种草对比 | 双产品对比种草结构 | 8 | 5 | 2026-07-10 |
-| 教程步骤 | N 步教程卡片结构 | 6 | 3 | 2026-07-08 |
+| seeding so sánh | Cấu trúc seeding so sánh hai sản phẩm | 8 | 5 | 2026-07-10 |
+| các bước hướng dẫn | Cấu trúc thẻ hướng dẫn N bước | 6 | 3 | 2026-07-08 |
 
-#### 微博 ({n2} 个)
-| 模板名 | 说明 | 变量数 | 使用次数 | 创建日期 |
+#### Weibo ({n2} mẫu)
+| Tên mẫu | Mô tả | Số biến | Lượt dùng | Ngày tạo |
 |--------|------|--------|----------|----------|
-| 热点评论 | 热搜话题评论结构 | 5 | 7 | 2026-07-12 |
+| bình luận trend | Cấu trúc bình luận chủ đề đang hot | 5 | 7 | 2026-07-12 |
 
-#### 通用 ({n3} 个)
+#### Chung ({n3} mẫu)
 | ... | ... | ... | ... | ... |
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-> 模板文件读写、INDEX.json 维护、usage_count 自增、`{{var}}` 提取与替换已固化为
-> `scripts/templates.py`（纯 stdlib，argparse 子命令）。**LLM 只做意图路由、内容结构分析
-> （把成功内容改写成含 `{{var}}` 占位符的模板正文）和结果呈现，不手写 JSON、不手动
-> 增删文件。** 索引与模板文件均原子写入（临时文件 + rename），增删模板同步更新 INDEX.json。
+> Đọc ghi file mẫu, bảo trì INDEX.json, tự tăng usage_count, trích và thay `{{var}}` đều đã cố định trong
+> `scripts/templates.py` (thuần stdlib, subcommand argparse). **LLM chỉ định tuyến ý định, phân tích cấu trúc nội dung
+> (viết lại nội dung thành công thành thân mẫu có placeholder `{{var}}`) và trình bày kết quả, không tự viết JSON, không tự tay
+> thêm xoá file.** Chỉ mục và file mẫu đều ghi nguyên tử (file tạm + rename), thêm xoá mẫu là cập nhật INDEX.json cùng lúc.
 
-### 操作路由
+### Định tuyến thao tác
 
-1. **解析用户意图**，映射到脚本子命令：
-   - "保存模板" / "存为模板" → `save`
-   - "用模板" / "套用模板" / "复用上次的结构" → `use`
-   - "模板列表" / "有哪些模板" / "常用模板" → `list`
-   - "编辑模板" / "改模板" → `edit`
-   - "删除模板" → `delete`
-   - "预览模板" / "看看模板" → `get`
+1. **Phân tích ý định người dùng**, ánh xạ sang subcommand của script:
+   - "lưu mẫu" / "lưu thành mẫu" -> `save`
+   - "dùng mẫu" / "áp mẫu" / "dùng lại cấu trúc lần trước" -> `use`
+   - "danh sách mẫu" / "có những mẫu nào" / "mẫu hay dùng" -> `list`
+   - "sửa mẫu" / "chỉnh mẫu" -> `edit`
+   - "xoá mẫu" -> `delete`
+   - "xem trước mẫu" / "coi thử mẫu" -> `get`
 
-### LLM 侧职责（save/use 前的分析）
+### Việc của LLM (phân tích trước save/use)
 
-2. **save 前**：LLM 阅读源内容，识别固定结构与可变区域，把具体值改写成 `{{变量名}}`
-   占位符（如产品名 → `{{product_name}}`、痛点 → `{{pain_point}}`），再把改写后的正文
-   通过 `--text` 或 `--file` 交给脚本。脚本负责提取变量清单、写文件、登记索引。
-3. **use 前**：LLM 根据 topic/Profile 为每个变量推导填充值，通过 `--var`/`--vars` 传入。
-   脚本负责替换、usage_count 自增、原子写回索引。
+2. **Trước save**: LLM đọc nội dung nguồn, nhận ra phần cấu trúc cố định và vùng thay đổi được, viết lại giá trị cụ thể thành placeholder
+   `{{ten_bien}}` (như tên sản phẩm -> `{{product_name}}`, nỗi đau -> `{{pain_point}}`), rồi đưa thân bài đã viết lại
+   cho script qua `--text` hoặc `--file`. Script lo trích danh sách biến, ghi file, đăng ký chỉ mục.
+3. **Trước use**: LLM dựa vào topic/Profile suy ra giá trị điền cho từng biến, truyền vào qua `--var`/`--vars`.
+   Script lo thay thế, tự tăng usage_count, ghi lại chỉ mục nguyên tử.
 
-### 调用脚本
+### Gọi script
 
-4. 统一入口（默认 `--root templates`）：
+4. Một cửa vào duy nhất (mặc định `--root templates`):
    ```bash
    S=skills/openclaw/template-library/scripts/templates.py
-   python3 $S save 种草对比 --category xiaohongshu --description "双产品对比" \
-           --text "标题：{{title}} A={{product_a}} vs B={{product_b}} CTA={{cta}}"
-   python3 $S list --category xiaohongshu                  # 按分类列出，按使用次数降序
-   python3 $S get 种草对比                                  # 预览内容 + 元信息
-   python3 $S use 种草对比 --var title=夏日防晒 --var product_a=安耐晒
-   python3 $S use 种草对比 --vars '{"title":"夏日防晒","cta":"点赞收藏"}'
-   python3 $S edit 种草对比 --category general --description "改描述" --text "新正文 {{x}}"
-   python3 $S delete 种草对比                                # 预览（dry-run）
-   python3 $S delete 种草对比 --apply                        # 确认后真正删除
+   python3 $S save "seeding so sánh" --category xiaohongshu --description "so sánh hai sản phẩm" \
+           --text "Tiêu đề: {{title}} A={{product_a}} vs B={{product_b}} CTA={{cta}}"
+   python3 $S list --category xiaohongshu                  # liệt kê theo phân loại, giảm dần theo lượt dùng
+   python3 $S get "seeding so sánh"                        # xem trước nội dung + thông tin meta
+   python3 $S use "seeding so sánh" --var title="chống nắng mùa hè" --var product_a="Anessa"
+   python3 $S use "seeding so sánh" --vars '{"title":"chống nắng mùa hè","cta":"thả tim và lưu bài"}'
+   python3 $S edit "seeding so sánh" --category general --description "đổi mô tả" --text "thân bài mới {{x}}"
+   python3 $S delete "seeding so sánh"                      # xem trước (dry-run)
+   python3 $S delete "seeding so sánh" --apply              # xác nhận xong mới xoá thật
    ```
 
-5. **脚本内置保证（无需 LLM 判断）**：
-   - `save` 同名默认报错，需 `--force` 覆盖；`edit` 改分类会移动文件并清理旧文件
-   - `use` 未填的变量保留 `{{占位符}}` 并在 stderr 警告，不会静默出错
-   - `delete` 默认 **dry-run**，仅打印将删除的模板，加 `--apply` 才真正删并清理索引
-   - 所有写操作原子化，增删模板与 INDEX.json 始终一致
+5. **Bảo đảm sẵn trong script (LLM không phải tự phán)**:
+   - `save` trùng tên thì mặc định báo lỗi, cần `--force` để ghi đè; `edit` đổi phân loại sẽ chuyển file và dọn file cũ
+   - `use` gặp biến chưa điền thì giữ nguyên `{{placeholder}}` và cảnh báo ra stderr, không lỗi âm thầm
+   - `delete` mặc định **dry-run**, chỉ in ra mẫu sắp xoá, thêm `--apply` mới xoá thật và dọn chỉ mục
+   - Mọi thao tác ghi đều nguyên tử, thêm xoá mẫu luôn khớp với INDEX.json
 
-6. **结果呈现**：把脚本输出整理成"输出"章节的 Markdown 返回给用户。
+6. **Trình bày kết quả**: sắp xếp output của script thành Markdown theo mục "Đầu ra" rồi trả cho người dùng.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile 上下文时**：
-  - save 操作自动将模板绑定到当前画像
-  - list 操作优先显示当前画像的模板，其他画像的模板标记为"共享"
-  - use 操作自动加载画像的 style.md 做语气适配
-  - 模板文件的 frontmatter 中记录 `profile: {画像名称}`
-- **无 Profile 上下文时**：
-  - 所有模板标记为 `profile: shared`（共享模板）
-  - list 操作显示全部模板，不做画像筛选
-  - use 操作不做语气适配，直接输出模板填充结果
+- **Khi có ngữ cảnh Profile**:
+  - Thao tác save tự gắn mẫu vào hồ sơ (Profile) hiện tại
+  - Thao tác list ưu tiên hiện mẫu của hồ sơ hiện tại, mẫu của hồ sơ khác đánh dấu "dùng chung"
+  - Thao tác use tự nạp style.md của hồ sơ để chỉnh giọng
+  - Frontmatter của file mẫu ghi `profile: {ten_ho_so}`
+- **Khi không có ngữ cảnh Profile**:
+  - Mọi mẫu đánh dấu `profile: shared` (mẫu dùng chung)
+  - Thao tác list hiện toàn bộ mẫu, không lọc theo hồ sơ
+  - Thao tác use không chỉnh giọng, xuất thẳng kết quả điền mẫu
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

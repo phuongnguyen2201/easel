@@ -9,32 +9,32 @@ layer: produce
 
 # Clipify
 
-Find the funniest moments in a video, cut them as standalone clips, optionally reformat 16:9 → 9:16 (face-pan or split-screen), and burn opus-style word-by-word captions.
+Tìm những khoảnh khắc hài nhất trong một video, cắt ra thành các clip đứng riêng, tuỳ chọn chuyển khung 16:9 → 9:16 (pan bám mặt hoặc split-screen), rồi đốt phụ đề từng chữ kiểu opus.
 
-## Inputs
+## Đầu vào
 
-- A video file path (the user will provide it; otherwise ask)
-- Optional: requested format (9:16, 16:9, 1:1) — if not given, ask after candidates are picked
-- Optional: subtitle style preference — if not given, ask before captioning
+- Đường dẫn file video (người dùng đưa; chưa có thì hỏi)
+- Tuỳ chọn: khung hình muốn ra (9:16, 16:9, 1:1) - chưa nói thì hỏi sau khi đã chốt danh sách clip ứng viên
+- Tuỳ chọn: kiểu phụ đề - chưa nói thì hỏi trước khi làm phụ đề
 
-## Tooling (use only the fastest path)
+## Công cụ (chỉ đi đường nhanh nhất)
 
-- **Whisper:** `whisper --model tiny.en --word_timestamps True --output_format json` (≈10× faster than `small.en`; quality fine for English). For non-English: `--model base` (drop `--language`).
-- **ffmpeg:** hardware decode is optional and platform-specific — use `-hwaccel auto`, or omit it (macOS: `videotoolbox`; Linux: `vaapi`/`cuda`/none). Add `-preset ultrafast` for renders. Use `-c:v libx264 -crf 20` for the final master.
-- **Numpy** for audio alignment (FFT cross-correlation). No scipy/cv2 needed.
-- **Scripts:** `<skill-dir>/scripts/` (where `<skill-dir>` is the directory containing this SKILL.md — typically `~/.claude/skills/clipify/`)
-  - `analyze.py` — speaker timeline from two ROI motion files
-  - `build_pan.py` — ffmpeg crop x-expression with hard cuts
-  - `build_ass.py` — opus-style ASS captions from whisper JSON
-  - `audio_align.py` — find offset of a sub-clip in a longer source
+- **Whisper:** `whisper --model tiny.en --word_timestamps True --output_format json` (nhanh gấp ~10 lần `small.en`; chất lượng đủ tốt cho tiếng Anh). Với video không phải tiếng Anh: `--model base` (bỏ `--language`).
+- **ffmpeg:** giải mã bằng phần cứng là tuỳ chọn và tuỳ nền tảng - dùng `-hwaccel auto`, hoặc bỏ luôn (macOS: `videotoolbox`; Linux: `vaapi`/`cuda`/không có). Thêm `-preset ultrafast` cho các bản render nháp. Dùng `-c:v libx264 -crf 20` cho bản master cuối.
+- **Numpy** để căn tiếng (FFT cross-correlation). Không cần scipy/cv2.
+- **Scripts:** `<skill-dir>/scripts/` (`<skill-dir>` là thư mục chứa file SKILL.md này - thường là `~/.claude/skills/clipify/`)
+  - `analyze.py` - dựng dòng thời gian người nói từ hai file chuyển động ROI
+  - `build_pan.py` - sinh biểu thức crop theo x cho ffmpeg, cắt cứng
+  - `build_ass.py` - sinh phụ đề ASS kiểu opus từ JSON của whisper
+  - `audio_align.py` - tìm offset của một clip con trong file nguồn dài
 
-Working dir: `/tmp/clipify/` (mkdir at start, leave artifacts for debugging).
+Thư mục làm việc: `/tmp/clipify/` (mkdir lúc bắt đầu, giữ lại file trung gian để debug).
 
 ---
 
-## Workflow
+## Quy trình
 
-### Step 1 — Find the funniest parts
+### Bước 1 - Tìm các đoạn hài nhất
 
 ```bash
 mkdir -p /tmp/clipify
@@ -42,47 +42,47 @@ ffmpeg -y -i "$VIDEO" -vn -ac 1 -ar 16000 /tmp/clipify/audio.wav
 whisper /tmp/clipify/audio.wav --model tiny.en --word_timestamps True --output_format json --output_dir /tmp/clipify --language en
 ```
 
-Read the resulting JSON (or `.txt`) and pick 3–5 candidate clips. Funny signals to scan for:
+Đọc file JSON vừa ra (hoặc bản `.txt`) rồi chọn 3-5 clip ứng viên. Các tín hiệu hài cần quét:
 
-- **Punchlines and reactions:** words like "what", "wait", "no way", laughter, "haha", swearing
-- **Reversal moments:** setup question → unexpected answer
-- **Awkward pauses:** Whisper segment with long gap, or filler ("uh", "um")
-- **Self-roast / quotable one-liners:** short declarative sentences that stand alone
-- **Audio peaks:** detect via `ffmpeg -af volumedetect` or look for rapid back-and-forth (alternating short Whisper segments)
+- **Câu chốt và phản ứng:** những từ như "what", "wait", "no way", tiếng cười, "haha", chửi thề
+- **Khoảnh khắc lật kèo:** câu hỏi dẫn dắt → câu trả lời bất ngờ
+- **Khoảng lặng ngượng:** segment Whisper có khoảng trống dài, hoặc từ đệm ("uh", "um")
+- **Tự trào / câu một dòng đáng trích:** câu khẳng định ngắn, tách ra vẫn đứng được
+- **Đỉnh âm lượng:** dò bằng `ffmpeg -af volumedetect`, hoặc tìm đoạn đối đáp qua lại nhanh (các segment Whisper ngắn xen kẽ)
 
-For each candidate, propose: `[start, end, why-it's-funny, suggested title]`. Aim for 10–25s clips. Show the list and let the user confirm/pick.
+Với mỗi ứng viên, đề xuất: `[start, end, why-it's-funny, suggested title]`. Nhắm clip dài 10-25 giây. Đưa danh sách ra cho người dùng xác nhận/chọn.
 
-### Step 2 — Trim each chosen clip
+### Bước 2 - Cắt từng clip đã chọn
 
 ```bash
 ffmpeg -y -ss "$START" -t "$DURATION" -i "$VIDEO" -c copy /tmp/clipify/clip_$N.mp4
 ```
 
-(Use `-c copy` for instant trim. Re-encode only if cuts must be frame-accurate.)
+(Dùng `-c copy` để cắt tức thì. Chỉ encode lại khi cần cắt chính xác tới từng frame.)
 
-### Step 3 — Decide the output format
+### Bước 3 - Chốt khung hình đầu ra
 
-Ask the user (skip if they already specified): "9:16 (TikTok / Reels), 16:9 (YouTube), or 1:1 (Insta feed)?"
+Hỏi người dùng (bỏ qua nếu họ đã nói rõ): "9:16 (TikTok / Reels), 16:9 (YouTube), hay 1:1 (feed Instagram)?"
 
-### Step 4 — If 16:9 → 9:16: pan-between-faces vs split-screen
+### Bước 4 - Nếu 16:9 → 9:16: pan giữa hai mặt hay split-screen
 
-Detect source aspect with `ffprobe`. If source is 16:9 and target is 9:16, ask:
+Dò tỉ lệ nguồn bằng `ffprobe`. Nếu nguồn là 16:9 mà đích là 9:16, hãy hỏi:
 
-> "Two options: **(a) hard-cut pan** that follows whoever is speaking (single face on screen at a time), or **(b) split-screen** stack with both faces visible. Which do you want?"
+> "Có hai hướng: **(a) pan cắt cứng** bám theo người đang nói (mỗi lúc chỉ một mặt trên khung), hoặc **(b) split-screen** xếp chồng, thấy cả hai mặt. Bạn chọn hướng nào?"
 
-Skip the question if there's only one face (single-talker clip). For single-talker, just center-crop.
+Bỏ qua câu hỏi này nếu chỉ có một mặt (clip một người nói). Clip một người thì chỉ cần crop giữa.
 
-#### Step 4a — Pan-between-faces (recommended for fast-cut talking-head dialogue)
+#### Bước 4a - Pan giữa hai mặt (nên dùng cho hội thoại talking-head cắt nhanh)
 
-1. **Locate the two face ROIs.** Sample one frame: `ffmpeg -ss <middle> -i <clip> -frames:v 1 /tmp/clipify/probe.jpg`. Read it. Eyeball each face's mouth+chin area as `x,y,w,h` in the source's pixel space. (No cv2 needed — camera is static within a clip; one frame is enough.) Verify by drawing boxes:
+1. **Xác định hai vùng ROI của mặt.** Lấy một frame mẫu: `ffmpeg -ss <middle> -i <clip> -frames:v 1 /tmp/clipify/probe.jpg`. Đọc ảnh đó. Ước lượng vùng miệng + cằm của từng mặt theo `x,y,w,h` trong hệ pixel của nguồn. (Không cần cv2 - camera đứng yên trong một clip; một frame là đủ.) Kiểm lại bằng cách vẽ khung:
 
    ```bash
    ffmpeg -i probe.jpg -vf "drawbox=x=$LX:y=$LY:w=$LW:h=$LH:color=cyan@0.9:t=4,drawbox=x=$RX:y=$RY:w=$RW:h=$RH:color=magenta@0.9:t=4" verify.jpg
    ```
 
-   Iterate **at most twice**. Boxes should cover mouth + chin and avoid hands/mics. Don't over-tune — frame differencing is forgiving.
+   Lặp **tối đa hai lần**. Khung nên phủ miệng + cằm và tránh tay/micro. Đừng chỉnh quá kỹ - phép so sai khác frame rất dễ tính.
 
-2. **Extract per-frame motion energy in each ROI:**
+2. **Trích năng lượng chuyển động từng frame trong mỗi ROI:**
 
    ```bash
    ffmpeg -y -i clip.mp4 -filter_complex "
@@ -92,17 +92,17 @@ Skip the question if there's only one face (single-talker clip). For single-talk
    " -map "[la]" -f null - -map "[ra]" -f null -
    ```
 
-3. **Build speaker timeline** (min dwell 1.0s — short interjections merge into the prior speaker):
+3. **Dựng dòng thời gian người nói** (thời gian bám tối thiểu 1.0s - câu chen ngắn sẽ nhập vào người nói trước đó):
 
    ```bash
    python3 <skill-dir>/scripts/analyze.py /tmp/clipify/L.txt /tmp/clipify/R.txt 1.0 > /tmp/clipify/segments.json
    ```
 
-4. **Pick pan x-coordinates** for a 9:16 vertical strip from the source. With source W=1920 and target W=1080, crop strip width = 608.
-   - LEFT_X = `face_left_center_x - 304` (clamp ≥ 0)
-   - RIGHT_X = `face_right_center_x - 304` (clamp ≤ source_W - 608)
+4. **Chọn toạ độ x để pan** cho dải dọc 9:16 lấy từ nguồn. Với nguồn W=1920 và đích W=1080, dải crop rộng 608.
+   - LEFT_X = `face_left_center_x - 304` (kẹp ≥ 0)
+   - RIGHT_X = `face_right_center_x - 304` (kẹp ≤ source_W - 608)
 
-5. **Generate the hard-cut x expression and render:**
+5. **Sinh biểu thức x cắt cứng rồi render:**
 
    ```bash
    EXPR=$(python3 <skill-dir>/scripts/build_pan.py /tmp/clipify/segments.json $LEFT_X $RIGHT_X)
@@ -112,11 +112,11 @@ Skip the question if there's only one face (single-talker clip). For single-talk
      -c:a aac -b:a 192k /tmp/clipify/clip_panned.mp4
    ```
 
-   Source 1920×1080 assumed; for 4K source either downscale first or double all coordinates.
+   Mặc định coi nguồn là 1920×1080; nguồn 4K thì hoặc downscale trước, hoặc nhân đôi toàn bộ toạ độ.
 
-#### Step 4b — Split-screen (both faces always visible)
+#### Bước 4b - Split-screen (lúc nào cũng thấy cả hai mặt)
 
-Two stacked tiles, 1080×960 each. The active speaker's tile is on top — overlay flips at speaker changes.
+Hai ô xếp chồng, mỗi ô 1080×960. Ô của người đang nói nằm trên - lớp overlay đảo mỗi lần đổi người nói.
 
 ```
 [0:v]split=2[a0][a1];
@@ -127,45 +127,45 @@ Two stacked tiles, 1080×960 each. The active speaker's tile is on top — overl
 [layoutL][layoutR]overlay=0:0:enable='<RIGHT_SPEAKER_ENABLE>'[v]
 ```
 
-Build `<RIGHT_SPEAKER_ENABLE>` from `segments.json` as `between(t,a,b)+between(t,a,b)+...` over the right-speaker segments. Tile crops should target ~720×640 around each face (1.125:1 to match 1080×960).
+Dựng `<RIGHT_SPEAKER_ENABLE>` từ `segments.json` theo dạng `between(t,a,b)+between(t,a,b)+...` trên các đoạn của người bên phải. Ô crop nên nhắm khoảng 720×640 quanh mỗi mặt (tỉ lệ 1.125:1 để khớp 1080×960).
 
-### Step 5 — Add subtitles
+### Bước 5 - Thêm phụ đề
 
-Ask once (only if user hasn't already specified a style):
+Hỏi một lần (chỉ khi người dùng chưa chọn kiểu):
 
-> "Three subtitle styles: **opus** (big bold white, yellow active-word highlight), **karaoke** (4-word chunks, green highlight), **minimal** (clean Helvetica, no highlight). Or paste an example you like."
+> "Có ba kiểu phụ đề: **opus** (chữ trắng to đậm, tô vàng từ đang đọc), **karaoke** (cụm 4 chữ, tô xanh lá), **minimal** (Helvetica gọn, không tô). Hoặc gửi một mẫu bạn thích."
 
-If they paste a reference image/example: match the font, size, weight, color, position, and animation as closely as possible — write a custom ASS by hand or extend `build_ass.py`.
+Nếu họ gửi ảnh/mẫu tham chiếu: bám sát font, cỡ chữ, độ đậm, màu, vị trí và hiệu ứng hết mức có thể - viết tay một file ASS riêng hoặc mở rộng `build_ass.py`.
 
-Else use the preset:
+Không thì dùng preset:
 
 ```bash
-# Re-run whisper on the trimmed clip for accurate timestamps relative to clip start
+# Chạy lại whisper trên clip đã cắt để mốc thời gian tính đúng từ đầu clip
 whisper /tmp/clipify/clip_panned.mp4 --model tiny.en --word_timestamps True --output_format json --output_dir /tmp/clipify --language en
 python3 <skill-dir>/scripts/build_ass.py /tmp/clipify/clip_panned.json /tmp/clipify/captions.ass opus
 ```
 
-Burn captions:
+Đốt phụ đề vào hình:
 
 ```bash
 ffmpeg -y -i /tmp/clipify/clip_panned.mp4 -vf "subtitles=/tmp/clipify/captions.ass" \
   -c:v libx264 -preset fast -crf 20 -c:a copy "$OUTPUT.mp4"
 ```
 
-### Step 6 — Deliver
+### Bước 6 - Bàn giao
 
-- Save each output to `<source_dir>/clipify_out/` (mkdir if missing)
-- Print one line per clip: name, duration, what was funny, output path
-- Print the first output path (or open it — Linux `xdg-open <path>`, macOS `open <path>`) so the user can check it
-- Offer to iterate (different style, different ROI, swap to split-screen, retime captions)
+- Lưu mỗi file thành phẩm vào `<source_dir>/clipify_out/` (mkdir nếu chưa có)
+- In một dòng cho mỗi clip: tên, độ dài, chỗ nào hài, đường dẫn đầu ra
+- In đường dẫn đầu ra đầu tiên (hoặc mở luôn - Linux `xdg-open <path>`, macOS `open <path>`) để người dùng xem thử
+- Mời người dùng chỉnh tiếp (đổi kiểu phụ đề, đổi ROI, chuyển sang split-screen, canh lại thời gian phụ đề)
 
 ---
 
-## Pitfalls (lessons from prior runs — don't repeat)
+## Lỗi hay gặp (rút từ các lần chạy trước - đừng lặp lại)
 
-- **Don't over-tune ROIs.** Two iterations max. Motion-diff is forgiving — wider ROIs covering mouth+chin work fine even if not perfectly mouth-centered.
-- **Watch out for scene cuts inside a clip.** Run `ffmpeg -filter:v "select='gt(scene,0.3)',showinfo" -f null -` to count cuts. If a 16:9→9:16 clip has many cuts, the fixed face ROIs only work for the dominant scene; warn the user, and offer to either pick a single-take clip or accept off-center framing during cuts.
-- **Source resolution matters.** If source is 4K, either downscale to 1920×1080 first (faster, fine for 9:16 output) or multiply all ROI/pan coordinates by 2.
-- **Burned-in subtitles in source.** Some "raw" clips still have subtitles. If so, find the no-subs master via audio cross-correlation (`audio_align.py`) and trim from there.
-- **Don't run whisper on the full feature-length source if a short clip suffices.** Whisper the trimmed clip after Step 2; only whisper the full source in Step 1 if you need a transcript to find funny moments.
-- **State the plan in one line, then act.** Don't narrate every iteration.
+- **Đừng chỉnh ROI quá kỹ.** Tối đa hai vòng. Phép so sai khác chuyển động rất dễ tính - ROI rộng phủ miệng + cằm vẫn chạy tốt dù không canh đúng tâm miệng.
+- **Coi chừng cắt cảnh nằm trong clip.** Chạy `ffmpeg -filter:v "select='gt(scene,0.3)',showinfo" -f null -` để đếm số cú cắt. Nếu clip 16:9→9:16 có nhiều cú cắt, ROI mặt cố định chỉ đúng với cảnh chủ đạo; báo trước cho người dùng, rồi mời họ hoặc chọn clip quay một mạch, hoặc chấp nhận khung lệch ở các đoạn cắt.
+- **Độ phân giải nguồn rất quan trọng.** Nguồn 4K thì hoặc downscale về 1920×1080 trước (nhanh hơn, đủ đẹp cho đầu ra 9:16), hoặc nhân đôi mọi toạ độ ROI/pan.
+- **Phụ đề đã đốt sẵn trong nguồn.** Một số clip "raw" vẫn dính phụ đề. Gặp vậy thì tìm bản master không phụ đề bằng cross-correlation âm thanh (`audio_align.py`) rồi cắt từ bản đó.
+- **Đừng chạy whisper trên cả file nguồn dài nếu một clip ngắn là đủ.** Chạy whisper trên clip đã cắt sau Bước 2; chỉ whisper toàn bộ nguồn ở Bước 1 khi cần transcript để tìm đoạn hài.
+- **Nói kế hoạch trong một dòng rồi làm.** Đừng tường thuật từng vòng lặp.

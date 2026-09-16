@@ -8,72 +8,72 @@ description: >-
 layer: produce
 ---
 
-# AI 视频生成
+# Sinh video AI
 
-> 文生视频 / 图生视频 / 数字人首帧驱动。封装 `shared/scripts/ai_video.py`，多 provider 可插拔、异步提交→轮询→下载。**用户自备 API key**（在 `.env` 配置）。
+> Chữ sinh video / ảnh sinh video / người ảo dẫn từ khung đầu. Bọc `shared/scripts/ai_video.py`, nhiều provider cắm được, gửi bất đồng bộ→poll→tải về. **Người dùng tự có API key** (cấu hình trong `.env`).
 
-## 前置：配置 API key
+## Trước khi chạy: cấu hình API key
 
-> **配置检查路径铁律**：先 `cd` 到 `AGENTS.md` 末尾给出的 Easel 项目根，确认当前目录有 `.env` 和 `skills/shared/scripts/`，再运行注册表、`check` 或生成命令。不得改用 workspace 的 `./shared/scripts/...`，也不得以 `env` / `printenv` 没显示变量为由判断未配置。
+> **Luật sắt về đường dẫn kiểm tra cấu hình**: trước tiên `cd` vào thư mục gốc dự án Easel ghi ở cuối `AGENTS.md`, xác nhận thư mục hiện tại có `.env` và `skills/shared/scripts/`, rồi mới chạy registry, `check` hay lệnh sinh nội dung. Không được đổi sang `./shared/scripts/...` của workspace, cũng không được kết luận là chưa cấu hình chỉ vì `env` / `printenv` không hiện biến.
 
-先选 provider 并在 `.env` 填对应 key，然后 `check` 离线校验：
+Chọn provider trước và điền key tương ứng vào `.env`, rồi chạy `check` để kiểm tra offline:
 
 ```bash
 python skills/shared/scripts/ai_video.py check --provider dashscope
 ```
 
-| provider | 服务 | 需在 .env 配 |
+| provider | Dịch vụ | Cần cấu hình trong .env |
 |----------|------|-------------|
-| `dashscope` | 阿里通义万相 Wan | `DASHSCOPE_API_KEY`（可选 `DASHSCOPE_VIDEO_MODEL`/`DASHSCOPE_BASE_URL`；兼容旧名 `DASHSCOPE_MODEL`） |
-| `ark` | 火山引擎 Seedance | `ARK_API_KEY`（可选 `ARK_MODEL`/`ARK_BASE_URL`） |
-| `kling` | 快手可灵 | `KLING_ACCESS_KEY` + `KLING_SECRET_KEY`（JWT 鉴权） |
-| `openai-compatible` | 通用 /videos 端点 | `VIDEO_API_KEY` + `VIDEO_BASE_URL`（可选 `VIDEO_MODEL`） |
-| `xhs-maas` | 小红书内网 MaaS（happyhorse 文/图生视频）| `XHS_MAAS_API_KEY`（可选 `XHS_MAAS_VIDEO_BASE`/`XHS_MAAS_T2V_MODEL`/`XHS_MAAS_I2V_MODEL`）。DashScope 风格异步 + api-key 头，内网直连 |
-| `agnes` | Agnes（agnes-video-2.5-flash）| `AGNES_API_KEY`（可选 `AGNES_BASE_URL`/`AGNES_MODEL`/`AGNES_SIZE`）。OpenAI Videos 兼容创建 + 自定义端点轮询；**默认带原生音频**（prompt 描述声音）；外网走代理 |
+| `dashscope` | Alibaba Tongyi Wanxiang Wan | `DASHSCOPE_API_KEY` (tuỳ chọn `DASHSCOPE_VIDEO_MODEL`/`DASHSCOPE_BASE_URL`; tương thích tên cũ `DASHSCOPE_MODEL`) |
+| `ark` | Volcengine Seedance | `ARK_API_KEY` (tuỳ chọn `ARK_MODEL`/`ARK_BASE_URL`) |
+| `kling` | Kuaishou Kling | `KLING_ACCESS_KEY` + `KLING_SECRET_KEY` (xác thực JWT) |
+| `openai-compatible` | Endpoint /videos dùng chung | `VIDEO_API_KEY` + `VIDEO_BASE_URL` (tuỳ chọn `VIDEO_MODEL`) |
+| `xhs-maas` | MaaS nội bộ Xiaohongshu (happyhorse chữ/ảnh sinh video)| `XHS_MAAS_API_KEY` (tuỳ chọn `XHS_MAAS_VIDEO_BASE`/`XHS_MAAS_T2V_MODEL`/`XHS_MAAS_I2V_MODEL`). Bất đồng bộ kiểu DashScope + header api-key, nối thẳng mạng nội bộ |
+| `agnes` | Agnes (agnes-video-2.5-flash)| `AGNES_API_KEY` (tuỳ chọn `AGNES_BASE_URL`/`AGNES_MODEL`/`AGNES_SIZE`). Tạo theo chuẩn OpenAI Videos + poll ở endpoint riêng; **mặc định có audio gốc** (mô tả âm thanh ngay trong prompt); ra mạng ngoài qua proxy |
 
-也可设 `VIDEO_PROVIDER` 免去每次 `--provider`。
+Cũng có thể đặt `VIDEO_PROVIDER` để khỏi truyền `--provider` mỗi lần.
 
-执行前先跑 `model_registry.py configured --group video --env-file .env`：只有一个可用就显式选它；多个可用且用户没点名时，列出 provider/模型询问本次使用哪个，不按默认值擅自选择。
+Trước khi chạy hãy gọi `model_registry.py configured --group video --env-file .env`: chỉ có một provider khả dụng thì chọn thẳng nó; nhiều provider khả dụng mà người dùng chưa chỉ định thì liệt kê provider/model để hỏi lần này dùng cái nào, không tự ý lấy giá trị mặc định.
 
-## 输入
+## Đầu vào
 
-> **画幅确认硬门**：用户或上游任务未明确横版/竖版（或 16:9/9:16/具体比例）时，任何生成/付费调用前必须追问并等确认；不得从平台、Profile 或脚本默认值静默推断。已明确则不重复问。
+> **Chốt chặn xác nhận khung hình**: khi người dùng hoặc task phía trên chưa nói rõ ngang/dọc (hoặc 16:9 / 9:16 / tỉ lệ cụ thể), phải hỏi lại và chờ xác nhận trước mọi lệnh sinh nội dung hay lệnh tốn tiền; không được suy ngầm từ nền tảng, Profile hay giá trị mặc định của script. Đã rõ rồi thì không hỏi lại.
 
-- 文生视频：画面/镜头/风格描述（prompt）
-- 图生视频：一张输入图（本地路径或 URL）+ 可选运动描述
-- 可选：时长 `--duration`、画幅 `--ratio`（16:9 / 9:16 / 1:1）、模型 `--model`、原生音频 `--audio auto|on|off`
+- Chữ sinh video: mô tả khung hình/góc máy/phong cách (prompt)
+- Ảnh sinh video: một ảnh đầu vào (đường dẫn local hoặc URL) + mô tả chuyển động tuỳ chọn
+- Tuỳ chọn: thời lượng `--duration`, khung hình `--ratio` (16:9 / 9:16 / 1:1), model `--model`, audio gốc `--audio auto|on|off`
 
-## 输出
+## Đầu ra
 
-生成的视频文件；必须用 `-o` 指定到 `outputs/主题名/`。异步任务自动轮询到完成再下载。
+File video sinh ra; bắt buộc dùng `-o` để chỉ vào `outputs/<chủ đề>/`. Tác vụ bất đồng bộ tự poll đến khi xong rồi mới tải về.
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **确认配置与能力**：先运行 `check`，再运行 `capabilities --provider <p> --model <m>`。短剧不得根据品牌名猜测模型是否支持原生音频；新模型用 `VIDEO_CAPABILITIES_JSON` 登记能力和请求字段，无需修改调用流程。
-   - **`probe-dialogue`**（短剧用）：真发 1 次生成 + ASR，测该模型能否**逐字忠实**说出指定台词，判 `dialogue_faithful` 并缓存——短剧据此决定用原生对白，还是"无台词生成 + 后期配音"。用法 `probe-dialogue --provider <p> --model <m>`。
-2. **写好 prompt**：AI 视频对 prompt 敏感，按 [AI 视频提示词规范](../video-strategy/references/ai-video-prompting.md) 写镜头、运镜、风格与时长。竖版短视频用 `--ratio 9:16`。
-3. **文生视频**：
+1. **Xác nhận cấu hình và năng lực**: chạy `check` trước, rồi chạy `capabilities --provider <p> --model <m>`. short-drama không được đoán model có hỗ trợ audio gốc hay không theo tên thương hiệu; model mới thì đăng ký năng lực và trường request bằng `VIDEO_CAPABILITIES_JSON`, không cần sửa luồng gọi.
+   - **`probe-dialogue`** (dùng cho short-drama): gửi thật 1 lần sinh + ASR, đo xem model có nói **đúng từng chữ** lời thoại chỉ định không, kết luận `dialogue_faithful` rồi cache lại - short-drama dựa vào đó để chọn đối thoại gốc, hay "sinh không lời thoại + lồng tiếng hậu kỳ". Cách dùng `probe-dialogue --provider <p> --model <m>`.
+2. **Viết prompt cho chuẩn**: video AI rất nhạy với prompt, theo [Chuẩn viết prompt video AI](../video-strategy/references/ai-video-prompting.md) mà mô tả khung hình, chuyển động máy, phong cách và thời lượng. Video ngắn dọc dùng `--ratio 9:16`.
+3. **Chữ sinh video**:
    ```bash
    python skills/shared/scripts/ai_video.py text2video --provider dashscope \
-     --prompt "海边日落，慢镜头推进，暖色调，电影感" --ratio 9:16 --duration 5 \
+     --prompt "hoàng hôn bên biển, máy tiến chậm, tông màu ấm, chất điện ảnh" --ratio 9:16 --duration 5 \
      --audio auto \
-     -o outputs/主题名/clip.mp4
+     -o outputs/<chủ đề>/clip.mp4
    ```
-4. **图生视频 / 让图动起来 / 数字人首帧**：
+4. **Ảnh sinh video / làm ảnh chuyển động / khung đầu người ảo**:
    ```bash
    python skills/shared/scripts/ai_video.py image2video --provider kling \
-     --image outputs/主题名/cover.png --prompt "人物微笑挥手，头发轻微飘动" \
-     -o outputs/主题名/clip.mp4
+     --image outputs/<chủ đề>/cover.png --prompt "nhân vật mỉm cười vẫy tay, tóc bay nhẹ" \
+     -o outputs/<chủ đề>/clip.mp4
    ```
-5. **后续加工**：生成的片段可交给 `video_ops.py`（拼接/加字幕/加 BGM/横竖转）、`auto-subtitle`（字幕）、`tts-voiceover`（配音）串成成片，或直接进 `auto-short-video` 端到端流程。
+5. **Gia công tiếp**: đoạn video sinh ra có thể đưa cho `video_ops.py` (nối/gắn phụ đề/gắn BGM/đổi ngang dọc), `auto-subtitle` (phụ đề), `tts-voiceover` (lồng tiếng) để ráp thành phim hoàn chỉnh, hoặc đưa thẳng vào luồng end-to-end `auto-short-video`.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：从 `style.md` 取视觉风格倾向注入 prompt；`platforms.md` 只用于给出画幅建议，不能替代用户确认。
-- 无 Profile：先确认横版/竖版，再按已确认比例生成。
+- Có Profile: lấy thiên hướng phong cách hình ảnh từ `style.md` bơm vào prompt; `platforms.md` chỉ dùng để gợi ý khung hình, không thay được xác nhận của người dùng.
+- Không có Profile: xác nhận ngang/dọc trước, rồi sinh theo tỉ lệ đã chốt.
 
-## 注意
+## Lưu ý
 
-- 视频生成 API 均为异步且**耗时较长**（数十秒到数分钟）+ **按量计费**，先与用户确认。
-- 各 provider 的 model 名/字段各版本有差异，均可用 `--model` 或 env 覆盖；如报错对照官方最新文档调整。
-- `--audio auto` 只按 capability profile 映射已知字段；能力声明不等于质量保证，下载后仍须 ffprobe/ASR/视觉审计。网关默认有声但开关字段未知时，不猜测注入参数。
+- API sinh video đều chạy bất đồng bộ và **tốn khá nhiều thời gian** (vài chục giây tới vài phút) + **tính tiền theo lượng dùng**, phải xác nhận với người dùng trước.
+- Tên model/trường dữ liệu của từng provider khác nhau theo phiên bản, đều ghi đè được bằng `--model` hoặc env; nếu báo lỗi thì đối chiếu tài liệu chính thức mới nhất mà chỉnh.
+- `--audio auto` chỉ ánh xạ các trường đã biết theo capability profile; khai báo năng lực không đảm bảo chất lượng, tải về vẫn phải kiểm bằng ffprobe/ASR/soát hình. Gateway mặc định có tiếng nhưng chưa rõ trường bật/tắt thì đừng đoán mà bơm tham số.

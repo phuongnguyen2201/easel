@@ -8,93 +8,93 @@ description: >-
 layer: attribute
 ---
 
-# 社媒数据记录与趋势分析
+# Ghi số liệu mạng xã hội và phân tích xu hướng
 
-> 记录社媒指标快照、分析粉丝增长趋势、追踪内容生命周期，用时间序列数据驱动运营决策。
+> Ghi snapshot chỉ số mạng xã hội, phân tích xu hướng tăng người theo dõi, bám vòng đời nội dung, lấy dữ liệu chuỗi thời gian để ra quyết định vận hành.
 
-## 数据层定位
+## Vị trí trong tầng dữ liệu
 
-本 SKILL 是归因链的**粉丝 / 时序快照底座**，唯一权威存储粉丝数、互动量、内容生命周期的时间序列快照（`outputs/_analytics/snapshots/{profile}/{platform}/{date}.json`）。
+SKILL này là **nền lưu người theo dõi / snapshot chuỗi thời gian** của chuỗi quy kết, nơi duy nhất có thẩm quyền lưu snapshot theo thời gian của số người theo dõi, lượng tương tác và vòng đời nội dung (`outputs/_analytics/snapshots/{profile}/{platform}/{date}.json`).
 
-- **只存时序快照，不存发布事件** — 每次发布的元信息（标题 / 链接 / 类型 / 来源 SKILL）由 `skill-publish-log` 维护（`outputs/_analytics/publish-log.json`）。本底座不重复记录发布事件，避免同一事实两处存储。
-- **消费方（读，不回写）** — `skill-publish-analytics` 模式 D（增长归因）与 `skill-social-performance-review`（环比 / 粉丝趋势）以本快照为**粉丝时序的权威来源**。
+- **Chỉ lưu snapshot theo thời gian, không lưu sự kiện đăng bài** - metadata mỗi lần đăng (tiêu đề / link / loại / SKILL nguồn) do `skill-publish-log` giữ (`outputs/_analytics/publish-log.json`). Nền này không ghi trùng sự kiện đăng, tránh cùng một dữ kiện nằm ở hai nơi.
+- **Bên tiêu thụ (chỉ đọc, không ghi ngược)** - `skill-publish-analytics` chế độ D (quy kết tăng trưởng) và `skill-social-performance-review` (so kỳ trước / xu hướng người theo dõi) lấy snapshot này làm **nguồn có thẩm quyền cho chuỗi thời gian người theo dõi**.
 
-| 底座 | 存什么 | 谁维护 |
+| Nền lưu | Lưu gì | Ai giữ |
 |------|--------|--------|
-| `outputs/_analytics/snapshots/{profile}/{platform}/{date}.json` | 粉丝 / 互动时序快照（本 SKILL） | skill-data-tracker |
-| `outputs/_analytics/publish-log.json` | 发布事件 | skill-publish-log |
+| `outputs/_analytics/snapshots/{profile}/{platform}/{date}.json` | Snapshot theo thời gian của người theo dõi / tương tác (SKILL này) | skill-data-tracker |
+| `outputs/_analytics/publish-log.json` | Sự kiện đăng bài | skill-publish-log |
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| mode | 是 | record / growth / lifecycle |
-| platform | Mode A: 是 | 平台名（小红书/抖音/微博/B站/公众号等） |
-| followers | Mode A: 是 | 当前粉丝数 |
-| total_likes | Mode A: 否 | 总获赞数 |
-| total_posts | Mode A: 否 | 总笔记/视频数 |
-| post_snapshots | Mode A: 否 | 近期帖子的逐条数据（用于生命周期追踪） |
-| post_title | Mode C: 是 | 要追踪的帖子标题或标识 |
-| time_range | Mode B: 否 | 分析窗口（默认近 30 天） |
+| mode | Có | record / growth / lifecycle |
+| platform | Mode A: Có | Tên nền tảng (Facebook/TikTok/YouTube/Zalo...) |
+| followers | Mode A: Có | Số người theo dõi hiện tại |
+| total_likes | Mode A: Không | Tổng lượt thích |
+| total_posts | Mode A: Không | Tổng số bài/video |
+| post_snapshots | Mode A: Không | Dữ liệu từng bài gần đây (dùng để bám vòng đời) |
+| post_title | Mode C: Có | Tiêu đề hoặc mã định danh bài cần bám |
+| time_range | Mode B: Không | Cửa sổ phân tích (mặc định 30 ngày gần nhất) |
 
-## 输出
+## Đầu ra
 
-### Mode A — 记录快照
+### Mode A - Ghi snapshot
 
 ```markdown
-# 数据快照记录
-- 日期: {date} | 平台: {platform} | Profile: {profile_name}
+# Bản ghi snapshot số liệu
+- Ngày: {date} | Nền tảng: {platform} | Profile: {profile_name}
 
-## 账号指标
-| 指标 | 当前值 | 上次记录 | 变化 |
+## Chỉ số kênh
+| Chỉ số | Giá trị hiện tại | Lần ghi trước | Thay đổi |
 |------|--------|---------|------|
 
-## 帖子快照（如有）
-| 标题 | 发布日期 | 点赞 | 收藏 | 评论 | 转发 |
+## Snapshot bài viết (nếu có)
+| Tiêu đề | Ngày đăng | Thích | Lưu | Bình luận | Chia sẻ |
 
-快照已保存至: outputs/_analytics/snapshots/{profile}/{platform}/{date}.json
+Snapshot đã lưu tại: outputs/_analytics/snapshots/{profile}/{platform}/{date}.json
 ```
 
-### Mode B — 增长趋势
+### Mode B - Xu hướng tăng trưởng
 
 ```markdown
-# 增长趋势分析
-- 平台: {platform} | 区间: {start} → {end} | 数据点: {count}
+# Phân tích xu hướng tăng trưởng
+- Nền tảng: {platform} | Khoảng: {start} → {end} | Điểm dữ liệu: {count}
 
-## 粉丝增长趋势
-| 日期 | 粉丝数 | 日增长 | 日增长率 |
+## Xu hướng tăng người theo dõi
+| Ngày | Người theo dõi | Tăng trong ngày | Tỉ lệ tăng trong ngày |
 
-## 关键指标
-- 日均/周均增长 | 趋势方向: 加速/稳定/减速
-- 最高/最低单日增长
-- 里程碑预测: 照此速度，{X} 天后破 {milestone} 粉
-- 趋势洞察: {增长加速/减速原因分析与建议}
+## Chỉ số then chốt
+- Tăng trung bình ngày/tuần | Hướng xu hướng: tăng tốc/ổn định/chậm lại
+- Mức tăng cao nhất/thấp nhất trong một ngày
+- Dự báo mốc: giữ tốc độ này, sau {X} ngày sẽ vượt {milestone} người theo dõi
+- Insight xu hướng: {phân tích lý do tăng tốc/chậm lại và đề xuất}
 ```
 
-### Mode C — 内容生命周期
+### Mode C - Vòng đời nội dung
 
 ```markdown
-# 内容生命周期分析
-- 帖子: {post_title} | 发布: {published_at} | 平台: {platform}
+# Phân tích vòng đời nội dung
+- Bài: {post_title} | Đăng: {published_at} | Nền tảng: {platform}
 
-## 生命周期数据
-| 天数 | 日期 | 点赞 | 收藏 | 评论 | 转发 | 日增量 |
-（Day 0 / 1 / 3 / 7 / 14 / 30 各行）
+## Dữ liệu vòng đời
+| Ngày thứ | Ngày | Thích | Lưu | Bình luận | Chia sẻ | Tăng trong ngày |
+(mỗi dòng một mốc Day 0 / 1 / 3 / 7 / 14 / 30)
 
-## 分类与洞察
-- 类型: 速爆型/稳增型/长尾型 | 峰值日: Day {peak} | 半衰期: {days} 天
-- 判定依据与后续策略启示
+## Phân loại và insight
+- Loại: bùng nổ nhanh/tăng đều/đuôi dài | Ngày đỉnh: Day {peak} | Chu kỳ bán rã: {days} ngày
+- Căn cứ phân loại và gợi ý chiến lược tiếp theo
 ```
 
-## 数据存储
+## Lưu trữ dữ liệu
 
-快照文件路径：`outputs/_analytics/snapshots/{profile}/{platform}/{date}.json`
+Đường dẫn file snapshot: `outputs/_analytics/snapshots/{profile}/{platform}/{date}.json`
 
 ```json
 {
   "date": "2026-07-22",
-  "platform": "xiaohongshu",
-  "profile": "科技数码达人",
+  "platform": "tiktok",
+  "profile": "Nhà sáng tạo công nghệ",
   "account_metrics": {
     "followers": 5200,
     "total_likes": 42000,
@@ -102,8 +102,8 @@ layer: attribute
   },
   "post_snapshots": [
     {
-      "post_id": "用户提供或自动编号",
-      "title": "帖子标题",
+      "post_id": "người dùng cung cấp hoặc tự đánh số",
+      "title": "tiêu đề bài",
       "published_at": "2026-07-20",
       "likes": 350,
       "collects": 120,
@@ -114,76 +114,76 @@ layer: attribute
 }
 ```
 
-## 执行步骤
+## Các bước thực thi
 
-快照读写、增长率/移动平均/里程碑外推、生命周期分类全部由 `scripts/track.py`
-确定性完成。LLM 负责补全参数（从 Profile/用户输入）、解读脚本 JSON、写增长建议。
-**不要手动算增长率、不要心算移动平均、不要手改快照 JSON。**
+Đọc/ghi snapshot, tính tỉ lệ tăng, trung bình trượt, ngoại suy mốc và phân loại vòng đời đều do `scripts/track.py`
+làm theo cách xác định. LLM lo điền tham số (từ Profile/đầu vào người dùng), đọc JSON script trả về, viết đề xuất tăng trưởng.
+**Đừng tự tính tỉ lệ tăng, đừng nhẩm trung bình trượt, đừng sửa tay file JSON snapshot.**
 
-### Mode A — 记录快照
+### Mode A - Ghi snapshot
 
-1. 从 Profile（`identity.md` 取 profile 名、`platforms.md` 取平台）或用户输入采集指标；缺失字段询问一次。
-2. 调用脚本（一天一快照，同日覆盖；自动计算与上次快照的 delta）：
+1. Lấy chỉ số từ Profile (`identity.md` lấy tên profile, `platforms.md` lấy nền tảng) hoặc từ đầu vào người dùng; trường nào thiếu thì hỏi một lần.
+2. Gọi script (mỗi ngày một snapshot, cùng ngày thì ghi đè; tự tính delta so với snapshot trước):
 
 ```bash
-python3 skills/openclaw/skill-data-tracker/scripts/track.py snapshot --profile "科技数码达人" --platform xiaohongshu \
+python3 skills/openclaw/skill-data-tracker/scripts/track.py snapshot --profile "Nhà sáng tạo công nghệ" --platform tiktok \
   --followers 5200 --total-likes 42000 --total-posts 89 [--date 2026-07-22] \
-  [--posts 帖子逐条数据.json]   # --posts 为数组，含 post_id/title/published_at/likes/collects/comments/shares
+  [--posts du-lieu-tung-bai.json]   # --posts la mang, gom post_id/title/published_at/likes/collects/comments/shares
 ```
 
-3. 展示脚本返回的 `snapshot` + `delta_vs_last` + 保存路径。
+3. Hiển thị `snapshot` + `delta_vs_last` + đường dẫn lưu mà script trả về.
 
-### Mode B — 增长趋势
+### Mode B - Xu hướng tăng trưởng
 
 ```bash
-python3 skills/openclaw/skill-data-tracker/scripts/track.py trend --profile "科技数码达人" --metric followers \
-  [--platform xiaohongshu] [--since 2026-07-01] [--until 2026-07-31]
+python3 skills/openclaw/skill-data-tracker/scripts/track.py trend --profile "Nhà sáng tạo công nghệ" --metric followers \
+  [--platform tiktok] [--since 2026-07-01] [--until 2026-07-31]
 ```
 
-脚本返回：逐点日增长/日增长率、7 日移动平均、`trend_direction`（加速/稳定/减速）、
-`milestone` + `milestone_eta_days`（≤30 天，超出返回 null）、`warning`（<3 点样本不足）。
-LLM 据此写趋势洞察与受众相关建议（有 Profile 时读 `audience.md`）。
+Script trả về: mức tăng và tỉ lệ tăng từng ngày, trung bình trượt 7 ngày, `trend_direction` (tăng tốc/ổn định/chậm lại),
+`milestone` + `milestone_eta_days` (≤30 ngày, vượt ngưỡng trả null), `warning` (<3 điểm là không đủ mẫu).
+LLM dựa vào đó viết insight xu hướng và đề xuất gắn với khán giả (có Profile thì đọc `audience.md`).
 
-### Mode C — 内容生命周期
+### Mode C - Vòng đời nội dung
 
 ```bash
-python3 skills/openclaw/skill-data-tracker/scripts/track.py lifecycle --profile "科技数码达人" \
-  --platform xiaohongshu --post-title "露营装备" --metric likes
+python3 skills/openclaw/skill-data-tracker/scripts/track.py lifecycle --profile "Nhà sáng tạo công nghệ" \
+  --platform tiktok --post-title "Đồ cắm trại" --metric likes
 ```
 
-脚本跨快照重建帖子时间序列，返回逐日增量、`peak_day`、`half_life_days`、
-`lifecycle_type`（速爆型/稳增型/长尾型/数据不足）。LLM 据类型写后续内容策略。
+Script dựng lại chuỗi thời gian của bài qua các snapshot, trả về mức tăng từng ngày, `peak_day`, `half_life_days`,
+`lifecycle_type` (bùng nổ nhanh/tăng đều/đuôi dài/không đủ dữ liệu). LLM theo loại đó viết chiến lược nội dung tiếp theo.
 
-### 导出增长归因视图
+### Xuất view quy kết tăng trưởng
 
-记录快照后生成 `skill-publish-analytics` 模式 D 所需的派生视图；不要手工维护另一份粉丝台账：
+Ghi snapshot xong thì sinh view dẫn xuất mà `skill-publish-analytics` chế độ D cần; đừng tự tay nuôi thêm một sổ người theo dõi khác:
 
 ```bash
 python3 skills/openclaw/skill-data-tracker/scripts/track.py export-followers
 ```
 
-默认汇总全部画像和平台到 `outputs/_analytics/follower-log.json`；可用 `--profile` 或 `--platform` 过滤。
+Mặc định gộp toàn bộ Profile và nền tảng vào `outputs/_analytics/follower-log.json`; có thể lọc bằng `--profile` hoặc `--platform`.
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `identity.md` 获取 profile 名称，用作快照目录名
-- 读取 `platforms.md` 自动填充 platform 参数，支持多平台同时记录
-- 读取 `audience.md` 在增长分析中给出受众相关的增长建议
-- 快照目录按 profile/platform 隔离：`outputs/_analytics/snapshots/{profile_name}/{platform}/`
+**Khi có Profile:**
+- Đọc `identity.md` lấy tên profile, dùng làm tên thư mục snapshot
+- Đọc `platforms.md` để tự điền tham số platform, hỗ trợ ghi nhiều nền tảng cùng lúc
+- Đọc `audience.md` để đề xuất tăng trưởng gắn với khán giả trong phần phân tích
+- Thư mục snapshot tách theo profile/platform: `outputs/_analytics/snapshots/{profile_name}/{platform}/`
 
-**无 Profile 时：**
-- 要求用户显式提供 platform 参数
-- 快照目录使用 "default"：`outputs/_analytics/snapshots/default/{platform}/`
-- 增长分析不做受众关联判断
-- 附注"提供 Profile 可自动关联平台和账号信息"
+**Khi không có Profile:**
+- Yêu cầu người dùng nêu rõ tham số platform
+- Thư mục snapshot dùng "default": `outputs/_analytics/snapshots/default/{platform}/`
+- Phân tích tăng trưởng không kết luận gì về khán giả
+- Ghi chú thêm "cung cấp Profile sẽ tự gắn thông tin nền tảng và kênh"
 
-## 规则
+## Quy tắc
 
-1. **不修改不删除** — 已有快照文件只读不改，同一天同一平台的重复记录是唯一允许的覆盖情况
-2. **一天一快照** — 同一平台每天最多一个快照，当天重复记录会覆盖当天数据
-3. **最少 3 个数据点** — 增长率计算至少需要 3 个数据点，不足时输出警告而非空洞的趋势判断
-4. **预测不超 30 天** — 里程碑预测基于近期趋势外推，不超过 30 天，避免误导
-5. **数据来源透明** — 所有指标来自用户输入或快照文件，不编造数据，不假设未提供的指标
+1. **Không sửa, không xoá** - file snapshot đã có chỉ đọc, ghi lại cùng ngày cùng nền tảng là trường hợp ghi đè duy nhất được phép
+2. **Mỗi ngày một snapshot** - mỗi nền tảng tối đa một snapshot trong ngày, ghi lại trong ngày sẽ đè dữ liệu hôm đó
+3. **Tối thiểu 3 điểm dữ liệu** - tính tỉ lệ tăng cần ít nhất 3 điểm, thiếu thì báo cảnh báo chứ không phán xu hướng suông
+4. **Dự báo không quá 30 ngày** - dự báo mốc dựa trên ngoại suy xu hướng gần đây, không quá 30 ngày để tránh gây hiểu sai
+5. **Minh bạch nguồn dữ liệu** - mọi chỉ số đến từ đầu vào người dùng hoặc file snapshot, không bịa số, không giả định chỉ số chưa được cung cấp
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

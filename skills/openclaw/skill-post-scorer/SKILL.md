@@ -8,146 +8,146 @@ description: >-
 layer: attribute
 ---
 
-# 帖子表现评分
+# Chấm điểm hiệu quả bài đăng
 
-> 对社媒帖子草稿进行互动潜力评分，基于历史表现数据输出结构化评分卡。
+> Chấm tiềm năng tương tác cho bản nháp bài đăng mạng xã hội, xuất thẻ điểm có cấu trúc dựa trên dữ liệu hiệu quả lịch sử.
 
-**加载后立即开始评分流程，不做摘要或等待确认。**
+**Nạp xong là bắt đầu quy trình chấm điểm ngay, không tóm tắt, không chờ xác nhận.**
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供待评分的帖子草稿，支持以下形式：
+Người dùng đưa bản nháp bài đăng trong prompt, hỗ trợ các dạng sau:
 
-- **文本内容**：直接粘贴帖子文案
-- **文件路径**：指向 `outputs/` 中的草稿文件
-- **平台指定**：可选，指定目标平台（小红书、抖音、微博、知乎、公众号、B站等）
+- **Nội dung text**: dán thẳng bài viết
+- **Đường dẫn file**: trỏ tới file nháp trong `outputs/`
+- **Chỉ định nền tảng**: tuỳ chọn, nêu nền tảng mục tiêu (Facebook, TikTok, YouTube Shorts, Zalo, blog/website...)
 
-示例 prompt：
+Ví dụ prompt:
 ```
 Execute /skill-post-scorer
-帖子：
-我花了3年时间才明白一个道理：
-最好的内容不是"写"出来的，而是"提炼"出来的。
-以下是我总结的5个内容提炼方法...
+Bài:
+Mất 3 năm tôi mới hiểu ra một điều:
+Nội dung hay nhất không phải "viết" ra, mà là "chắt" ra.
+Sau đây là 5 cách chắt nội dung tôi đúc kết được...
 ```
 
-## 输出
+## Đầu ra
 
-输出代码块格式的评分卡：
+Xuất thẻ điểm dạng khối mã:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-帖子表现评分卡
+Thẻ điểm hiệu quả bài đăng
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-钩子强度        ██████████  8/10
-声音匹配度      ███████░░░  7/10
-价值密度        ████████░░  8/10
-结构与格式      ███████░░░  7/10
-发布就绪度      ██████░░░░  6/10
+Độ mạnh hook        ██████████  8/10
+Khớp voice          ███████░░░  7/10
+Mật độ giá trị      ████████░░  8/10
+Cấu trúc/trình bày  ███████░░░  7/10
+Sẵn sàng đăng       ██████░░░░  6/10
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-总分            36/50
-判定            值得发布，建议优化钩子
+Tổng điểm           36/50
+Kết luận            Đáng đăng, nên tối ưu hook
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-改进建议：
-1. [最弱维度] 具体修改建议
+Gợi ý cải thiện:
+1. [chiều yếu nhất] gợi ý sửa cụ thể
 2. ...
 ```
 
-## 执行步骤
+## Các bước thực thi
 
-### 第一步：获取帖子
+### Bước 1: lấy bài
 
-读取用户粘贴的帖子内容。如果 prompt 中没有帖子文本，主动询问用户提供。
+Đọc nội dung bài người dùng dán. Nếu prompt không có text bài, chủ động hỏi người dùng đưa vào.
 
-### 第二步：加载评分数据
+### Bước 2: nạp dữ liệu chấm điểm
 
-按优先级获取表现数据：
+Lấy dữ liệu hiệu quả theo thứ tự ưu tiên:
 
-1. **Profile 中的历史数据**：检查 `=== EASEL ACCOUNT PROFILE ===` 标记，读取 `performance_data` 路径指向的历史帖子数据
-2. **用户提供数据**：询问用户是否有历史帖子导出数据（各平台创作者中心/后台可导出 CSV/Excel，或整理成 JSON 数组）
-3. **通用基准**：以上都没有时，使用 `references/fallback-benchmarks.md` 中的基准数据
+1. **Dữ liệu lịch sử trong Profile**: kiểm dấu `=== EASEL ACCOUNT PROFILE ===`, đọc dữ liệu bài cũ ở đường dẫn mà `performance_data` trỏ tới
+2. **Dữ liệu người dùng đưa**: hỏi người dùng có file xuất dữ liệu bài cũ không (trung tâm nhà sáng tạo/trang quản trị của từng nền tảng đều xuất được CSV/Excel, hoặc gom thành mảng JSON)
+3. **Chuẩn chung**: không có gì ở trên thì dùng dữ liệu chuẩn trong `references/fallback-benchmarks.md`
 
-### 第三步：分析高表现帖子
+### Bước 3: phân tích bài hiệu quả cao
 
-> **互动分与 Top 10% 筛选交给脚本，LLM 只做特征提炼。** 由
-> [`scripts/score.py`](scripts/score.py) 完成（复用
-> `../../shared/scripts/social_stats.py` 的 `engagement_score`）。
+> **Điểm tương tác và lọc Top 10% giao cho script, LLM chỉ đúc rút đặc trưng.** Do
+> [`scripts/score.py`](scripts/score.py) đảm nhiệm (tái dùng
+> `engagement_score` của `../../shared/scripts/social_stats.py`).
 
-有历史/用户数据时，把帖子整理成 JSON 数组（每条含点赞与评论字段），调用：
+Khi có dữ liệu lịch sử/dữ liệu người dùng, gom bài thành mảng JSON (mỗi bản ghi có trường like và comment), rồi gọi:
 
 ```bash
 python3 skills/openclaw/skill-post-scorer/scripts/score.py top --input history.json
 python3 skills/openclaw/skill-post-scorer/scripts/score.py top --input history.json --top-pct 5
 ```
 
-脚本自动：按 `互动分 = 点赞 + 评论×3` 逐条计算（字段兼容 likes/reactions/点赞、
-comments/评论）、按互动分降序、算出 Top N% 门槛与分布（均值/中位数/最高/最低）、
-样本量不足警告。**LLM 拿到脚本输出的 Top 帖子后**，提取其共性特征：
+Script tự động: tính từng bản ghi theo `điểm tương tác = like + comment x 3` (nhận các trường likes/reactions,
+comments), sắp giảm dần theo điểm tương tác, tính ngưỡng Top N% và phân bố (trung bình/trung vị/cao nhất/thấp nhất),
+cảnh báo khi mẫu quá ít. **Sau khi LLM nhận danh sách bài Top từ script**, đúc rút đặc trưng chung:
 
-- 开头钩子类型（提问、数据、故事、反常识）
-- 文本长度和段落节奏
-- 格式特征（列表、分隔、emoji 使用）
-- 行动号召（CTA）类型
-- 主题分类
-- 句式节奏（长短交替、断句频率）
+- Kiểu hook mở đầu (đặt câu hỏi, số liệu, kể chuyện, phản trực giác)
+- Độ dài text và nhịp đoạn
+- Đặc trưng trình bày (danh sách, ngắt đoạn, dùng emoji)
+- Kiểu kêu gọi hành động (CTA)
+- Phân loại chủ đề
+- Nhịp câu (dài ngắn xen kẽ, tần suất ngắt câu)
 
-无历史数据时跳过本步，直接用 `references/fallback-benchmarks.md` 的通用模式特征。
+Không có dữ liệu lịch sử thì bỏ qua bước này, dùng thẳng đặc trưng mẫu chung trong `references/fallback-benchmarks.md`.
 
-### 第四步：五维评分
+### Bước 4: chấm 5 chiều
 
-按 5 个维度打分，每项 1-10 分，总分 50 分。
+Chấm theo 5 chiều, mỗi chiều 1-10 điểm, tổng 50 điểm.
 
-评分标准详见 `references/scoring-criteria.md`。
+Tiêu chí chấm chi tiết xem `references/scoring-criteria.md`.
 
-| 维度 | 评判重点 |
+| Chiều | Trọng tâm đánh giá |
 |------|----------|
-| 钩子强度 | 前两句是否能阻止滑动，制造好奇或共鸣 |
-| 声音匹配度 | 是否契合账号一贯的语气、人设和表达习惯 |
-| 价值密度 | 每段是否提供具体洞察，而非空泛陈述 |
-| 结构与格式 | 排版是否适配目标平台的阅读习惯 |
-| 发布就绪度 | 能否直接发布，还是需要润色或补充 |
+| Độ mạnh hook | Hai câu đầu có chặn được cú lướt, tạo tò mò hay đồng cảm không |
+| Khớp voice | Có hợp giọng, persona và thói quen diễn đạt quen thuộc của kênh không |
+| Mật độ giá trị | Mỗi đoạn có cho insight cụ thể hay chỉ nói chung chung |
+| Cấu trúc/trình bày | Cách trình bày có hợp thói quen đọc của nền tảng mục tiêu không |
+| Sẵn sàng đăng | Đăng được ngay hay còn phải trau chuốt, bổ sung |
 
-**评分纪律：**
-- 诚实评分，不做讨好
-- 除非帖子确实匹配 Top 10% 的模式特征，否则不给 8 分以上
-- 有真实数据时用数据说话，没有时明确标注"基于通用基准"
+**Kỷ luật chấm điểm:**
+- Chấm thật, không nịnh
+- Trừ khi bài đúng là khớp đặc trưng của nhóm Top 10%, không cho quá 8 điểm
+- Có dữ liệu thật thì nói bằng dữ liệu, không có thì ghi rõ "dựa trên chuẩn chung"
 
-### 第五步：输出评分卡
+### Bước 5: xuất thẻ điểm
 
-按照上方「输出」部分的格式输出评分卡，包含：
-- 五维分数（含进度条可视化）
-- 总分和判定结论
-- 针对最弱维度的具体改进建议
+Xuất thẻ điểm theo đúng định dạng ở phần "Đầu ra" bên trên, gồm:
+- Điểm 5 chiều (kèm thanh tiến độ trực quan)
+- Tổng điểm và kết luận
+- Gợi ý sửa cụ thể cho chiều yếu nhất
 
-判定标准：
-- **40-50**：优秀，直接发布
-- **30-39**：值得发布，建议优化标注的弱项
-- **20-29**：需要修改，重点改进最弱的 1-2 个维度
-- **< 20**：建议重写
+Tiêu chuẩn kết luận:
+- **40-50**: xuất sắc, đăng luôn
+- **30-39**: đáng đăng, nên tối ưu các điểm yếu đã đánh dấu
+- **20-29**: cần sửa, tập trung cải thiện 1-2 chiều yếu nhất
+- **< 20**: nên viết lại
 
-> 更细分档（含各边界档的判定措辞）见 `references/fallback-benchmarks.md`，两处口径一致。
+> Thang chia chi tiết hơn (kèm cách phát biểu kết luận ở từng mốc ranh giới) xem `references/fallback-benchmarks.md`, hai nơi cùng một chuẩn.
 
-### 第六步：提供改写服务
+### Bước 6: đề nghị viết lại
 
-输出评分卡后，主动提出：
+Xuất thẻ điểm xong thì chủ động đề nghị:
 
-> 是否需要我改写得分最低的部分？
+> Bạn có muốn tôi viết lại phần bị chấm thấp nhất không?
 
-如果用户同意，针对最弱维度进行定向改写，保留其他部分不变，改写后重新评分对比。
+Nếu người dùng đồng ý, viết lại có trọng điểm cho chiều yếu nhất, giữ nguyên phần còn lại, viết xong chấm lại để đối chiếu.
 
-## Profile 感知
+## Nhận biết Profile
 
-### 有 Profile
+### Có Profile
 
-- 读取 `voice` / `tone` 字段，作为「声音匹配度」的评判标准
-- 读取 `platform` 字段，调整「结构与格式」的平台适配规则
-- 读取 `performance_data` 字段指向的历史数据文件，用真实数据替代通用基准
-- 读取 `topics` / `niche` 字段，评估内容是否在账号定位范围内
+- Đọc trường `voice` / `tone`, dùng làm chuẩn đánh giá "Khớp voice"
+- Đọc trường `platform`, chỉnh quy tắc thích ứng nền tảng của "Cấu trúc/trình bày"
+- Đọc file dữ liệu lịch sử mà trường `performance_data` trỏ tới, dùng dữ liệu thật thay chuẩn chung
+- Đọc trường `topics` / `niche`, đánh giá nội dung có nằm trong định vị của kênh không
 
-### 无 Profile
+### Không Profile
 
-- 「声音匹配度」退化为通用可读性评估
-- 「结构与格式」使用通用社媒最佳实践
-- 使用 `references/fallback-benchmarks.md` 中的基准数据
-- 评分卡末尾附注："如提供账号 Profile（含历史表现数据），评分将更精准"
+- "Khớp voice" hạ xuống thành đánh giá độ dễ đọc chung
+- "Cấu trúc/trình bày" dùng thực hành tốt chung của mạng xã hội
+- Dùng dữ liệu chuẩn trong `references/fallback-benchmarks.md`
+- Cuối thẻ điểm ghi chú: "nếu cung cấp Profile của kênh (kèm dữ liệu hiệu quả lịch sử), điểm sẽ chính xác hơn"

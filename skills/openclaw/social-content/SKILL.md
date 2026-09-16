@@ -8,117 +8,117 @@ description: >-
 layer: produce
 ---
 
-# 社媒内容创作
+# Sáng tạo nội dung mạng xã hội
 
-> 跨平台通用/兜底的社媒内容生成器。为国内平台（小红书 / 抖音 / B站 / 微博 / 公众号 / 知乎）为主、出海平台（X、LinkedIn）为辅，生成原生格式的钩子文案、正文、标签策略和互动引导。
+> Bộ sinh nội dung mạng xã hội dùng chung/dự phòng cho mọi nền tảng. Chủ yếu phục vụ nền tảng phổ biến ở Việt Nam (Facebook / TikTok / YouTube / Zalo / blog), phụ thêm nền tảng quốc tế (X, LinkedIn), sinh hook, thân bài, chiến lược hashtag và dẫn dắt tương tác theo đúng format bản địa.
 
-## 职责边界
+## Ranh giới trách nhiệm
 
-本 SKILL 定位是**跨平台通用/兜底**：多平台一次成稿、快速起草、平台不确定时的默认选择。遇到下列专精场景，交给下游 SKILL 出精品：
+SKILL này định vị là **dùng chung/dự phòng cho mọi nền tảng**: viết một lần ra nhiều nền tảng, nháp nhanh, lựa chọn mặc định khi chưa rõ nền tảng. Gặp các tình huống chuyên sâu dưới đây thì giao cho SKILL hạ nguồn làm bản tinh:
 
-| 场景 | 交给 |
+| Tình huống | Giao cho |
 |------|------|
-| 小红书整套笔记（多卡片 + 去 AI 化 + caption + hashtags 全流程） | `xhs-note-creator` |
-| 具体某条视频的分镜/口播脚本（Hook 评分、分秒计时、留存优化） | `video-script` |
-| 落地页 / 产品页 / 详情页 / 信息流等带货转化文案（种草卖点、标题/正文/CTA + 备选） | `copywriting` |
-| 严格套 PAS/AIDA/BAB 等框架的结构化帖子 | `post-formatter` |
+| Bài note trọn bộ kiểu Xiaohongshu (nhiều card + khử mùi AI + caption + hashtags, trọn quy trình) | `xhs-note-creator` |
+| Phân cảnh/kịch bản video nói cho một video cụ thể (chấm điểm Hook, bấm giờ theo giây, tối ưu giữ chân) | `video-script` |
+| Nội dung bán hàng chuyển đổi cho landing page / trang sản phẩm / trang chi tiết / feed quảng cáo (điểm bán để seeding, tiêu đề/thân bài/CTA + phương án dự phòng) | `copywriting` |
+| Bài đăng có cấu trúc, ép chặt khung PAS/AIDA/BAB | `post-formatter` |
 
-本 SKILL 保留完整通用能力：用户直接调它做任意平台内容都成立，不强制转下游。
+SKILL này vẫn giữ đủ năng lực tổng quát: người dùng gọi thẳng nó để làm nội dung cho nền tảng bất kỳ đều được, không bắt buộc chuyển xuống hạ nguồn.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供以下信息（部分可省略，SKILL 自动补全默认值）：
+Người dùng cung cấp các thông tin sau trong prompt (có thể bỏ bớt, SKILL tự điền giá trị mặc định):
 
-| 字段 | 说明 | 示例 |
+| Trường | Mô tả | Ví dụ |
 |------|------|------|
-| 平台 | 目标平台，可多选 | 小红书、抖音、B站、微博、公众号、知乎（出海兜底：X、LinkedIn） |
-| 内容类型 | 图文笔记、短视频脚本、长文、微博短博、thread、carousel | 图文笔记 |
-| 主题 | 帖子主题或素材 | 一段文本或一篇文章的 URL |
-| 目标 | 互动、引流、品牌、获客、种草、社区 | 互动 |
-| 受众 | 关注者画像 | 一二线城市职场女性 |
-| 调性 | 专业、轻松、犀利、种草、教育、励志 | 种草 |
-| 素材 | 可用的图片、视频、数据 | 无 |
+| Nền tảng | Nền tảng đích, chọn nhiều được | Facebook, TikTok, YouTube, Zalo, blog/website (dự phòng quốc tế: X, LinkedIn) |
+| Loại nội dung | Bài ảnh-chữ, kịch bản video ngắn, bài dài, status ngắn, thread, carousel | Bài ảnh-chữ |
+| Chủ đề | Chủ đề bài đăng hoặc tư liệu | Một đoạn văn bản hoặc URL của một bài viết |
+| Mục tiêu | Tương tác, kéo traffic, thương hiệu, tìm khách, seeding, cộng đồng | Tương tác |
+| Khán giả | Hồ sơ người theo dõi | Phụ nữ đi làm ở thành phố lớn |
+| Tông giọng | Chuyên nghiệp, nhẹ nhàng, sắc sảo, seeding, giáo dục, truyền cảm hứng | Seeding |
+| Tư liệu | Ảnh, video, số liệu có sẵn | Không có |
 
-## 输出
+## Đầu ra
 
-为每个目标平台输出以下结构：
+Với mỗi nền tảng đích, xuất theo cấu trúc sau:
 
-### 1. 平台帖子正文
+### 1. Thân bài đăng theo nền tảng
 
 ```
-[钩子首行]
+[hook dòng đầu]
 
-[正文内容]
+[nội dung thân bài]
 
-[CTA 行动引导]
+[CTA dẫn dắt hành động]
 
-[标签]
+[hashtag]
 
-字符数：N / 平台上限
+Số ký tự: N / giới hạn nền tảng
 ```
 
-### 2. 互动策略
+### 2. Chiến lược tương tác
 
-- 最佳发布时间
-- 发布后跟进动作（回复评论、转发等）
-- 跨平台联动计划
+- Giờ đăng tốt nhất
+- Việc cần làm sau khi đăng (trả lời bình luận, chia sẻ lại...)
+- Kế hoạch liên kết đa nền tảng
 
-### 3. 视觉方向
+### 3. Hướng hình ảnh
 
-- 配图/封面/配视频描述
-- 小红书图文卡片组大纲（如适用）
-- 短视频脚本钩子（如适用）
+- Mô tả ảnh minh hoạ/ảnh bìa/video kèm theo
+- Dàn ý bộ card ảnh-chữ kiểu Xiaohongshu (nếu áp dụng)
+- Hook kịch bản video ngắn (nếu áp dụng)
 
-### 4. 变体
+### 4. Biến thể
 
-- 每个平台 2-3 个帖子变体，用于 A/B 测试或分日发布。
+- Mỗi nền tảng 2-3 biến thể bài đăng, dùng cho A/B test hoặc đăng rải theo ngày.
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **收集需求** — 从用户 prompt 提取上述输入字段。缺失字段时：有 Profile 则从中补全，无 Profile 则用通用默认值。
+1. **Thu thập yêu cầu** - trích các trường đầu vào ở trên từ prompt của người dùng. Trường nào thiếu: có Profile thì lấy từ đó bù vào, không có Profile thì dùng giá trị mặc định chung.
 
-2. **加载平台规范** — 根据目标平台，参照 [platform-specs.md](references/platform-specs.md) 获取字符限制、图片尺寸、发布时间、平台规则。
+2. **Nạp quy chuẩn nền tảng** - theo nền tảng đích, tham chiếu [platform-specs.md](references/platform-specs.md) để lấy giới hạn ký tự, kích thước ảnh, giờ đăng, quy định nền tảng.
 
-3. **撰写钩子** — 参照公共源 `skills/shared/references/hook-title-formulas.md`，为每个平台选合适的钩子公式，写出首行。钩子决定 90% 的表现。
+3. **Viết hook** - tham chiếu nguồn dùng chung `skills/shared/references/hook-title-formulas.md`, chọn công thức hook hợp với từng nền tảng rồi viết dòng đầu. Hook quyết định 90% hiệu quả.
 
-4. **编排内容格式** — 参照 [content-formats.md](references/content-formats.md)，按内容类型组织正文：
-   - 小红书图文笔记 → 封面钩子 + 卡片组大纲 + 正文
-   - 短视频脚本（抖音/B站/视频号）→ 钩子 + 正文 + CTA
-   - 公众号/知乎长文 → 标题 + 开头 + 分段主体 + 收尾
-   - 微博短博 → 140 字精华 + 话题
-   - 内容复用 → 从一稿拆解为多平台素材
-   - （出海兜底）X thread / LinkedIn carousel
+4. **Sắp định dạng nội dung** - tham chiếu [content-formats.md](references/content-formats.md), tổ chức thân bài theo loại nội dung:
+   - Bài note ảnh-chữ kiểu Xiaohongshu -> hook ảnh bìa + dàn ý bộ card + thân bài
+   - Kịch bản video ngắn (TikTok/YouTube Shorts/Reels) -> hook + thân bài + CTA
+   - Bài dài trên Facebook, blog/website -> tiêu đề + mở bài + thân chia đoạn + kết
+   - Status ngắn kiểu Weibo -> 140 chữ tinh gọn + hashtag chủ đề
+   - Tái dùng nội dung -> tách một bản thảo thành tư liệu cho nhiều nền tảng
+   - (dự phòng quốc tế) X thread / LinkedIn carousel
 
-5. **添加标签** — 参照 [hashtag-strategy.md](references/hashtag-strategy.md)，按平台规则选择话题层级和数量。
+5. **Thêm hashtag** - tham chiếu [hashtag-strategy.md](references/hashtag-strategy.md), chọn tầng chủ đề và số lượng theo quy định từng nền tảng.
 
-6. **检查合规** — **字数用脚本校验，不靠肉眼数**：把每个平台的正文喂给
-   `python3 skills/shared/scripts/wordcount.py count`（stdin 传入），读 `social_count`
-   （社媒计数口径 = 中文字符 + 英文单词 + 数字串 + 标点），与 [platform-specs.md](references/platform-specs.md)
-   的字符上限比对，超限就据结果压缩后重数（可交给 `text-condenser`）。再规避违禁/限流词
-   （小红书/抖音尤其重要），确认话题数量符合平台规范，外链放置符合平台习惯。
+6. **Kiểm tra tuân thủ** - **đếm chữ bằng script, không đếm bằng mắt**: đưa thân bài của từng nền tảng vào
+   `python3 skills/shared/scripts/wordcount.py count` (truyền qua stdin), đọc `social_count`
+   (cách đếm cho mạng xã hội = ký tự CJK + từ tiếng Anh + chuỗi số + dấu câu), đối chiếu với [platform-specs.md](references/platform-specs.md)
+   về giới hạn ký tự, vượt thì nén theo kết quả rồi đếm lại (có thể giao cho `text-condenser`). Sau đó né từ cấm/từ gây bóp tương tác
+   (Facebook/TikTok đặc biệt quan trọng), xác nhận số hashtag đúng quy chuẩn nền tảng, vị trí đặt link ngoài hợp thói quen nền tảng.
 
-7. **去 AI + 质量门（强制，不可跳过）** — 每个平台正文按 text-polisher 权威源过两道门，不达标先改再交付：
-   - **去 AI 味**：按 `../text-polisher/references/zh-ai-markers.md`（中文，含小红书特化）+ `../text-polisher/references/phrases-to-remove.md` + `structures-to-avoid.md` 扫描重写；AI 味自检 **≥45/50**。
-   - **综合质量**：按 text-polisher 通用五维（清晰/节奏/真实/价值密度/语气匹配）自评 **≥35/50**。
-   - 两门都过才进下一步；这是本 SKILL 唯一的内容质量闸，别省。
+7. **Khử mùi AI + cổng chất lượng (bắt buộc, không được bỏ)** - thân bài mỗi nền tảng phải qua hai cổng theo nguồn thẩm quyền text-polisher, chưa đạt thì sửa rồi mới giao:
+   - **Khử mùi AI**: quét và viết lại theo `../text-polisher/references/zh-ai-markers.md` (tiếng Trung, có phần đặc thù Xiaohongshu) + `../text-polisher/references/phrases-to-remove.md` + `structures-to-avoid.md`; tự chấm mùi AI **>=45/50**.
+   - **Chất lượng tổng thể**: tự chấm theo năm chiều chung của text-polisher (rõ ràng/nhịp/chân thực/mật độ giá trị/khớp giọng) **>=35/50**.
+   - Qua cả hai cổng mới sang bước tiếp; đây là cổng chất lượng nội dung duy nhất của SKILL này, đừng bỏ.
 
-8. **生成变体** — 为每个平台输出 2-3 个帖子变体。
+8. **Sinh biến thể** - xuất 2-3 biến thể bài đăng cho mỗi nền tảng.
 
-9. **输出** — 按「输出」章节的格式交付全部内容，写入 `outputs/` 目录。
+9. **Xuất kết quả** - giao toàn bộ nội dung theo định dạng ở mục "Đầu ra", ghi vào thư mục `outputs/`.
 
-## Profile 感知
+## Nhận biết Profile
 
-### 有 Profile 时
+### Khi có Profile
 
-从 `=== EASEL ACCOUNT PROFILE ===` 上下文中提取：
+Trích từ ngữ cảnh `=== EASEL ACCOUNT PROFILE ===`:
 
-- **platform** — 锁定目标平台，加载对应规范
-- **audience** — 用于调整用语和深度
-- **tone / style** — 匹配账号一贯风格
-- **hashtag_sets** — 优先使用账号常用标签
-- **posting_schedule** — 用于推荐发布时间
+- **platform** - khoá nền tảng đích, nạp quy chuẩn tương ứng
+- **audience** - dùng để chỉnh cách dùng từ và độ sâu
+- **tone / style** - khớp phong cách nhất quán của kênh
+- **hashtag_sets** - ưu tiên dùng hashtag quen thuộc của kênh
+- **posting_schedule** - dùng để gợi ý giờ đăng
 
-### 无 Profile 时
+### Khi không có Profile
 
-- 退回通用模式：询问用户目标平台，使用通用最佳实践
-- 在输出末尾附注："如提供账号 Profile 可获得更精准的平台适配和风格匹配"
+- Lùi về chế độ chung: hỏi người dùng nền tảng đích, dùng best practice phổ quát
+- Ghi chú ở cuối đầu ra: "Nếu cung cấp Profile kênh sẽ có mức thích ứng nền tảng và khớp phong cách chính xác hơn"

@@ -8,112 +8,112 @@ description: >-
 layer: produce
 ---
 
-# 文字转语音配音（TTS Voiceover）
+# Lồng tiếng chuyển văn bản thành giọng nói (TTS Voiceover)
 
-> **配置检查路径铁律**：先 `cd` 到 `AGENTS.md` 末尾给出的 Easel 项目根，确认当前目录有 `.env` 和 `skills/shared/scripts/`。云 TTS 配置只能用项目根的 `model_registry.py configured --group voice --env-file .env` 和 `voice_clone.py check ... --env-file .env` 判断；不得在 workspace 跑 `./shared/scripts/...`，也不得用 `env` / `printenv` 推断 Key/URL 缺失。
+> **Luật cứng khi kiểm tra cấu hình**: `cd` về gốc dự án Easel ghi ở cuối `AGENTS.md` trước, xác nhận thư mục hiện tại có `.env` và `skills/shared/scripts/`. Cấu hình TTS đám mây chỉ được kết luận bằng `model_registry.py configured --group voice --env-file .env` và `voice_clone.py check ... --env-file .env` chạy từ gốc dự án; không chạy `./shared/scripts/...` trong workspace, cũng không dùng `env` / `printenv` để suy ra thiếu Key/URL.
 
-把文案 / 脚本合成为 AI 语音（口播、旁白、朗读）。共享脚本 `skills/shared/scripts/tts.py speak`：
-**默认闭源优先**——配了 `.env` 的 `VOICE_PROVIDER`(+ VOICE_API_KEY) 就走闭源云 TTS（voice_clone，
-按句合成+拼接+分句 SRT，有情感、像真人），**没 key 才退 edge**（AI 味、生硬，仅兜底）。
-`--engine closed/edge` 可强制；闭源音色用 `--voice` 传 voice-id（如 `FunAudioLLM/CosyVoice2-0.5B:alex`），
-旁白默认 alex，可用 `VOICE_NARRATOR_VOICE_ID` 覆盖。合成后语音可交 `audio_ops.py`/`video_ops.py` 混音或加到视频。
+Tổng hợp bài viết / kịch bản thành giọng AI (video nói, lời dẫn, đọc bài). Script dùng chung `skills/shared/scripts/tts.py speak`:
+**Mặc định ưu tiên bản closed-source** - đã khai `VOICE_PROVIDER` (+ VOICE_API_KEY) trong `.env` thì đi cloud TTS closed-source (voice_clone,
+tổng hợp theo câu + ghép + SRT tách câu, có cảm xúc, giống người thật), **không có key mới lùi về edge** (nghe mùi AI, khô cứng, chỉ để dự phòng).
+`--engine closed/edge` để ép chọn; voice closed-source truyền voice-id qua `--voice` (ví dụ `FunAudioLLM/CosyVoice2-0.5B:alex`),
+lời dẫn mặc định là alex, có thể ghi đè bằng `VOICE_NARRATOR_VOICE_ID`. Giọng sau khi tổng hợp có thể đưa sang `audio_ops.py`/`video_ops.py` để mix hoặc gắn vào video.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| text / file | 是 | 待配音的文本，或文本文件路径（长文本推荐 --file） |
-| voice | 否 | 音色，默认 `zh-CN-XiaoxiaoNeural`（晓晓） |
-| rate/volume/pitch | 否 | 语速 / 音量 / 音调微调 |
-| output | 否 | 默认 `outputs/主题名/{name}.mp3` |
+| text / file | Có | Văn bản cần lồng tiếng, hoặc đường dẫn file văn bản (văn bản dài nên dùng --file) |
+| voice | Không | Voice, mặc định `zh-CN-XiaoxiaoNeural` (Xiaoxiao) |
+| rate/volume/pitch | Không | Tinh chỉnh tốc độ đọc / âm lượng / cao độ |
+| output | Không | Mặc định `outputs/<chủ đề>/{name}.mp3` |
 
-## 输出
+## Đầu ra
 
-- 配音音频文件（mp3，可选 wav/m4a），放入 `outputs/主题名/`
-- 可选同步输出 SRT 字幕（`--subtitle`），供视频烧字幕用
-- 打印实际执行的 edge-tts 命令 + 输出文件时长/大小/音色
+- File audio lồng tiếng (mp3, tuỳ chọn wav/m4a), đặt vào `outputs/<chủ đề>/`
+- Tuỳ chọn xuất kèm phụ đề SRT (`--subtitle`) để burn chữ vào video
+- In ra lệnh edge-tts thực chạy + thời lượng/dung lượng/voice của file kết quả
 
-## 前置：外网代理
+## Yêu cầu trước: proxy ra ngoài
 
-edge-tts 调微软在线服务，**必须能访问外网**。内网环境先设代理：
+edge-tts gọi dịch vụ trực tuyến của Microsoft, **bắt buộc truy cập được internet**. Trong mạng nội bộ thì đặt proxy trước:
 
 ```bash
-export https_proxy=http://<代理host>:<端口> http_proxy=http://<代理host>:<端口>
+export https_proxy=http://<proxy-host>:<port> http_proxy=http://<proxy-host>:<port>
 ```
 
-脚本会自动读环境变量代理并透传给 edge-tts（也可用 `--proxy` 覆盖）。
+Script tự đọc biến môi trường proxy và truyền thẳng cho edge-tts (cũng có thể ghi đè bằng `--proxy`).
 
-## 执行步骤
+## Các bước thực thi
 
-脚本路径（相对项目根）：`skills/shared/scripts/tts.py`。每个子命令支持 `-h`。
+Đường dẫn script (tương đối gốc dự án): `skills/shared/scripts/tts.py`. Mỗi subcommand đều hỗ trợ `-h`.
 
-### 0. 挑音色（可选）
+### 0. Chọn voice (tuỳ chọn)
 
 ```bash
-python skills/shared/scripts/tts.py voices          # 常用中文音色 + 简介
-python skills/shared/scripts/tts.py voices --all    # 拉全量 zh- 音色（需外网）
+python skills/shared/scripts/tts.py voices          # Voice tiếng Trung thông dụng + mô tả ngắn
+python skills/shared/scripts/tts.py voices --all    # Lấy toàn bộ voice zh- (cần internet)
 ```
 
-### 1. 合成配音 speak
+### 1. Tổng hợp giọng đọc speak
 
 ```bash
-# 最简：一句话 → mp3
-python skills/shared/scripts/tts.py speak --text "欢迎来到本期内容" \
-  -o outputs/主题名/intro.mp3
+# Đơn giản nhất: một câu → mp3
+python skills/shared/scripts/tts.py speak --text "Chào mừng bạn đến với nội dung số này" \
+  -o "outputs/<chủ đề>/intro.mp3"
 
-# 长文本从文件读 + 换音色 + 加速 10%
+# Văn bản dài đọc từ file + đổi voice + tăng tốc 10%
 python skills/shared/scripts/tts.py speak --file script.txt \
-  -o outputs/主题名/narration.mp3 --voice zh-CN-YunxiNeural --rate +10%
+  -o "outputs/<chủ đề>/narration.mp3" --voice zh-CN-YunxiNeural --rate +10%
 
-# 同步出 SRT 字幕（视频烧字幕用）
+# Xuất kèm phụ đề SRT (để burn chữ vào video)
 python skills/shared/scripts/tts.py speak --file script.txt \
-  -o outputs/主题名/vo.mp3 --subtitle outputs/主题名/vo.srt
+  -o "outputs/<chủ đề>/vo.mp3" --subtitle "outputs/<chủ đề>/vo.srt"
 
-# 输出 wav（需 ffmpeg，便于后续无损处理）
-python skills/shared/scripts/tts.py speak --text "……" \
-  -o outputs/主题名/vo.wav --format wav
+# Xuất wav (cần ffmpeg, tiện xử lý không mất chất về sau)
+python skills/shared/scripts/tts.py speak --text "..." \
+  -o "outputs/<chủ đề>/vo.wav" --format wav
 ```
 
-参数：`--rate +10%`（语速）、`--volume +20%`（音量）、`--pitch +2Hz`（音调）。
+Tham số: `--rate +10%` (tốc độ đọc), `--volume +20%` (âm lượng), `--pitch +2Hz` (cao độ).
 
-### 2. 后处理（可选，复用已有共享脚本）
+### 2. Hậu kỳ (tuỳ chọn, tái dùng script dùng chung sẵn có)
 
-配音出来后按需接下游脚本，无需在本 SKILL 重造能力：
+Có giọng rồi thì nối tiếp script hạ nguồn theo nhu cầu, không cần dựng lại năng lực trong SKILL này:
 
 ```bash
-# ① 配音 + BGM 混音（原声 1.0 / BGM 0.3）→ 用 audio_ops concat / video_ops bgm
+# 1) Lồng tiếng + mix BGM (giọng gốc 1.0 / BGM 0.3) → dùng audio_ops concat / video_ops bgm
 python skills/shared/scripts/video_ops.py bgm -i vo.mp3 -o vo_bgm.mp3 \
   --music bgm.mp3 --voice-volume 1.0 --music-volume 0.3
 
-# ② 配音音量归一化到社媒响度（-14 LUFS）
+# 2) Chuẩn hoá âm lượng giọng về mức loudness mạng xã hội (-14 LUFS)
 python skills/shared/scripts/audio_ops.py normalize vo.mp3 -o vo_norm.mp3
 
-# ③ 把配音作为旁白加到视频
+# 3) Gắn giọng đọc làm lời dẫn vào video
 python skills/shared/scripts/video_ops.py bgm -i clip.mp4 -o clip_vo.mp4 \
   --music vo.mp3 --voice-volume 0.4 --music-volume 1.0
 ```
 
-## 常用中文音色
+## Voice tiếng Trung thông dụng
 
-| 音色 | 特点 |
+| Voice | Đặc điểm |
 |------|------|
-| `zh-CN-XiaoxiaoNeural` | 晓晓 · 女声，温暖亲和，通用首选（默认） |
-| `zh-CN-XiaoyiNeural` | 晓伊 · 女声，活泼年轻，口播/种草 |
-| `zh-CN-YunxiNeural` | 云希 · 男声，清朗自然，旁白/解说 |
-| `zh-CN-YunyangNeural` | 云扬 · 男声，专业沉稳，新闻/播报 |
-| `zh-CN-YunjianNeural` | 云健 · 男声，浑厚有力，激情内容 |
+| `zh-CN-XiaoxiaoNeural` | Xiaoxiao - giọng nữ, ấm áp thân thiện, lựa chọn chung (mặc định) |
+| `zh-CN-XiaoyiNeural` | Xiaoyi - giọng nữ, trẻ trung sôi nổi, video nói/seeding |
+| `zh-CN-YunxiNeural` | Yunxi - giọng nam, trong trẻo tự nhiên, lời dẫn/thuyết minh |
+| `zh-CN-YunyangNeural` | Yunyang - giọng nam, chuyên nghiệp điềm đạm, tin tức/bản tin |
+| `zh-CN-YunjianNeural` | Yunjian - giọng nam, trầm dày mạnh mẽ, nội dung nhiệt huyết |
 
-粤语用 `zh-HK-HiuMaanNeural`（曉曼），台式用 `zh-TW-HsiaoChenNeural`（曉臻）。
+Tiếng Quảng Đông dùng `zh-HK-HiuMaanNeural` (HiuMaan), giọng Đài Loan dùng `zh-TW-HsiaoChenNeural` (HsiaoChen).
 
-## 规则
+## Quy tắc
 
-1. **绝不覆盖原始素材** — 只写新文件到 `outputs/主题名/`。
-2. **长文本走 --file** — 避免命令行过长 / 换行转义问题。
-3. **先设代理** — edge-tts 需外网，网络失败脚本会给明确提示。
-4. **不重造能力** — 混音/归一化/加视频旁白复用 audio_ops.py / video_ops.py。
-5. **无 Profile 也能用** — 无画像时用默认音色晓晓。
+1. **Tuyệt đối không ghi đè tư liệu gốc** - chỉ ghi file mới vào `outputs/<chủ đề>/`.
+2. **Văn bản dài thì dùng --file** - tránh lệnh quá dài / lỗi escape xuống dòng.
+3. **Đặt proxy trước** - edge-tts cần internet, lỗi mạng thì script báo rõ.
+4. **Không dựng lại năng lực đã có** - mix/chuẩn hoá/gắn lời dẫn vào video thì tái dùng audio_ops.py / video_ops.py.
+5. **Không có Profile vẫn chạy được** - không có hồ sơ thì dùng voice mặc định Xiaoxiao.
 
-## Profile 感知
+## Nhận biết Profile
 
-有 Profile 时可读取账号偏好音色 / 语速 / 平台调性（如口播偏活泼晓伊、
-知识类偏沉稳云扬）作为默认参数；无 Profile 退到通用默认（晓晓、正常语速）。
+Có Profile thì đọc voice / tốc độ đọc / tone nền tảng mà kênh ưa dùng (ví dụ video nói thiên về Xiaoyi sôi nổi,
+nội dung kiến thức thiên về Yunyang điềm đạm) làm tham số mặc định; không có Profile thì lùi về mặc định chung (Xiaoxiao, tốc độ thường).

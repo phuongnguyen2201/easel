@@ -8,75 +8,75 @@ description: >-
 layer: publish
 ---
 
-# 平台原生搜索优化
+# Tối ưu tìm kiếm nội sàn
 
-> 让内容能被平台搜索到、排得靠前。以国内内容平台的站内搜索机制为主体，网页/博客 web SEO 作为可选模式。
+> Làm cho nội dung được nền tảng tìm ra và xếp hạng cao. Lấy cơ chế tìm kiếm nội sàn của các nền tảng nội dung Trung Quốc làm chủ thể, web SEO cho trang/blog là chế độ tuỳ chọn.
 
-## 定位
+## Định vị
 
-国内平台的流量分两条路：**推荐流量**（算法主动分发）和**搜索流量**（用户主动搜关键词命中）。多数创作只优化推荐，忽略搜索——而搜索流量精准、长尾、可累积。本 SKILL 专治搜索这条路：让标题、正文、标签、封面文字都踩中用户会搜的词。
+Lưu lượng trên các nền tảng này chia hai nhánh: **lưu lượng đề xuất** (thuật toán chủ động phân phối) và **lưu lượng tìm kiếm** (người dùng chủ động gõ từ khoá và trúng bài). Đa số nhà sáng tạo chỉ tối ưu đề xuất, bỏ quên tìm kiếm - trong khi lưu lượng tìm kiếm thì trúng đích, dài hạn, tích luỹ được. SKILL này chuyên trị nhánh tìm kiếm: làm cho tiêu đề, thân bài, hashtag, chữ trên ảnh bìa đều trúng từ mà người dùng sẽ tìm.
 
-推荐流量的钩子/完播/互动优化不在此列，交给 `social-content` / `video-script`。
+Việc tối ưu hook/tỉ lệ xem hết/tương tác cho lưu lượng đề xuất không thuộc đây, giao cho `social-content` / `video-script`.
 
-## 输入
+## Đầu vào
 
-- 待检查的内容（文件路径、文本、或已发布链接）
-- 目标平台（小红书 / 抖音 / 知乎 / 公众号 / B站 / 微博；缺省时询问或按 Profile）
-- 可选：目标关键词 / 想覆盖的搜索场景、检查侧重（发布前校验 / 关键词补强 / 全面优化）
+- Nội dung cần kiểm (đường dẫn file, văn bản, hoặc link bài đã đăng)
+- Nền tảng mục tiêu (Xiaohongshu / Douyin / Zhihu / WeChat OA / Bilibili / Weibo; thiếu thì hỏi hoặc lấy theo Profile)
+- Tuỳ chọn: từ khoá mục tiêu / tình huống tìm kiếm muốn phủ, trọng tâm kiểm (soát trước khi đăng / bổ sung từ khoá / tối ưu toàn diện)
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 搜索优化报告 — [平台]
+# Báo cáo tối ưu tìm kiếm - [nền tảng]
 
-## 目标关键词命中盘点
-| 关键词/搜索场景 | 出现位置（标题/正文/标签/封面） | 权重 | 状态 |
+## Rà soát mức trúng từ khoá mục tiêu
+| Từ khoá/tình huống tìm | Vị trí xuất hiện (tiêu đề/thân bài/hashtag/ảnh bìa) | Trọng số | Trạng thái |
 
-## 逐项校验（针对该平台的搜索信号）
-| 检查项 | 状态 ✅/⚠️/❌ | 说明 | 修改建议 |
+## Soát từng mục (theo tín hiệu tìm kiếm của nền tảng đó)
+| Mục kiểm | Trạng thái ✅/⚠️/❌ | Giải thích | Đề xuất sửa |
 
-## 搜索 vs 推荐取舍诊断
-（当前内容偏向哪条流量、是否需要为搜索让渡一部分推荐钩子）
+## Chẩn đoán đánh đổi giữa tìm kiếm và đề xuất
+(nội dung hiện nghiêng về nhánh nào, có cần nhường một phần hook đề xuất cho tìm kiếm không)
 
-## 整体评级：✅ 可发布 / ⚠️ 需修改 / ❌ 搜索面太窄
-## 优先修改项（Top 3，按预期搜索曝光增益排序）
+## Đánh giá tổng: ✅ đăng được / ⚠️ cần sửa / ❌ diện tìm kiếm quá hẹp
+## Mục cần sửa ưu tiên (Top 3, xếp theo mức tăng hiển thị tìm kiếm dự kiến)
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **读取内容** — 取全文、标题、标签/话题、封面或首帧文字（视频取标题+简介+字幕关键帧）。
-2. **确定平台与目标词** — 无目标词时，从内容主题反推用户可能搜的关键词与长尾词（谁在搜、搜什么、用什么说法）。
-3. **加载平台规则** — 读 `references/platform-search.md` 中对应平台的搜索信号与关键词布局规则。
-4. **逐项校验** — 按该平台规则打分：关键词是否前置、密度是否自然、标签是否踩中搜索热词、封面/首帧是否含可搜文字。
-5. **诊断流量取舍** — 判断内容当前偏推荐还是搜索，给出为搜索补强而不牺牲可读性的改法。
-6. **（可选）网页/博客模式** — 内容是公众号被百度收录的长文、知乎要冲搜索引擎、或独立站/博客时，读 `references/web-blog-seo.md` 追加 web SEO 校验。
-7. **排优先级并写产物** — 选出增益最大的 Top 3，保存到 `outputs/<具体主题>/seo-report.md`。
+1. **Đọc nội dung** - lấy toàn văn, tiêu đề, hashtag/chủ đề, chữ trên ảnh bìa hoặc khung đầu (video thì lấy tiêu đề + mô tả + khung phụ đề chính).
+2. **Chốt nền tảng và từ khoá mục tiêu** - không có từ mục tiêu thì suy ngược từ chủ đề nội dung ra từ khoá và từ khoá đuôi dài người dùng có thể tìm (ai tìm, tìm gì, nói bằng cách nào).
+3. **Nạp quy tắc nền tảng** - đọc trong `references/platform-search.md` phần tín hiệu tìm kiếm và cách bố trí từ khoá của nền tảng tương ứng.
+4. **Soát từng mục** - chấm theo quy tắc của nền tảng đó: từ khoá có đặt lên trước không, mật độ có tự nhiên không, hashtag có trúng từ hot trong tìm kiếm không, ảnh bìa/khung đầu có chữ tìm được không.
+5. **Chẩn đoán đánh đổi lưu lượng** - xác định nội dung đang nghiêng về đề xuất hay tìm kiếm, đưa cách bổ sung cho tìm kiếm mà không hy sinh độ dễ đọc.
+6. **(Tuỳ chọn) chế độ trang web/blog** - khi nội dung là bài dài trên WeChat OA được Baidu lập chỉ mục, câu trả lời Zhihu muốn lên công cụ tìm kiếm, hoặc website/blog riêng, đọc `references/web-blog-seo.md` để soát thêm phần web SEO.
+7. **Xếp ưu tiên và ghi sản phẩm** - chọn Top 3 tăng ích nhiều nhất, lưu vào `outputs/<chủ đề>/seo-report.md`.
 
-## 平台速览
+## Nhìn nhanh theo nền tảng
 
-各平台搜索机制差异很大，详细规则见 `references/platform-search.md`。核心分歧：
+Cơ chế tìm kiếm của các nền tảng khác nhau rất nhiều, quy tắc chi tiết xem `references/platform-search.md`. Khác biệt cốt lõi:
 
-| 平台 | 搜索入口 | 最关键的搜索信号 |
+| Nền tảng | Cửa tìm kiếm | Tín hiệu tìm kiếm quan trọng nhất |
 |------|----------|------------------|
-| 小红书 | 站内搜索框 | 标题+正文关键词、话题标签、封面文字、收藏量 |
-| 抖音 | 搜索 + 视频推荐搜索卡位 | 标题/文案关键词、话题词、完播与互动 |
-| 知乎 | 站内搜索 + 百度/谷歌收录 | 问题匹配、回答质量信号；**web SEO 在此适用** |
-| 公众号 | 微信搜一搜 | 标题关键词、原创标、账号权重、被搜历史 |
-| B站 | 站内搜索 | 标题/tag/简介关键词、播放与完播 |
-| 微博 | 话题/超话/热搜 | 话题词 #、时效性、互动量 |
+| Xiaohongshu | Ô tìm kiếm nội sàn | Từ khoá tiêu đề + thân bài, hashtag chủ đề, chữ ảnh bìa, lượt lưu |
+| Douyin | Tìm kiếm + ô tìm kiếm chèn trong luồng đề xuất video | Từ khoá tiêu đề/nội dung, từ chủ đề, tỉ lệ xem hết và tương tác |
+| Zhihu | Tìm kiếm nội sàn + được Baidu/Google lập chỉ mục | Khớp câu hỏi, tín hiệu chất lượng câu trả lời; **web SEO áp dụng ở đây** |
+| WeChat OA | WeChat Search | Từ khoá tiêu đề, nhãn bài nguyên gốc, trọng số kênh, lịch sử được tìm |
+| Bilibili | Tìm kiếm nội sàn | Từ khoá tiêu đề/tag/mô tả, lượt xem và tỉ lệ xem hết |
+| Weibo | Chủ đề/super topic/bảng tìm kiếm nóng | Từ chủ đề #, tính thời sự, lượng tương tác |
 
-**适用边界**：Meta 描述、Open Graph、URL/Slug、H1/H2 层级、E-E-A-T 这类 web SEO 只对"会被搜索引擎（百度/谷歌）抓取"的内容有效——知乎回答、独立站/博客、被外部收录的公众号文章。纯站内内容（小红书/抖音/B站/微博）不吃这套，别套。
+**Ranh giới áp dụng**: Meta description, Open Graph, URL/Slug, phân cấp H1/H2, E-E-A-T - nhóm web SEO này chỉ có tác dụng với nội dung "bị công cụ tìm kiếm (Baidu/Google) thu thập": câu trả lời Zhihu, website/blog riêng, bài WeChat OA được lập chỉ mục ra ngoài. Nội dung thuần nội sàn (Xiaohongshu/Douyin/Bilibili/Weibo) không ăn bộ này, đừng áp.
 
-## 检查原则
+## Nguyên tắc kiểm
 
-- **关键词前置** — 用户搜索时系统优先匹配靠前的词；标题前段、正文首句放核心词。
-- **说人话的词** — 命中用户真实搜索用语，而非行业黑话或自造词。
-- **密度自然** — 关键词覆盖到位即可，堆砌反而被判低质、限流。
-- **标签是搜索权重不是装饰** — 话题标签直接进搜索索引，选高搜索量且相关的。
-- **封面/首帧可被搜** — 部分平台 OCR 封面文字进索引，封面文案也要含关键词。
-- **搜索与推荐可兼得** — 优先在不牺牲钩子和可读性的前提下补关键词，冲突时按内容目标取舍。
+- **Đặt từ khoá lên trước** - khi người dùng tìm, hệ thống ưu tiên khớp các từ nằm ở đầu; để từ khoá chính ở đầu tiêu đề và câu đầu thân bài.
+- **Dùng từ người thật hay nói** - trúng đúng cách nói người dùng thật sự gõ, không phải tiếng lóng ngành hay từ tự chế.
+- **Mật độ tự nhiên** - từ khoá phủ đủ là được, nhồi nhét còn bị chấm kém chất lượng và bị bóp tương tác.
+- **Hashtag là trọng số tìm kiếm, không phải trang trí** - hashtag chủ đề vào thẳng chỉ mục tìm kiếm, chọn loại có lượng tìm cao và liên quan.
+- **Ảnh bìa/khung đầu cũng tìm được** - một số nền tảng OCR chữ trên ảnh bìa để đưa vào chỉ mục, chữ trên bìa cũng phải có từ khoá.
+- **Tìm kiếm và đề xuất có thể cùng đạt** - ưu tiên bổ sung từ khoá mà không hy sinh hook và độ dễ đọc, xung đột thì chọn theo mục tiêu nội dung.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：读 `platform` 锁定平台规则；读 `audience` 反推该人群的搜索用语；读账号常用 `hashtag_sets` 优先复用高权重标签；读 `preferences` 规避红线词。
-- **无 Profile**：询问目标平台与想覆盖的搜索场景，按 `references/platform-search.md` 通用规则校验，末尾附注"提供账号 Profile 可获得更贴合受众搜索习惯的关键词建议"。
+- **Có Profile**: đọc `platform` để khoá quy tắc nền tảng; đọc `audience` để suy ra cách tìm kiếm của nhóm khán giả đó; đọc `hashtag_sets` quen dùng của kênh để tái dùng hashtag trọng số cao; đọc `preferences` để né từ cấm.
+- **Không có Profile**: hỏi nền tảng mục tiêu và tình huống tìm kiếm muốn phủ, soát theo quy tắc chung trong `references/platform-search.md`, cuối bài ghi chú "cung cấp Profile của kênh sẽ nhận được gợi ý từ khoá bám sát thói quen tìm kiếm của khán giả hơn".

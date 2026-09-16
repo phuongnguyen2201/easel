@@ -8,57 +8,57 @@ description: >-
 layer: produce
 ---
 
-# 金句卡片
+# Thẻ câu đắt
 
-> HTML 单图渲染 → 截图分享。16:9 横版，一句 hero 金句 / 一组核心数据。
+> Render HTML thành một ảnh → chụp màn hình để chia sẻ. Khung ngang 16:9, một câu hero đắt / một cụm số liệu chính.
 
-> ⚠️ **生成前先读 [card-design](../card-design/SKILL.md) 设计系统**（选立场/锁配色/字越大越细/禁 AI 廉价感）。金句卡尤其靠排版层级——避免渐变文字、粗黑大标题、居中一切。
+> ⚠️ **Trước khi tạo phải đọc hệ thống thiết kế [card-design](../card-design/SKILL.md)** (chọn lập trường/khoá bảng màu/chữ càng lớn càng mảnh/cấm cảm giác AI rẻ tiền). Thẻ câu đắt đặc biệt sống nhờ phân cấp bố cục - tránh chữ gradient, tiêu đề đen đậm, căn giữa mọi thứ.
 
-## 骨架（二选一，按内容是"观点"还是"数字"）
+## Bộ khung (chọn 1 trong 2, tuỳ nội dung là "quan điểm" hay "con số")
 
-先按 card-design 选风格锁配色，再套下面对应骨架。
+Trước tiên theo card-design chọn phong cách và khoá bảng màu, rồi áp bộ khung tương ứng bên dưới.
 
-### A. 金句卡（一句 hero 观点）
+### A. Thẻ câu đắt (một quan điểm hero)
 
-- 容器 `w-[1600px] h-[900px]`，暗色 / 亮色按内容情绪二选一。
-- 中央一句 hero 金句（**字越大越细**，限 2-3 行，最戳的词用 1 个强调色）。
-- 下方署名 / 出处（无个人 handle 时用来源或品牌名，不硬塞头像占位）。
-- 左上角小标签（`Insight` / `观点` / `Quote`）；右下角品牌水印。
-- 微妙纹理（grid / dot / 极淡 noise），禁玻璃拟态与渐变文字。
+- Khung chứa `w-[1600px] h-[900px]`, chọn nền tối / nền sáng tuỳ cảm xúc nội dung.
+- Giữa thẻ là một câu hero đắt (**chữ càng lớn càng mảnh**, giới hạn 2-3 dòng, từ đắt nhất dùng 1 màu nhấn).
+- Bên dưới là chữ ký / nguồn trích (không có handle cá nhân thì dùng tên nguồn hoặc tên thương hiệu, đừng nhét chỗ trống ảnh đại diện).
+- Góc trên bên trái gắn nhãn nhỏ (`Insight` / `Quan điểm` / `Quote`); góc dưới bên phải là watermark thương hiệu.
+- Vân nền tinh tế (grid / dot / noise rất nhạt), cấm glassmorphism và chữ gradient.
 
-### B. 数据卡（一组核心数字）
+### B. Thẻ số liệu (một cụm số chính)
 
-- 同画幅，1 个主数字**超大字**（占视觉中心）+ 单位/说明小字在旁。
-- 2-4 个副指标横向排开，每个「大数字 + 一行标签」，对齐到网格。
-- 可加一句结论/来源脚注（`数据来源 · 截至 X`）建立可信度。
-- 数字用等宽或 Inter Tight，避免用 emoji 当图标。
+- Cùng khung hình, 1 số chính **cỡ chữ cực lớn** (chiếm tâm thị giác) + đơn vị/chú thích chữ nhỏ bên cạnh.
+- 2-4 chỉ số phụ xếp ngang, mỗi cái là "số lớn + một dòng nhãn", căn theo lưới.
+- Có thể thêm một câu kết luận/chú thích nguồn (`Nguồn dữ liệu · tính đến X`) để tăng độ tin cậy.
+- Số dùng font đều nét hoặc Inter Tight, tránh dùng emoji làm icon.
 
-## 国内平台适配
+## Thích ứng theo nền tảng
 
-- **微博**：横版直接配文；金句要短、能被单独转发；水印放品牌名。
-- **知乎**：偏理性，数据卡 + 一句结论最合适；出处/来源要显。
-- **公众号**：可作文中配图或封面延展；配色跟公众号主色。
-- **X/Twitter（出海）**：可保留 handle 署名；其余同金句卡。
+- **Facebook**: khung ngang gắn thẳng vào bài; câu đắt phải ngắn, tách ra share riêng vẫn hiểu; watermark để tên thương hiệu.
+- **LinkedIn**: thiên về lý tính, thẻ số liệu + một câu kết luận là hợp nhất; nguồn trích phải rõ.
+- **Blog/website**: dùng làm ảnh minh hoạ trong bài hoặc mở rộng thành ảnh bìa; bảng màu theo màu chủ đạo của trang.
+- **X/Threads (thị trường quốc tế)**: giữ handle trong phần chữ ký; còn lại giống thẻ câu đắt.
 
-## 渲染出图（必做，勿手动截图）
+## Render ra ảnh (bắt buộc, đừng chụp màn hình thủ công)
 
-生成 HTML 后，用共享渲染脚本自动出图（playwright + chromium，已配置走代理加载 CDN/字体）：
+Sau khi tạo HTML, dùng script render dùng chung để tự xuất ảnh (playwright + chromium, đã cấu hình đi qua proxy để tải CDN/font):
 
 ```bash
 python skills/shared/scripts/render_card.py \
-  --html outputs/主题名/assets/card.html \
-  --out outputs/主题名/card.png \
+  --html "outputs/<chủ đề>/assets/card.html" \
+  --out "outputs/<chủ đề>/card.png" \
   --full-page --width 1600 --height 900
 ```
 
-- 16:9 横版用 `--width 1600 --height 900`。
-- 脚本对外部 CDN/字体做有界超时（默认 20s 超时也继续），不会卡死；用环境代理加载 Tailwind/Google Fonts。
-- 首次使用需 `pip install playwright && playwright install chromium`（见项目依赖说明）。
+- Khung ngang 16:9 dùng `--width 1600 --height 900`.
+- Script đặt timeout có giới hạn cho CDN/font bên ngoài (mặc định quá 20s vẫn chạy tiếp), không treo; dùng proxy môi trường để tải Tailwind/Google Fonts.
+- Lần đầu dùng cần `pip install playwright && playwright install chromium` (xem phần phụ thuộc của dự án).
 
-## 与其他卡片 SKILL 的区别
+## Khác biệt với các SKILL thẻ khác
 
-三者都是"HTML 单图 → 截图"，仅画幅与场景不同，互不替代：
+Cả ba đều là "HTML một ảnh → chụp màn hình", chỉ khác khung hình và tình huống, không thay thế nhau:
 
-- **card-quote（本 SKILL）** = 16:9 横版金句/数据卡，一句 hero 观点或一组核心数字，配微博 / 知乎 / X / 公众号。
-- **card-xiaohongshu** = 1080×1440 竖版小红书知识卡（走 card-design 风格库），可多张联排滑动浏览。承载多观点、成套干货时用它。
-- **poster-hero** = 1080×1920 竖版营销海报 / 朋友圈分享图，大标题 + 卖点 + 二维码，用于产品发布、活动宣传。
+- **card-quote (SKILL này)** = thẻ câu đắt/số liệu khung ngang 16:9, một quan điểm hero hoặc một cụm số chính, hợp Facebook / LinkedIn / X / blog.
+- **card-xiaohongshu** = thẻ kiến thức dọc 1080×1440 (theo thư viện phong cách card-design), ghép nhiều tấm để lướt được. Dùng khi cần chở nhiều quan điểm, bộ kiến thức trọn gói.
+- **poster-hero** = poster marketing dọc 1080×1920 / ảnh chia sẻ lên story/feed, tiêu đề lớn + điểm bán + mã QR, dùng cho ra mắt sản phẩm, quảng bá sự kiện.

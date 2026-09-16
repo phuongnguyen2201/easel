@@ -8,83 +8,83 @@ description: >-
 layer: produce
 ---
 
-# 营销文案写作
+# Viết nội dung marketing
 
-> 为国内营销场景撰写和优化高转化文案：种草、信息流广告、卖点提炼、活动促销、电商详情页、落地页。套经典框架，落国内语境。
+> Viết và tối ưu nội dung chuyển đổi cao cho bối cảnh marketing trong nước: seeding, quảng cáo feed, chắt lọc điểm bán, khuyến mãi sự kiện, trang chi tiết sản phẩm, landing page. Áp khung kinh điển, đặt vào ngữ cảnh trong nước.
 
-## 职责边界
+## Ranh giới trách nhiệm
 
-| 场景 | 交给谁 | 为什么 |
+| Tình huống | Giao cho ai | Vì sao |
 |------|--------|--------|
-| **卖货/转化导向的营销文案**（种草卖点、信息流广告、活动、详情页、落地页） | **本 SKILL** | 以"促成购买/转化"为目标，讲卖点、讲收益、给 CTA |
-| **整套小红书笔记**（多卡片 + caption + hashtags + 去 AI + 校验全流程） | `xhs-note-creator` | 小红书图文/种草的总入口，不是单条文案 |
-| 通用社媒内容（多平台原生格式、钩子、标签、互动引导） | `social-content` | 偏内容运营/涨粉互动，不强转化 |
-| 严格套 PAS/AIDA/BAB/STAR 框架的结构化帖子（200-250 字、移动端排版） | `post-formatter` | 专做单一框架的规范化帖子 |
+| **Nội dung marketing hướng bán hàng/chuyển đổi** (điểm bán seeding, quảng cáo feed, sự kiện, trang sản phẩm, landing page) | **SKILL này** | Lấy mục tiêu "thúc đẩy mua/chuyển đổi", nói điểm bán, nói lợi ích, đưa CTA |
+| **Bài ảnh-chữ trọn bộ** (nhiều thẻ + caption + hashtags + khử mùi AI + kiểm tra cả quy trình) | `xhs-note-creator` | Cửa vào chính cho bài ảnh-chữ/seeding, không phải một đoạn nội dung lẻ |
+| Nội dung social phổ thông (định dạng bản địa đa nền tảng, hook, hashtag, dẫn dắt tương tác) | `social-content` | Thiên về vận hành nội dung/tăng follow, không ép chuyển đổi |
+| Bài có cấu trúc ép đúng khung PAS/AIDA/BAB/STAR (200-250 chữ, dàn trang cho mobile) | `post-formatter` | Chuyên làm bài chuẩn hoá theo một khung duy nhất |
 
-一句话分工：**要卖货找 copywriting，要整套小红书笔记找 xhs-note-creator，要涨粉找 social-content，要套固定框架排版找 post-formatter。** 可串联（本 SKILL 出卖点文案 → post-formatter 排成帖子 → social-content 适配多平台）。
+Phân vai một câu: **muốn bán hàng thì tìm copywriting, muốn bài ảnh-chữ trọn bộ thì tìm xhs-note-creator, muốn tăng follow thì tìm social-content, muốn ép khung cố định và dàn trang thì tìm post-formatter.** Có thể nối chuỗi (SKILL này ra nội dung điểm bán → post-formatter dàn thành bài → social-content thích ứng nhiều nền tảng).
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供以下信息（缺失时主动询问）：
+Người dùng cung cấp các thông tin sau trong prompt (thiếu thì chủ động hỏi):
 
-1. **文案类型** — 种草 / 信息流广告 / 卖点提炼 / 活动促销 / 详情页 / 落地页
-2. **产品/服务** — 卖什么、核心卖点、与竞品的差异、能带来的结果
-3. **目标动作** — 希望用户做什么（下单、领券、加购、点击链接、私信咨询、到店）
-4. **投放场景/平台** — 小红书 / 抖音信息流 / 朋友圈广告 / 电商平台 / 落地页等（影响长度、语气、CTA 形式）
-5. **证据素材**（如有）— 销量、评价、成分/参数、案例、资质
-6. **受众** — 谁看、什么消费顾虑
+1. **Loại nội dung** - seeding / quảng cáo feed / chắt lọc điểm bán / khuyến mãi sự kiện / trang sản phẩm / landing page
+2. **Sản phẩm/dịch vụ** - bán gì, điểm bán cốt lõi, khác gì đối thủ, mang lại kết quả gì
+3. **Hành động mục tiêu** - muốn người dùng làm gì (đặt hàng, nhận voucher, thêm giỏ, bấm link, nhắn tin tư vấn, tới cửa hàng)
+4. **Bối cảnh/nền tảng chạy** - Facebook / feed quảng cáo TikTok / quảng cáo story-feed / sàn thương mại điện tử / landing page... (ảnh hưởng độ dài, giọng, dạng CTA)
+5. **Tư liệu làm bằng chứng** (nếu có) - doanh số, đánh giá, thành phần/thông số, case, chứng nhận
+6. **Khán giả** - ai đọc, băn khoăn gì khi mua
 
-## 输出
+## Đầu ra
 
-按文案类型交付对应结构（详见 `references/copy-frameworks.md`），通常包含：
+Giao đúng cấu trúc theo loại nội dung (chi tiết xem `references/copy-frameworks.md`), thường gồm:
 
-- **主标题/开头钩子** + 2-3 个备选
-- **正文**（按所选框架组织：痛点→方案→卖点→信任→CTA 等）
-- **卖点清单**（FAB：功能→优势→利益，逐条）
-- **CTA/行动引导** + 2-3 个备选
-- **关键元素标注**：说明选择理由和所用框架/原则
+- **Tiêu đề chính/hook mở đầu** + 2-3 phương án dự phòng
+- **Thân bài** (tổ chức theo khung đã chọn: điểm đau → giải pháp → điểm bán → tin cậy → CTA...)
+- **Danh sách điểm bán** (FAB: tính năng → ưu thế → lợi ích, từng dòng)
+- **CTA/dẫn dắt hành động** + 2-3 phương án dự phòng
+- **Chú thích các yếu tố then chốt**: nói rõ lý do chọn và khung/nguyên tắc đã dùng
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **收集上下文** — 确认文案类型、产品卖点、目标动作、投放场景、受众、证据；缺失项主动询问。
-2. **确定语气** — 按 Profile 或用户指示定调（种草偏亲切真实、信息流偏直给、活动偏紧迫、详情页偏专业）。
-3. **提炼卖点** — 用 FAB 把产品特性翻译成用户利益（框架定义见 `skills/shared/references/copy-frameworks.md`），排出主次。
-4. **选框架搭结构** — 按内容目的从 `skills/shared/references/copy-frameworks.md` 选框架（AIDA / PAS / FAB / 4U / BAB），再按文案类型从 `references/copy-frameworks.md` 取对应**结构模板**。
-5. **写标题/钩子** — 用 `skills/shared/references/hook-title-formulas.md` 的标题/钩子公式产出 2-3 个备选。
-6. **填正文** — 逐段推进，一段一论点；用 `references/natural-transitions.md` 保持衔接自然、口语流畅。
-7. **打磨风格 + 去 AI 门（强制）** — 按 `references/writing-style-rules.md` 抓**营销文案特有**的风格（讲利益、信任前置、反问/类比、CTA 给理由）；**去 AI 味走 text-polisher 权威源并过门禁**（`../text-polisher/references/{phrases-to-remove,structures-to-avoid,zh-ai-markers}.md`）——AI 味自检 **≥45/50**、综合质量 **≥35/50**，不达标先改再交付。本 SKILL 不维护去 AI 副本。
-8. **写 CTA** — 按目标动作产出 2-3 个 CTA 备选。
-9. **字数校验（有长度约束的类型必做）** — 信息流广告、详情页首屏、落地页等有字符/篇幅限制的，用脚本判定不靠肉眼数：
+1. **Thu thập bối cảnh** - xác nhận loại nội dung, điểm bán sản phẩm, hành động mục tiêu, bối cảnh chạy, khán giả, bằng chứng; thiếu gì chủ động hỏi.
+2. **Chốt giọng** - định giọng theo Profile hoặc chỉ dẫn của người dùng (seeding thiên gần gũi chân thật, feed thiên nói thẳng, sự kiện thiên gấp gáp, trang sản phẩm thiên chuyên nghiệp).
+3. **Chắt lọc điểm bán** - dùng FAB để dịch đặc tính sản phẩm thành lợi ích người dùng (định nghĩa khung xem `skills/shared/references/copy-frameworks.md`), xếp thứ tự chính phụ.
+4. **Chọn khung, dựng cấu trúc** - theo mục đích nội dung mà chọn khung trong `skills/shared/references/copy-frameworks.md` (AIDA / PAS / FAB / 4U / BAB), rồi theo loại nội dung lấy **mẫu cấu trúc** tương ứng trong `references/copy-frameworks.md`.
+5. **Viết tiêu đề/hook** - dùng công thức tiêu đề/hook trong `skills/shared/references/hook-title-formulas.md` để ra 2-3 phương án.
+6. **Lấp thân bài** - đẩy từng đoạn, mỗi đoạn một luận điểm; dùng `references/natural-transitions.md` để giữ mạch nối tự nhiên, khẩu ngữ trôi chảy.
+7. **Gọt phong cách + cửa khử mùi AI (bắt buộc)** - theo `references/writing-style-rules.md` để bắt phong cách **đặc thù của nội dung marketing** (nói lợi ích, tín hiệu tin cậy lên trước, câu hỏi tu từ/so sánh, CTA phải có lý do); **khử mùi AI đi theo nguồn chuẩn text-polisher và phải qua cửa** (`../text-polisher/references/{phrases-to-remove,structures-to-avoid,zh-ai-markers}.md`) - tự chấm mùi AI **≥45/50**, chất lượng tổng **≥35/50**, chưa đạt thì sửa rồi mới giao. SKILL này không giữ bản sao quy tắc khử AI.
+8. **Viết CTA** - theo hành động mục tiêu, ra 2-3 phương án CTA.
+9. **Kiểm số chữ (bắt buộc với loại có ràng buộc độ dài)** - quảng cáo feed, màn đầu trang sản phẩm, landing page... có giới hạn ký tự/dung lượng thì dùng script để phán, không đếm bằng mắt:
    ```bash
-   python3 skills/shared/scripts/wordcount.py count -f outputs/主题名/copy.txt
+   python3 skills/shared/scripts/wordcount.py count -f "outputs/<chủ đề>/copy.txt"
    ```
-   读 `social_count` 与投放位的字符上限比对，超限交给 `text-condenser` 压缩后重数。
-10. **组装交付** — 按「输出」格式组装文案 + 标注 + 备选，写入 `outputs/`。
+   Đọc `social_count` rồi đối chiếu với giới hạn ký tự của vị trí đăng, vượt thì giao `text-condenser` nén rồi đếm lại.
+10. **Lắp ráp và giao** - ráp nội dung + chú thích + phương án dự phòng theo định dạng "Đầu ra", ghi vào `outputs/`.
 
-## 文案核心原则
+## Nguyên tắc cốt lõi khi viết
 
-- **清晰优先** — 清晰与创意冲突时选清晰，用户 3 秒内看懂在卖什么。
-- **讲利益不讲功能** — 特性说"它是什么"，利益说"这对你意味着什么"（FAB 的核心）。
-- **要具体** — "早八通勤 10 分钟出门不迟到" > "省时高效"；有数字用数字。
-- **用用户的话** — 镜像评论区、笔记、咨询里的真实说法，不用品牌自嗨词。
-- **一段一论点** — 每段只推进一个论据，沿文案构建"心动→信任→行动"链路。
-- **信任前置** — 国内消费决策重口碑与从众，销量/评价/资质等信任信号要早出现。
-- **CTA 要给理由** — 不只说"点击购买"，配上为什么现在买（限时、限量、赠品、价格锚点）。
+- **Rõ ràng trước tiên** - khi rõ ràng xung đột với sáng tạo thì chọn rõ ràng, người đọc hiểu đang bán gì trong 3 giây.
+- **Nói lợi ích chứ không nói tính năng** - tính năng nói "nó là gì", lợi ích nói "điều đó nghĩa là gì với bạn" (cốt lõi của FAB).
+- **Phải cụ thể** - "8 giờ sáng ra khỏi nhà trong 10 phút vẫn kịp giờ" > "tiết kiệm thời gian, hiệu quả"; có số thì dùng số.
+- **Dùng lời của người dùng** - soi gương cách nói thật trong bình luận, bài viết, tin nhắn tư vấn, đừng dùng từ tự sướng của thương hiệu.
+- **Mỗi đoạn một luận điểm** - mỗi đoạn chỉ đẩy một luận cứ, dựng chuỗi "rung động → tin tưởng → hành động" dọc bài.
+- **Tín hiệu tin cậy lên trước** - quyết định mua trong nước nặng về đánh giá và tâm lý đám đông, nên doanh số/đánh giá/chứng nhận phải xuất hiện sớm.
+- **CTA phải có lý do** - đừng chỉ nói "bấm mua", kèm theo vì sao phải mua ngay (giới hạn thời gian, giới hạn số lượng, quà tặng, mỏ neo giá).
 
-## 文案类型速览
+## Lướt nhanh các loại nội dung
 
-各类型的结构模板与写法要点见 `references/copy-frameworks.md`（框架定义见 `skills/shared/references/copy-frameworks.md`）。核心差异：
+Mẫu cấu trúc và điểm mấu chốt của từng loại xem `references/copy-frameworks.md` (định nghĩa khung xem `skills/shared/references/copy-frameworks.md`). Khác biệt cốt lõi:
 
-| 类型 | 主用框架 | 语气 | 关键 |
+| Loại | Khung chính | Giọng | Mấu chốt |
 |------|----------|------|------|
-| 种草文案 | 痛点-方案 / 亲测体验 | 亲切、真实、去广告感 | 场景代入、真实体验、避免硬广被限流 |
-| 信息流广告 | AIDA / 4U | 直给、抓眼 | 前 1 行定生死、利益前置、CTA 明确 |
-| 卖点提炼 | FAB | 精炼 | 特性→优势→利益逐条翻译，排主次 |
-| 活动/促销 | 紧迫+价值锚点 | 有节奏、有紧迫感 | 力度清晰、制造紧迫、降低决策成本 |
-| 详情页 | FAB + 异议处理 | 专业、可信 | 卖点分层、参数可视化、打消顾虑 |
-| 落地页/产品页 | AIDA + 结构化版块 | 依受众 | 首屏价值主张、信任背书、单一主 CTA |
+| Bài seeding | Điểm đau-giải pháp / trải nghiệm thật | Gần gũi, chân thật, bớt mùi quảng cáo | Đặt vào bối cảnh, trải nghiệm thật, tránh quảng cáo lộ liễu bị bóp tương tác |
+| Quảng cáo feed | AIDA / 4U | Nói thẳng, bắt mắt | Dòng đầu định sống chết, lợi ích lên trước, CTA rõ ràng |
+| Chắt lọc điểm bán | FAB | Cô đọng | Dịch từng dòng tính năng → ưu thế → lợi ích, xếp chính phụ |
+| Sự kiện/khuyến mãi | Gấp gáp + mỏ neo giá trị | Có nhịp, có sức ép thời gian | Mức ưu đãi rõ, tạo gấp gáp, giảm chi phí ra quyết định |
+| Trang sản phẩm | FAB + xử lý phản đối | Chuyên nghiệp, đáng tin | Phân tầng điểm bán, trực quan hoá thông số, dẹp băn khoăn |
+| Landing page/trang sản phẩm | AIDA + khối có cấu trúc | Tuỳ khán giả | Tuyên ngôn giá trị ở màn đầu, bảo chứng tin cậy, một CTA chính duy nhất |
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：读 `style.md`（语气/表达风格）、`audience.md`（受众画像）、`preferences.md`（红线禁忌），文案调性、措辞、卖点角度全部对齐 Profile。
-- **无 Profile**：主动询问语气偏好（亲切/专业/紧迫）、受众、品牌个性；未提供则退回通用专业语气，交付末尾附注"如提供账号 Profile 可获得更贴合品牌的文案"。
+- **Có Profile**: đọc `style.md` (giọng/phong cách diễn đạt), `audience.md` (hồ sơ khán giả), `preferences.md` (lằn ranh đỏ, điều cấm kỵ), chỉnh tông giọng, câu chữ, góc điểm bán khớp hết với Profile.
+- **Không có Profile**: chủ động hỏi giọng ưa thích (gần gũi/chuyên nghiệp/gấp gáp), khán giả, cá tính thương hiệu; không có thì lùi về giọng chuyên nghiệp phổ thông, cuối bản giao ghi chú "nếu cung cấp Profile của kênh sẽ có nội dung bám thương hiệu hơn".

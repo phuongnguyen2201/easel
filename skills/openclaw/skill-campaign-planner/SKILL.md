@@ -7,55 +7,55 @@ description: >-
 layer: plan
 ---
 
-# 活动 / 营销策划（campaign-planner）
+# Lập kế hoạch sự kiện / marketing (campaign-planner)
 
-> 产出一份可落地的营销活动方案，覆盖目标→节奏→内容矩阵→玩法→资源→风险→复盘指标。
-> 领域方法在 `references/campaign-frameworks.md`，本文件只讲流程。**定义规则与模型，不套具体案例。**
+> Ra một phương án campaign marketing chạy được thật, phủ mục tiêu -> nhịp -> ma trận nội dung -> minigame -> nguồn lực -> rủi ro -> chỉ số hậu kiểm.
+> Phương pháp chuyên môn nằm ở `references/campaign-frameworks.md`, file này chỉ nói quy trình. **Định nghĩa quy tắc và mô hình, không áp case cụ thể.**
 
-> 单条选题蹭热点见 skill-trend-rider；系列内容规划见 skill-content-strategy；
-> 商单/联名见 skill-collab-proposal；本 SKILL 做**一次营销活动的整体策划**。
+> Bắt trend cho một đề tài đơn lẻ xem skill-trend-rider; quy hoạch nội dung theo series xem skill-content-strategy;
+> Booking quảng cáo/collab xem skill-collab-proposal; SKILL này lo **toàn bộ kế hoạch cho một campaign marketing**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 活动类型 | 是 | 节日营销 / 电商大促 / 新品发布 / 活动造势 / 周年庆等 |
-| 目标 | 推荐 | 涨粉 / 转化 / 声量 / 拉新 / 清库存（决定节奏与玩法侧重） |
-| 时间 | 推荐 | 活动日期 / 大促节点（决定预热-爆发-返场排期） |
-| 资源 | 可选 | 预算、可用平台、是否有 KOL/达人、产品/优惠力度 |
+| Loại campaign | Có | Marketing dịp lễ / đợt sale lớn sàn TMĐT / ra mắt sản phẩm / tạo sóng sự kiện / kỷ niệm thành lập... |
+| Mục tiêu | Nên có | Tăng follow / chuyển đổi / độ phủ / kéo khách mới / xả tồn kho (quyết định nhịp và trọng tâm minigame) |
+| Thời gian | Nên có | Ngày diễn ra / mốc đợt sale lớn (quyết định lịch khởi động - bùng nổ - kéo dài) |
+| Nguồn lực | Tuỳ chọn | Ngân sách, nền tảng dùng được, có KOL/KOC hay không, sản phẩm/mức ưu đãi |
 
-信息不全时先补齐关键项（类型/目标/时间），再出方案。
+Thiếu thông tin thì bổ sung các mục then chốt (loại/mục tiêu/thời gian) trước, rồi mới ra phương án.
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **判定活动类型与核心目标**，读 `references/campaign-frameworks.md`「一、目标→打法映射」确定主打法
-   （声量型/转化型/拉新型策略侧重不同）。
-2. **搭营销节奏**：按「二、营销节奏模型」拆成 预热期 / 爆发期 / 返场期（大促再加 蓄水/尾款 等节点），
-   每阶段定目标、内容重点、发布密度。
-3. **排内容矩阵**：按「三、内容矩阵」把 各阶段 × 各平台 × 内容形式 排成表（哪个平台承担种草/转化/造势）。
-   跨平台适配交给 skill-cross-platform-publish 落地。
-4. **设计互动玩法**：从「四、玩法库」选契合目标的玩法（抽奖/挑战赛/晒单/预约/拼团/联名等），说明机制与目的。
-5. **资源分配**：按「五、KOL 分层与预算」给达人分层建议（头部造势/腰部种草/素人铺量）与预算大致比例。
-6. **风险与合规**：按「六、风险与合规红线」列此类活动的常见坑（虚假宣传、诱导、平台规则、舆情）。
-7. **效果指标**：按「七、效果指标」给分阶段可量化 KPI 与复盘口径（配合 skill-social-performance-review）。
-8. 输出结构化方案：目标 → 节奏排期表 → 内容矩阵表 → 玩法 → 资源/预算 → 风险 → KPI。
+1. **Xác định loại campaign và mục tiêu cốt lõi**, đọc `references/campaign-frameworks.md` mục "I. Ánh xạ mục tiêu -> cách đánh" để chốt cách đánh chính
+   (kiểu độ phủ/kiểu chuyển đổi/kiểu kéo khách mới có trọng tâm chiến lược khác nhau).
+2. **Dựng nhịp campaign**: theo mục "II. Mô hình nhịp marketing" tách thành giai đoạn khởi động / bùng nổ / kéo dài (đợt sale lớn thêm các mốc gom nhu cầu / chốt thanh toán),
+   mỗi giai đoạn chốt mục tiêu, trọng tâm nội dung, mật độ đăng.
+3. **Xếp ma trận nội dung**: theo mục "III. Ma trận nội dung", xếp bảng giai đoạn x nền tảng x định dạng nội dung (nền tảng nào lo seeding/chuyển đổi/tạo sóng).
+   Việc thích ứng đa nền tảng giao cho skill-content-repurposing triển khai.
+4. **Thiết kế minigame tương tác**: từ mục "IV. Thư viện minigame" chọn cơ chế hợp mục tiêu (quay thưởng/thử thách/khoe đơn/đăng ký trước/mua chung/collab...), nói rõ cơ chế và mục đích.
+5. **Phân bổ nguồn lực**: theo mục "V. Phân tầng KOL và ngân sách", đề xuất phân tầng KOL (top tạo sóng/tầm trung seeding/người thường phủ số lượng) và tỉ lệ ngân sách ước lượng.
+6. **Rủi ro và tuân thủ**: theo mục "VI. Rủi ro và lằn ranh tuân thủ", liệt kê bẫy thường gặp của loại campaign này (quảng cáo sai sự thật, dụ dỗ, quy định nền tảng, khủng hoảng truyền thông).
+7. **Chỉ số hiệu quả**: theo mục "VII. Chỉ số hiệu quả", đưa KPI đo được theo từng giai đoạn và cách tính khi hậu kiểm (kết hợp skill-social-performance-review).
+8. Xuất phương án có cấu trúc: mục tiêu -> bảng lịch nhịp -> bảng ma trận nội dung -> minigame -> nguồn lực/ngân sách -> rủi ro -> KPI.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：目标/平台/调性贴合 `identity.md`+`platforms.md`；玩法与文案语气对齐 `style.md`；
-  合规遵守 `preferences.md` 底线；预算/达人建议匹配账号体量。
-- 无 Profile：按活动类型给通用方案，标注需用户补充预算/平台/产品信息以精化。
+- Có Profile: mục tiêu/nền tảng/tông giọng bám `identity.md`+`platforms.md`; minigame và giọng bài viết khớp `style.md`;
+  tuân thủ theo lằn ranh trong `preferences.md`; đề xuất ngân sách/KOL khớp quy mô kênh.
+- Không có Profile: ra phương án chung theo loại campaign, ghi chú cần người dùng bổ sung thông tin ngân sách/nền tảng/sản phẩm để tinh chỉnh.
 
-## 规则
+## Quy tắc
 
-1. 方案必须**可落地**：给具体节奏排期、平台分工、玩法机制，不写空泛口号。
-2. 节奏是核心——预热蓄水、爆发集中、返场收尾，别把火力平摊。
-3. 玩法服务目标：转化型重优惠/紧迫感，声量型重话题/参与感，别乱堆玩法。
-4. 明确风险与合规红线（尤其大促的价格/宣传合规），不建议违规诱导玩法。
-5. 给可量化 KPI 与复盘口径，方案闭环到效果评估。
+1. Phương án bắt buộc **chạy được thật**: đưa lịch nhịp cụ thể, phân vai nền tảng, cơ chế minigame, không viết khẩu hiệu suông.
+2. Nhịp là cốt lõi - khởi động gom nhu cầu, bùng nổ dồn lực, kéo dài chốt hạ, đừng rải đều hoả lực.
+3. Minigame phục vụ mục tiêu: kiểu chuyển đổi nặng ưu đãi/tính cấp bách, kiểu độ phủ nặng chủ đề/cảm giác tham gia, đừng chất bừa minigame.
+4. Nói rõ rủi ro và lằn ranh tuân thủ (nhất là giá/quảng cáo trong đợt sale lớn), không đề xuất minigame dụ dỗ vi phạm.
+5. Đưa KPI đo được và cách tính khi hậu kiểm, phương án khép vòng tới đánh giá hiệu quả.
 
-## 参考来源
+## Nguồn tham khảo
 
-沉淀自内容营销活动通用方法论（营销节奏 预热-爆发-返场、AISAS/AARRR 视角、大促蓄水-尾款节点、
-达人分层投放），本地化到国内平台（小红书种草、抖音爆发、社群转化、公众号沉淀）。框架化为可复用
-模型，不绑定具体品牌案例。
+Đúc kết từ phương pháp luận chung về campaign content marketing (nhịp marketing khởi động - bùng nổ - kéo dài, góc nhìn AISAS/AARRR, mốc gom nhu cầu - chốt thanh toán của đợt sale lớn,
+phân tầng KOL khi chạy), bản địa hoá cho nền tảng nội địa TQ (Xiaohongshu seeding, Douyin bùng nổ, cộng đồng chuyển đổi, WeChat OA tích luỹ). Đóng khung thành mô hình
+dùng lại được, không gắn với case thương hiệu cụ thể.

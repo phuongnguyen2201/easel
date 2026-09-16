@@ -8,95 +8,95 @@ description: >-
 layer: produce
 ---
 
-# 科研论文解读（论文 → 视频 / 图文）
+# Giải thích bài báo khoa học (paper → video / bài ảnh-chữ)
 
-> 把一篇论文讲成普通人/同行都爱看的视频号视频或图文。核心中间产物是一份
-> **结构化 asset library**（一次解析+提炼，视频与图文两条产线共用，不重复调 LLM）。
-> 确定性 IO（拉论文/解析 PDF/骨架）走 `scripts/paper_ingest.py`；**提炼与分镜脚本由你 LLM 完成**——这是本 SKILL 的核心价值。
+> Kể một bài báo thành video hoặc bài ảnh-chữ mà cả người thường lẫn dân trong ngành đều thích xem. Sản phẩm trung gian cốt lõi là một
+> **asset library có cấu trúc** (parse + chắt lọc một lần, hai dây chuyền video và ảnh-chữ dùng chung, không gọi LLM lặp lại).
+> IO tất định (kéo paper/parse PDF/dựng khung) chạy qua `scripts/paper_ingest.py`; **phần chắt lọc và kịch bản phân cảnh do bạn (LLM) làm** - đó là giá trị cốt lõi của SKILL này.
 
-> 视频转图文（反向）见 **video-to-article**；纯格式转换见 **doc-convert**；
-> 只做图表见 **chart-visualization / infographic**；发视频号见 **skill-channels-upload**。
+> Video sang bài ảnh-chữ (chiều ngược) xem **video-to-article**; chỉ đổi định dạng xem **doc-convert**;
+> chỉ làm biểu đồ xem **chart-visualization / infographic**; đăng bài giao SKILL đăng của nền tảng đích (adapter VN, Giai đoạn 5).
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 论文 | 是 | arxiv id（2401.12345）/ arxiv 链接 / 本地 PDF 路径（没给就问） |
-| 目标形态 | 否 | 视频（默认，视频号/B站）/ 图文（知乎/公众号）/ 两者都要 |
-| 视频画幅 | 视频时必填 | 用户或上游任务未明确横版/竖版（或 16:9/9:16/具体分辨率）时，进入视频制作前必须追问并等确认；不得按平台、Profile 或默认值静默推断，已明确则不重复问 |
-| 受众深度 | 否 | 大众科普（默认）/ 同行向（更专业） |
-| 时长 | 否 | 视频默认 2–4 分钟（视频号中视频） |
+| Bài báo | Có | arxiv id (2401.12345) / link arxiv / đường dẫn PDF cục bộ (không đưa thì hỏi) |
+| Dạng đích | Không | Video (mặc định, Video Channels/Bilibili) / bài ảnh-chữ (Zhihu/WeChat OA) / cả hai |
+| Khung hình video | Bắt buộc khi làm video | Khi người dùng hoặc task phía trên chưa nói rõ ngang/dọc (hoặc 16:9/9:16/độ phân giải cụ thể), phải hỏi lại và chờ xác nhận trước khi vào khâu dựng video; không được im lặng suy ra theo nền tảng, Profile hay giá trị mặc định, đã rõ rồi thì đừng hỏi lại |
+| Độ sâu cho khán giả | Không | Phổ thông đại chúng (mặc định) / dành cho dân trong ngành (chuyên sâu hơn) |
+| Thời lượng | Không | Video mặc định 2-4 phút (video dài trung bình trên Video Channels) |
 
-## 产物结构（`outputs/论文简称/`）
+## Cấu trúc sản phẩm (`outputs/<chủ đề>/`)
 
 ```
-article.md               图文版（知乎/公众号）
-final.mp4                成片
+article.md               bản ảnh-chữ (Zhihu/WeChat OA)
+final.mp4                video hoàn chỉnh
 assets/                  paper.pdf / parsed/ / asset-library.json / script.md
-  slide-plan.json        结构化分页（页面唯一输入，口播与屏幕文字分离）
-  slides/                稳定渲染的逐页 PNG + HTML + audit report
-  slides-contact-sheet.jpg  整套视觉复核图
+  slide-plan.json        phân trang có cấu trúc (đầu vào duy nhất của trang, tách lời nói và chữ trên màn hình)
+  slides/                PNG + HTML từng trang render ổn định + audit report
+  slides-contact-sheet.jpg  ảnh soát lại toàn bộ bộ visual
 ```
 
-脚本（相对项目根）：`paper_ingest.py`（解析）+ `render_slides.py`（分页校验/渲染/审计）。
+Script (tương đối so với gốc dự án): `paper_ingest.py` (parse) + `render_slides.py` (kiểm tra phân trang/render/audit).
 
-## 执行步骤
+## Các bước thực hiện
 
-### 1. 取原文 + 解析
+### 1. Lấy bản gốc + parse
 
-1. **环境自检**：`python skills/openclaw/paper-explainer/scripts/paper_ingest.py check`
-   （看 pdfplumber / MinerU token / 代理；缺 pdfplumber 则 `pip install pdfplumber`）。
-2. **拉论文**：`paper_ingest.py fetch --paper <id/url/本地pdf> -o outputs/论文简称/assets/paper.pdf`。
-3. **解析**：`paper_ingest.py parse -i outputs/论文简称/assets/paper.pdf -o outputs/论文简称/assets/parsed/`
-   （有 `MINERU_API_TOKEN` 走 MinerU 含公式/图表结构化，否则 pdfplumber 纯文本 + 尽力抽图）。
+1. **Tự kiểm môi trường**: `python skills/openclaw/paper-explainer/scripts/paper_ingest.py check`
+   (xem pdfplumber / MinerU token / proxy; thiếu pdfplumber thì `pip install pdfplumber`).
+2. **Kéo bài báo**: `paper_ingest.py fetch --paper <id/url/pdf> -o "outputs/<chủ đề>/assets/paper.pdf"`.
+3. **Parse**: `paper_ingest.py parse -i "outputs/<chủ đề>/assets/paper.pdf" -o "outputs/<chủ đề>/assets/parsed/"`
+   (có `MINERU_API_TOKEN` thì đi MinerU, có cấu trúc công thức/biểu đồ; không thì pdfplumber text thuần + cố gắng trích hình).
 
-### 2. 结构化提炼（你来做，核心）
+### 2. Chắt lọc có cấu trúc (bạn làm, phần cốt lõi)
 
-4. 生成骨架：`paper_ingest.py skeleton -o outputs/论文简称/assets/asset-library.json`。
-5. 读 `assets/parsed/content.*`，按 `references/paper-distill-schema.md` 填满 `assets/asset-library.json`：
-   `one_liner`（一句话讲清干了啥）、`problem`/`prior_gap`、`contributions`（≤3 条）、
-   `method`（含**通俗类比** analogy）、`key_figures`（挑 2–4 张关键图，每张写 `plain` 大白话解释）、
-   `results`（含关键数字）、`limitations`、`takeaway`、`terms`（术语通俗表）。
-   **通俗化方法**见 `references/explain-methodology.md`（公式/图表→大白话、类比法、避免堆术语）。
-6. **忠于原文**：不夸大、不编造结论；拿不准的地方标注，别臆测（学术内容错了会被同行抓）。
+4. Sinh khung: `paper_ingest.py skeleton -o "outputs/<chủ đề>/assets/asset-library.json"`.
+5. Đọc `assets/parsed/content.*`, theo `references/paper-distill-schema.md` điền đầy `assets/asset-library.json`:
+   `one_liner` (một câu nói rõ paper làm được gì), `problem`/`prior_gap`, `contributions` (tối đa 3 ý),
+   `method` (kèm **phép so sánh dễ hiểu** analogy), `key_figures` (chọn 2-4 hình then chốt, mỗi hình viết `plain` giải thích bằng lời thường),
+   `results` (kèm số liệu then chốt), `limitations`, `takeaway`, `terms` (bảng thuật ngữ bình dân).
+   **Cách diễn giải bình dân** xem `references/explain-methodology.md` (công thức/biểu đồ → lời thường, phép so sánh, tránh chất đống thuật ngữ).
+6. **Trung thành với bản gốc**: không thổi phồng, không bịa kết luận; chỗ nào chưa chắc thì ghi chú rõ, đừng đoán bừa (nội dung học thuật sai sẽ bị dân trong ngành bắt lỗi).
 
-### 3A. 视频产线（视频号/B站）
+### 3A. Dây chuyền video (Video Channels/Bilibili)
 
-7. **分镜脚本**：按 `references/video-storyboard.md` 结构（钩子→问题→已有不足→贡献→方法一图讲清→结果→意义）把 asset-library 写成 `assets/script.md`。
-   分镜/留存/口播节奏**复用 video-script** 的方法（喂论文语境）。可选**双人问答口播**（主持人提问+讲解者回答）比单人旁白更抓耳——用双人时把口播写成逐行 `lines.json`（`{speaker,text,emotion}`，speaker=主讲/提问）。
-8. **视觉素材盘点 + 配图**：先列出每页的视觉角色（证据图/重绘图/概念线稿/字体图形/motif），再写 slide-plan。论文原图从 `assets/parsed/figures/` 选用；复杂原图先裁关键区域，方法流程/结果图用 **infographic / chart-visualization** 重绘。封面/概念页缺图时，主动找或制作与主题直接相关的线稿、局部图或符号素材，不用随机机器人/blob 填空。图中文字在目标分辨率不可读就不得直接使用。
-9. **稳定 slide 产线（强制，不得在 outputs 临时写 make_slides 脚本）**：先读 [card-design](../card-design/SKILL.md) 的设计原则和 `references/slide-design.md`，把 script 写成 `assets/slide-plan.json`。把用户/Profile/参考图的原始风格意图原样写入 `style`，再分别选 `base_style`、`treatment`、`theme`、`motif` 和视觉素材来实现；不得把用户风格强行归为某个预设，也不得因没有同名预设而拒绝。迁移的是可观察特征（氛围、配色、线条、纹理、构图、角色/物件素材），不是穷举风格名。未指定风格时用 `editorial`，但默认也必须有明确的编辑网格、纸张层次、章节锚点和图片框法，不得交付“素底 + 字”。整套锁定一个设计立场，页面骨架与审计门保持稳定。运行：
+7. **Kịch bản phân cảnh**: theo cấu trúc trong `references/video-storyboard.md` (hook → vấn đề → hạn chế hiện có → đóng góp → một hình nói rõ phương pháp → kết quả → ý nghĩa), viết asset-library thành `assets/script.md`.
+   Phân cảnh/giữ chân/nhịp video nói **dùng lại phương pháp của video-script** (nạp ngữ cảnh bài báo). Có thể chọn **video nói hai người hỏi đáp** (người dẫn hỏi + người giảng đáp) bắt tai hơn lời dẫn một người - khi dùng hai người thì viết lời nói thành `lines.json` từng dòng (`{speaker,text,emotion}`, speaker=người giảng/người hỏi).
+8. **Kiểm kê tư liệu visual + chọn hình**: trước hết liệt kê vai trò visual của từng trang (hình bằng chứng/hình vẽ lại/nét phác khái niệm/typography/motif), rồi mới viết slide-plan. Hình gốc của bài báo lấy từ `assets/parsed/figures/`; hình gốc phức tạp thì cắt lấy vùng then chốt, sơ đồ phương pháp/hình kết quả vẽ lại bằng **infographic / chart-visualization**. Trang bìa/trang khái niệm thiếu hình thì chủ động tìm hoặc làm nét phác, hình cắt cận hay ký hiệu liên quan trực tiếp tới chủ đề, đừng lấy robot/blob ngẫu nhiên lấp chỗ. Chữ trong hình mà không đọc nổi ở độ phân giải đích thì không được dùng thẳng.
+9. **Dây chuyền slide ổn định (bắt buộc, không được viết script make_slides tạm trong outputs)**: đọc trước nguyên tắc thiết kế của [card-design](../card-design/SKILL.md) và `references/slide-design.md`, rồi viết script thành `assets/slide-plan.json`. Ghi nguyên văn ý đồ phong cách gốc của người dùng/Profile/ảnh tham chiếu vào `style`, sau đó chọn riêng `base_style`, `treatment`, `theme`, `motif` và tư liệu visual để hiện thực hoá; không được ép phong cách của người dùng vào một preset có sẵn, cũng không được từ chối chỉ vì không có preset trùng tên. Thứ cần chuyển sang là đặc điểm quan sát được (không khí, phối màu, nét, chất liệu, bố cục, tư liệu nhân vật/vật thể), không phải liệt kê tên phong cách. Chưa chỉ định phong cách thì dùng `editorial`, nhưng mặc định cũng phải có lưới biên tập rõ ràng, lớp giấy, mốc neo chương mục và cách đóng khung ảnh, không được giao "nền trơn + chữ". Cả bộ khoá vào một lập trường thiết kế, khung xương trang và cổng audit giữ ổn định. Chạy:
    ```bash
-   python skills/openclaw/paper-explainer/scripts/render_slides.py validate --plan outputs/<项目>/assets/slide-plan.json
-   python skills/openclaw/paper-explainer/scripts/render_slides.py render --plan outputs/<项目>/assets/slide-plan.json --out-dir outputs/<项目>/assets/slides
-   python skills/openclaw/paper-explainer/scripts/render_slides.py audit --plan outputs/<项目>/assets/slide-plan.json --slides-dir outputs/<项目>/assets/slides --contact-sheet outputs/<项目>/assets/slides-contact-sheet.jpg
+   python skills/openclaw/paper-explainer/scripts/render_slides.py validate --plan "outputs/<chủ đề>/assets/slide-plan.json"
+   python skills/openclaw/paper-explainer/scripts/render_slides.py render --plan "outputs/<chủ đề>/assets/slide-plan.json" --out-dir "outputs/<chủ đề>/assets/slides"
+   python skills/openclaw/paper-explainer/scripts/render_slides.py audit --plan "outputs/<chủ đề>/assets/slide-plan.json" --slides-dir "outputs/<chủ đề>/assets/slides" --contact-sheet "outputs/<chủ đề>/assets/slides-contact-sheet.jpg"
    ```
-   任一非 0 退出必须改 plan 后重渲；`validate` 会按页面职能拦截“只有口号、缺少解释”的低信息页，并检查合并主题后所有正文色在实际背景上的对比度；明亮 accent 可继续用于装饰，文字会使用可读的语义前景色。`render` 会硬拦文字/元素越界、重叠、组内不对齐、卡内文字左边漂移与结构页过度空洞。脚本全过后当前 Agent **必须肉眼查看 contact sheet 和至少 3 张原尺寸 slide**，检查暂停/静音时页面能否独立读懂、论文图可读、文字是否和所属元素对齐、留白是否有叙事作用、视觉素材是否相关、节奏是否重复；只过脚本不等于合格。不要把 narration 整段搬上屏。只有论文图本身承载主要信息时才可在该页设 `density: visual`，不得把它当作跳过内容提炼的开关。
-10. **成片（配音+字幕+合成，缺一不可）**：从 slide-plan 的 narration 生成口播——单人用 **tts-voiceover**，双人用 **multi-voice-dubbing**；同步 SRT，缺则跑 **auto-subtitle**。把 `assets/slides/slide_*.png`、配音和字幕写入 auto-short-video storyboard 后合成，必须设顶层 `"image_motion": "static"`；slide/图表禁用 Ken Burns，不得缩放、平移或裁掉边缘。页面停留时长按对应 narration 音频/字幕分段，不均分整轨。不能只交静态图或无声视频。
-11. 用 `manifest.py meta` 登记 `final.mp4` 或 `article.md` 为 deliverable；中间解析、slide 和音频只放 `assets/`。
-12. **发布**：交 **skill-channels-upload**（视频号）/ B站 biliup。
+   Bất kỳ lần thoát khác 0 nào cũng phải sửa plan rồi render lại; `validate` sẽ theo chức năng từng trang mà chặn các trang nghèo thông tin kiểu "chỉ có khẩu hiệu, thiếu giải thích", đồng thời kiểm tra độ tương phản của mọi màu chữ thân bài trên nền thực tế sau khi gộp theme; accent sáng vẫn dùng để trang trí được, còn chữ sẽ lấy màu nền trước ngữ nghĩa đủ đọc. `render` chặn cứng chữ/phần tử tràn khung, chồng nhau, lệch hàng trong nhóm, chữ trong thẻ trôi lề trái và trang cấu trúc rỗng quá mức. Sau khi mọi script đều qua, Agent hiện tại **bắt buộc nhìn tận mắt contact sheet và ít nhất 3 slide ở kích thước gốc**, kiểm tra khi tạm dừng/tắt tiếng thì trang có tự đọc hiểu được không, hình bài báo có đọc nổi không, chữ có thẳng hàng với phần tử của nó không, khoảng trắng có vai trò kể chuyện không, tư liệu visual có liên quan không, nhịp có bị lặp không; qua script không đồng nghĩa với đạt. Đừng bê nguyên đoạn narration lên màn hình. Chỉ khi chính hình bài báo mang thông tin chính thì mới được đặt `density: visual` cho trang đó, không được coi nó là công tắc để bỏ qua khâu chắt lọc nội dung.
+10. **Ra video (lồng tiếng + phụ đề + ghép, thiếu một thứ là hỏng)**: từ narration trong slide-plan sinh lời nói - một người dùng **tts-voiceover**, hai người dùng **multi-voice-dubbing**; đồng bộ SRT, thiếu thì chạy **auto-subtitle**. Ghi `assets/slides/slide_*.png`, tiếng lồng và phụ đề vào storyboard của auto-short-video rồi ghép, bắt buộc đặt `"image_motion": "static"` ở cấp cao nhất; slide/biểu đồ cấm Ken Burns, không được zoom, pan hay cắt mất rìa. Thời gian dừng mỗi trang bám theo đoạn audio/phụ đề narration tương ứng, không chia đều cả track. Không được chỉ giao ảnh tĩnh hay video không tiếng.
+11. Dùng `manifest.py meta` đăng ký `final.mp4` hoặc `article.md` là deliverable; phần parse trung gian, slide và audio chỉ để trong `assets/`.
+12. **Đăng bài**: giao SKILL đăng của nền tảng đích (adapter VN, Giai đoạn 5).
 
-### 3B. 图文产线（知乎/公众号）
+### 3B. Dây chuyền ảnh-chữ (Zhihu/WeChat OA)
 
-13. 用**同一份 asset-library** 写 `article.md`：标题（钩子）+ 用大白话讲清 problem→method→results→takeaway，配 `assets/` 的图。
-    平台适配见 `references/platform-adapt.md`（知乎逻辑链、公众号成文起承转合）。排版/长图交 **doc-convert**；发布交 **skill-zhihu-publisher / skill-wechat-publisher**。
+13. Dùng **cùng một asset-library** để viết `article.md`: tiêu đề (hook) + nói rõ bằng lời thường problem → method → results → takeaway, kèm hình trong `assets/`.
+    Thích ứng nền tảng xem `references/platform-adapt.md` (chuỗi logic kiểu Zhihu, mạch mở - thân - chuyển - kết kiểu WeChat OA). Dàn trang/ảnh dài giao **doc-convert**; đăng bài giao SKILL đăng của nền tảng đích.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：`platforms.md` 定主平台并给出形态/画幅/时长建议，但视频画幅仍须用户确认；`audience.md` 定受众深度（大众 vs 同行）；`style.md` 定讲解调性；`identity.md` 定领域垂类（AI/生物/材料…影响类比取材）。
-- **无 Profile**：默认视频号 2–4 分钟中视频、大众科普深度，先问领域与受众。
+- **Có Profile**: `platforms.md` chốt nền tảng chính và gợi ý dạng/khung hình/thời lượng, nhưng khung hình video vẫn phải để người dùng xác nhận; `audience.md` chốt độ sâu cho khán giả (đại chúng vs dân trong ngành); `style.md` chốt giọng giảng giải; `identity.md` chốt ngách lĩnh vực (AI/sinh học/vật liệu... ảnh hưởng tới nguồn lấy phép so sánh).
+- **Không có Profile**: mặc định video dài trung bình 2-4 phút, độ sâu phổ thông đại chúng, hỏi trước lĩnh vực và khán giả.
 
-## 规则
+## Quy tắc
 
-1. **忠于原文**：不夸大贡献、不编造数字/结论；术语拿不准先查原文，别臆测。
-2. **一次提炼、两处复用**：asset-library.json 是唯一真相源，视频与图文都从它出，避免重复提炼与口径不一。
-3. **通俗但不失真**：用类比降低门槛，但类比不能扭曲原意；关键术语给一句通俗解释而非回避。
-4. **图优先**：论文靠图讲方法/结果，视频/图文尽量用图（原图或重绘信息图）承载信息。
-5. **刻意不做**：数字人讲座（太重）、依赖 LaTeX 源（从 PDF 入覆盖更广）。
-6. **页面不是口播稿，也不是口号板**：一页一个中心结论，但必须用解释、证据或数字口径让页面在暂停/静音时也能独立读懂；细节留给 narration，不得靠缩小字号容纳过量文字。
+1. **Trung thành với bản gốc**: không thổi phồng đóng góp, không bịa số liệu/kết luận; thuật ngữ chưa chắc thì tra lại bản gốc, đừng đoán bừa.
+2. **Chắt lọc một lần, dùng lại hai nơi**: asset-library.json là nguồn sự thật duy nhất, cả video lẫn bài ảnh-chữ đều xuất phát từ đó, tránh chắt lọc lặp và lệch cách diễn đạt.
+3. **Dễ hiểu nhưng không sai lệch**: dùng phép so sánh để hạ ngưỡng, nhưng so sánh không được bóp méo ý gốc; thuật ngữ then chốt phải có một câu giải thích bình dân chứ không né tránh.
+4. **Ưu tiên hình**: bài báo dựa vào hình để nói phương pháp/kết quả, video/bài ảnh-chữ cố gắng dùng hình (hình gốc hoặc infographic vẽ lại) để tải thông tin.
+5. **Cố ý không làm**: bài giảng bằng người ảo (quá nặng), phụ thuộc mã nguồn LaTeX (vào từ PDF thì phủ rộng hơn).
+6. **Trang không phải bản lời nói, cũng không phải bảng khẩu hiệu**: mỗi trang một kết luận trung tâm, nhưng phải có giải thích, bằng chứng hoặc cách nêu số liệu để trang tự đọc hiểu được khi tạm dừng/tắt tiếng; chi tiết để dành cho narration, không được thu nhỏ cỡ chữ để nhét quá nhiều chữ.
 
-## 参考来源
+## Nguồn tham khảo
 
-见 `EASEL-META.md`。流程沉淀自 QuZhan51496/paper2anything（本身即 Claude Skills：parse_pdf/MinerU + 提炼方法论外置 references + 多形态扇出）、
-showlab/Paper2Video（按内容块切段、字幕先行）、Paper2Poster（结构化 asset library 中间产物）、
-Azzedde/paper_to_podcast（双人问答口播）、OpenDCAI/Paper2Any（一次解析扇出多形态）。
+Xem `EASEL-META.md`. Quy trình đúc kết từ QuZhan51496/paper2anything (bản thân nó là Claude Skills: parse_pdf/MinerU + phương pháp chắt lọc tách ra references + fan-out nhiều dạng),
+showlab/Paper2Video (cắt đoạn theo khối nội dung, phụ đề đi trước), Paper2Poster (sản phẩm trung gian asset library có cấu trúc),
+Azzedde/paper_to_podcast (video nói hai người hỏi đáp), OpenDCAI/Paper2Any (parse một lần, fan-out nhiều dạng).

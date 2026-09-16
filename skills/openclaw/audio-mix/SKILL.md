@@ -7,64 +7,64 @@ description: >-
 layer: produce
 ---
 
-# 音频混合（旁白 + BGM + 音效）
+# Trộn audio (lời dẫn + BGM + hiệu ứng)
 
-> 把多条音频**同时叠加**混成一轨，核心能力是**闪避（ducking）**——旁白说话时自动压低
-> 背景音乐，人声清晰、音乐不抢。全部走 `skills/shared/scripts/audio_mix.py`，
-> **不要手拼 amix/sidechaincompress**。
+> Trộn nhiều đường tiếng **chồng lên nhau cùng lúc** thành một track, năng lực cốt lõi là **ducking (tự hạ nhạc)** - khi lời dẫn cất tiếng thì tự động hạ
+> nhạc nền xuống, giọng người rõ, nhạc không lấn. Tất cả chạy qua `skills/shared/scripts/audio_mix.py`,
+> **đừng tự ghép tay amix/sidechaincompress**.
 
-> 前后顺序拼接（一段接一段）见 **audio-editing** `concat`；给视频配乐见 **video-editing** `bgm`；
-> 降噪见 **audio-denoise**。
+> Nối trước sau theo thứ tự (đoạn này tiếp đoạn kia) xem **audio-editing** `concat`; gắn nhạc cho video xem **video-editing** `bgm`;
+> khử ồn xem **audio-denoise**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 旁白 | 否 | 口播/配音主轨（给了则输出时长跟它走，并触发闪避） |
-| BGM | 否 | 背景音乐（自动循环补足到旁白长度） |
-| 音效 | 否 | 一个或多个音效，可指定各自出现时间点 |
+| Lời dẫn | Không | Track chính video nói/lồng tiếng (đưa vào thì thời lượng đầu ra bám theo nó, và kích hoạt ducking) |
+| BGM | Không | Nhạc nền (tự lặp cho đủ độ dài lời dẫn) |
+| Hiệu ứng | Không | Một hoặc nhiều hiệu ứng, chỉ định được mốc thời gian xuất hiện của từng cái |
 
-（三者至少给一个。最典型："旁白 + BGM"。）
+(Ít nhất phải có một trong ba. Điển hình nhất: "lời dẫn + BGM".)
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 混音后的单轨音频（mp3/wav/m4a，按输出后缀）
-- 报告：轨数、时长、是否闪避
+- Audio một track sau khi trộn (mp3/wav/m4a, theo đuôi file xuất)
+- Báo cáo: số track, thời lượng, có ducking hay không
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/audio_mix.py`（`mix -h` 看参数）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/audio_mix.py` (`mix -h` để xem tham số).
 
 ```bash
-# 旁白 + BGM（默认自动闪避，BGM 循环补足到旁白长度）
+# Lời dẫn + BGM (mặc định tự ducking, BGM lặp cho đủ độ dài lời dẫn)
 python skills/shared/scripts/audio_mix.py mix \
   --voice narration.mp3 --bgm music.mp3 --bgm-volume 0.25 \
-  -o outputs/主题名/final.mp3
+  -o outputs/<chủ đề>/final.mp3
 
-# 关闭闪避（纯叠加）
+# Tắt ducking (chỉ chồng tiếng)
 python skills/shared/scripts/audio_mix.py mix --voice v.mp3 --bgm m.mp3 --no-duck -o out.mp3
 
-# 旁白 + 定时音效（第 3.5s 一个叮，第 8s 一个 whoosh）
+# Lời dẫn + hiệu ứng theo mốc (giây 3.5 một tiếng ding, giây 8 một tiếng whoosh)
 python skills/shared/scripts/audio_mix.py mix --voice v.mp3 \
   --sfx ding.wav --sfx-at 3.5 --sfx whoosh.wav --sfx-at 8 -o out.mp3
 ```
 
-## 调参
+## Chỉnh tham số
 
-- **人声被音乐盖住**：调低 `--bgm-volume`（默认 0.25）或确认闪避已开（默认开）。
-- **闪避太猛/音乐一顿一顿**：`--no-duck` 后手动压低 `--bgm-volume`。
-- **BGM 比旁白短**：默认自动循环；不想循环用 `--bgm-loop-off`。
-- **音效太响/太轻**：`--sfx-volume`（默认 0.9）。
+- **Giọng người bị nhạc lấn**: hạ `--bgm-volume` (mặc định 0.25) hoặc kiểm tra ducking đã bật chưa (mặc định bật).
+- **Ducking quá gắt / nhạc giật cục**: dùng `--no-duck` rồi tự tay hạ `--bgm-volume`.
+- **BGM ngắn hơn lời dẫn**: mặc định tự lặp; không muốn lặp thì dùng `--bgm-loop-off`.
+- **Hiệu ứng quá to/quá nhỏ**: `--sfx-volume` (mặc định 0.9).
 
-## 规则
+## Quy tắc
 
-1. 有旁白时输出时长 = 旁白长度，BGM 自动循环/裁切对齐并在末尾淡出。
-2. 旁白 + BGM 默认开启闪避（人声优先）；不需要时显式 `--no-duck`。
-3. `--sfx` 与 `--sfx-at` 数量一致（或不给 --sfx-at 全部默认 0s）。
-4. 混音不做响度归一（保留相对音量）；需统一响度先用 audio-editing `normalize`。
-5. 产物统一进 `outputs/主题名/`。
+1. Có lời dẫn thì thời lượng đầu ra = độ dài lời dẫn, BGM tự lặp/cắt cho khớp và fade out ở cuối.
+2. Lời dẫn + BGM mặc định bật ducking (ưu tiên giọng người); không cần thì ghi rõ `--no-duck`.
+3. `--sfx` và `--sfx-at` phải bằng nhau về số lượng (hoặc không đưa --sfx-at thì tất cả mặc định 0s).
+4. Trộn audio không chuẩn hoá độ to (giữ nguyên tương quan âm lượng); cần đồng nhất độ to thì dùng audio-editing `normalize` trước.
+5. Sản phẩm gom hết vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-闪避用 ffmpeg `sidechaincompress`（以人声为控制信号压缩 BGM），是播客/口播视频保证人声清晰的
-标准做法；多轨叠加用 `amix`。把 sidechain 接线与循环对齐封装成确定性脚本。
+Ducking dùng ffmpeg `sidechaincompress` (lấy giọng người làm tín hiệu điều khiển để nén BGM), là cách làm chuẩn của podcast/video nói để giữ giọng
+người luôn rõ; chồng nhiều track thì dùng `amix`. Đấu nối sidechain và canh lặp được gói thành script xác định.

@@ -7,59 +7,59 @@ description: >-
 layer: produce
 ---
 
-# 思维导图（Markdown → 脑图）
+# Sơ đồ tư duy (Markdown -> mindmap)
 
-> 把 Markdown 大纲渲染成可交互思维导图 HTML，可选导出 PNG。走 `skills/shared/scripts/mindmap.py`
-> （markmap）。
+> Render dàn ý Markdown thành HTML sơ đồ tư duy tương tác, tuỳ chọn xuất PNG. Chạy qua `skills/shared/scripts/mindmap.py`
+> (markmap).
 
-> 数据图表见 chart-visualization；信息图/流程图见 infographic；本 SKILL 专做**层级大纲脑图**。
+> Biểu đồ số liệu xem chart-visualization; infographic/sơ đồ quy trình xem infographic; SKILL này chuyên làm **mindmap dàn ý phân cấp**.
 
-## 输入
+## Đầu vào
 
-Markdown 大纲（用标题 `#`/`##`/`###` 表示层级，`-` 列表表示叶子）：
+Dàn ý Markdown (dùng tiêu đề `#`/`##`/`###` để phân cấp, danh sách `-` là nút lá):
 ```markdown
-# 中心主题
-## 分支一
-- 要点 A
-- 要点 B
-## 分支二
-- 要点 C
+# Chủ đề trung tâm
+## Nhánh một
+- Ý chính A
+- Ý chính B
+## Nhánh hai
+- Ý chính C
 ```
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 思维导图 HTML（单文件；markmap JS 走 CDN，联网可交互展开/折叠，离线打开不可交互）
-- 可选 PNG 图片（`--png`）
+- HTML sơ đồ tư duy (một file duy nhất; markmap JS lấy từ CDN, có mạng thì bung/gập được, mở offline thì không tương tác)
+- Ảnh PNG tuỳ chọn (`--png`)
 
-## 执行
+## Thực thi
 
-脚本路径（相对项目根）：`skills/shared/scripts/mindmap.py`（`make -h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/mindmap.py` (`make -h`).
 
 ```bash
-# 先把内容整理成 Markdown 大纲（你来做），存为 outline.md，再：
+# Trước hết sắp nội dung thành dàn ý Markdown (bạn làm), lưu thành outline.md, rồi:
 python skills/shared/scripts/mindmap.py make -i outline.md \
-  -o outputs/主题名/mm.html --png
+  -o "outputs/<chủ đề>/mm.html" --png
 ```
-`-i -` 可从 stdin 读；`--title` 自定义标题；`--bg` 背景色。
+`-i -` đọc được từ stdin; `--title` tự đặt tiêu đề; `--bg` màu nền.
 
-## 用法要点
+## Điểm mấu chốt khi dùng
 
-1. **先把内容组织成清晰的 Markdown 大纲**（层级分明、每节点简短）——这是脑图质量的关键，
-   由你（LLM）完成：从文章/主题提炼中心 → 分支 → 要点。
-2. 层级建议 2-4 层，节点文字精炼（几个字），别把整句话塞进节点。
-3. HTML 可交互（展开/折叠、缩放），适合分享或嵌入；PNG 适合直接发图。
+1. **Trước hết tổ chức nội dung thành dàn ý Markdown rõ ràng** (phân cấp mạch lạc, mỗi nút thật ngắn) - đây là chìa khoá chất lượng mindmap,
+   do bạn (LLM) làm: từ bài viết/chủ đề rút ra trung tâm -> nhánh -> ý chính.
+2. Nên để 2-4 cấp, chữ trong nút cô đọng (vài chữ), đừng nhét cả câu dài vào một nút.
+3. HTML tương tác được (bung/gập, phóng to thu nhỏ), hợp để chia sẻ hoặc nhúng; PNG hợp để đăng ảnh trực tiếp.
 
-## 前置（PNG）
+## Điều kiện trước (PNG)
 
-PNG 渲染需 playwright + chromium + 外网（markmap JS 走 CDN）。仅要 HTML 则无额外依赖。
+Render PNG cần playwright + chromium + mạng ngoài (markmap JS lấy từ CDN). Chỉ cần HTML thì không phụ thuộc gì thêm.
 
-## 规则
+## Quy tắc
 
-1. 内容先成 Markdown 大纲再渲染，不要把无结构的长文直接丢进去。
-2. 节点简洁；层级不宜过深（超过 4 层可读性差）。
-3. 产物统一进 `outputs/主题名/`。
+1. Nội dung phải thành dàn ý Markdown rồi mới render, đừng ném thẳng bài dài không có cấu trúc vào.
+2. Nút gọn; đừng phân cấp quá sâu (quá 4 cấp là khó đọc).
+3. Sản phẩm đều nằm trong `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-markmap（Markdown → 交互式思维导图）是开源标准方案；本 SKILL 生成自包含 HTML（CDN 加载
-markmap），并用 Chromium 无头渲染导出 PNG。
+markmap (Markdown -> sơ đồ tư duy tương tác) là giải pháp mã nguồn mở chuẩn mực; SKILL này sinh HTML tự chứa (nạp
+markmap qua CDN), và dùng Chromium headless render để xuất PNG.

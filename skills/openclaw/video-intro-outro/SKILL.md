@@ -7,86 +7,86 @@ description: >-
 layer: produce
 ---
 
-# 视频片头 / 片尾
+# Thẻ mở đầu / thẻ kết thúc video
 
-> 生成片头/片尾**视频卡片**（标题 + 副标题 + logo + 关注引导），并把 片头 + 主视频 + 片尾
-> 归一化后拼接成一条成片。全部走 `skills/shared/scripts/intro_outro.py`，**不要手拼
-> drawtext / xfade**——脚本已处理字体路径、音画参数一致、转场时间偏移计算。
+> Sinh **thẻ video** mở đầu/kết thúc (tiêu đề + tiêu đề phụ + logo + kêu gọi theo dõi), rồi ghép mở đầu + video chính + kết thúc
+> sau khi chuẩn hoá thành một bản hoàn chỉnh. Tất cả đi qua `skills/shared/scripts/intro_outro.py`, **đừng tự ghép tay
+> drawtext / xfade** - script đã lo đường dẫn font, đồng nhất tham số hình-tiếng, tính offset thời gian chuyển cảnh.
 
-> 只做"片头/片尾卡片 + 拼接"。静态封面图见 **poster-hero**；通用剪辑见 **video-editing**；
-> 完整"一句话→成片"流水线见 **auto-short-video**。
+> Chỉ làm "thẻ mở đầu/kết thúc + ghép nối". Ảnh bìa tĩnh xem **poster-hero**; dựng cắt thông thường xem **video-editing**;
+> quy trình đầy đủ "một câu -> thành phẩm" xem **auto-short-video**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 主视频 | 拼接时必填 | 要加片头/片尾的视频（没给就问） |
-| 标题/副标题 | 推荐 | 片头主题、片尾致谢等文案 |
-| 关注引导 CTA | 片尾常用 | 如"点赞 + 关注 不迷路" |
-| logo | 可选 | 品牌 logo 图片，叠在标题上方 |
-| 画幅 | 可选 | 默认竖版 1080x1920；拼接时默认对齐主视频 |
-| 背景 | 可选 | 纯色 / 双色渐变 / 图片 |
+| Video chính | Bắt buộc khi ghép | Video cần thêm mở đầu/kết thúc (không đưa thì hỏi) |
+| Tiêu đề/tiêu đề phụ | Nên có | Nội dung như chủ đề phần mở đầu, lời cảm ơn phần kết |
+| CTA kêu gọi theo dõi | Hay dùng ở phần kết | Ví dụ "Like + Theo dõi để không lạc nhau" |
+| logo | Tuỳ chọn | Ảnh logo thương hiệu, đặt chồng phía trên tiêu đề |
+| Khung hình | Tuỳ chọn | Mặc định dọc 1080x1920; khi ghép thì mặc định bám theo video chính |
+| Nền | Tuỳ chọn | Màu đơn / gradient hai màu / ảnh |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 片头 / 片尾卡片片段（`intro.mp4` / `outro.mp4`）
-- 拼接后的成片（`*-final.mp4`）
-- 报告：卡片时长、画幅、转场方式
+- Đoạn thẻ mở đầu / kết thúc (`intro.mp4` / `outro.mp4`)
+- Bản hoàn chỉnh sau khi ghép (`*-final.mp4`)
+- Báo cáo: thời lượng thẻ, khung hình, kiểu chuyển cảnh
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/intro_outro.py`（各子命令支持 `-h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/intro_outro.py` (mọi subcommand đều hỗ trợ `-h`).
 
-### 1. 生成片头卡片
+### 1. Sinh thẻ mở đầu
 ```bash
 python skills/shared/scripts/intro_outro.py card \
-  --title "本期主题" --subtitle "3 分钟讲清楚" \
+  --title "Chủ đề số này" --subtitle "Giải thích gọn trong 3 phút" \
   --gradient --color 0x1a2a6c --color2 0xb21f1f \
-  --size 1080x1920 --duration 2.5 -o outputs/主题名/intro.mp4
+  --size 1080x1920 --duration 2.5 -o "outputs/<chủ đề>/intro.mp4"
 ```
 
-### 2. 生成片尾卡片（带关注引导）
+### 2. Sinh thẻ kết thúc (kèm kêu gọi theo dõi)
 ```bash
 python skills/shared/scripts/intro_outro.py card --preset outro \
-  --title "感谢观看" --cta "点赞 + 关注 不迷路" \
+  --title "Cảm ơn đã xem" --cta "Like + Theo dõi để không lạc nhau" \
   --color black --size 1080x1920 --duration 2.5 \
-  -o outputs/主题名/outro.mp4
+  -o "outputs/<chủ đề>/outro.mp4"
 ```
-背景三选一：`--color <色>`（纯色）/ `--gradient`（配 `--color`/`--color2` 双色渐变）/
-`--bg-image <图>`（图片背景，自动裁切填满）。`--logo <图>` 叠加品牌 logo。
+Chọn một kiểu nền: `--color <màu>` (màu đơn) / `--gradient` (dùng kèm `--color`/`--color2` cho gradient hai màu) /
+`--bg-image <ảnh>` (nền ảnh, tự cắt cho đầy khung). `--logo <ảnh>` để chồng logo thương hiệu.
 
-### 3. 拼接到主视频
+### 3. Ghép vào video chính
 ```bash
-# 硬切（默认，最稳）
-python skills/shared/scripts/intro_outro.py attach --main <主视频> \
-  --intro outputs/主题名/intro.mp4 \
-  --outro outputs/主题名/outro.mp4 \
-  -o outputs/主题名/<名>-final.mp4
+# Cắt cứng (mặc định, ổn nhất)
+python skills/shared/scripts/intro_outro.py attach --main "<video chính>" \
+  --intro "outputs/<chủ đề>/intro.mp4" \
+  --outro "outputs/<chủ đề>/outro.mp4" \
+  -o "outputs/<chủ đề>/<tên>-final.mp4"
 
-# 淡入淡出转场
-python skills/shared/scripts/intro_outro.py attach --main <主视频> \
-  --intro outputs/主题名/intro.mp4 --transition fade --trans-duration 0.5 \
-  -o outputs/主题名/<名>-final.mp4
+# Chuyển cảnh mờ dần
+python skills/shared/scripts/intro_outro.py attach --main "<video chính>" \
+  --intro "outputs/<chủ đề>/intro.mp4" --transition fade --trans-duration 0.5 \
+  -o "outputs/<chủ đề>/<tên>-final.mp4"
 ```
-`--intro` / `--outro` 至少给一个，可只加其一。`--transition` 可选
-`none/fade/fadeblack/fadewhite/wipeleft/slideup/circleopen`。画幅默认对齐主视频，
-`--size` 可强制。
+`--intro` / `--outro` phải có ít nhất một, cũng có thể chỉ thêm một cái. `--transition` chọn trong
+`none/fade/fadeblack/fadewhite/wipeleft/slideup/circleopen`. Khung hình mặc định bám theo video chính,
+`--size` để ép cứng.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：标题/CTA 语气贴合 `style.md` 人设；有品牌 logo/主色时用作 `--logo` 与
-  `--color`；默认画幅按 `platforms.md` 主平台（抖音/小红书竖版 1080x1920，B站/横版 1920x1080）。
-- 无 Profile：用中性文案与默认深色背景，竖版 1080x1920，末尾提示可提供品牌信息定制。
+- Có Profile: giọng tiêu đề/CTA bám persona trong `style.md`; có logo/màu chủ đạo thương hiệu thì dùng cho `--logo` và
+  `--color`; khung hình mặc định theo nền tảng chính trong `platforms.md` (Douyin/Xiaohongshu dọc 1080x1920, Bilibili/ngang 1920x1080).
+- Không có Profile: dùng nội dung trung tính và nền tối mặc định, dọc 1080x1920, cuối cùng nhắc người dùng có thể đưa thông tin thương hiệu để tuỳ biến.
 
-## 规则
+## Quy tắc
 
-1. 卡片时长默认 2.5s，片头别太长（2-3s 为宜），避免劝退。
-2. 文案精炼——标题一句、副标题一句、CTA 一句，不堆字。
-3. 拼接前脚本会自动把三段归一化到同画幅/帧率/音轨，**不要**自己先转格式。
-4. 转场时长自动限制在相邻片段时长内，过长会被收窄。
-5. 产物统一进 `outputs/主题名/`。
+1. Thời lượng thẻ mặc định 2.5s, phần mở đầu đừng dài quá (2-3s là vừa), tránh làm người xem bỏ đi.
+2. Câu chữ gọn - tiêu đề một câu, tiêu đề phụ một câu, CTA một câu, đừng chất chữ.
+3. Trước khi ghép, script tự chuẩn hoá ba đoạn về cùng khung hình/frame rate/track tiếng, **đừng** tự chuyển định dạng trước.
+4. Thời lượng chuyển cảnh tự giới hạn trong độ dài đoạn liền kề, dài quá sẽ bị bóp lại.
+5. Sản phẩm đều đi vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-片头片尾/关注引导卡片是短视频与 B站/YouTube 的标准件；实现参考 ffmpeg drawtext（文字层）
-与 xfade/acrossfade（转场音画交叠）的确定性组合，把易错的时间偏移与参数对齐封装进脚本。
+Thẻ mở đầu/kết thúc và thẻ kêu gọi theo dõi là chuẩn mực của video ngắn và YouTube; phần hiện thực tham khảo ffmpeg drawtext (lớp chữ)
+và xfade/acrossfade (chồng lấn hình-tiếng khi chuyển cảnh) theo tổ hợp xác định, gói phần offset thời gian và căn chỉnh tham số dễ sai vào trong script.

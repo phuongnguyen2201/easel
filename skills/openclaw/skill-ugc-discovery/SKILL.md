@@ -8,108 +8,108 @@ description: >-
 layer: discover
 ---
 
-# UGC 内容发现
+# Phát hiện nội dung UGC
 
-> 搜索与创作者品牌/账号相关的用户生成内容，发现粉丝内容、测评、提及和社区讨论，输出可互动的 UGC 列表。
+> Tìm nội dung do người dùng tạo liên quan tới thương hiệu/kênh của nhà sáng tạo, phát hiện bài của người theo dõi, review, nhắc tên và thảo luận cộng đồng, xuất ra danh sách UGC có thể tương tác.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| brand_keywords | 是 | 品牌名/账号名，可多个（逗号分隔） |
-| platforms | 否 | 聚焦平台（小红书/B站/微博/知乎/抖音），默认全平台 |
-| content_type | 否 | reviews / mentions / fan_art / complaints / all（默认 all） |
-| time_range | 否 | recent / this_month / this_quarter（默认 recent） |
+| brand_keywords | có | Tên thương hiệu/tên kênh, có thể nhiều (phân tách bằng dấu phẩy) |
+| platforms | không | Nền tảng tập trung (Xiaohongshu/Bilibili/Weibo/Zhihu/Douyin), mặc định toàn nền tảng |
+| content_type | không | reviews / mentions / fan_art / complaints / all (mặc định all) |
+| time_range | không | recent / this_month / this_quarter (mặc định recent) |
 
-## 输出
+## Đầu ra
 
 ```markdown
-# UGC 内容发现报告
+# Báo cáo phát hiện nội dung UGC
 
-## 发现概览
-- 搜索关键词: {keywords}
-- 搜索平台: {platforms}
-- 发现 UGC 内容: {count} 条
-- 正面/中性/负面: {positive}/{neutral}/{negative}
+## Tổng quan phát hiện
+- Từ khoá tìm kiếm: {keywords}
+- Nền tảng tìm kiếm: {platforms}
+- Nội dung UGC tìm được: {count} mục
+- Tích cực/trung tính/tiêu cực: {positive}/{neutral}/{negative}
 
-## 高价值 UGC（推荐互动/转发）
-| # | 平台 | 内容摘要 | 来源链接 | 互动量估计 | 情感 | 建议动作 |
+## UGC giá trị cao (nên tương tác/chia sẻ)
+| # | Nền tảng | Tóm tắt nội dung | Link nguồn | Ước lượng tương tác | Cảm xúc | Hành động đề xuất |
 |---|------|---------|---------|-----------|------|---------|
 
-## 负面反馈（需关注）
-| # | 平台 | 内容摘要 | 来源链接 | 严重程度 | 建议回应 |
+## Phản hồi tiêu cực (cần lưu ý)
+| # | Nền tảng | Tóm tắt nội dung | Link nguồn | Mức nghiêm trọng | Phản hồi đề xuất |
 |---|------|---------|---------|---------|---------|
 
-## 互动建议
-- {具体建议: 转发/评论/联动/感谢}
+## Gợi ý tương tác
+- {gợi ý cụ thể: chia sẻ/bình luận/collab/cảm ơn}
 ```
 
-## 三条发现路径
+## Ba lộ trình phát hiện
 
-### 路径 1 — 平台搜索（主路径）
+### Lộ trình 1 - Tìm trên nền tảng (lộ trình chính)
 
-用 WebSearch 搜索创作者/品牌名相关内容：
+Dùng WebSearch tìm nội dung liên quan tới tên nhà sáng tạo/thương hiệu:
 
-**搜索关键词组合：**
-- `"{账号名} 推荐"` / `"{账号名} 测评"` / `"{品牌名} 体验"`
-- `"{账号名} site:xiaohongshu.com"` / `"site:bilibili.com"`
-- `"{账号名} 好物"` / `"{账号名} 同款"`
+**Các tổ hợp từ khoá tìm kiếm:**
+- `"{tên kênh} review"` / `"{tên kênh} đánh giá"` / `"{tên thương hiệu} trải nghiệm"`
+- `"{tên kênh} site:xiaohongshu.com"` / `"site:bilibili.com"`
+- `"{tên kênh} đồ tốt"` / `"{tên kênh} mẫu tương tự"`
 
-按 platforms 参数聚焦平台，未指定时逐平台搜索。
+Tập trung nền tảng theo tham số platforms, không chỉ định thì tìm lần lượt từng nền tảng.
 
-### 路径 2 — 话题/标签监控
+### Lộ trình 2 - Theo dõi chủ đề/hashtag
 
-搜索创作者品牌话题和关联标签：
+Tìm chủ đề thương hiệu của nhà sáng tạo và các hashtag liên quan:
 
-- `"#{账号名}# site:weibo.com"` — 微博话题
-- `"#{品牌话题}#"` — 跨平台品牌话题
-- `"{账号名} 话题"` / `"{品牌名} 标签"`
+- `"#{tên kênh}# site:weibo.com"` - chủ đề trên Weibo
+- `"#{chủ đề thương hiệu}#"` - chủ đề thương hiệu xuyên nền tảng
+- `"{tên kênh} chủ đề"` / `"{tên thương hiệu} hashtag"`
 
-### 路径 3 — 社区讨论扫描
+### Lộ trình 3 - Quét thảo luận cộng đồng
 
-搜索论坛、问答社区、讨论帖：
+Tìm diễn đàn, cộng đồng hỏi đáp, bài thảo luận:
 
-- `"{品牌名} 怎么样"` / `"{产品名} 好用吗"` — 知乎/贴吧
-- `"{品牌名} 值得买吗"` / `"{账号名} 靠谱吗"` — 购买决策讨论
-- `"{品牌名} 吐槽"` / `"{品牌名} 避坑"` — 负面反馈定向搜索
+- `"{tên thương hiệu} thế nào"` / `"{tên sản phẩm} có tốt không"` - Zhihu/Tieba
+- `"{tên thương hiệu} có đáng mua không"` / `"{tên kênh} có uy tín không"` - thảo luận quyết định mua
+- `"{tên thương hiệu} chê"` / `"{tên thương hiệu} tránh hố"` - tìm có hướng phản hồi tiêu cực
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **确认关键词**：从用户输入获取 brand_keywords。若有 Profile，从 `identity.md` 补充账号名、品牌名、产品名等关键词。
-2. **确定搜索范围**：根据 platforms 参数确定目标平台；根据 content_type 调整搜索关键词侧重（reviews 侧重"测评/推荐"，complaints 侧重"吐槽/避坑"）。
-3. **执行三条路径**：
-   - 路径 1：对每个平台执行 2-3 组关键词搜索（WebSearch）
-   - 路径 2：搜索品牌话题和标签
-   - 路径 3：搜索社区讨论
-4. **内容采集**：对搜索结果中高相关的链接，用 WebFetch 获取内容摘要和互动数据。
-5. **去重与分类**：去除重复结果，按情感倾向分类（正面/中性/负面）。
-6. **情感判断**：基于内容文本判断情感倾向，区分事实性提及和评价性内容。
-7. **价值排序**：按互动量和内容质量排序，筛选出高价值 UGC（值得互动/转发的内容）。
-8. **负面标注**：单独列出负面反馈，按严重程度排序，给出建议回应策略。
-9. **互动建议**：针对高价值 UGC 给出具体互动建议（转发并感谢 / 评论区互动 / 联动合作邀约）。
-10. **输出报告**：按输出模板生成完整报告，保存到 `outputs/`。
+1. **Xác nhận từ khoá**: lấy brand_keywords từ đầu vào của người dùng. Nếu có Profile, bổ sung tên kênh, tên thương hiệu, tên sản phẩm... từ `identity.md`.
+2. **Xác định phạm vi tìm kiếm**: theo tham số platforms xác định nền tảng đích; theo content_type điều chỉnh trọng tâm từ khoá (reviews nghiêng về "đánh giá/review", complaints nghiêng về "chê/tránh hố").
+3. **Chạy ba lộ trình**:
+   - Lộ trình 1: mỗi nền tảng chạy 2-3 nhóm từ khoá (WebSearch)
+   - Lộ trình 2: tìm chủ đề và hashtag thương hiệu
+   - Lộ trình 3: tìm thảo luận cộng đồng
+4. **Thu thập nội dung**: với các link liên quan cao trong kết quả tìm kiếm, dùng WebFetch lấy tóm tắt nội dung và số liệu tương tác.
+5. **Khử trùng lặp và phân loại**: bỏ kết quả trùng, phân loại theo sắc thái cảm xúc (tích cực/trung tính/tiêu cực).
+6. **Đánh giá cảm xúc**: dựa trên văn bản nội dung để xác định sắc thái, phân biệt nhắc tên mang tính sự kiện và nội dung mang tính đánh giá.
+7. **Xếp hạng giá trị**: sắp theo lượng tương tác và chất lượng nội dung, lọc ra UGC giá trị cao (đáng tương tác/chia sẻ).
+8. **Đánh dấu tiêu cực**: liệt kê riêng phản hồi tiêu cực, sắp theo mức nghiêm trọng, đưa ra chiến lược phản hồi đề xuất.
+9. **Gợi ý tương tác**: với UGC giá trị cao, đưa ra gợi ý tương tác cụ thể (chia sẻ kèm lời cảm ơn / tương tác dưới bình luận / mời collab).
+10. **Xuất báo cáo**: sinh báo cáo đầy đủ theo mẫu đầu ra, lưu vào `outputs/`.
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `identity.md` 获取账号名、品牌名、产品线关键词，自动扩展搜索关键词
-- 读取 `platforms.md` 确定活跃平台，优先搜索这些平台
-- 读取 `audience.md` 判断哪些 UGC 来自目标受众群体（更具互动价值）
-- 读取 `style.md` 匹配互动建议的语气和方式
+**Khi có Profile:**
+- Đọc `identity.md` lấy tên kênh, tên thương hiệu, từ khoá dòng sản phẩm để tự mở rộng từ khoá tìm kiếm
+- Đọc `platforms.md` xác định nền tảng đang hoạt động, ưu tiên tìm trên các nền tảng này
+- Đọc `audience.md` để biết UGC nào đến từ nhóm khán giả mục tiêu (giá trị tương tác cao hơn)
+- Đọc `style.md` để khớp giọng điệu và cách tương tác trong gợi ý
 
-**无 Profile 时：**
-- 用户必须提供 brand_keywords，否则提示用户补充
-- 全平台搜索，不做平台优先级排序
-- 互动建议给出通用策略
-- 附注"提供 Profile 可获得更精准的 UGC 发现和互动建议"
+**Khi không có Profile:**
+- Người dùng bắt buộc cung cấp brand_keywords, nếu không thì nhắc người dùng bổ sung
+- Tìm toàn nền tảng, không xếp ưu tiên nền tảng
+- Gợi ý tương tác đưa ra chiến lược chung
+- Ghi chú "Cung cấp Profile sẽ giúp phát hiện UGC và gợi ý tương tác chính xác hơn"
 
-## 规则
+## Quy tắc
 
-1. **区分事实与分析** — 搜索到的内容是事实，情感判断是分析，两者分开标注
-2. **必须附来源链接** — 每条发现的 UGC 必须附上来源 URL
-3. **不编造 UGC** — 搜索无结果时如实报告"未发现相关 UGC"，不捏造内容
-4. **优先可操作内容** — 排序时优先展示高互动量、值得回应的 UGC
-5. **负面内容不回避** — 负面反馈单独列出，给出建设性的回应建议
-6. **标注数据局限** — WebSearch 结果有时效和覆盖限制，明确标注搜索范围和局限性
+1. **Tách sự kiện và phân tích** - nội dung tìm được là sự kiện, đánh giá cảm xúc là phân tích, ghi chú tách bạch hai phần
+2. **Bắt buộc kèm link nguồn** - mỗi UGC phát hiện được phải kèm URL nguồn
+3. **Không bịa UGC** - tìm không ra thì báo trung thực "không phát hiện UGC liên quan", không bịa nội dung
+4. **Ưu tiên nội dung hành động được** - khi sắp xếp, ưu tiên hiển thị UGC có lượng tương tác cao, đáng phản hồi
+5. **Không né nội dung tiêu cực** - phản hồi tiêu cực liệt kê riêng, đưa gợi ý phản hồi mang tính xây dựng
+6. **Ghi rõ giới hạn dữ liệu** - kết quả WebSearch có giới hạn về thời gian và độ phủ, phải ghi rõ phạm vi và giới hạn tìm kiếm
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

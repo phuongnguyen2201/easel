@@ -8,68 +8,68 @@ description: >-
 layer: produce
 ---
 
-# 小红书图文卡片
+# Bộ thẻ ảnh-chữ dọc
 
-你是一名小红书视觉内容设计师。根据用户提供的内容，生成一组小红书风格的 HTML 知识卡片。
+Bạn là nhà thiết kế nội dung thị giác cho mạng xã hội. Dựa trên nội dung người dùng đưa, tạo một bộ thẻ kiến thức HTML dạng dọc.
 
-## ⚠️ 生成前必读设计系统（否则大概率做出廉价 AI 卡）
+## ⚠️ Bắt buộc đọc design system trước khi tạo (không thì gần như chắc chắn ra thẻ AI rẻ tiền)
 
-**写第一行 HTML 之前，先读 [card-design](../card-design/SKILL.md) 设计系统**，按它的五步来：
-①**先让用户选风格**(card-design 有 9 种命名风格:瑞士极简/杂志编辑/新中式墨韵/奶油温柔/多巴胺Y2K/高奢黑金/手账贴纸/极客终端/植物清新——用户没选就列 3-4 个候选让 ta 挑或按内容推荐) ②锁定该风格 spec(字体/配色hex,禁自定义) ③字体层级(字越大越细) ④套骨架 ⑤渲染后跑 `card_audit.py` 硬门禁。
+**Trước khi viết dòng HTML đầu tiên, hãy đọc design system [card-design](../card-design/SKILL.md)**, làm theo năm bước của nó:
+①**Cho người dùng chọn phong cách trước** (card-design có 9 phong cách có tên: Swiss tối giản/tạp chí biên tập/mực nho tân Trung Hoa/kem dịu dàng/dopamine Y2K/xa xỉ đen vàng/sổ tay sticker/geek terminal/thực vật tươi mát - người dùng chưa chọn thì liệt kê 3-4 ứng viên cho họ chọn hoặc gợi ý theo nội dung) ②Khoá spec của phong cách đó (font/mã màu hex, cấm tự chế) ③Phân cấp chữ (chữ càng to nét càng mảnh) ④Áp khung xương ⑤Render xong chạy `card_audit.py` làm cửa cứng.
 
-不读设计系统、凭"感觉"写，就会做出：深蓝科技渐变 + emoji 当图标 + 大片死空白的 PPT 味卡片（反面教材）。**卡片美不美第一取决于选对风格**，别所有内容都套同一种。
+Không đọc design system, viết theo "cảm giác" thì sẽ ra: gradient công nghệ xanh đậm + emoji làm icon + mảng trắng chết mênh mông, đúng kiểu thẻ mùi PPT (phản ví dụ). **Thẻ đẹp hay không trước hết phụ thuộc vào chọn đúng phong cách**, đừng áp cùng một phong cách cho mọi nội dung.
 
-## 输出规范
+## Quy cách đầu ra
 
-- 输出 N 张连续卡片，每张 `width: 1080px; height: 1440px`，用 flex 纵向排列方便整体截图也方便单张截图
-- N 由用户内容信息量决定：短内容 3-6 张起步，长内容更多（小红书平台单帖最多 18 图，通常 9 张以内最佳）
-- 一张卡只承载一个核心观点
+- Xuất N thẻ liên tiếp, mỗi thẻ `width: 1080px; height: 1440px`, xếp dọc bằng flex để vừa chụp cả bộ vừa chụp từng thẻ đều tiện
+- N do lượng thông tin của người dùng quyết định: nội dung ngắn khởi đầu 3-6 thẻ, nội dung dài thì nhiều hơn (Xiaohongshu cho tối đa 18 ảnh mỗi bài, thường dưới 9 thẻ là tốt nhất)
+- Mỗi thẻ chỉ chở một ý chính
 
-## 卡片结构
+## Cấu trúc thẻ
 
-按 `card-design/references/card-recipes.md` 的骨架选型（封面/账本/管线/对比/矩阵/数据/金句/收尾）。典型一套：
-1. **封面卡** — Display 大标题(细字重) + 一句钩子副标 + 顶 kicker + 底信息行（填到底，别中段空）
-2. **正文卡** — 每张一个核心观点，用**账本行/管线/矩阵**等有信息量的骨架填满，不是一句话配大空白
-3. **收尾卡** — 要点回顾(小账本) + 行动号召 + 水印
+Chọn khung xương theo `card-design/references/card-recipes.md` (ảnh bìa/sổ cái/pipeline/so sánh/ma trận/số liệu/câu đắt/kết). Một bộ điển hình:
+1. **Thẻ bìa** - tiêu đề lớn Display (nét mảnh) + một dòng phụ đề hook + kicker trên + dòng thông tin dưới (lấp tới đáy, đừng hụt ở giữa)
+2. **Thẻ nội dung** - mỗi thẻ một ý chính, lấp đầy bằng khung xương có thông tin như **dòng sổ cái/pipeline/ma trận**, không phải một câu kèm mảng trắng lớn
+3. **Thẻ kết** - điểm lại ý chính (sổ cái nhỏ) + CTA + watermark
 
-## 视觉风格（硬性，细节见 card-design）
+## Phong cách thị giác (bắt buộc, chi tiết xem card-design)
 
-- **配色**：从 `card-design/references/palettes.md` 选一套锁定的方案，**整套卡片全程用它**——知识/生活走杂志暖纸系(Ink/Kraft/Dune)，科技/工具走瑞士系(克莱因蓝)。**正文不用纯黑**。
-- **禁**：深蓝/蓝紫科技渐变、渐变文字、玻璃拟态、emoji 当图标、居中一切、大标题用粗黑体、`flex:1` 顶出的底部死空白。（详见 `anti-ai-slop.md`）
-- **填满**：内容覆盖 ≥75% 画高，任何无理由空白带 >15% 判失败。内容少就扩内容/换省高骨架/换 1:1，别留死空白。（详见 `layout-laws.md`）
-- 图标用线性图标(Lucide 风格,stroke 1.5)或纯排版，不用 emoji。字号大、对比强、行距宽（手机可读，正文 ≥28px）。
-- 每张卡片角落小水印（作者名 / 日期）。
+- **Bảng màu**: chọn một bộ đã khoá trong `card-design/references/palettes.md`, **dùng xuyên suốt cả bộ thẻ** - kiến thức/đời sống đi hệ giấy ấm tạp chí (Ink/Kraft/Dune), công nghệ/công cụ đi hệ Swiss (xanh Klein). **Thân bài không dùng đen tuyền**.
+- **Cấm**: gradient công nghệ xanh đậm/tím xanh, chữ gradient, glassmorphism, emoji làm icon, canh giữa tất cả, tiêu đề lớn dùng sans siêu đậm, khoảng trắng chết dưới đáy do `flex:1` đẩy ra. (chi tiết xem `anti-ai-slop.md`)
+- **Lấp đầy**: nội dung phủ ≥75% chiều cao khung, bất kỳ dải trắng vô cớ nào >15% là trượt. Ít nội dung thì mở rộng nội dung/đổi khung xương tiết kiệm chiều cao/đổi 1:1, đừng để trắng chết. (chi tiết xem `layout-laws.md`)
+- Icon dùng icon nét (kiểu Lucide, stroke 1.5) hoặc thuần typography, không dùng emoji. Cỡ chữ lớn, tương phản mạnh, giãn dòng rộng (đọc được trên điện thoại, thân bài ≥28px).
+- Mỗi thẻ có watermark nhỏ ở góc (tên tác giả / ngày).
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `style.md` 读品牌配色和风格偏好（但仍遵守 card-design 的高级感底线，别退回"柔和渐变"这类模糊描述），从 `identity.md` 读账号名用作水印
-- **无 Profile**：按 card-design 默认——知识/科技类默认瑞士+克莱因蓝或杂志+Indigo Porcelain，生活/情感类默认杂志暖纸系，水印留空
+- **Có Profile**: đọc `style.md` lấy màu thương hiệu và phong cách ưa thích (nhưng vẫn giữ ngưỡng sang trọng của card-design, đừng lùi về mô tả mơ hồ kiểu "gradient dịu nhẹ"), đọc `identity.md` lấy tên kênh làm watermark
+- **Không có Profile**: theo mặc định của card-design - nhóm kiến thức/công nghệ mặc định Swiss + xanh Klein hoặc tạp chí + Indigo Porcelain, nhóm đời sống/cảm xúc mặc định hệ giấy ấm tạp chí, để trống watermark
 
-## 与其他卡片 SKILL 的区别
+## Khác gì các SKILL thẻ còn lại
 
-三者都是"HTML 单图 → 截图"，仅画幅与场景不同，互不替代：
+Cả ba đều là "HTML một ảnh → chụp màn hình", chỉ khác khung hình và tình huống, không thay thế nhau:
 
-- **card-xiaohongshu（本 SKILL）** = 1080×1440 竖版小红书知识卡，可多张联排滑动浏览，一套干货拆成 3-9 张。**小红书的封面/首图**也用本 SKILL 的封面卡（一套卡的第 1 张）。
-- **card-quote** = 16:9 横版金句/数据卡，单张 hero 观点或核心数字，配微博 / 知乎 / X / 公众号。
-- **poster-hero** = 1080×1920 竖版**独立营销海报** / 朋友圈分享图，大标题 + 卖点 + 二维码，用于产品发布、活动宣传（不是笔记首图——笔记首图用本 SKILL 的封面卡）。
+- **card-xiaohongshu (SKILL này)** = thẻ kiến thức dọc 1080×1440, xem lướt nhiều thẻ liền nhau, một bộ kiến thức tách thành 3-9 thẻ. **Ảnh bìa/ảnh đầu của bài đăng** cũng dùng thẻ bìa của SKILL này (thẻ số 1 trong bộ).
+- **card-quote** = thẻ câu đắt/số liệu ngang 16:9, một ý hero hoặc con số cốt lõi, hợp Facebook / blog / X / website.
+- **poster-hero** = **poster marketing độc lập** dọc 1080×1920 / ảnh chia sẻ lên story-feed, tiêu đề lớn + điểm bán + mã QR, dùng cho ra mắt sản phẩm, quảng bá sự kiện (không phải ảnh đầu bài đăng - ảnh đầu bài đăng dùng thẻ bìa của SKILL này).
 
-（三者生成前都应先读 card-design 设计系统。）
+(Cả ba đều nên đọc design system card-design trước khi tạo.)
 
-## 输出
+## Đầu ra
 
-生成完整的 HTML 文件，写入 `outputs/` 目录，再用共享脚本自动渲染成图（勿手动截图）：
+Tạo file HTML hoàn chỉnh, ghi vào thư mục `outputs/`, rồi dùng script dùng chung để render tự động thành ảnh (đừng chụp màn hình thủ công):
 
 ```bash
-# 多张卡片：每张 .card 元素单独出图，得 card_1.png card_2.png ...
+# Nhiều thẻ: mỗi phần tử .card xuất riêng một ảnh, được card_1.png card_2.png ...
 python skills/shared/scripts/render_card.py \
-  --html outputs/主题名/assets/cards.html \
-  --out-dir outputs/主题名 --all ".card" --prefix card \
+  --html "outputs/<chủ đề>/assets/cards.html" \
+  --out-dir "outputs/<chủ đề>" --all ".card" --prefix card \
   --width 1080 --height 1440
 
-# ⭐ 渲染后必做：死空白/密度硬门禁，全 PASS 才交付
-python skills/openclaw/card-design/scripts/card_audit.py audit -f "outputs/主题名/card_*.png"
+# ⭐ Bắt buộc sau khi render: cửa cứng về khoảng trắng chết/mật độ, PASS hết mới giao
+python skills/openclaw/card-design/scripts/card_audit.py audit -f "outputs/<chủ đề>/card_*.png"
 ```
 
-- 竖版 1080×1440；HTML 里每张卡片外层用统一 class（如 `.card`）便于 `--all` 批量导出。
-- 脚本用 playwright+chromium，对 CDN/字体有界超时不卡死；首次需 `pip install playwright && playwright install chromium`。
-- **card_audit 有 FAIL 的卡** → 按 `card-design/references/layout-laws.md` 的「欠填修正阶梯」补内容或换骨架，重渲到全 PASS。
+- Dọc 1080×1440; trong HTML mỗi thẻ bọc ngoài bằng một class thống nhất (ví dụ `.card`) để `--all` xuất hàng loạt.
+- Script dùng playwright+chromium, có timeout giới hạn cho CDN/font nên không treo; lần đầu cần `pip install playwright && playwright install chromium`.
+- **Thẻ bị card_audit báo FAIL** → theo "thang sửa lỗi thiếu lấp đầy" trong `card-design/references/layout-laws.md` để bổ sung nội dung hoặc đổi khung xương, render lại tới khi PASS hết.

@@ -8,56 +8,56 @@ description: >-
 layer: discover
 ---
 
-# RSS / Newsletter 聚合
+# Tổng hợp RSS / Newsletter
 
-> 把一批订阅源的最新更新聚合成摘要，用于每日选题与资讯追踪。走 `scripts/rss_digest.py`
-> （纯标准库解析 RSS 2.0 / Atom），无第三方依赖。
+> Gom bản cập nhật mới nhất của một loạt nguồn đã đăng ký thành bản tóm tắt, dùng để chọn đề tài hằng ngày và theo dõi tin tức. Chạy qua `scripts/rss_digest.py`
+> (parse RSS 2.0 / Atom thuần thư viện chuẩn), không phụ thuộc bên thứ ba.
 
-> 全网热搜见 skill-trending-topics；行业新闻见 skill-news-intelligence；本 SKILL 专注
-> **用户自选订阅源**的更新聚合。
+> Bảng trend toàn mạng xem skill-trending-topics; tin tức ngành xem skill-news-intelligence; SKILL này tập trung
+> tổng hợp cập nhật từ **nguồn do người dùng tự chọn**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 订阅源 | 是 | `--url` 单个/多个，或 `--feeds` 列表文件（每行一个 RSS/Atom URL） |
-| 关键词 | 可选 | 只保留标题/摘要命中的条目（逗号分隔） |
-| 时间窗 | 可选 | 只保留最近 N 天 |
+| Nguồn đăng ký | Có | `--url` một hoặc nhiều, hoặc `--feeds` file danh sách (mỗi dòng một URL RSS/Atom) |
+| Từ khoá | Tuỳ chọn | Chỉ giữ mục có tiêu đề/tóm tắt khớp (ngăn cách bằng dấu phẩy) |
+| Khung thời gian | Tuỳ chọn | Chỉ giữ N ngày gần nhất |
 
-## 执行
+## Thực hiện
 
-脚本路径（相对项目根）：`skills/openclaw/skill-rss-aggregator/scripts/rss_digest.py`。
+Đường dẫn script (tương đối so với gốc dự án): `skills/openclaw/skill-rss-aggregator/scripts/rss_digest.py`.
 
 ```bash
-# 聚合多源，过滤 AI/大模型，最近 7 天，输出 Markdown 摘要
+# Gom nhiều nguồn, lọc AI/mô hình lớn, 7 ngày gần nhất, xuất tóm tắt Markdown
 python <skill>/scripts/rss_digest.py fetch --feeds feeds.txt \
-  --keyword AI,大模型,Agent --since 7 -o outputs/资讯简报/digest.md
+  --keyword AI,LLM,Agent --since 7 -o "outputs/<chủ đề>/digest.md"
 
-# 单个源快速看
+# Xem nhanh một nguồn
 python <skill>/scripts/rss_digest.py fetch --url https://example.com/feed.xml --limit 20
 ```
 
-`feeds.txt` 每行一个 URL（`#` 开头为注释）。输出 `.md` 自动 Markdown，否则 JSON。
+`feeds.txt` mỗi dòng một URL (dòng mở đầu bằng `#` là chú thích). Đầu ra `.md` thì tự động Markdown, còn lại là JSON.
 
-## 结果怎么用
+## Dùng kết quả thế nào
 
-1. 聚合摘要 → 从中挑选题，喂 skill-topic-evaluator 评估可行性、skill-content-matrix 排选题。
-2. 关键词过滤锁定垂类，只看和账号相关的更新。
-3. 定期跑（配合 OpenClaw 定时）做"每日/每周资讯简报"。
+1. Bản tóm tắt tổng hợp → chọn đề tài từ đó, nạp cho skill-topic-evaluator để đánh giá tính khả thi, skill-content-matrix để xếp đề tài.
+2. Lọc từ khoá để khoá vào ngách, chỉ xem các cập nhật liên quan tới kênh.
+3. Chạy định kỳ (kết hợp hẹn giờ của OpenClaw) để làm "bản tin hằng ngày/hằng tuần".
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：默认关键词取 `identity.md` 垂类关键词；只推与账号定位相关的更新。
-- 无 Profile：不过滤或按用户给的关键词，全量聚合。
+- Có Profile: từ khoá mặc định lấy theo từ khoá ngách trong `identity.md`; chỉ đẩy các cập nhật liên quan tới định vị của kênh.
+- Không có Profile: không lọc hoặc lọc theo từ khoá người dùng đưa, tổng hợp toàn bộ.
 
-## 规则
+## Quy tắc
 
-1. 找不到某平台 RSS 时，很多站点/公众号可用 RSSHub 生成 RSS，提示用户配置。
-2. 无 pubDate 的条目不因时间窗被误删（保留，排最后）。
-3. 摘要只列标题/来源/日期/摘要片段与链接，不抓全文（尊重版权）。
-4. 拉取失败的源跳过并提示，不中断整体聚合。
+1. Khi không tìm được RSS của một nền tảng, nhiều site/trang WeChat OA có thể dùng RSSHub để sinh RSS, nhắc người dùng cấu hình.
+2. Mục không có pubDate thì không bị khung thời gian xoá nhầm (giữ lại, xếp cuối).
+3. Bản tóm tắt chỉ liệt kê tiêu đề/nguồn/ngày/đoạn trích và link, không kéo toàn văn (tôn trọng bản quyền).
+4. Nguồn kéo lỗi thì bỏ qua và báo lại, không làm gián đoạn cả lượt tổng hợp.
 
-## 参考来源
+## Nguồn tham khảo
 
-RSS 2.0 / Atom 为标准 XML 订阅格式；无 RSS 的站点常用 RSSHub 生成。本 SKILL 用 stdlib
-xml.etree 解析（兼容两种格式 + HTML 清洗 + RFC822/ISO 日期），关键词/时间窗过滤 + 去重排序。
+RSS 2.0 / Atom là định dạng đăng ký XML chuẩn; site không có RSS thường dùng RSSHub để sinh. SKILL này dùng stdlib
+xml.etree để parse (tương thích cả hai định dạng + làm sạch HTML + ngày RFC822/ISO), lọc từ khoá/khung thời gian + bỏ trùng và sắp xếp.

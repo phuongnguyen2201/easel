@@ -8,77 +8,77 @@ description: >-
 layer: produce
 ---
 
-# 图片去背景 / 抠图换背景
+# Tách nền ảnh / đổi nền cho ảnh
 
-> 用 rembg（AI 语义分割）把主体抠出，输出透明 PNG 或换新背景。无需绿幕。全部走
-> `skills/shared/scripts/remove_bg.py`。
+> Dùng rembg (phân đoạn ngữ nghĩa bằng AI) để tách chủ thể ra, xuất PNG trong suốt hoặc thay nền mới. Không cần phông xanh. Tất cả đi qua
+> `skills/shared/scripts/remove_bg.py`.
 
-> 绿幕**视频**抠像见 **green-screen**；电商视觉方案见 **ecom-details-image**；
-> 常规缩放/裁切/水印见 **image-editing**。
+> Tách phông xanh cho **video** xem **green-screen**; phương án ảnh thương mại điện tử xem **ecom-details-image**;
+> phóng to/thu nhỏ, cắt ảnh, đóng dấu thông thường xem **image-editing**.
 
-## 前置
+## Chuẩn bị trước
 
-首次运行自动下载模型（~4-170MB，视模型而定），需外网代理（脚本读 `EASEL_PROXY`/`http(s)_proxy`，未设则直连）。先自检：
+Lần chạy đầu tự tải model (~4-170MB tuỳ model), cần proxy ra ngoài (script đọc `EASEL_PROXY`/`http(s)_proxy`, không đặt thì nối thẳng). Tự kiểm tra trước:
 ```bash
 python skills/shared/scripts/remove_bg.py check
 ```
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 图片 | 是 | 要抠图的图片（没给就问） |
-| 输出背景 | 否 | 透明（默认）/ 纯色 / 换图片背景 |
-| 模型 | 否 | 通用 / 人像 / 精细，见下表 |
+| Ảnh | Có | Ảnh cần tách nền (chưa đưa thì hỏi) |
+| Nền đầu ra | Không | Trong suốt (mặc định) / màu đơn sắc / thay bằng ảnh nền |
+| Model | Không | Tổng quát / chân dung / tinh xảo, xem bảng dưới |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 抠好的图片（透明用 `.png`）
-- 报告：所用模型、背景形态
+- Ảnh đã tách nền (nền trong suốt thì dùng `.png`)
+- Báo cáo: model đã dùng, dạng nền đầu ra
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/remove_bg.py`（`remove -h` 看参数）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/remove_bg.py` (xem tham số bằng `remove -h`).
 
 ```bash
-# 透明背景（务必输出 .png）
+# Nền trong suốt (bắt buộc xuất .png)
 python skills/shared/scripts/remove_bg.py remove -i product.jpg \
-  -o outputs/主题名/cutout.png
+  -o outputs/<chủ đề>/cutout.png
 
-# 电商白底主图
+# Ảnh chính nền trắng cho thương mại điện tử
 python skills/shared/scripts/remove_bg.py remove -i product.jpg \
-  -o outputs/主题名/white.jpg --bg-color white
+  -o outputs/<chủ đề>/white.jpg --bg-color white
 
-# 换新场景背景
+# Thay nền bằng cảnh mới
 python skills/shared/scripts/remove_bg.py remove -i person.jpg \
-  -o outputs/主题名/scene.png --bg-image scene.jpg
+  -o outputs/<chủ đề>/scene.png --bg-image scene.jpg
 
-# 人像 + 毛发边缘细腻
+# Chân dung + viền tóc mượt
 python skills/shared/scripts/remove_bg.py remove -i portrait.jpg \
-  -o outputs/主题名/cut.png --model u2net_human_seg --alpha-matting
+  -o outputs/<chủ đề>/cut.png --model u2net_human_seg --alpha-matting
 ```
 
-## 模型选择
+## Chọn model
 
-| 模型 | 适用 |
+| Model | Phù hợp cho |
 |------|------|
-| `u2net`（默认） | 通用主体 |
-| `u2netp` | 轻量快速（质量略低） |
-| `u2net_human_seg` | 人像专用 |
-| `isnet-general-use` | 更精细的通用分割 |
-| `silueta` | 体积小的通用模型 |
+| `u2net` (mặc định) | Chủ thể tổng quát |
+| `u2netp` | Nhẹ và nhanh (chất lượng thấp hơn chút) |
+| `u2net_human_seg` | Chuyên cho ảnh chân dung |
+| `isnet-general-use` | Phân đoạn tổng quát tinh hơn |
+| `silueta` | Model tổng quát dung lượng nhỏ |
 
-抠不干净/边缘毛糙时：换更精细的模型，或加 `--alpha-matting`（慢但边缘更好，适合头发/毛绒）。
+Khi tách chưa sạch hoặc viền còn rối: đổi sang model tinh hơn, hoặc thêm `--alpha-matting` (chậm nhưng viền đẹp hơn, hợp với tóc/lông).
 
-## 规则
+## Quy tắc
 
-1. 要透明背景**必须输出 .png**（jpg 不支持透明，脚本会自动改白底并提示）。
-2. 电商主图用 `--bg-color white`；换场景用 `--bg-image`（自动等比覆盖裁切）。
-3. 人像优先 `u2net_human_seg`，商品/通用用 `u2net`。
-4. 抠图质量取决于主体与背景对比度；复杂/低对比图无法保证完美。
-5. 产物统一进 `outputs/主题名/`。
+1. Muốn nền trong suốt thì **bắt buộc xuất .png** (jpg không hỗ trợ nền trong, script sẽ tự chuyển nền trắng và báo lại).
+2. Ảnh chính thương mại điện tử dùng `--bg-color white`; đổi cảnh thì dùng `--bg-image` (tự phủ và cắt theo tỉ lệ).
+3. Ảnh chân dung ưu tiên `u2net_human_seg`, sản phẩm/tổng quát thì dùng `u2net`.
+4. Chất lượng tách phụ thuộc độ tương phản giữa chủ thể và nền; ảnh phức tạp hoặc tương phản thấp thì không bảo đảm hoàn hảo.
+5. Sản phẩm đều đi vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-去背景用 rembg（u2net 系列显著性目标检测/分割模型）+ onnxruntime CPU 推理，是无 GPU 抠图的
-主流方案。换背景合成用 Pillow alpha_composite。把模型加载、代理注入、背景合成封装成确定性脚本。
+Tách nền dùng rembg (dòng model u2net phát hiện/phân đoạn đối tượng nổi bật) + suy luận CPU bằng onnxruntime, là
+phương án phổ biến khi không có GPU. Ghép nền mới dùng Pillow alpha_composite. Việc nạp model, chèn proxy, ghép nền được gói vào script xác định.

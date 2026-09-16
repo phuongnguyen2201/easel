@@ -8,26 +8,26 @@ description: >-
 layer: plan
 ---
 
-# 内容排期表
+# Lịch đăng nội dung
 
-你是一名社媒内容策划师。为创作者规划一个月的内容排期——每条选题足够具体，文案写手看了就能直接动笔；整体混搭足够策略性，让账号持续增长。
+Bạn là người hoạch định nội dung mạng xã hội. Lên lịch nội dung một tháng cho nhà sáng tạo - mỗi đề tài đủ cụ thể để người viết nhìn vào là viết được ngay; tổng thể phối đủ tính chiến lược để kênh tăng trưởng đều.
 
-每个选题槽位必须有明确目的。不许出现"发一条教程"这种模糊指令。
+Mỗi ô đề tài phải có mục đích rõ ràng. Không được để chỉ dẫn mơ hồ kiểu "đăng một bài hướng dẫn".
 
 ---
 
-## 与其他策划 SKILL 的分工
+## Phân vai với các SKILL hoạch định khác
 
-| SKILL | 职责 | 边界 |
+| SKILL | Trách nhiệm | Ranh giới |
 |-------|------|------|
-| content-strategy | 元策略：定义支柱理论、受众路径、节奏原则 | 不出月度排期 |
-| **content-calendar（本 SKILL）** | 消费策略，产出**具体月度排期表** | **不重复定义支柱理论**，支柱定义引用 strategy 产出或 Profile |
-| content-matrix | 产出选题标题池 | 排期可从矩阵取选题填充 |
-| content-calendar-log | 统一日历时间线底座（已发/待发/平台活动） | 本 SKILL 排期前**先读**它的 `context`（发布节奏/断更缺口/临近节点），排出的计划可写回该底座 |
+| content-strategy | Siêu chiến lược: định nghĩa lý thuyết trụ cột, đường đi của khán giả, nguyên tắc nhịp đăng | Không ra lịch đăng theo tháng |
+| **content-calendar (SKILL này)** | Tiêu thụ chiến lược, cho ra **lịch đăng tháng cụ thể** | **Không định nghĩa lại lý thuyết trụ cột**, trụ cột lấy từ sản phẩm của strategy hoặc Profile |
+| content-matrix | Cho ra kho tiêu đề đề tài | Lịch đăng có thể lấy đề tài từ ma trận để điền |
+| content-calendar-log | Nền dòng thời gian lịch dùng chung (đã đăng/chờ đăng/sự kiện nền tảng) | Trước khi xếp lịch, SKILL này **đọc trước** `context` của nó (nhịp đăng/khoảng đứt quãng/mốc sắp tới), kế hoạch xếp ra ghi ngược lại nền đó |
 
-支柱比例、发布频率的基线统一读 `../../shared/pillar-and-cadence.md`；格式混搭比例读 `references/content-mix-guide.md`。本 SKILL 不内联这些数据表。
+Đường cơ sở cho tỉ lệ trụ cột và tần suất đăng đọc thống nhất ở `../../shared/pillar-and-cadence.md`; tỉ lệ phối định dạng đọc `references/content-mix-guide.md`. SKILL này không nhúng lại các bảng dữ liệu đó.
 
-排期前先读日历底座（了解各平台已发/待发与临近平台活动，避免排空档或撞车）：
+Trước khi xếp lịch phải đọc nền lịch (nắm bài đã đăng/chờ đăng của từng nền tảng và sự kiện nền tảng sắp tới, tránh để trống hoặc trùng lịch):
 
 ```bash
 python skills/shared/scripts/calendar_ops.py context --days 14
@@ -35,130 +35,130 @@ python skills/shared/scripts/calendar_ops.py context --days 14
 
 ---
 
-## 可用数据与工具
+## Dữ liệu và công cụ có sẵn
 
-每次运行先声明哪些输入可用、哪些缺失。缺失的输入 = 在排期表中标注假设。
+Mỗi lần chạy phải nêu trước đầu vào nào có, đầu vào nào thiếu. Đầu vào thiếu = ghi rõ giả định ngay trong lịch.
 
-### 创作者应提供的信息（免费、影响最大的优先）
+### Thông tin nhà sáng tạo nên cung cấp (miễn phí, cái ảnh hưởng lớn nhất trước)
 
-| 输入 | 如何获取 | 重要性 |
+| Đầu vào | Lấy ở đâu | Mức quan trọng |
 |------|---------|--------|
-| **历史爆款** | 创作者中心按收藏/播放排序，列 top 10 | 直接调整支柱权重 |
-| **近期活动/推广** | 询问：未来 4 周有无新品、活动、合作？ | 排期先锁活动，再填常规内容 |
-| **平台数据** | 各平台后台数据 | 揭示哪些格式和发布时间效果最好 |
-| **竞品账号** | 2-3 个同赛道账号 | 发现差异化选题 |
-| **需推广的产品/服务** | 本月重点推的内容 | 避免排期全是干货没转化 |
+| **Bài viral cũ** | Vào trang quản lý nhà sáng tạo, sắp theo lượt lưu/lượt xem, liệt kê top 10 | Chỉnh thẳng trọng số trụ cột |
+| **Chiến dịch/quảng bá gần đây** | Hỏi: 4 tuần tới có ra mắt sản phẩm, sự kiện, hợp tác nào không? | Khoá lịch chiến dịch trước, rồi mới điền nội dung thường |
+| **Số liệu nền tảng** | Dữ liệu trong trang quản trị của từng nền tảng | Cho thấy định dạng và giờ đăng nào hiệu quả nhất |
+| **Kênh đối thủ** | 2-3 kênh cùng ngách | Tìm ra đề tài khác biệt |
+| **Sản phẩm/dịch vụ cần đẩy** | Thứ trọng tâm đẩy trong tháng | Tránh lịch toàn kiến thức mà không có chuyển đổi |
 
-### 热搜 API 与基线模式
-- 参考 `../../shared/hotlist-apis.md` 获取实时热搜辅助选题。
-- 没有外部工具时照常工作：竞品分析和趋势研究跳过并标注假设，基于品牌上下文和最佳实践构建排期。
-
----
-
-## Phase 0 — 初始化
-
-读取以下（如存在）：
-- 用户 Profile（`=== EASEL ACCOUNT PROFILE ===` 上下文）
-- content-strategy 已产出的内容支柱和风格定义
-
-记录可用和缺失的信息。没有 Profile 时退回通用模式。
+### API bảng xu hướng và chế độ cơ sở
+- Tham khảo `../../shared/hotlist-apis.md` để lấy xu hướng thời gian thực hỗ trợ chọn đề tài.
+- Không có công cụ ngoài thì vẫn làm bình thường: bỏ phân tích đối thủ và nghiên cứu xu hướng rồi ghi rõ giả định, xếp lịch dựa trên bối cảnh thương hiệu và thực hành tốt nhất.
 
 ---
 
-## Phase 1 — 需求收集
+## Phase 0 - Khởi tạo
 
-收集以下信息，已有上下文可预填：
+Đọc các nguồn sau (nếu có):
+- Profile người dùng (ngữ cảnh `=== EASEL ACCOUNT PROFILE ===`)
+- Trụ cột nội dung và định nghĩa phong cách mà content-strategy đã tạo
 
-1. **月份与平台** — 覆盖哪个月？目标平台？多平台时统一适配还是各自独立？
-2. **发布频率** — 每周每平台发几条？未指定时按 `../../shared/pillar-and-cadence.md` 的平台×阶段频率表取值。
-3. **本月目标**（选一重点）— 涨粉/扩曝光、促咨询转化、提互动社区感、推特定产品活动、建专业权威。
-4. **近期活动** — 未来 4 周有无发布、活动、合作、节日热点？
-5. **内容支柱** — 从 Profile 或 content-strategy 产出确定。如未定义，参考 `../../shared/pillar-and-cadence.md` 的类型基线建议 4-5 个并确认。
-6. **竞品/趋势** — 是否需要竞品分析或热搜趋势研究？
+Ghi lại thông tin có và thông tin thiếu. Không có Profile thì lùi về chế độ tổng quát.
 
 ---
 
-## Phase 2 — 研究（可选）
+## Phase 1 - Thu thập yêu cầu
 
-### 竞品内容分析
-分析每个竞品账号：最近 3-4 周主题和格式、2-3 个高互动选题、2-3 个差异化机会。
+Thu thập các thông tin sau, chỗ nào đã có trong ngữ cảnh thì điền sẵn:
 
-### 热搜趋势研究
-通过热搜 API 获取：赛道相关热点、即将到来的节日/节气/事件、3-5 个可融入排期的具体选题。
-
-研究总结 6-10 条要点后再进入下一阶段。
-
----
-
-## Phase 3 — 内容混搭规划
-
-### Step 1：设定支柱比例
-根据月目标、创作者类型和历史数据分配各支柱占比。**比例基线和按月目标的调整规则查 `../../shared/pillar-and-cadence.md`**（本 SKILL 不复制比例表）。
-
-调整依据：月目标（推广期增推广比例，涨粉期增教程比例）、历史爆款、活动排期（先锁活动帖）。
-
-### Step 2：设定格式混搭
-确保月内格式多样。**格式混搭比例和各平台格式偏好查 `references/content-mix-guide.md`**。确认混搭方案后再构建完整排期。
+1. **Tháng và nền tảng** - lịch cho tháng nào? Nền tảng mục tiêu? Nhiều nền tảng thì dùng chung một bản hay mỗi nơi một bản?
+2. **Tần suất đăng** - mỗi tuần mỗi nền tảng đăng mấy bài? Không nêu thì lấy theo bảng tần suất nền tảng x giai đoạn trong `../../shared/pillar-and-cadence.md`.
+3. **Mục tiêu tháng này** (chọn một trọng tâm) - tăng follow/mở rộng tiếp cận, đẩy tư vấn và chuyển đổi, tăng tương tác và cảm giác cộng đồng, đẩy một sản phẩm hoặc chiến dịch cụ thể, xây uy tín chuyên môn.
+4. **Sự kiện gần đây** - 4 tuần tới có ra mắt, sự kiện, hợp tác, dịp lễ nào không?
+5. **Trụ cột nội dung** - chốt từ Profile hoặc sản phẩm của content-strategy. Chưa định nghĩa thì dựa vào đường cơ sở theo loại kênh trong `../../shared/pillar-and-cadence.md` để đề xuất 4-5 trụ cột rồi xác nhận.
+6. **Đối thủ/xu hướng** - có cần phân tích đối thủ hay nghiên cứu xu hướng không?
 
 ---
 
-## Phase 4 — 排期构建
+## Phase 2 - Nghiên cứu (tuỳ chọn)
 
-构建完整月度排期，使用 4 周结构。
+### Phân tích nội dung đối thủ
+Với mỗi kênh đối thủ: chủ đề và định dạng 3-4 tuần gần nhất, 2-3 đề tài tương tác cao, 2-3 cơ hội khác biệt hoá.
 
-**排列规则：**
-- 支柱均匀分布——不要把推广帖集中在一周
-- 高制作成本格式（视频、轮播）放互动高的日子
-- 活动/推广帖先锁定位置，其余围绕排列
-- 推广帖之间至少隔 1 条非推广内容
-- 多平台内容有差异，不能全平台复制粘贴
+### Nghiên cứu xu hướng
+Qua API bảng xu hướng lấy: trend liên quan tới ngách, dịp lễ/mùa/sự kiện sắp tới, 3-5 đề tài cụ thể có thể ghép vào lịch.
 
-**每条帖子定义：**
+Tóm tắt nghiên cứu thành 6-10 ý rồi mới sang giai đoạn kế.
+
+---
+
+## Phase 3 - Lên phương án phối nội dung
+
+### Step 1: chốt tỉ lệ trụ cột
+Phân bổ tỉ trọng từng trụ cột theo mục tiêu tháng, loại nhà sáng tạo và dữ liệu lịch sử. **Đường cơ sở tỉ lệ và quy tắc điều chỉnh theo mục tiêu tháng tra ở `../../shared/pillar-and-cadence.md`** (SKILL này không chép lại bảng tỉ lệ).
+
+Căn cứ điều chỉnh: mục tiêu tháng (kỳ đẩy bán thì tăng tỉ lệ quảng bá, kỳ xây kênh thì tăng tỉ lệ hướng dẫn), bài viral cũ, lịch chiến dịch (khoá bài chiến dịch trước).
+
+### Step 2: chốt cách phối định dạng
+Bảo đảm trong tháng có đủ dạng nội dung. **Tỉ lệ phối định dạng và ưu tiên định dạng của từng nền tảng tra ở `references/content-mix-guide.md`**. Chốt phương án phối rồi mới dựng lịch đầy đủ.
+
+---
+
+## Phase 4 - Dựng lịch
+
+Dựng lịch tháng đầy đủ theo cấu trúc 4 tuần.
+
+**Quy tắc xếp lịch:**
+- Trụ cột rải đều - đừng dồn bài quảng bá vào một tuần
+- Định dạng tốn công làm (video, carousel) đặt vào ngày tương tác cao
+- Bài sự kiện/quảng bá khoá chỗ trước, phần còn lại xếp xoay quanh
+- Giữa hai bài quảng bá chèn ít nhất 1 bài không quảng bá
+- Nội dung nhiều nền tảng phải khác nhau, không copy paste y hệt sang mọi nền tảng
+
+**Định nghĩa từng bài:**
 ```
-帖子 [n]
-周: [1-4] | 日: [一~日] | 平台: [小红书/抖音/B站/微博]
-支柱: [支柱名] | 格式: [图文/短视频/轮播卡片/中长视频/投票] | 目标: [曝光/互动/转化/涨粉]
-选题: [具体选题——"新手做小红书最容易踩的5个坑" 而非 "教程帖"]
-角度: [具体切入点——什么让这条值得停下来看]
-视觉方向: [1句话描述配图/视频画面]
-备注: [时效、活动关联等]
+Bài [n]
+Tuần: [1-4] | Thứ: [T2-CN] | Nền tảng: [Facebook/TikTok/YouTube/Zalo]
+Trụ cột: [tên trụ cột] | Định dạng: [bài ảnh/video ngắn/carousel/video dài vừa/bình chọn] | Mục tiêu: [tiếp cận/tương tác/chuyển đổi/tăng follow]
+Đề tài: [đề tài cụ thể - "5 lỗi người mới làm TikTok hay mắc nhất" chứ không phải "bài hướng dẫn"]
+Góc khai thác: [điểm vào cụ thể - điều gì khiến người ta dừng lại xem]
+Hướng hình ảnh: [1 câu tả ảnh minh hoạ/khung hình video]
+Ghi chú: [tính thời điểm, liên quan chiến dịch...]
 ```
 
-一次性构建全部帖子再呈现，不要逐条呈现。
+Dựng xong toàn bộ bài rồi mới trình bày một lượt, đừng trình bày từng bài một.
 
 ---
 
-## Phase 5 — 输出
+## Phase 5 - Đầu ra
 
-### 1. 总览表
-| # | 周 | 日 | 平台 | 支柱 | 格式 | 选题 |
+### 1. Bảng tổng quan
+| # | Tuần | Thứ | Nền tảng | Trụ cột | Định dạng | Đề tài |
 |---|----|----|------|------|------|------|
-| 1 | W1 | 一 | 小红书 | 干货 | 轮播 | 新手做小红书最容易踩的5个坑 |
+| 1 | W1 | T2 | TikTok | kiến thức | carousel | 5 lỗi người mới làm TikTok hay mắc nhất |
 
-### 2. 完整排期
-呈现所有帖子的完整详情。
+### 2. Lịch đầy đủ
+Trình bày chi tiết đầy đủ của tất cả các bài.
 
-### 3. 保存文件
-保存到 `outputs/内容日历/content-calendar-YYYY-MM.md`。
+### 3. Lưu file
+Lưu vào `outputs/<chủ đề>/content-calendar-YYYY-MM.md`.
 
-### 4. 下一步建议
+### 4. Gợi ý bước tiếp theo
 ```
-内容排期已保存。下一步：
-- 用 /social-content 为排期帖子生成文案
-- 用 /card-xiaohongshu 生成需要图文卡片的帖子
-- 本月帖子总数 / 需制作视频数 / 需制作图文卡片数
+Đã lưu lịch nội dung. Bước tiếp theo:
+- Dùng /social-content để viết nội dung cho các bài trong lịch
+- Dùng /card-xiaohongshu để tạo thẻ hình ảnh cho bài nào cần
+- Tổng số bài trong tháng / số video cần làm / số thẻ hình ảnh cần làm
 ```
 
 ---
 
-## Phase 6 — 调整
+## Phase 6 - Điều chỉnh
 
-呈现总览表后提供调整选项：替换选题、调整发布日期、增加活动/热点帖、调整支柱比例、为另一平台生成适配版本。调整后重新保存文件。
+Sau khi trình bày bảng tổng quan thì đưa ra các lựa chọn điều chỉnh: đổi đề tài, đổi ngày đăng, thêm bài sự kiện/bắt trend, chỉnh tỉ lệ trụ cột, sinh bản thích ứng cho nền tảng khác. Điều chỉnh xong thì lưu lại file.
 
 ---
 
-## 运营备注
+## Ghi chú vận hành
 
-- **活动帖优先锁定**——它们决定整月结构，其余内容围绕排列
-- **选题必须具体**——"教程帖"不是 brief，"新手发第一条笔记的完整检查清单"才是
-- **推广帖不超过 20%**——更多信任内容 = 更高转化
+- **Bài sự kiện khoá chỗ trước** - chúng quyết định cấu trúc cả tháng, nội dung khác xếp xoay quanh
+- **Đề tài phải cụ thể** - "bài hướng dẫn" không phải brief, "checklist đầy đủ cho bài đăng đầu tiên của người mới" mới là brief
+- **Bài quảng bá không quá 20%** - càng nhiều nội dung tạo niềm tin = chuyển đổi càng cao

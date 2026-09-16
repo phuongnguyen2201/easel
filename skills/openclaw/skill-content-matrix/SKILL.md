@@ -7,93 +7,93 @@ description: >-
 layer: plan
 ---
 
-# 选题矩阵生成
+# Sinh ma trận đề tài
 
-> 将用户的内容支柱与 8 种内容格式交叉，生成选题矩阵，每个单元格产出一个具体、可直接执行的选题标题。
+> Giao trụ cột nội dung của người dùng với 8 định dạng nội dung để sinh ma trận đề tài, mỗi ô cho ra một tiêu đề đề tài cụ thể, làm được ngay.
 
-## 与其他策划 SKILL 的分工
+## Phân vai với các SKILL hoạch định khác
 
-| SKILL | 职责 | 边界 |
+| SKILL | Trách nhiệm | Ranh giới |
 |-------|------|------|
-| content-strategy | 定义支柱理论 | 本 SKILL 承接其支柱，不重复定义 |
-| content-calendar | 出月度排期 | 可从本矩阵取选题填充排期 |
-| **content-matrix（本 SKILL）** | 出**选题标题池**（支柱 × 格式），批量评分挑 Top | 只出标题池，不排期 |
-| topic-evaluator | 单条选题深评 | 与本 SKILL **共用同一套评分维度**（见下），matrix 批量、evaluator 深评 |
+| content-strategy | Định nghĩa lý thuyết trụ cột | SKILL này nhận trụ cột từ đó, không định nghĩa lại |
+| content-calendar | Ra lịch đăng theo tháng | Có thể lấy đề tài từ ma trận này để lấp lịch |
+| **content-matrix (SKILL này)** | Ra **kho tiêu đề đề tài** (trụ cột × định dạng), chấm điểm hàng loạt để chọn Top | Chỉ ra kho tiêu đề, không xếp lịch |
+| topic-evaluator | Đánh giá sâu một đề tài đơn | **Dùng chung một bộ chiều chấm điểm** với SKILL này (xem dưới), matrix chấm hàng loạt, evaluator đánh giá sâu |
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Diễn giải |
 |------|------|------|
-| 内容支柱 | 是 | 3-5 个支柱关键词或短语 |
-| identity.md | 否 | 有画像时自动读取，预填账号定位并辅助推荐支柱 |
-| style.md | 否 | 有画像时用于调整选题语言风格 |
+| Trụ cột nội dung | Có | 3-5 từ khoá hoặc cụm từ trụ cột |
+| identity.md | Không | Có hồ sơ thì tự đọc, điền sẵn định vị kênh và hỗ trợ gợi ý trụ cột |
+| style.md | Không | Có hồ sơ thì dùng để chỉnh phong cách ngôn ngữ của đề tài |
 
-## 输出
+## Đầu ra
 
-Markdown 表格文件 `content-matrix-YYYY-MM-DD.md`，结构如下：
+File bảng Markdown `content-matrix-YYYY-MM-DD.md`, cấu trúc như sau:
 
 ```
-| 支柱 \ 格式 | Actionable | Motivational | Analytical | Contrarian | Observation | X vs Y | Present vs Future | Listicle |
+| Trụ cột \ Định dạng | Actionable | Motivational | Analytical | Contrarian | Observation | X vs Y | Present vs Future | Listicle |
 |-------------|-----------|-------------|-----------|-----------|------------|--------|------------------|---------|
-| 支柱 A      | 具体标题   | 具体标题     | ...       | ...       | ...        | ...    | ...              | ...     |
-| 支柱 B      | ...       | ...         | ...       | ...       | ...        | ...    | ...              | ...     |
+| Trụ cột A   | tiêu đề cụ thể | tiêu đề cụ thể | ... | ... | ... | ... | ... | ... |
+| Trụ cột B   | ...       | ...         | ...       | ...       | ...        | ...    | ...              | ...     |
 ```
 
-每个单元格 = 一个具体选题标题（非泛泛主题）。
+Mỗi ô = một tiêu đề đề tài cụ thể (không phải chủ đề chung chung).
 
-表格后附：最强选题标注 + 下一步操作提示。
+Sau bảng đính kèm: đánh dấu các đề tài mạnh nhất + gợi ý bước tiếp theo.
 
-## 执行步骤
+## Các bước thực thi
 
-1. **检查上下文文件**
-   - 检查是否有画像 `identity.md`，存在则读取并预填账号定位
-   - 检查是否有画像 `style.md`，存在则读取语言风格偏好
+1. **Kiểm tra file ngữ cảnh**
+   - Kiểm tra có hồ sơ `identity.md` không, có thì đọc và điền sẵn định vị kênh
+   - Kiểm tra có hồ sơ `style.md` không, có thì đọc lấy phong cách ngôn ngữ ưa dùng
 
-2. **获取内容支柱**
-   - 用户直接提供：验证数量为 3-5 个
-   - 用户未提供且有 `identity.md`：基于账号定位推荐 3-5 个候选支柱，请用户确认
-   - 用户未提供且无上下文：直接询问用户
+2. **Lấy trụ cột nội dung**
+   - Người dùng đưa thẳng: xác nhận số lượng là 3-5
+   - Người dùng chưa đưa nhưng có `identity.md`: dựa trên định vị kênh gợi ý 3-5 trụ cột ứng viên, mời người dùng chốt
+   - Người dùng chưa đưa và không có ngữ cảnh: hỏi thẳng người dùng
 
-3. **加载内容格式定义**
-   - 参照 `references/content-formats.md` 中的 8 种格式及其规则
+3. **Nạp định nghĩa định dạng nội dung**
+   - Tham chiếu 8 định dạng và quy tắc của chúng trong `references/content-formats.md`
 
-4. **构建矩阵**
-   - 对每个支柱 x 每种格式，生成一个具体选题标题
-   - 标题必须同时体现该支柱的领域特征和该格式的表达方式
-   - 标题必须是可直接写作的具体题目，不是模糊主题
+4. **Dựng ma trận**
+   - Với mỗi trụ cột x mỗi định dạng, sinh một tiêu đề đề tài cụ thể
+   - Tiêu đề phải thể hiện đồng thời đặc trưng lĩnh vực của trụ cột đó và cách diễn đạt của định dạng đó
+   - Tiêu đề phải là đề bài cụ thể viết được ngay, không phải chủ đề mơ hồ
 
-5. **输出矩阵**
-   - 渲染为 Markdown 表格
-   - 保存为 `outputs/选题矩阵/content-matrix-YYYY-MM-DD.md`
+5. **Xuất ma trận**
+   - Render thành bảng Markdown
+   - Lưu thành `outputs/<chủ đề>/content-matrix-YYYY-MM-DD.md`
 
-6. **选题评分（批量池）**
-   - 按 `../../shared/scoring-dimensions.md` 的**统一七维 + 标尺 + 推荐权重**，对矩阵中每个选题加权打分（满分 100），换算综合分排序。
-   - 与 topic-evaluator 共用同一套维度和标尺，口径一致——本 SKILL 做批量快评，evaluator 做单条深评。
-   - 从矩阵中挑选 Top 3-5 最强选题，给出推荐理由（含关键维度得分明细）。
-   - **敏感赛道**选题按 scoring-dimensions.md 的合规预警清单标注 ⚠️ 并附合规建议。
+6. **Chấm điểm đề tài (kho hàng loạt)**
+   - Theo **bảy chiều thống nhất + thước đo + trọng số khuyến nghị** trong `../../shared/scoring-dimensions.md`, chấm có trọng số cho từng đề tài trong ma trận (thang 100), quy ra điểm tổng rồi xếp hạng.
+   - Dùng chung một bộ chiều và thước đo với topic-evaluator, thống nhất cách hiểu - SKILL này chấm nhanh hàng loạt, evaluator đánh giá sâu từng đề tài.
+   - Chọn Top 3-5 đề tài mạnh nhất trong ma trận, nêu lý do khuyến nghị (kèm chi tiết điểm ở các chiều then chốt).
+   - Đề tài thuộc **ngách nhạy cảm** thì đánh dấu ⚠️ theo danh sách cảnh báo tuân thủ trong scoring-dimensions.md và kèm khuyến nghị tuân thủ.
 
-7. **提供下一步操作**
-   - 提示用户可选择任意单元格展开为完整帖子
-   - 示例："选择任意一个选题编号，我来帮你展开为完整内容"
+7. **Đưa bước tiếp theo**
+   - Nhắc người dùng có thể chọn bất kỳ ô nào để triển khai thành bài hoàn chỉnh
+   - Ví dụ: "Chọn một mã đề tài bất kỳ, tôi sẽ giúp bạn triển khai thành nội dung hoàn chỉnh"
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `platforms.md`，根据平台特性调整选题风格（如小红书偏实用干货、抖音偏情绪引爆）
-- 读取 `audience.md`，确保选题与目标受众匹配
-- 读取 `identity.md`，选题围绕账号定位展开
-- 读取 `style.md`，调整标题语气
+**Khi có Profile:**
+- Đọc `platforms.md`, chỉnh phong cách đề tài theo đặc tính nền tảng (ví dụ Xiaohongshu thiên nội dung thực dụng, Douyin thiên kích cảm xúc)
+- Đọc `audience.md`, bảo đảm đề tài khớp với khán giả mục tiêu
+- Đọc `identity.md`, đề tài xoay quanh định vị kênh
+- Đọc `style.md`, chỉnh giọng điệu tiêu đề
 
-**无 Profile 时：**
-- 退回通用模式，选题不做平台特化
-- 在输出末尾附注："如提供账号 Profile，可生成更贴合平台和受众的选题"
+**Khi không có Profile:**
+- Lui về chế độ chung, đề tài không đặc hoá theo nền tảng
+- Ghi chú ở cuối đầu ra: "Nếu cung cấp Profile kênh, có thể sinh đề tài bám nền tảng và khán giả sát hơn"
 
-## 规则
+## Quy tắc
 
-1. 支柱数量必须在 3-5 个之间，不足 3 个要求补充，超过 5 个要求精简
-2. 每个单元格必须是具体标题，禁止出现"关于 XX 的内容"这类泛泛描述
-3. 标题必须同时匹配所在行的支柱和所在列的格式，不可张冠李戴
-4. 有 `style.md` 时，标题语言风格必须与之一致
-5. 禁止使用破折号（em dash）
-6. 同一支柱下 8 个标题之间不可重复角度
-7. 矩阵中不出现重复或高度相似的选题
+1. Số trụ cột bắt buộc nằm trong khoảng 3-5, thiếu 3 thì yêu cầu bổ sung, quá 5 thì yêu cầu tinh giản
+2. Mỗi ô bắt buộc là tiêu đề cụ thể, cấm xuất hiện kiểu mô tả chung chung như "nội dung về XX"
+3. Tiêu đề bắt buộc khớp đồng thời trụ cột của hàng và định dạng của cột, không được râu ông nọ cắm cằm bà kia
+4. Khi có `style.md`, phong cách ngôn ngữ của tiêu đề bắt buộc nhất quán với nó
+5. Cấm dùng gạch ngang dài (em dash)
+6. Trong cùng một trụ cột, 8 tiêu đề không được trùng góc tiếp cận
+7. Trong ma trận không xuất hiện đề tài trùng hoặc giống nhau quá nhiều

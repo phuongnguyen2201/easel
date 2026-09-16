@@ -8,67 +8,67 @@ description: >-
 layer: produce
 ---
 
-# 音频降噪
+# Khử ồn âm thanh
 
-清理录音中的背景噪声。降噪专项 SKILL——通过共享脚本 `skills/shared/scripts/audio_ops.py denoise` 封装 ffmpeg 降噪滤镜，提供三级方案（从基础滤波到 RNN 神经网络），参数确定、可复现，不现场手拼命令。
+Dọn tiếng ồn nền trong bản ghi. SKILL chuyên trách khử ồn - gói các filter khử ồn của ffmpeg qua script dùng chung `skills/shared/scripts/audio_ops.py denoise`, đưa ra ba mức (từ lọc cơ bản tới mạng nơ-ron RNN), tham số cố định, tái lập được, không ghép lệnh tại chỗ.
 
-> 通用音频操作（裁剪/转码/音量/提取/拼接/淡入淡出/变速）见 **audio-editing**。本 SKILL 专注降噪。
+> Thao tác âm thanh chung (cắt/chuyển mã/âm lượng/tách/nối/fade in-out/đổi tốc độ) xem **audio-editing**. SKILL này chỉ lo khử ồn.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| input_file | 是 | 音频或视频文件路径 |
-| tier | 否 | `1` / `2` / `3`（默认 `2`） |
-| output_file | 否 | 默认 `outputs/主题名/{filename}-clean.{ext}` |
-| mix | 否 | 降噪强度 0.0-1.0（默认 0.8，仅 tier3 RNNoise） |
-| preserve_original | 否 | 保留原始文件（默认 true） |
+| input_file | Có | Đường dẫn file âm thanh hoặc video |
+| tier | Không | `1` / `2` / `3` (mặc định `2`) |
+| output_file | Không | Mặc định `outputs/<chủ đề>/{filename}-clean.{ext}` |
+| mix | Không | Cường độ khử ồn 0.0-1.0 (mặc định 0.8, chỉ dùng cho tier3 RNNoise) |
+| preserve_original | Không | Giữ lại file gốc (mặc định true) |
 
-支持格式：wav, mp3, flac, aac, m4a, mp4, mkv, mov。
+Định dạng hỗ trợ: wav, mp3, flac, aac, m4a, mp4, mkv, mov.
 
-## 输出
+## Đầu ra
 
-- 降噪后的音频文件（放入 `outputs/主题名/`）
-- 处理报告：原始文件信息、所用 tier 与滤镜链、输出文件信息、大小对比
+- File âm thanh đã khử ồn (đặt vào `outputs/<chủ đề>/`)
+- Báo cáo xử lý: thông tin file gốc, tier và chuỗi filter đã dùng, thông tin file đầu ra, so sánh dung lượng
 
-## 三级降噪方案（对应脚本 `--tier`）
+## Ba mức khử ồn (ứng với `--tier` của script)
 
-脚本按 tier 自动选滤镜链并打印实际执行的 ffmpeg 命令。
+Script tự chọn chuỗi filter theo tier và in ra lệnh ffmpeg thực sự chạy.
 
-### Tier 1 — 基础降噪（ffmpeg 内置滤波）
+### Tier 1 - Khử ồn cơ bản (bộ lọc sẵn có của ffmpeg)
 
-切除低频隆隆声、高频嘶嘶声 + FFT 降噪，纯 ffmpeg 无外部依赖。
-滤镜：`highpass=f=80,lowpass=f=8000,afftdn=nr=12:nf=-40:tn=1`
-适用：轻度噪声、无需模型的快速处理。
+Cắt tiếng ù tần số thấp, tiếng xì tần số cao + khử ồn FFT, thuần ffmpeg, không phụ thuộc bên ngoài.
+Filter: `highpass=f=80,lowpass=f=8000,afftdn=nr=12:nf=-40:tn=1`
+Phù hợp: nhiễu nhẹ, cần xử lý nhanh mà không cần model.
 
-### Tier 2 — 加强降噪（更强 FFT + 非局部均值）
+### Tier 2 - Khử ồn tăng cường (FFT mạnh hơn + trung bình phi cục bộ)
 
-更激进的 FFT 降噪叠加 anlmdn，仍纯 ffmpeg。
-滤镜：`highpass=f=70,afftdn=nr=24:nf=-30:tn=1,anlmdn=s=0.0005`
-适用：中度噪声、稳态背景噪声（空调/风扇/底噪）。**默认档**。
+Khử ồn FFT quyết liệt hơn, chồng thêm anlmdn, vẫn thuần ffmpeg.
+Filter: `highpass=f=70,afftdn=nr=24:nf=-30:tn=1,anlmdn=s=0.0005`
+Phù hợp: nhiễu trung bình, tiếng nền ổn định (điều hoà/quạt/nhiễu nền). **Mức mặc định**.
 
-### Tier 3 — RNN 神经网络降噪（arnndn + 后处理）
+### Tier 3 - Khử ồn bằng mạng nơ-ron RNN (arnndn + hậu xử lý)
 
-RNNoise 针对人声优化 + 高通预处理 + 动态压缩 + 响度归一化。
-滤镜：`highpass=f=60,arnndn=m=<model>:mix=<mix>,acompressor=...,loudnorm=...`
-适用：人声录音、播客、访谈、复杂噪声环境。
-**需要 RNNoise 模型 `sh.rnnn`；缺失时脚本自动降级 Tier2 并打印下载提示。**
+RNNoise tối ưu cho giọng người + tiền xử lý highpass + nén động + chuẩn hoá độ lớn.
+Filter: `highpass=f=60,arnndn=m=<model>:mix=<mix>,acompressor=...,loudnorm=...`
+Phù hợp: bản ghi giọng nói, podcast, phỏng vấn, môi trường nhiễu phức tạp.
+**Cần model RNNoise `sh.rnnn`; thiếu thì script tự hạ xuống Tier2 và in hướng dẫn tải.**
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/audio_ops.py`。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/audio_ops.py`.
 
-### 1. 探测输入文件
+### 1. Dò file đầu vào
 
 ```bash
 python skills/shared/scripts/audio_ops.py info input_file
 ```
 
-脚本自身检查 ffmpeg/ffprobe，缺失时给安装提示。向用户展示时长/码率/声道，判断音频还是视频。
+Script tự kiểm tra ffmpeg/ffprobe, thiếu thì báo cách cài. Cho người dùng xem thời lượng/bitrate/số kênh, xác định là audio hay video.
 
-### 2. 准备 RNN 模型（仅 Tier3）
+### 2. Chuẩn bị model RNN (chỉ Tier3)
 
-检查脚本旁 `skills/shared/scripts/models/sh.rnnn` 是否存在。不存在则下载：
+Kiểm tra xem `skills/shared/scripts/models/sh.rnnn` cạnh script đã có chưa. Chưa có thì tải:
 
 ```bash
 mkdir -p skills/shared/scripts/models
@@ -76,42 +76,42 @@ curl -L https://github.com/GregorR/rnnoise-models/raw/master/somnolent-hogwash-2
   -o skills/shared/scripts/models/sh.rnnn
 ```
 
-不下载也可——脚本会自动降级 Tier2。也可用 `--model <path>` 指定其它模型。
+Không tải cũng được - script sẽ tự hạ xuống Tier2. Cũng có thể dùng `--model <path>` để chỉ model khác.
 
-### 3. 执行降噪
-
-```bash
-# 默认 Tier2
-python skills/shared/scripts/audio_ops.py denoise input.wav -o outputs/主题名/input-clean.wav --tier 2
-# Tier3（RNNoise，人声）
-python skills/shared/scripts/audio_ops.py denoise input.wav -o outputs/主题名/input-clean.wav --tier 3 --mix 0.8
-```
-
-- 脚本会打印实际运行的 ffmpeg 命令（透明执行）。
-- **视频输入自动 `-c:v copy`**：只处理音轨，视频轨原样保留。
-
-### 4. 验证输出 + 报告
-
-脚本处理完自动打印输出文件的时长/码率/声道/采样率。如需完整对比：
+### 3. Chạy khử ồn
 
 ```bash
-python skills/shared/scripts/audio_ops.py info outputs/主题名/input-clean.wav
+# Tier2 mặc định
+python skills/shared/scripts/audio_ops.py denoise input.wav -o outputs/<chủ đề>/input-clean.wav --tier 2
+# Tier3 (RNNoise, giọng người)
+python skills/shared/scripts/audio_ops.py denoise input.wav -o outputs/<chủ đề>/input-clean.wav --tier 3 --mix 0.8
 ```
 
-报告内容：原始 vs 输出（格式/时长/大小/采样率）、所用 tier 与滤镜链、大小变化。
+- Script sẽ in lệnh ffmpeg thực sự chạy (thực thi minh bạch).
+- **Đầu vào là video thì tự thêm `-c:v copy`**: chỉ xử lý luồng tiếng, luồng hình giữ nguyên.
 
-## 规则
+### 4. Kiểm tra đầu ra + báo cáo
 
-1. **绝不删除原始文件** — 即使用户未指定 `preserve_original`。
-2. **先探测再处理** — 始终先 `info` 展示文件信息。
-3. **视频输入只动音频** — 脚本自动 `-c:v copy`。
-4. **透明执行** — 脚本打印实际 ffmpeg 命令。
-5. **降噪过度时** — 建议降低 tier 或 `--mix`（如 0.8→0.5）。
-6. **无 Profile 依赖** — 音频处理不需要账号画像。
+Xử lý xong script tự in thời lượng/bitrate/số kênh/tần số lấy mẫu của file đầu ra. Cần so sánh đầy đủ thì:
 
-## 自研参考
+```bash
+python skills/shared/scripts/audio_ops.py info outputs/<chủ đề>/input-clean.wav
+```
 
-- FFmpeg afftdn/arnndn/anlmdn 滤镜文档
-- [xiph/rnnoise](https://github.com/xiph/rnnoise) — RNN 噪声抑制
-- [GregorR/rnnoise-models](https://github.com/GregorR/rnnoise-models) — 预训练模型
-- [timsainb/noisereduce](https://github.com/timsainb/noisereduce) — Python 频谱门控（备选方案）
+Nội dung báo cáo: gốc vs đầu ra (định dạng/thời lượng/dung lượng/tần số lấy mẫu), tier và chuỗi filter đã dùng, thay đổi dung lượng.
+
+## Quy tắc
+
+1. **Tuyệt đối không xoá file gốc** - kể cả khi người dùng không nêu `preserve_original`.
+2. **Dò trước, xử lý sau** - luôn chạy `info` xem thông tin file trước đã.
+3. **Đầu vào video thì chỉ động vào tiếng** - script tự thêm `-c:v copy`.
+4. **Thực thi minh bạch** - script in ra lệnh ffmpeg thực tế.
+5. **Khi khử ồn quá tay** - nên hạ tier hoặc `--mix` (ví dụ 0.8 xuống 0.5).
+6. **Không phụ thuộc Profile** - xử lý âm thanh không cần hồ sơ tài khoản.
+
+## Tham khảo khi tự phát triển
+
+- Tài liệu filter afftdn/arnndn/anlmdn của FFmpeg
+- [xiph/rnnoise](https://github.com/xiph/rnnoise) - triệt nhiễu bằng RNN
+- [GregorR/rnnoise-models](https://github.com/GregorR/rnnoise-models) - model huấn luyện sẵn
+- [timsainb/noisereduce](https://github.com/timsainb/noisereduce) - spectral gating bằng Python (phương án thay thế)

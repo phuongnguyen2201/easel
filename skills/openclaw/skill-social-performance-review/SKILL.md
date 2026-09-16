@@ -7,99 +7,99 @@ description: >-
 layer: attribute
 ---
 
-# 月度效果复盘
+# Hậu kiểm hiệu quả theo tháng
 
-> 分析上月社媒内容表现，找出有效模式与失败原因，输出客户可读的复盘报告和下月可执行建议。
+> Phân tích hiệu quả nội dung mạng xã hội tháng trước, tìm ra mô hình hiệu quả và nguyên nhân thất bại, xuất báo cáo hậu kiểm khách hàng đọc được và đề xuất làm được cho tháng sau.
 
-## 数据层定位
+## Định vị tầng dữ liệu
 
-本 SKILL 是归因链的**消费层**，不新建数据底座：
+SKILL này là **tầng tiêu thụ** trong chuỗi quy kết, không dựng thêm nền dữ liệu:
 
-- **粉丝 / 时序数据的权威来源是 `skill-data-tracker` 快照底座**（`outputs/_analytics/snapshots/`）；发布事件底座是 `skill-publish-log`（`outputs/_analytics/publish-log.json`）。有对应底座数据时优先取用做环比与粉丝趋势。
-- **本 SKILL 的临时文件与产物不是底座** — 阶段 3 的 `outputs/复盘主题/.tmp-{月份}.json` 是标准化输入（用完即删），`context/best-performers.md`、`context/review-history.md` 是复盘沉淀，均不重复存储粉丝时序或发布事件本身。
-- 当底座数据缺失时，退到 CSV / 截图 / 口述输入（见「数据质量」），不阻断复盘。
+- **Nguồn chuẩn của dữ liệu người theo dõi / chuỗi thời gian là nền snapshot `skill-data-tracker`** (`outputs/_analytics/snapshots/`); nền sự kiện đăng bài là `skill-publish-log` (`outputs/_analytics/publish-log.json`). Có dữ liệu nền tương ứng thì ưu tiên lấy ra để so tháng liền kề và xem xu hướng người theo dõi.
+- **File tạm và sản phẩm của SKILL này không phải nền dữ liệu** - `outputs/<chủ đề>/.tmp-{tháng}.json` ở giai đoạn 3 là đầu vào đã chuẩn hoá (dùng xong xoá ngay), `context/best-performers.md`, `context/review-history.md` là phần đọng lại của hậu kiểm, đều không lưu trùng chuỗi thời gian người theo dõi hay bản thân sự kiện đăng bài.
+- Khi thiếu dữ liệu nền, lùi về đầu vào CSV / ảnh chụp màn hình / lời kể (xem "Chất lượng dữ liệu"), không chặn việc hậu kiểm.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供以下信息：
+Người dùng cung cấp các thông tin sau trong prompt:
 
-- **复盘月份**：哪个月的数据
-- **平台**：小红书 / 抖音 / B站 / 微博 / 公众号（可多选）
-- **数据来源**（按优先级）：
-  - CSV 导出（小红书创作者中心 / 抖音创作者服务平台 / B站创作中心 / 微博数据中心）
-  - 截图（各平台后台数据概览）
-  - 口述（用户描述哪些帖子表现好/差）
-- **业务背景**（可选）：当月是否有特殊事件、促销、付费推广
+- **Tháng hậu kiểm**: dữ liệu của tháng nào
+- **Nền tảng**: Xiaohongshu / Douyin / Bilibili / Weibo / WeChat OA (chọn nhiều được)
+- **Nguồn dữ liệu** (theo thứ tự ưu tiên):
+  - Xuất CSV (Xiaohongshu Creator Center / Douyin Creator Service Platform / Bilibili Creative Center / Weibo Data Center)
+  - Ảnh chụp màn hình (trang tổng quan số liệu trong backend từng nền tảng)
+  - Lời kể (người dùng mô tả bài nào tốt/kém)
+- **Bối cảnh kinh doanh** (tuỳ chọn): trong tháng có sự kiện đặc biệt, khuyến mãi, quảng cáo trả tiền hay không
 
-示例 prompt：
+Prompt ví dụ:
 ```
 Execute /skill-social-performance-review
-月份：2025年6月
-平台：小红书
-数据：附上后台截图
-背景：6月中旬做了一次好物分享合集
+Tháng: 6/2025
+Nền tảng: Xiaohongshu
+Dữ liệu: đính kèm ảnh chụp backend
+Bối cảnh: giữa tháng 6 có làm một bài tổng hợp chia sẻ đồ tốt
 ```
 
-## 输出
+## Đầu ra
 
-结构化月度复盘报告，保存到 `outputs/复盘主题/[客户名]-social-review-[月份]-[年份].md`。
+Báo cáo hậu kiểm tháng có cấu trúc, lưu vào `outputs/<chủ đề>/[tên khách hàng]-social-review-[tháng]-[năm].md`.
 
-报告包含：月度概览、表现最佳/最差帖子分析、内容支柱与格式拆解、关键洞察、下月建议。
+Báo cáo gồm: tổng quan tháng, phân tích bài tốt nhất/kém nhất, bóc tách trụ cột nội dung và định dạng, insight chính, đề xuất tháng sau.
 
-完整报告模板见 `references/report-template.md`。
+Mẫu báo cáo đầy đủ xem `references/report-template.md`.
 
-## 数据质量
+## Chất lượng dữ liệu
 
-SKILL 适配三种数据质量等级，缺数据不中断分析：
+SKILL thích ứng với ba mức chất lượng dữ liệu, thiếu dữ liệu vẫn không dừng phân tích:
 
-| 等级 | 数据来源 | 分析深度 |
+| Mức | Nguồn dữ liệu | Độ sâu phân tích |
 |------|----------|----------|
-| **完整** | CSV 导出 + 账号概览截图 | 逐帖评分，完整指标对比 |
-| **部分** | 截图或 Top/Bottom 帖子列表 | 模式分析，标注数据缺口 |
-| **最少** | 用户口述表现好/差的帖子 | 定性分析 + 基于最佳实践的建议 |
+| **Đầy đủ** | Xuất CSV + ảnh tổng quan kênh | Chấm từng bài, so sánh chỉ số đầy đủ |
+| **Một phần** | Ảnh chụp hoặc danh sách bài Top/Bottom | Phân tích mô hình, ghi rõ chỗ thiếu dữ liệu |
+| **Tối thiểu** | Người dùng kể bài nào tốt/kém | Phân tích định tính + đề xuất dựa trên best practice |
 
-在报告开头明确标注数据来源和质量等级。
+Ghi rõ nguồn dữ liệu và mức chất lượng ngay đầu báo cáo.
 
-## 执行步骤
+## Các bước thực hiện
 
-### 阶段 0 — 环境准备
+### Giai đoạn 0 - Chuẩn bị môi trường
 
-读取以下上下文文件（存在则读，不存在则跳过并记录）：
+Đọc các file bối cảnh sau (có thì đọc, không có thì bỏ qua và ghi lại):
 
-- `context/brand-style.md` — 内容支柱、平台定位、目标
-- `context/content-calendar.md` — 上月排期计划
-- `context/best-performers.md` — 历史高表现帖子
-- `context/review-history.md` — 历史评分趋势
-- `outputs/复盘主题/` 最新文件 — 上月复盘（用于环比）
+- `context/brand-style.md` - trụ cột nội dung, định vị nền tảng, mục tiêu
+- `context/content-calendar.md` - lịch đăng tháng trước
+- `context/best-performers.md` - các bài hiệu quả cao trong quá khứ
+- `context/review-history.md` - xu hướng điểm chấm qua các kỳ
+- File mới nhất trong `outputs/<chủ đề>/` - hậu kiểm tháng trước (dùng để so tháng liền kề)
 
-### 阶段 1 — 信息收集
+### Giai đoạn 1 - Thu thập thông tin
 
-收集复盘月份、平台、数据来源、业务背景和当月目标。
+Thu thập tháng hậu kiểm, nền tảng, nguồn dữ liệu, bối cảnh kinh doanh và mục tiêu trong tháng.
 
-若用户未准备导出数据，提供导出步骤指引：
-- **小红书**：创作者中心 → 数据中心 → 内容分析 → 选时间范围
-- **抖音**：创作者服务中心 → 数据看板 → 作品分析
-- **B站**：创作中心 → 数据中心 → 稿件分析
-- **微博**：微博数据中心 → 内容分析
-- **公众号**：公众号后台 → 统计 → 内容分析
+Nếu người dùng chưa chuẩn bị dữ liệu xuất, hướng dẫn các bước xuất:
+- **Xiaohongshu**: Creator Center → Data Center → Content Analysis → chọn khoảng thời gian
+- **Douyin**: Creator Service Center → Data Dashboard → Content Analysis
+- **Bilibili**: Creative Center → Data Center → Video Analysis
+- **Weibo**: Weibo Data Center → Content Analysis
+- **WeChat OA**: backend WeChat OA → Statistics → Content Analysis
 
-若无法导出，请用户提供：Top 3 帖子 + Bottom 3 帖子 + 粉丝变化 + 意外表现帖子。
+Nếu không xuất được, xin người dùng cung cấp: Top 3 bài + Bottom 3 bài + biến động người theo dõi + bài có kết quả bất ngờ.
 
-### 阶段 2 — 数据标准化
+### Giai đoạn 2 - Chuẩn hoá dữ liệu
 
-接受 CSV / 截图 / 口述，统一提取：帖子日期、类型、文案摘要、触达、互动、保存/点击、分享、互动率。
+Nhận CSV / ảnh chụp / lời kể, trích đồng nhất: ngày đăng, loại bài, tóm tắt nội dung, lượt tiếp cận, tương tác, lưu/click, chia sẻ, tỉ lệ tương tác.
 
-**清洗规则**：
-- 付费推广帖子排除出有机基准，单独标注
-- Reels/短视频触达天然膨胀，对比格式时注明
-- 发帖空白期单独记录
+**Quy tắc làm sạch**:
+- Bài chạy quảng cáo trả tiền loại khỏi chuẩn tự nhiên, ghi chú riêng
+- Reels/video ngắn có lượt tiếp cận phồng lên tự nhiên, khi so định dạng phải ghi rõ
+- Khoảng thời gian không đăng bài ghi riêng
 
-### 阶段 3 — 效果分析
+### Giai đoạn 3 - Phân tích hiệu quả
 
-**先把标准化数据落成 JSON，交给 `scripts/review.py` 做确定性计算，再由你解读。**
-不要手算互动率、不要心排 Top/Bottom、不要心算环比和加权评分。
+**Trước hết đổ dữ liệu đã chuẩn hoá thành JSON, giao `scripts/review.py` tính toán tất định, rồi bạn mới diễn giải.**
+Đừng tự tính tỉ lệ tương tác, đừng nhẩm xếp Top/Bottom, đừng nhẩm so tháng liền kề và điểm có trọng số.
 
-把阶段 2 标准化后的数据写成输入 JSON（`outputs/复盘主题/.tmp-{月份}.json`）：
+Ghi dữ liệu đã chuẩn hoá ở giai đoạn 2 thành JSON đầu vào (`outputs/<chủ đề>/.tmp-{tháng}.json`):
 
 ```json
 {
@@ -109,83 +109,83 @@ SKILL 适配三种数据质量等级，缺数据不中断分析：
   "plan": {"planned_posts": 12},
   "benchmark": {"engagement_rate_avg": 0.04},
   "posts": [
-    {"title": "...", "date": "2026-06-05", "type": "轮播", "pillar": "好物",
+    {"title": "...", "date": "2026-06-05", "type": "carousel", "pillar": "đồ tốt",
      "reach": 8000, "impressions": null, "views": null,
      "likes": 420, "comments": 60, "saves": 300, "shares": 40}
   ]
 }
 ```
 
-字段可缺（付费推广帖先剔除再入 posts）。互动率基数优先 reach→impressions→views。
-`previous`/`plan`/`benchmark` 缺失时对应分析降级，不中断。运行：
+Trường có thể thiếu (bài quảng cáo trả tiền loại ra trước rồi mới đưa vào posts). Mẫu số tỉ lệ tương tác ưu tiên reach → impressions → views.
+Thiếu `previous`/`plan`/`benchmark` thì phần phân tích tương ứng hạ cấp, không dừng. Chạy:
 
 ```bash
-python3 skills/openclaw/skill-social-performance-review/scripts/review.py score --input outputs/复盘主题/assets/2026-06.json
+python3 skills/openclaw/skill-social-performance-review/scripts/review.py score --input "outputs/<chủ đề>/assets/2026-06.json"
 ```
 
-脚本返回：逐帖互动率与综合分、Top3/Bottom3（小红书按收藏排、其他按互动率排）、
-支柱聚合、格式聚合、环比（互动率/触达/粉丝）、加权内部评分及所用维度、`warnings`。
+Script trả về: tỉ lệ tương tác và điểm tổng từng bài, Top3/Bottom3 (Xiaohongshu xếp theo lượt lưu, còn lại xếp theo tỉ lệ tương tác),
+gộp theo trụ cột, gộp theo định dạng, so tháng liền kề (tỉ lệ tương tác/tiếp cận/người theo dõi), điểm nội bộ có trọng số và các chiều đã dùng, `warnings`.
 
-据脚本结果完成 7 项分析（详见 `references/analysis-framework.md`）：账号快照 / 最佳帖子 /
-最差帖子 / 内容支柱表现 / 格式表现 / 开头分析（脚本不做，需读文案首句）/ 发帖节奏。
-基准数据参考 `references/benchmarks.md`。分析完删除临时 JSON。
+Dựa vào kết quả script hoàn thành 7 mục phân tích (chi tiết xem `references/analysis-framework.md`): ảnh chụp kênh / bài tốt nhất /
+bài kém nhất / hiệu quả trụ cột nội dung / hiệu quả định dạng / phân tích câu mở (script không làm, phải đọc câu đầu bài viết) / nhịp đăng bài.
+Dữ liệu chuẩn tham khảo `references/benchmarks.md`. Phân tích xong thì xoá JSON tạm.
 
-### 阶段 4 — 竞品观察（可选）
+### Giai đoạn 4 - Quan sát đối thủ (tuỳ chọn)
 
-仅在有竞品账号且配置了 Playwright/Firecrawl MCP 时执行。
-观察竞品上月发帖频率、内容组合、格式偏好和互动水平，提炼 4-6 条对比要点。
+Chỉ chạy khi có kênh đối thủ và đã cấu hình Playwright/Firecrawl MCP.
+Quan sát tần suất đăng, tổ hợp nội dung, định dạng ưa dùng và mức tương tác của đối thủ tháng trước, rút ra 4-6 ý so sánh.
 
-无 MCP 工具时跳过并在报告中注明。
+Không có công cụ MCP thì bỏ qua và ghi chú trong báo cáo.
 
-### 阶段 5 — 洞察与建议
+### Giai đoạn 5 - Insight và đề xuất
 
-- **关键洞察**（2-4 条）：连接因果，解释当月表现的核心模式
-- **下月建议**（3-5 条，按预期影响排序）：每条包含"做什么 / 数据依据 / 如何落地"
-- **排期调整**：支柱比例、格式组合、开头策略、发帖频率的具体变更建议
+- **Insight chính** (2-4 ý): nối nhân quả, giải thích mô hình cốt lõi của kết quả trong tháng
+- **Đề xuất tháng sau** (3-5 ý, xếp theo tác động dự kiến): mỗi ý gồm "làm gì / căn cứ dữ liệu / triển khai thế nào"
+- **Điều chỉnh lịch đăng**: đề xuất thay đổi cụ thể về tỉ lệ trụ cột, tổ hợp định dạng, chiến lược câu mở, tần suất đăng
 
-建议必须具体可执行 — 不写"多发轮播"，写"轮播从每月 2 条增至 4 条，聚焦[表现最佳支柱]"。
+Đề xuất phải cụ thể và làm được - đừng viết "đăng carousel nhiều hơn", hãy viết "carousel tăng từ 2 lên 4 bài mỗi tháng, tập trung vào [trụ cột hiệu quả nhất]".
 
-### 阶段 6 — 输出
+### Giai đoạn 6 - Xuất kết quả
 
-1. **报告**：按 `references/report-template.md` 模板输出到 `outputs/复盘主题/`
-2. **更新上下文**：
-   - `context/best-performers.md` — 追加本月 Top 3
-   - `context/review-history.md` — 追加一行月度摘要（触达 / 互动率 / 粉丝变化 / 评分）
-3. **交接提示**：告知用户如何用复盘结果驱动下月排期
+1. **Báo cáo**: theo mẫu `references/report-template.md` xuất ra `outputs/<chủ đề>/`
+2. **Cập nhật bối cảnh**:
+   - `context/best-performers.md` - thêm Top 3 của tháng này
+   - `context/review-history.md` - thêm một dòng tóm tắt tháng (tiếp cận / tỉ lệ tương tác / biến động người theo dõi / điểm)
+3. **Gợi ý bàn giao**: chỉ cho người dùng cách dùng kết quả hậu kiểm để lên lịch đăng tháng sau
 
-### 内部评分
+### Điểm nội bộ
 
-综合评分 1-10 由 `scripts/review.py score` 的 `internal_score` 字段确定性给出
-（**不要自己心算加权**），记入 `context/review-history.md`。维度与权重：
+Điểm tổng 1-10 do trường `internal_score` của `scripts/review.py score` đưa ra tất định
+(**đừng tự nhẩm trọng số**), ghi vào `context/review-history.md`. Các chiều và trọng số:
 
-| 维度 | 权重 |
+| Chiều | Trọng số |
 |------|------|
-| 互动率 vs 基准 | 25% |
-| 粉丝增长趋势 | 20% |
-| 最佳帖子表现 | 20% |
-| 排期执行率 | 15% |
-| 触达趋势 | 20% |
+| Tỉ lệ tương tác vs chuẩn | 25% |
+| Xu hướng tăng người theo dõi | 20% |
+| Hiệu quả bài tốt nhất | 20% |
+| Tỉ lệ thực hiện lịch đăng | 15% |
+| Xu hướng tiếp cận | 20% |
 
-脚本会剔除缺数据的维度并对剩余权重重新归一化，`dimensions_used` 标明实际参与维度。
+Script sẽ loại các chiều thiếu dữ liệu và chuẩn hoá lại trọng số còn lại, `dimensions_used` ghi rõ các chiều thực sự tham gia.
 
-## 注意事项
+## Lưu ý
 
-- **收藏/点赞是小红书最重要指标** — 反映内容被用户认为有价值，优先于曝光量
-- **不同平台核心指标不同** — 小红书看收藏，抖音看完播率，B站看硬币/投币，微博看转发
-- **缺数据不废复盘** — 基于用户记忆的定性复盘仍有价值，标注局限并推动下月导出
-- **付费推广帖子污染有机基准** — 务必确认并排除
-- **短视频触达膨胀** — 服务非粉丝，不直接与图文对比触达
-- **建议部分是核心** — 创作者最想知道下月该做什么
+- **Lưu/thích là chỉ số quan trọng nhất trên Xiaohongshu** - cho thấy người dùng thấy nội dung có giá trị, ưu tiên hơn lượt hiển thị
+- **Mỗi nền tảng có chỉ số cốt lõi khác nhau** - Xiaohongshu nhìn lượt lưu, Douyin nhìn tỉ lệ xem hết, Bilibili nhìn lượt tặng coin, Weibo nhìn lượt chia sẻ lại
+- **Thiếu dữ liệu không bỏ hậu kiểm** - hậu kiểm định tính dựa trên trí nhớ người dùng vẫn có giá trị, ghi rõ giới hạn và thúc đẩy xuất dữ liệu tháng sau
+- **Bài quảng cáo trả tiền làm nhiễu chuẩn tự nhiên** - phải xác nhận và loại ra
+- **Video ngắn có tiếp cận phồng lên** - phục vụ cả người chưa theo dõi, đừng so tiếp cận trực tiếp với bài ảnh kèm chữ
+- **Phần đề xuất mới là cốt lõi** - nhà sáng tạo muốn biết nhất là tháng sau nên làm gì
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：
-  - 读取 `platform` 确定分析平台和基准
-  - 读取内容支柱做支柱级拆解
-  - 读取品牌风格校验内容一致性
-  - 读取历史数据路径做环比分析
-- **无 Profile**：
-  - 询问用户目标平台和当月目标
-  - 使用 `references/benchmarks.md` 通用基准
-  - 跳过支柱分析（或让用户口述支柱分类）
-  - 附注："如提供账号 Profile，可启用支柱拆解和历史趋势分析"
+- **Có Profile**:
+  - Đọc `platform` để chốt nền tảng phân tích và chuẩn so sánh
+  - Đọc trụ cột nội dung để bóc tách theo trụ cột
+  - Đọc phong cách thương hiệu để soát tính nhất quán của nội dung
+  - Đọc đường dẫn dữ liệu lịch sử để phân tích so tháng liền kề
+- **Không có Profile**:
+  - Hỏi người dùng nền tảng mục tiêu và mục tiêu trong tháng
+  - Dùng chuẩn chung trong `references/benchmarks.md`
+  - Bỏ qua phân tích trụ cột (hoặc để người dùng kể phân loại trụ cột)
+  - Ghi chú: "nếu cung cấp Profile của kênh, có thể bật bóc tách trụ cột và phân tích xu hướng lịch sử"

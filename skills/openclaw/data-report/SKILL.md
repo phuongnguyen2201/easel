@@ -8,78 +8,78 @@ description: >-
 layer: produce
 ---
 
-# 数据可视化报告
+# Báo cáo trực quan hoá dữ liệu
 
-你是一名数据可视化专家。把用户提供的 CSV/Excel/JSON 数据，转成一份自包含的
-HTML 可视化报告（KPI 卡片 + 图表 + 数据洞察 + 数据表）。
+Bạn là chuyên gia trực quan hoá dữ liệu. Biến dữ liệu CSV/Excel/JSON người dùng đưa thành một
+báo cáo HTML trực quan tự chứa (thẻ KPI + biểu đồ + insight + bảng dữ liệu).
 
-数据读取、聚合、出图、HTML 组装都由 `scripts/report.py` 确定性完成，
-你只负责"写洞察文字"这一需要理解的环节，不要手算聚合、手拼图表。
+Đọc dữ liệu, tổng hợp, vẽ biểu đồ, ráp HTML đều do `scripts/report.py` làm một cách xác định,
+bạn chỉ lo khâu cần hiểu là "viết phần insight", đừng tự tính tổng hợp hay tự ghép biểu đồ.
 
-## 与其他图表 SKILL 的区别
+## Khác gì các SKILL biểu đồ còn lại
 
-三者都能"生成图表"，但机制与产物不同，按需求路由：
+Cả ba đều "ra biểu đồ" nhưng cơ chế và sản phẩm khác nhau, định tuyến theo nhu cầu:
 
-- **data-report（本 SKILL）** = 输入 CSV/Excel/JSON，产出**整页可视化报告**（KPI 卡 + 多图 + 洞察 + 表格）。要一份完整报告页时用它。
-- **chart-visualization** = 调 AntV 远程 API，产出**单张静态图片 URL**（25+ 类型）。只要一张标准统计图、直接拿图片链接时用它。
-- **infographic** = 本地 JS 渲染，产出**信息图 / GIF 动画图表**。要结构化信息图或带动画的 GIF/MP4 时用它。
+- **data-report (SKILL này)** = đầu vào CSV/Excel/JSON, cho ra **trang báo cáo trực quan đầy đủ** (thẻ KPI + nhiều biểu đồ + insight + bảng). Cần một trang báo cáo hoàn chỉnh thì dùng nó.
+- **chart-visualization** = gọi API từ xa của AntV, cho ra **một URL ảnh tĩnh duy nhất** (25+ loại). Chỉ cần một biểu đồ thống kê chuẩn, lấy luôn link ảnh thì dùng nó.
+- **infographic** = render JS tại máy, cho ra **infographic / biểu đồ động GIF**. Cần infographic có cấu trúc hoặc GIF/MP4 có chuyển động thì dùng nó.
 
-## 输入
+## Đầu vào
 
-- 数据文件：`.csv` / `.json` / `.xlsx`（Excel 需环境有 openpyxl，缺失时脚本会提示）
-- 可选：报告标题、想突出的 KPI 列名
+- File dữ liệu: `.csv` / `.json` / `.xlsx` (Excel cần môi trường có openpyxl, thiếu thì script sẽ báo)
+- Tuỳ chọn: tiêu đề báo cáo, tên cột KPI muốn làm nổi bật
 
-## 输出
+## Đầu ra
 
-- 一个自包含 HTML 报告文件（图表以 base64 内嵌，可离线打开），写入 `outputs/`
-- 可选：把 HTML 渲染成一张长图用于社媒分享
+- Một file báo cáo HTML tự chứa (biểu đồ nhúng base64, mở offline được), ghi vào `outputs/<chủ đề>/`
+- Tuỳ chọn: render HTML thành một ảnh dài để chia sẻ mạng xã hội
 
-## 执行步骤
+## Các bước thực hiện
 
-### 1. 读数据概览（供你写洞察）
-
-```bash
-python skills/openclaw/data-report/scripts/report.py analyze <数据文件>
-```
-
-返回 JSON：行列数、每列类型与缺失、数值列的 min/max/mean/median/sum/std、
-每个类别列的 Top 5。**据此判断数据讲了什么**，为第 3 步准备洞察文字。
-
-### 2. 生成报告 HTML
+### 1. Đọc tổng quan dữ liệu (để bạn viết insight)
 
 ```bash
-python skills/openclaw/data-report/scripts/report.py report <数据文件> \
-  -o outputs/主题名/report.html \
-  --title "报告标题" \
-  --kpi 列名1 列名2         # 可选，不给则自动挑数值列
+python skills/openclaw/data-report/scripts/report.py analyze "<file dữ liệu>"
 ```
 
-脚本自动：算 KPI（数值列汇总）、自动选型出 2-4 张图（时间序列→折线、
-类别→柱状、占比→饼图）、拼成含 KPI 卡 + 内嵌图 + 数据表的整页 HTML。
-matplotlib 用 Agg 后端并已配好中文字体，不会乱码。
+Trả về JSON: số hàng/cột, kiểu và phần thiếu của từng cột, min/max/mean/median/sum/std của cột số,
+Top 5 của từng cột phân loại. **Dựa vào đó xác định dữ liệu đang nói gì**, chuẩn bị insight cho bước 3.
 
-### 3. 补写洞察文字（可选但推荐）
+### 2. Sinh HTML báo cáo
 
-基于第 1 步的概览，在生成的 HTML 里补 3-5 条洞察（emoji 开头、像产品周报：
-趋势、异常、对比、行动建议）。用 Edit 在报告的洞察区插入即可——数据都是
-真实的，**不要捏造数字**，只做解读。
+```bash
+python skills/openclaw/data-report/scripts/report.py report "<file dữ liệu>" \
+  -o "outputs/<chủ đề>/report.html" \
+  --title "Tiêu đề báo cáo" \
+  --kpi "Tên cột 1" "Tên cột 2"   # tuỳ chọn, không đưa thì tự chọn cột số
+```
 
-### 4. 渲染成长图分享（可选）
+Script tự động: tính KPI (tổng hợp cột số), tự chọn loại và vẽ 2-4 biểu đồ (chuỗi thời gian → đường,
+phân loại → cột, tỉ trọng → tròn), ráp thành trang HTML gồm thẻ KPI + biểu đồ nhúng + bảng dữ liệu.
+matplotlib chạy backend Agg và đã cấu hình sẵn font Unicode có dấu nên không lỗi font.
+
+### 3. Viết bổ sung phần insight (tuỳ chọn nhưng nên làm)
+
+Dựa trên tổng quan ở bước 1, bổ sung 3-5 insight vào HTML vừa sinh (mở đầu bằng emoji, giống báo
+cáo tuần sản phẩm: xu hướng, bất thường, so sánh, đề xuất hành động). Dùng Edit chèn vào khu
+insight của báo cáo là xong - dữ liệu đều là thật, **đừng bịa số**, chỉ diễn giải.
+
+### 4. Render thành ảnh dài để chia sẻ (tuỳ chọn)
 
 ```bash
 python skills/shared/scripts/render_card.py \
-  --html outputs/主题名/report.html \
-  --out outputs/主题名/report.png \
+  --html "outputs/<chủ đề>/report.html" \
+  --out "outputs/<chủ đề>/report.png" \
   --full-page --width 1080
 ```
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `style.md` 读品牌主色，用 Edit 改 HTML 里 `--main` 变量统一配色。
-- **无 Profile**：用脚本默认专业配色。
+- **Có Profile**: đọc màu chủ đạo thương hiệu từ `style.md`, dùng Edit sửa biến `--main` trong HTML cho đồng bộ màu.
+- **Không có Profile**: dùng bảng màu chuyên nghiệp mặc định của script.
 
-## 要点
+## Điểm cốt lõi
 
-- **必须用脚本解析真实数据**，KPI 与图表由脚本从数据算出，不要手写数值。
-- 洞察是你唯一"创作"的部分，其余都走脚本保证确定性。
-- 无数值列时脚本仍出数据表（会打印 WARN），报告依然可用。
+- **Bắt buộc dùng script để phân tích dữ liệu thật**, KPI và biểu đồ do script tính từ dữ liệu, đừng tự gõ số.
+- Insight là phần duy nhất bạn "sáng tác", phần còn lại đi qua script để bảo đảm tính xác định.
+- Không có cột số thì script vẫn xuất bảng dữ liệu (có in WARN), báo cáo vẫn dùng được.

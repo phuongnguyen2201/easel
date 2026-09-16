@@ -8,51 +8,51 @@ description: >-
 layer: produce
 ---
 
-# 卡片设计系统（生成前必读）
+# Hệ thiết kế thẻ (đọc trước khi tạo)
 
-> 这不是一个"生成器",而是一套**设计系统 + 硬规则**。所有"HTML/CSS → 截图"的卡片/海报 SKILL
-> 在写第一行 HTML 之前先读它。核心信念(来自实战开源方案与去 AI 味研究的一致结论):
-> **高级感来自「克制 + 层级 + 网格 + 填满」,不是靠阴影/圆角/渐变堆出来的。**
-> 「没人做设计决定」= AI 选了一万张图的统计平均值 = 廉价。本系统就是替你把决定钉死。
+> Đây không phải một "bộ sinh thẻ" mà là một **hệ thiết kế + luật cứng**. Mọi SKILL thẻ/poster kiểu "HTML/CSS → chụp màn hình"
+> phải đọc file này trước khi viết dòng HTML đầu tiên. Niềm tin cốt lõi (kết luận thống nhất từ các giải pháp mã nguồn mở thực chiến và nghiên cứu khử mùi AI):
+> **Cảm giác cao cấp đến từ "tiết chế + phân cấp + lưới + lấp đầy", không phải chồng đổ bóng/bo góc/gradient lên nhau.**
+> "Không ai ra quyết định thiết kế" = AI lấy trung bình thống kê của một vạn tấm ảnh = rẻ tiền. Hệ này chốt sẵn các quyết định thay bạn.
 
-## 五步流程（照做，别跳）
+## Quy trình 5 bước (làm đủ, đừng bỏ bước)
 
-1. **让用户选风格**（第一步，也是最重要的一步）：从 `references/styles.md` 的**风格库**里给用户几个选项，让 ta 挑一个——
-   - 用户已指定风格 → 直接用。
-   - 用户没指定 → **列 3-4 个候选**（风格名 + 一句话 + 适用），按内容品类/平台/Profile 推荐，问 ta 选哪个；急着要就用推荐的第一个并说明"默认用了 X 风格，想换随时说"。
-   - 风格库现有 9 种：瑞士极简 / 杂志编辑 / 新中式墨韵 / 奶油温柔 / 多巴胺 Y2K / 高奢黑金 / 手账贴纸 / 极客终端 / 植物清新。**卡片美不美，第一取决于选对风格**，别所有内容都套同一种。
-2. **锁定该风格的 spec**：`styles.md` 里选中风格给了**字体(family+字重)+配色(hex)+版式性格+装饰**——**严格照它**，整套卡片全程只用这一套，不自由发挥、不换色。（配色细节另见 `palettes.md`）
-3. **定字体层级**：按 `typography.md`——「**字越大越细**」（字体已装 Noto Sans/Serif CJK 全字重，大标题用 Thin/Light）。手机端正文 ≥28px。
-4. **套骨架**：从 `card-recipes.md` 选卡型骨架(封面/账本/管线/对比/矩阵/数据/金句)，按其**最小密度线**填内容。
-5. **渲染后自检**（硬门禁）：
+1. **Cho người dùng chọn phong cách** (bước đầu tiên, cũng là bước quan trọng nhất): lấy vài lựa chọn từ **thư viện phong cách** trong `references/styles.md` cho người dùng, để họ chọn một:
+   - Người dùng đã chỉ định phong cách → dùng luôn.
+   - Người dùng không chỉ định → **liệt kê 3-4 ứng viên** (tên phong cách + một câu mô tả + hợp với gì), gợi ý theo loại nội dung/nền tảng/Profile, hỏi họ chọn cái nào; nếu họ gấp thì dùng ứng viên đầu tiên và nói rõ "mặc định đang dùng phong cách X, muốn đổi cứ nói".
+   - Thư viện phong cách hiện có 9 kiểu: tối giản Thuỵ Sĩ / tạp chí biên tập / thuỷ mặc tân Á Đông / kem dịu nhẹ / dopamine Y2K / đen vàng cao cấp / sổ tay sticker / geek terminal / xanh cây cỏ. **Thẻ đẹp hay không, trước hết do chọn đúng phong cách**, đừng áp một kiểu cho mọi nội dung.
+2. **Chốt spec của phong cách đó**: phong cách được chọn trong `styles.md` đã cho sẵn **font (family + độ đậm) + bảng màu (hex) + tính cách bố cục + hoạ tiết** - **bám sát tuyệt đối**, cả bộ thẻ từ đầu tới cuối chỉ dùng đúng bộ này, không tự phát huy, không đổi màu. (Chi tiết bảng màu xem thêm `palettes.md`)
+3. **Định phân cấp chữ**: theo `typography.md` - "**chữ càng lớn càng mảnh**" (bộ font đã cài đủ độ đậm Noto Sans/Serif CJK, tiêu đề lớn dùng Thin/Light). Thân bài trên điện thoại ≥28px.
+4. **Áp khung xương**: chọn khung xương theo loại thẻ trong `card-recipes.md` (ảnh bìa/sổ ghi/pipeline/so sánh/ma trận/dữ liệu/câu đắt), rồi đổ nội dung theo **ngưỡng mật độ tối thiểu** của nó.
+5. **Tự kiểm sau khi render** (cổng chặn cứng):
    ```bash
-   python skills/openclaw/card-design/scripts/card_audit.py audit -f outputs/主题名/card_*.png
+   python skills/openclaw/card-design/scripts/card_audit.py audit -f "outputs/<chủ đề>"/card_*.png
    ```
-   任何 FAIL(死空白/跨度不足/头重脚轻)→ 按 `layout-laws.md`「欠填修正阶梯」补内容或换骨架**重渲**，全 PASS 再交付。
+   Bất kỳ FAIL nào (khoảng trống chết/dàn trải không đủ/đầu nặng chân nhẹ) → theo "thang sửa lỗi thiếu nội dung" trong `layout-laws.md` để bổ sung nội dung hoặc đổi khung xương rồi **render lại**, PASS hết mới giao.
 
-## 铁律速查（详见 references）
+## Tra nhanh luật thép (chi tiết xem references)
 
-- **填满**:内容覆盖 ≥75% 画高;任何**无理由**空白带 >15% 画高 = 失败。内容少就**扩内容/换省高骨架/换 1:1 画幅**,**绝不**用 `flex:1` 把内容顶成垂直居中、**绝不**加装饰 blob 填空。→ `layout-laws.md`
-- **字越大越细**:大标题 w200-500,小字才用粗体。全用 700 粗黑体 = 廉价 banner。→ `typography.md`
-- **禁 emoji 当图标**:用线性图标(Lucide,stroke 1.5,棱角款)或纯排版。→ `anti-ai-slop.md`
-- **禁蓝紫科技渐变**(头号 AI tell)、禁 `bg-clip-text` 渐变字、禁玻璃拟态、禁"居中一切"。→ `anti-ai-slop.md`
-- **正文永远不用纯黑**,用深灰/深墨(#6B6560 / #0a1f3d 等)。
-- 瑞士立场:**零圆角、零阴影、禁渐变**,靠色块+发丝线+网格。杂志立场:小圆角、仅截图给极柔阴影、必须有背景氛围层(极淡纸纹/墨晕)。
+- **Lấp đầy**: nội dung phủ ≥75% chiều cao khung; bất kỳ dải trắng **không có lý do** nào >15% chiều cao khung = hỏng. Ít nội dung thì **mở rộng nội dung/đổi khung xương tốn ít chiều cao/đổi khung hình 1:1**, **tuyệt đối không** dùng `flex:1` để đẩy nội dung căn giữa theo chiều dọc, **tuyệt đối không** thêm blob trang trí lấp chỗ trống. → `layout-laws.md`
+- **Chữ càng lớn càng mảnh**: tiêu đề lớn dùng w200-500, chỉ chữ nhỏ mới in đậm. Dùng toàn bộ 700 đậm = banner rẻ tiền. → `typography.md`
+- **Cấm lấy emoji làm icon**: dùng icon nét (Lucide, stroke 1.5, kiểu góc cạnh) hoặc thuần typography. → `anti-ai-slop.md`
+- **Cấm gradient xanh tím kiểu công nghệ** (dấu hiệu AI số một), cấm chữ gradient `bg-clip-text`, cấm glassmorphism, cấm "căn giữa mọi thứ". → `anti-ai-slop.md`
+- **Thân bài không bao giờ dùng đen tuyền**, dùng xám đậm/mực đậm (#6B6560 / #0a1f3d ...).
+- Lập trường Thuỵ Sĩ: **không bo góc, không đổ bóng, cấm gradient**, dựa vào mảng màu + đường mảnh + lưới. Lập trường tạp chí: bo góc nhỏ, chỉ ảnh chụp mới cho bóng cực nhẹ, bắt buộc có lớp nền tạo không khí (vân giấy/loang mực cực nhạt).
 
 ## references
 
-- `styles.md` — ⭐ **风格库(9 种命名风格,用户选一个)**,每个含字体/配色hex/版式性格/装饰/适用。**第一步先读它选风格。**
-- `palettes.md` — 锁定配色细节(杂志6套 + 瑞士4套 + 莫兰迪/奶油补充),带 hex。
-- `typography.md` — 中文字体层级、"越大越细"、最小字号死线、中英混排(Noto Sans/Serif CJK 全字重)。
-- `layout-laws.md` — 填满画幅法则、4带密度自检、欠填/溢出修正阶梯(治死空白)。
-- `anti-ai-slop.md` — AI 廉价感 P0/P1/P2 反例清单 + 高杠杆去 AI 味动作。
-- `card-recipes.md` — 按卡型/品类的骨架 + 每种的最小密度线。
+- `styles.md` - ⭐ **Thư viện phong cách (9 phong cách có tên, người dùng chọn một)**, mỗi cái gồm font/mã màu hex/tính cách bố cục/hoạ tiết/hợp với gì. **Bước đầu tiên là đọc file này để chọn phong cách.**
+- `palettes.md` - chốt chi tiết bảng màu (6 bộ tạp chí + 4 bộ Thuỵ Sĩ + bổ sung Morandi/kem), kèm mã hex.
+- `typography.md` - phân cấp chữ, quy tắc "càng lớn càng mảnh", cỡ chữ tối thiểu không được phá, trộn chữ đa ngôn ngữ (Noto Sans/Serif CJK đủ độ đậm).
+- `layout-laws.md` - luật lấp đầy khung hình, tự kiểm mật độ theo 4 dải, thang sửa lỗi thiếu/tràn nội dung (trị khoảng trống chết).
+- `anti-ai-slop.md` - danh sách phản ví dụ P0/P1/P2 về cảm giác AI rẻ tiền + các thao tác khử mùi AI hiệu quả cao.
+- `card-recipes.md` - khung xương theo loại thẻ/phân loại nội dung + ngưỡng mật độ tối thiểu của từng loại.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**:从 `style.md` 读品牌配色/风格倾向;但**优先保证本系统的高级感底线**——若 Profile 没给明确视觉规范,就按本系统选立场+锁色,别退回"柔和渐变"这类模糊描述。account 名用作水印。
-- **无 Profile**:知识/科技类默认「瑞士 + 克莱因蓝」或「杂志 + Indigo Porcelain」;生活/情感类默认「杂志 + Kraft/Dune 暖纸」。
+- **Có Profile**: đọc bảng màu thương hiệu/thiên hướng phong cách từ `style.md`; nhưng **ưu tiên giữ ngưỡng cao cấp của hệ này** - nếu Profile không nêu quy chuẩn hình ảnh rõ ràng thì cứ theo hệ này chọn lập trường + khoá màu, đừng lùi về mô tả mơ hồ kiểu "gradient dịu nhẹ". Tên account dùng làm watermark.
+- **Không có Profile**: nội dung kiến thức/công nghệ mặc định "Thuỵ Sĩ + xanh Klein" hoặc "tạp chí + Indigo Porcelain"; nội dung đời sống/cảm xúc mặc định "tạp chí + giấy ấm Kraft/Dune".
 
-## 参考来源
+## Nguồn tham khảo
 
-见 `EASEL-META.md`。规则再提炼自 op7418/guizang-social-card-skill(设计立场/填满法则/密度自检,AGPL——仅借鉴规则未抄文件)、comeonzhj/Auto-Redbook-Skills(主题皮肤/自动分页)、funboy322/avoid-ai-design + yetone/kill-ai-slop(去 AI 味清单)、cardplanet/Ant-Card(风格命名与模板库思路)。
+Xem `EASEL-META.md`. Quy tắc được chắt lọc lại từ op7418/guizang-social-card-skill (lập trường thiết kế/luật lấp đầy/tự kiểm mật độ, AGPL - chỉ tham khảo quy tắc chứ không chép file), comeonzhj/Auto-Redbook-Skills (skin theo chủ đề/tự phân trang), funboy322/avoid-ai-design + yetone/kill-ai-slop (danh sách khử mùi AI), cardplanet/Ant-Card (cách đặt tên phong cách và ý tưởng thư viện template).

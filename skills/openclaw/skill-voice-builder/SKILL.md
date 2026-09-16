@@ -8,116 +8,116 @@ description: >-
 layer: plan
 ---
 
-# 声音画像构建
+# Dựng hồ sơ giọng văn
 
-> 通过结构化访谈 + 写作样本分析，生成个人声音画像（about-me.md + voice.md），确保后续内容创作的品牌一致性。
+> Qua phỏng vấn có cấu trúc + phân tích bài mẫu, dựng hồ sơ giọng văn cá nhân (about-me.md + voice.md), giữ thương hiệu nhất quán cho nội dung về sau.
 
-## 输入
+## Đầu vào
 
-用户参与访谈并提供 3-5 篇写作样本（小红书笔记、抖音文案、B站文稿、微博帖子、公众号文章等）。
+Người dùng trả lời phỏng vấn và đưa 3-5 bài mẫu (bài trên Facebook, kịch bản TikTok, kịch bản YouTube, post Zalo, bài blog/website...).
 
-若用户没有样本，可输入 `use samples` 加载默认样本集 `references/sample-content.md`。
+Nếu người dùng chưa có bài mẫu, gõ `use samples` để nạp bộ mẫu mặc định `references/sample-content.md`.
 
-## 输出
+## Đầu ra
 
-两个文件，输出至项目根目录（**独立的轻量声音产物，不属于 Profile 六维 schema**；如需并入画像，可把要点回写到 `profiles/<画像>/style.md`）：
+Hai file, ghi ra thư mục gốc dự án (**sản phẩm giọng văn nhẹ và độc lập, không thuộc schema sáu chiều của Profile**; muốn gộp vào Profile thì chép các ý chính ngược lại vào `profiles/<Profile>/style.md`):
 
-1. **about-me.md**（≤300 词）— 个人定位：身份定位、目标受众、主题支柱、行业观点、人设承诺、内容禁区
-2. **voice.md**（≤500 词）— 声音画像：正向信号（怎么写）+ 缺失信号（从不怎么写），合并在同一文件
+1. **about-me.md** (≤300 từ) - định vị cá nhân: danh tính và định vị, khán giả mục tiêu, trụ cột chủ đề, quan điểm ngành, cam kết persona, vùng cấm nội dung
+2. **voice.md** (≤500 từ) - hồ sơ giọng văn: tín hiệu dương (viết thế nào) + tín hiệu thiếu vắng (không bao giờ viết kiểu gì), gộp chung một file
 
-## 执行步骤
+## Các bước thực thi
 
-### 1. 自动启动访谈
+### 1. Tự động mở phỏng vấn
 
-加载即执行，不做任何前言、摘要或确认。第一条消息必须是访谈问题。
+Nạp là chạy, không mở bài, không tóm tắt, không hỏi xác nhận. Tin nhắn đầu tiên bắt buộc là câu hỏi phỏng vấn.
 
-禁止：
-- 总结本 SKILL 的功能
-- 询问用户是否准备好
-- 解释将生成哪些文件
+Cấm:
+- Tóm tắt chức năng của SKILL này
+- Hỏi người dùng đã sẵn sàng chưa
+- Giải thích sẽ sinh ra những file nào
 
-### 2. 分两批提问（共 6 题）
+### 2. Hỏi thành hai đợt (tổng 6 câu)
 
-使用 AskUserQuestion 工具，每批最多 4 题。
+Dùng công cụ AskUserQuestion, mỗi đợt tối đa 4 câu.
 
-- **Batch 1**（4 题）：身份定位、目标受众、主题支柱、行业观点
-- **Batch 2**（2 题）：人设承诺、内容禁区
+- **Batch 1** (4 câu): danh tính và định vị, khán giả mục tiêu, trụ cột chủ đề, quan điểm ngành
+- **Batch 2** (2 câu): cam kết persona, vùng cấm nội dung
 
-问题详情及选项 → [interview-questions.md](references/interview-questions.md)
+Chi tiết câu hỏi và phương án → [interview-questions.md](references/interview-questions.md)
 
-Batch 1 回答后立即发送 Batch 2，中间不做评论。若有答案为空，单独追问一次后继续。
+Trả lời xong Batch 1 thì gửi ngay Batch 2, ở giữa không bình luận. Câu nào bỏ trống thì hỏi lại riêng một lần rồi đi tiếp.
 
-### 3. 生成 about-me.md
+### 3. Sinh about-me.md
 
-根据 6 题答案撰写，结构：
-
-```
-# 我的定位
-## 身份与定位
-## 目标受众
-## 内容主题支柱
-## 行业观点
-## 人设承诺
-## 内容禁区
-```
-
-≤300 词。每一行都应是后续创作时可直接引用的信息。
-
-### 4. 收集写作样本
-
-提示用户粘贴 3-5 篇写作样本。支持一次性粘贴或逐篇发送。
-
-- 最少 3 篇才可进入分析，不足时追问
-- 用户输入 `use samples` → 加载 `references/sample-content.md`，告知样本作者并提醒可随时替换
-
-### 5. 分析样本
-
-跨所有样本寻找模式，不依赖单篇特征。
-
-分析维度详情 → [voice-analysis-dimensions.md](references/voice-analysis-dimensions.md)
-
-四个分析维度：
-- **声音信号** — 句长、段落节奏、开头风格、人称、语调、标志性短语、CTA 风格
-- **结构信号** — 长度范围、列表 vs 散文、开头/结尾模式、过渡手法
-- **主题信号** — 跨样本的高频主题、隐含受众、作者立场
-- **缺失信号** — 从未出现的词汇/标点、从未使用的开头类型、从未触及的语调
-
-### 6. 生成 voice.md
-
-综合声音画像，正向信号与缺失信号合并在同一文件：
+Viết dựa trên đáp án của 6 câu, cấu trúc:
 
 ```
-# 我的声音画像
-## 我听起来像谁
-## 语气基调
-## 句子节奏
-## 开头钩子
-## 我怎么开头
-## 我怎么收尾
-## 标志性表达
-## 内容禁区
-## 这个声音从不做的事
+# Định vị của tôi
+## Danh tính và định vị
+## Khán giả mục tiêu
+## Trụ cột chủ đề nội dung
+## Quan điểm ngành
+## Cam kết persona
+## Vùng cấm nội dung
 ```
 
-≤500 词。每个章节必须基于样本实证，不得编造。`内容禁区` 和 `这个声音从不做的事` 必须有样本缺失证据支撑。
+≤300 từ. Mỗi dòng phải là thông tin trích dùng được ngay khi sáng tạo về sau.
 
-### 7. 确认完成并提示下一步
+### 4. Thu bài mẫu
 
-告知用户两个文件已就绪，后续创作将自动引用。提示可用的下一步操作。
+Nhắc người dùng dán 3-5 bài mẫu. Cho phép dán một lần hoặc gửi từng bài.
 
-## Profile 感知
+- Tối thiểu 3 bài mới được vào bước phân tích, thiếu thì hỏi thêm
+- Người dùng gõ `use samples` → nạp `references/sample-content.md`, báo tác giả bài mẫu và nhắc có thể thay bất cứ lúc nào
 
-- **有 Profile** — 从 Profile 中预填受众、平台、调性偏好等已知信息，访谈时跳过已有答案或用于验证；voice.md 中标注与 Profile 的一致性。
-- **无 Profile** — 完整执行全部 6 题访谈，生成通用声音画像。
+### 5. Phân tích bài mẫu
 
-## 规则
+Tìm quy luật xuyên suốt mọi bài mẫu, không dựa vào đặc điểm của một bài.
 
-1. **加载即执行** — 不做摘要、不做解释、直接开始访谈
-2. **最少 3 篇样本** — 少于 3 篇不启动分析
-3. **基于实证** — 从样本中提取模式，不编造不存在的特征
-4. **矛盾保留** — 样本间风格矛盾时如实记录，不做平滑处理
-5. **字数限制** — about-me.md ≤300 词，voice.md ≤500 词
-6. **产物格式** — 所有样本内容使用代码块输出，保留换行和空白
-7. **不重复** — voice.md 不重复 about-me.md 中已有的受众和主题信息
-8. **语言** — 产物文件默认使用中文（除非样本明确为英文）
-9. **禁用破折号** — 产物文件和草稿中不使用 em dash
+Chi tiết các chiều phân tích → [voice-analysis-dimensions.md](references/voice-analysis-dimensions.md)
+
+Bốn chiều phân tích:
+- **Tín hiệu giọng** - độ dài câu, nhịp đoạn, kiểu mở đầu, ngôi xưng, ngữ điệu, cụm từ đặc trưng, phong cách CTA
+- **Tín hiệu cấu trúc** - khoảng độ dài, liệt kê vs văn xuôi, mẫu mở/kết, cách chuyển ý
+- **Tín hiệu chủ đề** - chủ đề lặp nhiều qua các bài, khán giả ngầm định, lập trường tác giả
+- **Tín hiệu thiếu vắng** - từ ngữ/dấu câu chưa từng xuất hiện, kiểu mở đầu chưa từng dùng, ngữ điệu chưa từng chạm tới
+
+### 6. Sinh voice.md
+
+Tổng hợp hồ sơ giọng văn, tín hiệu dương và tín hiệu thiếu vắng gộp chung một file:
+
+```
+# Hồ sơ giọng văn của tôi
+## Tôi nghe giống ai
+## Tông giọng nền
+## Nhịp câu
+## Hook mở đầu
+## Tôi mở đầu thế nào
+## Tôi kết bài thế nào
+## Cách diễn đạt đặc trưng
+## Vùng cấm nội dung
+## Những điều giọng này không bao giờ làm
+```
+
+≤500 từ. Mỗi mục phải dựa trên bằng chứng từ bài mẫu, không được bịa. `Vùng cấm nội dung` và `Những điều giọng này không bao giờ làm` phải có bằng chứng thiếu vắng trong bài mẫu.
+
+### 7. Xác nhận hoàn tất và gợi bước tiếp theo
+
+Báo người dùng hai file đã sẵn sàng, các bước sáng tạo sau sẽ tự trích dùng. Gợi ý những thao tác tiếp theo.
+
+## Nhận biết Profile
+
+- **Có Profile** - điền sẵn khán giả, nền tảng, tông giọng ưa dùng và các thông tin đã biết từ Profile, khi phỏng vấn thì bỏ qua câu đã có đáp án hoặc dùng để đối chiếu; ghi chú mức khớp với Profile ngay trong voice.md.
+- **Không có Profile** - chạy đủ cả 6 câu phỏng vấn, sinh hồ sơ giọng văn dùng chung.
+
+## Quy tắc
+
+1. **Nạp là chạy** - không tóm tắt, không giải thích, vào phỏng vấn luôn
+2. **Tối thiểu 3 bài mẫu** - dưới 3 bài thì không khởi động phân tích
+3. **Dựa trên bằng chứng** - rút quy luật từ bài mẫu, không bịa đặc điểm không có thật
+4. **Giữ mâu thuẫn** - phong cách giữa các bài chỏi nhau thì ghi đúng như vậy, không làm mượt
+5. **Giới hạn độ dài** - about-me.md ≤300 từ, voice.md ≤500 từ
+6. **Định dạng sản phẩm** - mọi nội dung bài mẫu xuất trong khối mã, giữ nguyên xuống dòng và khoảng trắng
+7. **Không lặp** - voice.md không nhắc lại thông tin khán giả và chủ đề đã có trong about-me.md
+8. **Ngôn ngữ** - file sản phẩm mặc định viết tiếng Việt (trừ khi bài mẫu rõ ràng là tiếng Anh)
+9. **Cấm gạch ngang dài** - file sản phẩm và bản nháp không dùng em dash

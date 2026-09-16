@@ -8,49 +8,49 @@ description: >-
 layer: publish
 ---
 
-# 短链 + UTM 追踪
+# Short link + theo dõi UTM
 
-> 给链接拼 UTM 追踪参数并缩短，追踪各平台引流效果。走 `scripts/shortlink.py`（纯标准库无依赖，
-> 短链用免 key 公共服务 TinyURL / is.gd / v.gd）。
+> Gắn tham số theo dõi UTM vào link rồi rút gọn, để đo hiệu quả kéo traffic của từng nền tảng. Chạy `scripts/shortlink.py` (thuần thư viện chuẩn, không phụ thuộc,
+> short link dùng dịch vụ công khai không cần key: TinyURL / is.gd / v.gd).
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| URL | 是 | 落地页/商品/表单链接 |
-| source | UTM 时必填 | 来源平台，如 xiaohongshu/douyin/wechat |
-| medium | UTM 时必填 | 媒介，如 social/video/cpc |
-| campaign | UTM 时必填 | 活动名，如 618/newproduct |
+| URL | Có | Link landing page/sản phẩm/biểu mẫu |
+| source | Bắt buộc khi gắn UTM | Nền tảng nguồn, ví dụ facebook/tiktok/zalo |
+| medium | Bắt buộc khi gắn UTM | Kênh, ví dụ social/video/cpc |
+| campaign | Bắt buộc khi gắn UTM | Tên chiến dịch, ví dụ tet/newproduct |
 
-## 执行
+## Thực thi
 
-脚本路径（相对项目根）：`skills/openclaw/skill-short-link/scripts/shortlink.py`（各子命令 `-h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/openclaw/skill-short-link/scripts/shortlink.py` (mỗi subcommand đều có `-h`).
 
 ```bash
-# 一步到位：拼 UTM + 缩短（最常用）
+# Làm một phát: gắn UTM + rút gọn (hay dùng nhất)
 python <skill>/scripts/shortlink.py both --url "https://shop.example.com/item/123" \
-  --source xiaohongshu --medium social --campaign 618
+  --source facebook --medium social --campaign tet
 
-# 只拼 UTM 参数
+# Chỉ gắn tham số UTM
 python <skill>/scripts/shortlink.py utm --url "https://a.com/p" \
-  --source douyin --medium video --campaign summer --content 视频A
+  --source tiktok --medium video --campaign summer --content "Video A"
 
-# 只缩短
+# Chỉ rút gọn
 python <skill>/scripts/shortlink.py short --url "https://a.com/very/long/url" --provider tinyurl
 ```
 
-- 默认短链服务 `tinyurl`（最稳、任意 URL 均可）；也可 `--provider isgd`/`vgd`（支持 `--alias` 自定义短码，
-  但对部分域名有黑名单）。
-- 多平台投放建议**每个平台一条短链**（source 不同），这样后台能分平台看流量。
+- Dịch vụ short link mặc định là `tinyurl` (ổn nhất, nhận mọi URL); cũng có thể dùng `--provider isgd`/`vgd` (hỗ trợ `--alias` để tự đặt mã ngắn,
+  nhưng chặn một số tên miền).
+- Chạy nhiều nền tảng thì nên **mỗi nền tảng một short link riêng** (khác source), như vậy trong báo cáo mới tách được traffic theo nền tảng.
 
-## 规则
+## Quy tắc
 
-1. 每个投放渠道生成独立短链（utm_source 区分），否则无法分平台归因。
-2. campaign 用统一命名规范（如 `618`、`产品名-月份`），方便后续聚合。
-3. `--content` 用于同活动多素材 A/B（如"视频A"/"图文B"）。
-4. 短链服务为第三方公共服务，重要投放建议自建短链域名（本 SKILL 便于快速出链）。
+1. Mỗi kênh chạy sinh một short link riêng (phân biệt bằng utm_source), không thì không quy được traffic về từng nền tảng.
+2. Đặt tên campaign theo một quy ước thống nhất (ví dụ `tet`, `tên-sản-phẩm-tháng`) để sau này gộp số liệu cho dễ.
+3. `--content` dùng để A/B nhiều biến thể trong cùng chiến dịch (ví dụ "Video A"/"Bài ảnh B").
+4. Đây là dịch vụ short link công khai của bên thứ ba; chiến dịch quan trọng nên tự dựng tên miền rút gọn riêng (SKILL này chỉ để ra link cho nhanh).
 
-## 参考来源
+## Nguồn tham khảo
 
-UTM 是 GA/各分析平台通用的来源追踪参数标准（utm_source/medium/campaign/term/content）。
-短链用 TinyURL / is.gd / v.gd 的免 key 公共 API。纯 urllib 实现。
+UTM là bộ tham số theo dõi nguồn dùng chung cho GA và các nền tảng phân tích (utm_source/medium/campaign/term/content).
+Short link đi qua API công khai không cần key của TinyURL / is.gd / v.gd. Viết thuần bằng urllib.

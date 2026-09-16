@@ -7,112 +7,112 @@ description: >-
 layer: produce
 ---
 
-# 字数裁剪/摘要
+# Cắt chữ / tóm tắt
 
-> 把长文本压缩到指定字数，保留核心信息，适配不同平台的字数限制。
+> Nén văn bản dài về số chữ chỉ định, giữ thông tin cốt lõi, khớp giới hạn độ dài của từng nền tảng.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| `text` | 是 | 待压缩的原文 |
-| `target_length` | 否 | 目标字数（如 `140`、`280`、`500`）；不指定则自动压缩到原文 30%-50% |
-| `mode` | 否 | 压缩模式：`strict` / `summary` / `extract`（默认 `summary`） |
-| `platform` | 否 | 目标平台（自动设定字数限制）：`weibo`(140) / `twitter`(280) / `xiaohongshu`(1000) / `zhihu_answer`(自由) |
-| `preserve` | 否 | 必须保留的关键信息/关键词列表 |
-| `tone` | 否 | 压缩后的语气倾向：`neutral`（默认）/ `punchy`（有力）/ `soft`（柔和） |
+| `text` | Có | Bản gốc cần nén |
+| `target_length` | Không | Số chữ đích (ví dụ `140`, `280`, `500`); không chỉ định thì tự nén còn 30%-50% bản gốc |
+| `mode` | Không | Chế độ nén: `strict` / `summary` / `extract` (mặc định `summary`) |
+| `platform` | Không | Nền tảng đích (tự đặt giới hạn số chữ): `weibo`(140) / `twitter`(280) / `xiaohongshu`(1000) / `zhihu_answer`(tự do) |
+| `preserve` | Không | Danh sách thông tin/từ khoá bắt buộc giữ |
+| `tone` | Không | Thiên hướng giọng sau khi nén: `neutral` (mặc định) / `punchy` (mạnh) / `soft` (mềm) |
 
-### 压缩模式说明
+### Giải thích các chế độ nén
 
-| 模式 | 行为 | 适用场景 |
+| Chế độ | Hành vi | Dùng khi nào |
 |------|------|----------|
-| `strict` | 严格控制在目标字数 ±5%，逐字斟酌 | 有硬性字数限制的平台（微博、Twitter） |
-| `summary` | 保留所有要点，允许字数浮动 ±15% | 生成摘要、文章导语 |
-| `extract` | 只提取原文中最精华的原句，不改写 | 金句提取、精华摘录 |
+| `strict` | Siết đúng số chữ đích ±5%, cân từng chữ | Nền tảng có giới hạn độ dài cứng (Weibo, Twitter) |
+| `summary` | Giữ hết ý chính, cho phép số chữ xê dịch ±15% | Làm tóm tắt, sapo bài viết |
+| `extract` | Chỉ trích nguyên câu đắt nhất trong bản gốc, không viết lại | Trích câu đắt, lọc tinh hoa |
 
-## 输出
+## Đầu ra
 
-- 压缩后的文案
-- 压缩报告：原文字数、目标字数、实际字数、压缩率、保留的核心要点列表
-- 写入 `outputs/` 目录
+- Nội dung sau khi nén
+- Báo cáo nén: số chữ bản gốc, số chữ đích, số chữ thực tế, tỉ lệ nén, danh sách ý cốt lõi đã giữ
+- Ghi vào thư mục `outputs/`
 
-## 执行步骤
+## Các bước thực hiện
 
-> **字数以脚本为准**：字数统计和达标判定一律用 `skills/shared/scripts/wordcount.py`，
-> 不靠自己数。LLM 负责改写，脚本负责判定。
-> 社媒计数口径（`social_count`）= 中文字符 + 英文单词 + 数字串 + 标点。
+> **Số chữ lấy theo script**: đếm chữ và phán định đạt/chưa đạt đều dùng `skills/shared/scripts/wordcount.py`,
+> không tự đếm. LLM lo viết lại, script lo phán định.
+> Cách đếm cho mạng xã hội (`social_count`) = ký tự CJK + từ tiếng Anh + chuỗi số + dấu câu.
 
-### Step 1 — 原文分析
+### Step 1 - Phân tích bản gốc
 
-1. 统计原文字数：`python3 skills/shared/scripts/wordcount.py count -f <原文>`（或经 stdin 传入）
-2. 提取核心信息结构：
-   - 中心论点 / 核心事实
-   - 关键论据 / 支撑数据
-   - 次要信息 / 补充说明
-   - 修饰性内容 / 过渡句
-3. 对每条信息标注优先级（P0 必留 / P1 尽量留 / P2 可删）
+1. Đếm số chữ bản gốc: `python3 skills/shared/scripts/wordcount.py count -f <bản-gốc>` (hoặc truyền qua stdin)
+2. Trích cấu trúc thông tin cốt lõi:
+   - Luận điểm trung tâm / dữ kiện cốt lõi
+   - Luận cứ then chốt / số liệu chống lưng
+   - Thông tin thứ yếu / phần bổ sung
+   - Nội dung tô điểm / câu chuyển ý
+3. Gắn mức ưu tiên cho từng thông tin (P0 bắt buộc giữ / P1 cố giữ / P2 có thể bỏ)
 
-### Step 2 — 裁剪策略
+### Step 2 - Chiến lược cắt
 
-根据保留率（目标字数 / 原文字数）选择策略：
+Chọn chiến lược theo tỉ lệ giữ lại (số chữ đích / số chữ bản gốc):
 
-| 保留率 | 策略 | 说明 |
+| Tỉ lệ giữ | Chiến lược | Mô tả |
 |--------|------|------|
-| > 70% | 轻度删减 | 删冗余修饰、合并重复表达 |
-| 40%-70% | 中度压缩 | 删 P2 信息、精简句式、合并相似段落 |
-| 20%-40% | 重度压缩 | 只留 P0/P1、改写为高密度表达 |
-| < 20% | 极限压缩 | 只留 P0、一句话概括 |
+| > 70% | Cắt nhẹ | Bỏ tô điểm thừa, gộp cách nói lặp |
+| 40%-70% | Nén vừa | Bỏ thông tin P2, gọn câu cú, gộp đoạn giống nhau |
+| 20%-40% | Nén mạnh | Chỉ giữ P0/P1, viết lại theo lối mật độ cao |
+| < 20% | Nén tối đa | Chỉ giữ P0, gói trong một câu |
 
-### Step 3 — 执行压缩
+### Step 3 - Thực hiện nén
 
-按 `mode` 执行：
+Chạy theo `mode`:
 
-**strict 模式（脚本兜底，闭环调整）：**
-1. 先裁到目标字数的 120%
-2. 逐句精简，去掉每句中可删的词
-3. **调用脚本校验**：`python3 skills/shared/scripts/wordcount.py check --target <N> -f <文件>`（或经 stdin 传入）
-   - 退出码 0 = 达标；非 0 = 未达标，脚本会给出「还需增/删 X 字」
-   - 平台硬限制默认 ±5%，可用 `--tolerance` 调整（如 `--tolerance 0.1`）
-4. **未达标则继续改写并重新 check，直到脚本判定 pass（退出码 0）**，不得凭感觉收尾
-5. 确认无断句、无残句
+**Chế độ strict (script làm chốt chặn, chỉnh theo vòng khép kín):**
+1. Cắt trước về 120% số chữ đích
+2. Gọn từng câu, bỏ những từ có thể bỏ trong mỗi câu
+3. **Gọi script kiểm tra**: `python3 skills/shared/scripts/wordcount.py check --target <N> -f <file>` (hoặc truyền qua stdin)
+   - Mã thoát 0 = đạt; khác 0 = chưa đạt, script sẽ báo "còn cần thêm/bớt X chữ"
+   - Giới hạn cứng của nền tảng mặc định ±5%, chỉnh bằng `--tolerance` (ví dụ `--tolerance 0.1`)
+4. **Chưa đạt thì viết lại rồi check lại, tới khi script phán pass (mã thoát 0)**, không được kết thúc theo cảm tính
+5. Xác nhận không có câu đứt, không có câu cụt
 
-**summary 模式：**
-1. 按信息优先级筛选内容
-2. 用自己的话重写，不受原文句式约束
-3. 确保逻辑连贯、可独立阅读
+**Chế độ summary:**
+1. Lọc nội dung theo mức ưu tiên thông tin
+2. Viết lại bằng lời của mình, không bị ràng buộc bởi cú pháp bản gốc
+3. Bảo đảm mạch logic liền lạc, đọc độc lập được
 
-**extract 模式：**
-1. 对每句打分（信息密度 x 表达质量）
-2. 按得分降序选句，直到接近目标字数
-3. 调整句序使其连贯
-4. 不改写原句（最多做衔接过渡）
+**Chế độ extract:**
+1. Chấm điểm từng câu (mật độ thông tin x chất lượng diễn đạt)
+2. Chọn câu theo điểm giảm dần, tới khi gần số chữ đích
+3. Chỉnh thứ tự câu cho liền mạch
+4. Không viết lại câu gốc (nhiều nhất là thêm câu nối)
 
-### Step 4 — 质量检查
+### Step 4 - Kiểm tra chất lượng
 
-- 字数是否达标：**strict 模式必须以 `wordcount.py check` 退出码 0 为准**；其他模式用 `wordcount.py count` 核对是否落在容差范围
-- `preserve` 中的关键信息是否全部保留
-- 压缩后是否可独立阅读（不需要看原文就能理解）
-- 是否有信息失真（压缩导致意思改变）
-- 句子是否完整（无残句、无悬空指代）
+- Số chữ đạt chưa: **chế độ strict bắt buộc lấy mã thoát 0 của `wordcount.py check` làm chuẩn**; chế độ khác dùng `wordcount.py count` đối chiếu xem có nằm trong dung sai không
+- Thông tin then chốt trong `preserve` đã giữ đủ chưa
+- Bản nén có đọc độc lập được không (không cần xem bản gốc vẫn hiểu)
+- Có sai lệch thông tin không (nén làm đổi nghĩa)
+- Câu có trọn vẹn không (không câu cụt, không đại từ lửng)
 
-### Step 5 — 输出压缩报告
+### Step 5 - Xuất báo cáo nén
 
 ```
-压缩报告:
-- 原文: 2,350 字
-- 目标: 500 字
-- 实际: 487 字 (压缩率 79.3%，压缩率 = 已删减比例 = 1 − 实际/原文)
-- 模式: summary
-- 保留要点:
-  1. [P0] 核心论点 — 已保留
-  2. [P0] 关键数据 — 已保留
-  3. [P1] 案例说明 — 已精简
-  4. [P2] 背景介绍 — 已删除
+Báo cáo nén:
+- Bản gốc: 2.350 chữ
+- Đích: 500 chữ
+- Thực tế: 487 chữ (tỉ lệ nén 79.3%, tỉ lệ nén = phần đã cắt = 1 - thực tế/bản gốc)
+- Chế độ: summary
+- Ý đã giữ:
+  1. [P0] Luận điểm cốt lõi - đã giữ
+  2. [P0] Số liệu then chốt - đã giữ
+  3. [P1] Phần ví dụ - đã rút gọn
+  4. [P2] Phần bối cảnh - đã bỏ
 ```
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `style.md` 读取品牌调性，压缩时保持一致的语言风格；参考 `platforms.md` 中的平台偏好，自动匹配最常用平台的字数规范
-- **无 Profile**：按用户指定的参数压缩；未指定平台时默认 `summary` 模式，压缩到原文 30%-50%
+- **Có Profile**: đọc tông giọng thương hiệu từ `style.md`, giữ phong cách ngôn ngữ nhất quán khi nén; tham chiếu ưu tiên nền tảng trong `platforms.md`, tự khớp quy chuẩn số chữ của nền tảng hay dùng nhất
+- **Không có Profile**: nén theo tham số người dùng chỉ định; chưa chỉ định nền tảng thì mặc định chế độ `summary`, nén còn 30%-50% bản gốc
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

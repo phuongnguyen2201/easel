@@ -7,93 +7,93 @@ description: >-
 layer: produce
 ---
 
-# 字幕翻译 / 双语字幕
+# Dịch phụ đề / phụ đề song ngữ
 
-> 把已有字幕翻译成目标语言，产出**双语**（原文+译文）或**纯译文**字幕，可选烧录进视频。
-> 翻译交给 LLM（你自己），确定性部分（解析/合并/格式/时间轴/烧录）全交给
-> `skills/shared/scripts/subtitle_ops.py`。**不要手拼 ffmpeg，也不要手改时间轴。**
+> Dịch phụ đề có sẵn sang ngôn ngữ đích, cho ra phụ đề **song ngữ** (bản gốc + bản dịch) hoặc **chỉ bản dịch**, tuỳ chọn đốt cứng vào video.
+> Phần dịch giao cho LLM (chính bạn), phần xác định (parse/gộp/định dạng/timeline/đốt phụ đề) giao hết cho
+> `skills/shared/scripts/subtitle_ops.py`. **Đừng tự ghép lệnh ffmpeg, cũng đừng sửa tay timeline.**
 
-> 只做"已有字幕 → 翻译/双语/烧录"。语音识别生成字幕见 **auto-subtitle**；
-> 通用视频剪辑见 **video-editing**。
+> Chỉ làm "phụ đề có sẵn -> dịch/song ngữ/đốt cứng". Nhận dạng giọng nói để tạo phụ đề xem **auto-subtitle**;
+> Dựng video nói chung xem **video-editing**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 字幕文件 | 是 | `.srt` / `.vtt` / `.ass` 路径（没给就问） |
-| 目标语言 | 是 | 译成什么语言（如中文 / English / 日本語） |
-| 输出形态 | 否 | `双语`（默认）/ `纯译文` |
-| 原译顺序 | 否 | 双语时原文在上（默认）或译文在上 |
-| 视频文件 | 否 | 给了则可烧录；软挂载（可开关）或硬烧录（烧进画面） |
+| File phụ đề | Có | Đường dẫn `.srt` / `.vtt` / `.ass` (không đưa thì hỏi) |
+| Ngôn ngữ đích | Có | Dịch sang ngôn ngữ nào (vd Tiếng Việt / English / Tiếng Nhật) |
+| Dạng đầu ra | Không | `song ngữ` (mặc định) / `chỉ bản dịch` |
+| Thứ tự gốc-dịch | Không | Khi song ngữ: bản gốc ở trên (mặc định) hoặc bản dịch ở trên |
+| File video | Không | Có thì đốt được phụ đề; gắn mềm (bật/tắt được) hoặc đốt cứng (in thẳng vào hình) |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 双语 / 纯译文字幕文件（`.srt` 或 `.ass`）
-- 若烧录：带字幕的视频（`*-sub.mp4`）
-- 报告：条数、目标语言、形态、输出路径
+- File phụ đề song ngữ / chỉ bản dịch (`.srt` hoặc `.ass`)
+- Nếu đốt phụ đề: video có phụ đề (`*-sub.mp4`)
+- Báo cáo: số dòng phụ đề, ngôn ngữ đích, dạng đầu ra, đường dẫn xuất
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/subtitle_ops.py`（每个子命令支持 `-h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/subtitle_ops.py` (mỗi subcommand đều hỗ trợ `-h`).
 
-### 1. 提取待译文本
+### 1. Trích văn bản cần dịch
 ```bash
-python skills/shared/scripts/subtitle_ops.py extract -i <字幕> -o /tmp/st_lines.txt
+python skills/shared/scripts/subtitle_ops.py extract -i "<phụ đề>" -o /tmp/st_lines.txt
 ```
-每条字幕一行、行号与顺序固定。**记住总行数 N。**
+Mỗi dòng phụ đề nằm trên một dòng, số dòng và thứ tự cố định. **Nhớ tổng số dòng N.**
 
-### 2. 逐行翻译（你来做）
-读 `/tmp/st_lines.txt`，逐行翻译成目标语言，写入 `/tmp/st_trans.txt`：
-- **行数必须严格等于 N，顺序一一对应，不增删空行、不合并、不拆行**（脚本会校验，不一致直接报错）。
-- 一行内如原文有多句，整合成一行译文，不要拆成多行。
-- 语气/术语按内容领域走；口语内容译得自然口语，书面内容译得书面。
-- 空行原文对应空行译文（保持占位）。
+### 2. Dịch từng dòng (bạn tự làm)
+Đọc `/tmp/st_lines.txt`, dịch từng dòng sang ngôn ngữ đích, ghi vào `/tmp/st_trans.txt`:
+- **Số dòng phải đúng bằng N, thứ tự khớp một-một, không thêm bớt dòng trống, không gộp, không tách dòng** (script sẽ kiểm, lệch là báo lỗi ngay).
+- Một dòng gốc có nhiều câu thì gộp thành một dòng dịch, đừng tách ra nhiều dòng.
+- Giọng và thuật ngữ bám theo lĩnh vực nội dung; nội dung nói thì dịch tự nhiên như nói, nội dung văn viết thì dịch trang trọng.
+- Dòng gốc trống thì dòng dịch cũng để trống (giữ chỗ).
 
-### 3. 合并成双语 / 纯译文字幕
+### 3. Gộp thành phụ đề song ngữ / chỉ bản dịch
 ```bash
-# 双语 SRT（原文在上，译文在下）
-python skills/shared/scripts/subtitle_ops.py merge -i <字幕> --trans /tmp/st_trans.txt \
-  -o outputs/主题名/<名>-bilingual.srt
+# SRT song ngữ (bản gốc ở trên, bản dịch ở dưới)
+python skills/shared/scripts/subtitle_ops.py merge -i "<phụ đề>" --trans /tmp/st_trans.txt \
+  -o "outputs/<chủ đề>/<tên>-bilingual.srt"
 
-# 双语 ASS（原文白色较大 / 译文黄色略小，样式更佳，推荐用于硬烧录）
-python skills/shared/scripts/subtitle_ops.py merge -i <字幕> --trans /tmp/st_trans.txt \
-  -o outputs/主题名/<名>-bilingual.ass --format ass
+# ASS song ngữ (bản gốc chữ trắng to hơn / bản dịch chữ vàng nhỏ hơn, kiểu đẹp hơn, nên dùng khi đốt cứng)
+python skills/shared/scripts/subtitle_ops.py merge -i "<phụ đề>" --trans /tmp/st_trans.txt \
+  -o "outputs/<chủ đề>/<tên>-bilingual.ass" --format ass
 
-# 纯译文（不保留原文）
-python skills/shared/scripts/subtitle_ops.py merge -i <字幕> --trans /tmp/st_trans.txt \
-  -o outputs/主题名/<名>-<lang>.srt --trans-only
+# Chỉ bản dịch (không giữ bản gốc)
+python skills/shared/scripts/subtitle_ops.py merge -i "<phụ đề>" --trans /tmp/st_trans.txt \
+  -o "outputs/<chủ đề>/<tên>-<lang>.srt" --trans-only
 ```
-`--order trans-top` 可让译文在上。
+`--order trans-top` để đưa bản dịch lên trên.
 
-### 4.（可选）烧录进视频
+### 4. (Tuỳ chọn) Đốt phụ đề vào video
 ```bash
-# 硬烧录（烧进画面，推荐用 .ass 保留双语样式）
-python skills/shared/scripts/subtitle_ops.py burn -i <视频> \
-  --sub outputs/主题名/<名>-bilingual.ass \
-  -o outputs/主题名/<名>-sub.mp4
+# Đốt cứng (in thẳng vào hình, nên dùng .ass để giữ kiểu song ngữ)
+python skills/shared/scripts/subtitle_ops.py burn -i "<video>" \
+  --sub "outputs/<chủ đề>/<tên>-bilingual.ass" \
+  -o "outputs/<chủ đề>/<tên>-sub.mp4"
 
-# 软挂载（可在播放器开关，不改画面；mp4→mov_text，mkv→srt）
-python skills/shared/scripts/subtitle_ops.py burn -i <视频> \
-  --sub outputs/主题名/<名>-bilingual.srt \
-  -o outputs/主题名/<名>-sub.mp4 --soft
+# Gắn mềm (bật/tắt trong trình phát, không đổi hình; mp4 -> mov_text, mkv -> srt)
+python skills/shared/scripts/subtitle_ops.py burn -i "<video>" \
+  --sub "outputs/<chủ đề>/<tên>-bilingual.srt" \
+  -o "outputs/<chủ đề>/<tên>-sub.mp4" --soft
 ```
 
-## 其它子命令
+## Các subcommand khác
 
-- `parse -i <字幕> [-o out.json]` — 解析成 JSON（含时间轴），供程序化处理或核对。
-- `build --json <cues.json> -o <字幕>` — 从 JSON（cue 带 `text` 与可选 `trans`）构建，适合批量/整段翻译回填。
-- `convert -i a.srt -o b.vtt` — 格式互转（srt ↔ vtt ↔ ass）。
+- `parse -i "<phụ đề>" [-o out.json]` - parse thành JSON (kèm timeline), để xử lý bằng chương trình hoặc đối chiếu.
+- `build --json <cues.json> -o "<phụ đề>"` - dựng từ JSON (cue có `text` và `trans` tuỳ chọn), hợp cho dịch hàng loạt/cả đoạn rồi điền ngược.
+- `convert -i a.srt -o b.vtt` - chuyển đổi định dạng (srt <-> vtt <-> ass).
 
-## 规则
+## Quy tắc
 
-1. 翻译走 extract → 逐行译 → merge 三步，**严守行数一致**，绝不让脚本回退到"猜行对应"。
-2. 时间轴、字幕条数、格式一律由脚本产出，禁止手改时间戳。
-3. 硬烧录中文优先用 `.ass`（内置 Noto Sans CJK 样式）；若用 srt 硬烧录且中文变方块，`burn` 加 `--font-dir` 指向含 CJK 字体的目录。
-4. 双语默认原文在上、译文在下（`--order` 可调）；纯译文用 `--trans-only`。
-5. 产物统一进 `outputs/主题名/`。
+1. Dịch theo ba bước extract -> dịch từng dòng -> merge, **giữ đúng số dòng**, tuyệt đối không để script phải "đoán dòng nào khớp dòng nào".
+2. Timeline, số dòng phụ đề và định dạng đều do script sinh ra, cấm sửa tay dấu thời gian.
+3. Đốt cứng nên ưu tiên `.ass` (có sẵn style Noto Sans CJK); nếu đốt cứng bằng srt mà chữ tiếng Việt có dấu thành ô vuông, thêm `--font-dir` cho `burn` trỏ tới thư mục có font Unicode đầy đủ.
+4. Song ngữ mặc định bản gốc ở trên, bản dịch ở dưới (chỉnh bằng `--order`); chỉ bản dịch thì dùng `--trans-only`.
+5. Sản phẩm đều vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-字幕翻译工具形态参考开源项目：rockbenben/subtitle-translator（批量双语、译文上下对齐）、
-bonigarcia/dualsub（双语合并）、innovationmech/video-translate（软/硬字幕嵌入）。
-本 SKILL 把"翻译"交给 LLM，只把易错的解析/时间轴/合并/烧录做成确定性脚本。
+Hình thái công cụ dịch phụ đề tham khảo các dự án mã nguồn mở: rockbenben/subtitle-translator (song ngữ hàng loạt, canh trên dưới bản dịch),
+bonigarcia/dualsub (gộp song ngữ), innovationmech/video-translate (nhúng phụ đề mềm/cứng).
+SKILL này giao phần "dịch" cho LLM, chỉ biến các khâu dễ sai là parse/timeline/gộp/đốt phụ đề thành script xác định.

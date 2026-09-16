@@ -10,47 +10,47 @@ layer: produce
 
 # ecom-details-image Skill
 
-当用户需要视觉策略、图片 Prompt、商品主图、营销图、社媒图、广告图、电商 PDP 视觉，或要求直接 AI 生图时，使用这个 Skill。
+Dùng Skill này khi người dùng cần chiến lược hình ảnh, Prompt ảnh, ảnh chính sản phẩm, ảnh marketing, ảnh mạng xã hội, ảnh quảng cáo, visual PDP thương mại điện tử, hoặc yêu cầu sinh ảnh AI trực tiếp.
 
-两种模式：
+Hai chế độ:
 
-1. **Brief / Prompt 模式**：只输出视觉简报和可执行图片 Prompt。
-2. **Generate 模式**：当用户明确要求"生图、生成图片、出图、render image"时，先输出最终 Prompt，再调用 `scripts/generate_image.py`。
+1. **Chế độ Brief / Prompt**: chỉ xuất brief hình ảnh và Prompt ảnh chạy được.
+2. **Chế độ Generate**: khi người dùng yêu cầu rõ "sinh ảnh, tạo ảnh, ra ảnh, render image", xuất Prompt cuối trước, rồi gọi `scripts/generate_image.py`.
 
-> **审美方向对齐 [card-design](../card-design/SKILL.md)**：详情页信息图 / 营销图的视觉方向遵守同一套去 AI 廉价感原则——禁蓝紫科技渐变、禁 emoji 当图标、字大字细、留白克制、填满不空。把这些写进 Prompt 的正向/否定约束里（本 SKILL 出 t2i Prompt，非 HTML 渲染，故是"审美方向"层面对齐，不走 render_card）。
+> **Đồng bộ hướng thẩm mỹ với [card-design](../card-design/SKILL.md)**: ảnh infographic trang chi tiết / ảnh marketing theo cùng một bộ nguyên tắc khử cảm giác AI rẻ tiền - cấm gradient xanh tím kiểu công nghệ, cấm dùng emoji làm icon, chữ to nét mảnh, chừa khoảng trắng có tiết chế, lấp đầy chứ không để trống hoác. Viết các ràng buộc này vào phần thuận và phần phủ định của Prompt (SKILL này ra Prompt t2i, không render HTML, nên chỉ đồng bộ ở mức "hướng thẩm mỹ", không đi qua render_card).
 
-不要暴露、索要、写入、提交或回显真实 API key。使用者必须通过自己的环境变量配置 API。
+Không để lộ, không hỏi xin, không ghi, không commit và không in lại API key thật. Người dùng phải tự cấu hình API bằng biến môi trường của mình.
 
-## References（按需加载，不要一次性全读）
+## References (nạp khi cần, đừng đọc hết một lượt)
 
-| 文件 | 内容 | 何时读 |
+| File | Nội dung | Khi nào đọc |
 |---|---|---|
-| `references/templates.md` | 25 个场景模板匹配表、使用方式、风格变体速查 | 判断场景类型、匹配模板时 |
-| `references/templates/*.json` | 具体场景模板（`prompt_template`/`variants`/`category_tips`/`anti_ai_tips`） | 只读匹配到的那一个 |
-| `references/image-gen-rules.md` | 通用 Prompt 结构、文生图铁律、精简原则、Anti-AI 技巧、翻车点防护 | 写每一条 Prompt 时 |
-| `references/campaign-style-lock.md` | 多图任务的 Campaign Style Lock 规则与默认模板 | 任务含多张图时 |
-| `references/pdp-sequences.md` | 转化驱动诊断、主图/详情页序列、多角度镜头、详情页信息图结构、字体搭配 | 商品图/详情页/PDP 任务时 |
+| `references/templates.md` | Bảng khớp 25 mẫu bối cảnh, cách dùng, tra nhanh biến thể phong cách | Khi xác định loại bối cảnh và khớp mẫu |
+| `references/templates/*.json` | Mẫu bối cảnh cụ thể (`prompt_template`/`variants`/`category_tips`/`anti_ai_tips`) | Chỉ đọc đúng cái đã khớp |
+| `references/image-gen-rules.md` | Cấu trúc Prompt chung, luật thép text-to-image, nguyên tắc tinh gọn, mẹo Anti-AI, chặn điểm dễ hỏng | Khi viết từng Prompt |
+| `references/campaign-style-lock.md` | Quy tắc Campaign Style Lock và mẫu mặc định cho task nhiều ảnh | Khi task có nhiều ảnh |
+| `references/pdp-sequences.md` | Chẩn đoán động lực chuyển đổi, chuỗi ảnh chính/trang chi tiết, góc máy đa chiều, cấu trúc infographic trang chi tiết, phối font | Khi làm ảnh sản phẩm/trang chi tiết/PDP |
 
-## 核心流程
+## Quy trình lõi
 
-1. 判断视觉任务类型和场景 → 读 `references/templates.md` 匹配模板。
-2. 从 `references/templates/` 读取**匹配到的那一个** JSON，取 `prompt_template`、`variants`、`category_tips` 作为 Prompt 基础结构。
-3. 只收集会实质影响图片结果的缺失信息（见下方**最小输入**）。
-4. 构建视觉简报。
-5. 多图任务：先按 `references/campaign-style-lock.md` 建立 **Campaign Style Lock**，锁定整套图的色板、冷暖调、字体、背景、光线、布局和图标风格。
-6. 按 `references/image-gen-rules.md` 写出可执行图片 Prompt（保持简洁，逐条对照铁律）；多图任务必须把同一段 Campaign Style Lock 原样放进每张 Prompt。
-7. 商品图/详情页/营销图：按 `references/pdp-sequences.md` 先做转化驱动力诊断，再排序列。
-8. 用户要求电商详情页 / PDP / 主图堆栈 / 整套商品图时，默认输出 **5 张主图 + 7-9 张详情页图片** 的图片包（详情页每屏必须是电商信息图格式，见 `references/pdp-sequences.md`）。
-9. 用户要求直接出图 → 调用 `scripts/generate_image.py`；用户提供参考产品图时传入 `--image`。
-10. 返回 Prompt、生成文件路径和关键假设。
+1. Xác định loại task hình ảnh và bối cảnh → đọc `references/templates.md` để khớp mẫu.
+2. Từ `references/templates/` đọc **đúng một** file JSON đã khớp, lấy `prompt_template`, `variants`, `category_tips` làm cấu trúc nền cho Prompt.
+3. Chỉ hỏi thêm thông tin còn thiếu mà thực sự ảnh hưởng tới kết quả ảnh (xem **Đầu vào tối thiểu** bên dưới).
+4. Dựng brief hình ảnh.
+5. Task nhiều ảnh: trước hết theo `references/campaign-style-lock.md` lập **Campaign Style Lock**, khoá bảng màu, tông nóng lạnh, font, nền, ánh sáng, bố cục và phong cách icon cho cả bộ ảnh.
+6. Theo `references/image-gen-rules.md` viết Prompt ảnh chạy được (giữ gọn, đối chiếu từng luật thép); task nhiều ảnh bắt buộc chép nguyên đoạn Campaign Style Lock vào mọi Prompt.
+7. Ảnh sản phẩm/trang chi tiết/ảnh marketing: theo `references/pdp-sequences.md` chẩn đoán động lực chuyển đổi trước, rồi mới xếp chuỗi ảnh.
+8. Khi người dùng yêu cầu trang chi tiết thương mại điện tử / PDP / bộ ảnh chính / trọn bộ ảnh sản phẩm, mặc định xuất gói **5 ảnh chính + 7-9 ảnh trang chi tiết** (mỗi màn trang chi tiết bắt buộc theo định dạng infographic thương mại điện tử, xem `references/pdp-sequences.md`).
+9. Người dùng yêu cầu ra ảnh ngay → gọi `scripts/generate_image.py`; khi người dùng đưa ảnh sản phẩm tham chiếu thì truyền `--image`.
+10. Trả về Prompt, đường dẫn file đã sinh và các giả định quan trọng.
 
-## 最小输入
+## Đầu vào tối thiểu
 
-任何视觉任务优先确认：目标、用途（主图/广告图/社媒图/Banner/PDP 模块/缩略图等）、主体、受众与语境、风格、构图与比例、是否需要图内文字、负面约束。缺少非关键字段时，明确假设后继续，不要无谓阻塞。
+Mọi task hình ảnh đều ưu tiên xác nhận: mục tiêu, mục đích dùng (ảnh chính/ảnh quảng cáo/ảnh mạng xã hội/Banner/module PDP/thumbnail...), chủ thể, khán giả và ngữ cảnh, phong cách, bố cục và tỉ lệ, có cần chữ trong ảnh không, ràng buộc phủ định. Thiếu trường không quan trọng thì nêu rõ giả định rồi làm tiếp, đừng chặn vô ích.
 
-## 生图脚本调用（scripts/generate_image.py）
+## Gọi script sinh ảnh (scripts/generate_image.py)
 
-直接生图走 apimart.ai 图像生成接口（模型由 `IMG_MODEL` 指定，model-agnostic，异步轮询）；也可改用统一生图入口 skill `ai-image-gen`。优先在 `.claude/skills/ecom-details-image/` 放 `.env`，不要把真实 API key 写进仓库：
+Sinh ảnh trực tiếp đi qua API tạo ảnh của apimart.ai (model do `IMG_MODEL` chỉ định, model-agnostic, polling bất đồng bộ); cũng có thể chuyển sang skill cổng sinh ảnh chung `ai-image-gen`. Ưu tiên đặt `.env` trong `.claude/skills/ecom-details-image/`, đừng ghi API key thật vào repo:
 
 ```dotenv
 IMG_BASE_URL=https://api.apimart.ai/v1
@@ -58,9 +58,9 @@ IMG_MODEL=gpt-image-2
 IMG_API_KEY=your-api-key
 ```
 
-脚本兼容别名：`OPENAI_BASE_URL`、`OPENAI_API_BASE`、`OPENAI_IMAGE_MODEL`、`OPENAI_MODEL`、`OPENAI_API_KEY`。
+Script chấp nhận các alias: `OPENAI_BASE_URL`, `OPENAI_API_BASE`, `OPENAI_IMAGE_MODEL`, `OPENAI_MODEL`, `OPENAI_API_KEY`.
 
-调用形状：
+Dạng lệnh gọi:
 
 ```bash
 python3 skills/openclaw/ecom-details-image/scripts/generate_image.py --prompt "..." --size 1:1 --resolution 2k
@@ -68,45 +68,45 @@ python3 skills/openclaw/ecom-details-image/scripts/generate_image.py --prompt-fi
 python3 skills/openclaw/ecom-details-image/scripts/generate_image.py --env-file .env --image product.jpg --prompt-file prompt.txt
 ```
 
-参数：`--prompt` / `--prompt-file`；`--output-dir`（仅用户指定时用，否则 `generated-images/`）；`--size`（比例格式，14 种，如 `1:1`/`16:9`/`2:3`/`4:5`，默认 `1:1`）；`--resolution`（`1k`/`2k`/`4k`，默认 `2k`，4K 仅限 6 个宽幅比例）；`--image`（参考产品图路径，对保证产品外观准确非常有效）；`--poll-interval`（默认 `5`）；`--timeout`（默认 `180`）；`--format`（默认 `png`）。
+Tham số: `--prompt` / `--prompt-file`; `--output-dir` (chỉ dùng khi người dùng chỉ định, nếu không thì `generated-images/`); `--size` (dạng tỉ lệ, 14 kiểu, ví dụ `1:1`/`16:9`/`2:3`/`4:5`, mặc định `1:1`); `--resolution` (`1k`/`2k`/`4k`, mặc định `2k`, 4K chỉ áp dụng cho 6 tỉ lệ khổ rộng); `--image` (đường dẫn ảnh sản phẩm tham chiếu, rất hiệu quả để giữ đúng ngoại hình sản phẩm); `--poll-interval` (mặc định `5`); `--timeout` (mặc định `180`); `--format` (mặc định `png`).
 
-生图规则：
+Quy tắc sinh ảnh:
 
-1. 先输出最终 Prompt，再调脚本。短 Prompt 用 `--prompt`，长 Prompt 用 `--prompt-file`。
-2. 根据平台选 `--size`，没要求时默认 `1:1`。
-3. 缺少 `IMG_API_KEY` 等配置时**不要调用脚本**，只输出完整 Prompt 包 + 配置命令示例，说明需要在 `.env` 里配置什么，交给用户自行运行。
-4. 如果 API/模型不支持某尺寸，改用最接近的支持尺寸并说明。
+1. Xuất Prompt cuối trước, rồi mới gọi script. Prompt ngắn dùng `--prompt`, Prompt dài dùng `--prompt-file`.
+2. Chọn `--size` theo nền tảng, không có yêu cầu thì mặc định `1:1`.
+3. Thiếu cấu hình như `IMG_API_KEY` thì **không gọi script**, chỉ xuất trọn gói Prompt cùng ví dụ lệnh cấu hình, nói rõ cần khai báo gì trong `.env`, để người dùng tự chạy.
+4. Nếu API hoặc model không hỗ trợ một kích thước nào đó, đổi sang kích thước được hỗ trợ gần nhất và nói rõ.
 
-## QA 检查（输出前逐条确认）
+## Kiểm tra QA (xác nhận từng mục trước khi xuất)
 
-- Prompt 符合用户真实目标，已匹配正确场景模板并基于其 `prompt_template` 组装。
-- Prompt 简洁、只含核心信息，主体/构图/风格/用途明确。
-- 商品/营销任务包含转化驱动力诊断；证据缺失时不虚构效果、认证、数据、评分、销量、评价或授权。
-- 已应用文生图铁律：hex 颜色、数字占比、显式留白、否定清单、平台预留空间（详见 `references/image-gen-rules.md`）。
-- UGC/直播/社媒场景已应用 anti-AI 技巧（模板的 `anti_ai_tips` 字段）。
-- 多图任务：每张以同一段 Campaign Style Lock 开头；已分配不同角度和景别，无连续 3 张相同角度，全景图占比 ≤ 40%。
-- **详情页图片必须是电商信息图格式**（含标题、图标、标签、利益点、步骤或信任徽章），每张详情页 Prompt 以 `E-commerce infographic` 开头，不是单纯多角度产品照片。
-- 图内文字短且必要；有用户参考图时已传 `--image`；负面约束覆盖常见失败点。
-- 输出和文件里没有 API key 或私密凭据。
-- 提醒用户出图后放大 200% 逐字核对中文笔画。
+- Prompt đúng mục tiêu thật của người dùng, đã khớp đúng mẫu bối cảnh và ráp dựa trên `prompt_template` của mẫu đó.
+- Prompt gọn, chỉ giữ thông tin cốt lõi, rõ chủ thể/bố cục/phong cách/mục đích dùng.
+- Task sản phẩm hoặc marketing có chẩn đoán động lực chuyển đổi; thiếu bằng chứng thì không bịa công dụng, chứng nhận, số liệu, điểm đánh giá, doanh số, nhận xét hay giấy uỷ quyền.
+- Đã áp dụng luật thép text-to-image: mã màu hex, tỉ lệ bằng số, khoảng trắng nêu rõ, danh sách phủ định, chừa chỗ cho giao diện nền tảng (chi tiết xem `references/image-gen-rules.md`).
+- Bối cảnh UGC/livestream/mạng xã hội đã áp dụng mẹo anti-AI (trường `anti_ai_tips` của mẫu).
+- Task nhiều ảnh: mỗi ảnh mở đầu bằng cùng một đoạn Campaign Style Lock; đã phân bổ góc máy và cỡ cảnh khác nhau, không có 3 ảnh liên tiếp cùng góc, ảnh toàn cảnh chiếm không quá 40%.
+- **Ảnh trang chi tiết bắt buộc theo định dạng infographic thương mại điện tử** (có tiêu đề, icon, nhãn, lợi ích, bước làm hoặc huy hiệu tin cậy), mỗi Prompt trang chi tiết mở đầu bằng `E-commerce infographic`, không phải chỉ là ảnh sản phẩm chụp nhiều góc.
+- Chữ trong ảnh ngắn và cần thiết; có ảnh tham chiếu của người dùng thì đã truyền `--image`; ràng buộc phủ định bao được các lỗi thường gặp.
+- Trong output và trong file không có API key hay thông tin xác thực riêng tư.
+- Nhắc người dùng sau khi ra ảnh hãy phóng to 200% soát lại từng chữ, nhất là dấu tiếng Việt.
 
-## 输出格式
+## Định dạng output
 
-Brief / Prompt 模式返回：
+Chế độ Brief / Prompt trả về:
 
-1. **匹配模板**（模板文件名 + 场景类型）
+1. **Mẫu đã khớp** (tên file mẫu + loại bối cảnh)
 2. **Visual Brief**
 3. **Final Image Prompt**
 4. **Negative Constraints**
 5. **Assumptions**
 
-商品或营销任务追加：**Conversion Driver Diagnosis**、**Campaign Style Lock**（多图时）、**Hero Image Sequence**（标注每张对应模板）、**PDP Detail Image Sequence**（涉及详情页/PDP/整套商品图时）、**Copy Lines**（需要文字时）、**Test Priorities**。
+Task sản phẩm hoặc marketing bổ sung: **Conversion Driver Diagnosis**, **Campaign Style Lock** (khi nhiều ảnh), **Hero Image Sequence** (ghi rõ từng ảnh theo mẫu nào), **PDP Detail Image Sequence** (khi đụng tới trang chi tiết/PDP/trọn bộ ảnh sản phẩm), **Copy Lines** (khi cần chữ), **Test Priorities**.
 
-Generate 模式返回：
+Chế độ Generate trả về:
 
-1. **匹配模板**（模板文件名 + 场景类型）
+1. **Mẫu đã khớp** (tên file mẫu + loại bối cảnh)
 2. **Final Image Prompt**
-3. **Campaign Style Lock**（多图任务必须返回）
-4. **Image Pack Plan**（每张图的编号、用途、尺寸、对应模板和短文案）
+3. **Campaign Style Lock** (task nhiều ảnh bắt buộc trả về)
+4. **Image Pack Plan** (số thứ tự, mục đích, kích thước, mẫu tương ứng và câu chữ ngắn của từng ảnh)
 5. **Generated Files**
 6. **Assumptions / Notes**

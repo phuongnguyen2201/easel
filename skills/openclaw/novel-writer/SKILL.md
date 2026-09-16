@@ -8,104 +8,104 @@ description: >-
 layer: produce
 ---
 
-# AI 小说 / 网文连载创作
+# Viết tiểu thuyết / truyện mạng dài kỳ bằng AI
 
-> 一句灵感 → 世界观/人设 → 三级大纲 → 逐章正文。核心是**长篇一致性**：
-> 用「**文件即真相 + 按需加载**」——AI 不靠上下文记忆，每写一章只加载相关切片，
-> 状态全落文件、可 diff、可续写。确定性 IO（搭骨架/进度/机械查 AI 味）走
-> `scripts/novel_ops.py`，**创意（设定/大纲/正文）由你 LLM 完成**。
+> Một câu cảm hứng -> thế giới quan/nhân vật -> dàn ý 3 cấp -> chính văn từng chương. Cốt lõi là **nhất quán truyện dài**:
+> dùng "**file là sự thật + nạp theo nhu cầu**" - AI không dựa vào trí nhớ ngữ cảnh, mỗi chương chỉ nạp lát cắt liên quan,
+> trạng thái đổ hết ra file, diff được, viết tiếp được. IO xác định (dựng khung/tiến độ/quét mùi AI máy móc) chạy qua
+> `scripts/novel_ops.py`, **phần sáng tạo (thiết định/dàn ý/chính văn) do bạn - LLM - làm**.
 
-> 只做单段风格改写见 **style-transfer**；只做润色去 AI 感见 **text-polisher**；
-> 只做通用文章见 **social-content**；发知乎见 **skill-zhihu-publisher**。
+> Chỉ đổi phong cách một đoạn xem **style-transfer**; chỉ trau chuốt khử mùi AI xem **text-polisher**;
+> chỉ viết bài thường xem **social-content**; đăng bài xem SKILL đăng của nền tảng đích.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 灵感/题材 | 是 | 一句话创意，或已有设定（没给就问） |
-| 平台 | 否 | 知乎盐选 / 番茄 / 起点 / 小红书图文（默认按 Profile 或问） |
-| 书名 | 否 | 缺省由题材拟定，用作产物目录名 |
-| 本次动作 | 否 | 立项 / 出大纲 / 写第 N 章 / 续写 / 改图文（默认按对话判断） |
+| Cảm hứng/đề tài | Có | Một câu ý tưởng, hoặc thiết định đã có (chưa cho thì hỏi) |
+| Nền tảng | Không | Zhihu Yanxuan / Fanqie / Qidian / bài ảnh-chữ Xiaohongshu (mặc định theo Profile hoặc hỏi) |
+| Tên sách | Không | Bỏ trống thì đặt theo đề tài, dùng làm tên thư mục sản phẩm |
+| Việc lần này | Không | Lập dự án / ra dàn ý / viết chương N / viết tiếp / chuyển bài ảnh-chữ (mặc định suy từ hội thoại) |
 
-## 产物结构（`outputs/书名/`）
+## Cấu trúc sản phẩm (`outputs/<tên sách>/`)
 
 ```
-bible/    world.md characters.md voice.md canon.md   ← 硬事实（写每章必读）
-outline/  overview.md volumes.md chapters.md          ← 三级大纲
-state/    summary.md character-state.md plot-arcs.md progress.json/md  ← 连载状态
-chapters/ 001.md 002.md ...                            ← 章节正文
+bible/    world.md characters.md voice.md canon.md   <- sự thật cứng (chương nào cũng phải đọc)
+outline/  overview.md volumes.md chapters.md          <- dàn ý 3 cấp
+state/    summary.md character-state.md plot-arcs.md progress.json/md  <- trạng thái dài kỳ
+chapters/ 001.md 002.md ...                            <- chính văn từng chương
 ```
 
-脚本路径（相对项目根）：`skills/openclaw/novel-writer/scripts/novel_ops.py`。
-字数校验复用：`skills/shared/scripts/wordcount.py`。
+Đường dẫn script (tính từ gốc dự án): `skills/openclaw/novel-writer/scripts/novel_ops.py`.
+Kiểm số chữ dùng chung: `skills/shared/scripts/wordcount.py`.
 
-## 执行步骤（按对话选对应子流程，不必每次全跑）
+## Các bước thực thi (chọn nhánh theo hội thoại, không cần chạy hết mỗi lần)
 
-### A. 立项（首次）
+### A. Lập dự án (lần đầu)
 
-1. **搭骨架**：`python skills/openclaw/novel-writer/scripts/novel_ops.py scaffold --book "<书名>"`
-   （生成 bible/outline/state/chapters 模板，已存在的文件不覆盖）。
-2. **定世界观 + 人设 + 文风**：读 `references/web-novel-methodology.md` 与 `references/platform-specs.md`，
-   据题材写满 `bible/world.md`（力量体系/规则/硬约束）、`bible/characters.md`（主角+关键配角：身份/外貌/性格/目标/关系）、
-   `bible/voice.md`（视角/时态/句式节奏/用词偏好 + 本书禁用词表）。设定要**可执行**（能约束后续正文），不写空话。
+1. **Dựng khung**: `python skills/openclaw/novel-writer/scripts/novel_ops.py scaffold --book "<tên sách>"`
+   (sinh mẫu bible/outline/state/chapters, file đã có thì không ghi đè).
+2. **Chốt thế giới quan + nhân vật + văn phong**: đọc `references/web-novel-methodology.md` và `references/platform-specs.md`,
+   theo đề tài viết đầy `bible/world.md` (hệ thống sức mạnh/luật lệ/ràng buộc cứng), `bible/characters.md` (nhân vật chính + phụ quan trọng: thân phận/ngoại hình/tính cách/mục tiêu/quan hệ),
+   `bible/voice.md` (ngôi kể/thì/nhịp câu/từ hay dùng + bảng từ cấm của sách này). Thiết định phải **chạy được** (ràng buộc được chính văn), không viết chung chung.
 
-### B. 大纲（三级）
+### B. Dàn ý (3 cấp)
 
-3. **overview → volumes → chapters**：写 `outline/overview.md`（一句话卖点+核心冲突+主线+结局向）、
-   `outline/volumes.md`（分卷 arc：每卷目标/转折/卷末高潮）、`outline/chapters.md`（章节目录表：标题+一句话钩子+涉及伏笔）。
-   大纲底座可参考 `skill-article-outline`，但必须扩成网文三级结构 + 伏笔埋点表（登记进 `bible/canon.md`）。
+3. **overview -> volumes -> chapters**: viết `outline/overview.md` (một câu bán ý tưởng + xung đột lõi + tuyến chính + hướng kết),
+   `outline/volumes.md` (arc từng quyển: mục tiêu/bước ngoặt/cao trào cuối quyển), `outline/chapters.md` (bảng mục lục chương: tiêu đề + một câu hook + phục bút liên quan).
+   Nền dàn ý có thể tham khảo `skill-article-outline`, nhưng phải mở rộng thành cấu trúc 3 cấp của truyện mạng + bảng cắm phục bút (ghi vào `bible/canon.md`).
 
-### C. 黄金三章（前 3 章单独强化）
+### C. Ba chương vàng (3 chương đầu tăng cường riêng)
 
-4. 按 `references/web-novel-methodology.md` 的黄金三章模板，把前三章的**开局钩子、爽点、代入感、追读悬念**拉满
-   （第 1 章 3 秒内给冲突/金手指信号；每章末留强钩子）。这三章决定留存，值得单独打磨。
+4. Theo mẫu ba chương vàng trong `references/web-novel-methodology.md`, đẩy kịch **hook mở đầu, điểm sướng, cảm giác nhập vai, hồi hộp giữ người đọc** của ba chương đầu
+   (chương 1 phải cho tín hiệu xung đột/kim thủ chỉ trong 3 giây; cuối mỗi chương để hook mạnh). Ba chương này quyết định tỉ lệ giữ chân, đáng mài riêng.
 
-### D. 写单章（连载主循环）
+### D. Viết một chương (vòng lặp chính của truyện dài kỳ)
 
-5. **只加载相关切片**（不塞全书）：读 `bible/`（全部，是硬约束）+ `outline/chapters.md` 里本章那行 +
-   `state/summary.md`（前情提要）+ `state/character-state.md` 里相关角色。
-6. **（可选）先出场景卡**：复杂章节按 `references/scene-card-schema.md` 先列场景卡（角色/地点/冲突/story value 涨落/情绪/出口）再写正文。
-7. **写正文**到 `chapters/<三位数>.md`：遵守 `bible/voice.md` 文风、章末强钩子。
-8. **字数门禁**：把正文喂
-   `python3 skills/shared/scripts/wordcount.py check --target <平台目标字数> --tolerance 0.15 -f chapters/<NNN>.md`
-   （知乎盐选/番茄单章常 2000–4000，见 platform-specs），不达标按提示增删。
-9. **去 AI 味**：先跑 `python skills/openclaw/novel-writer/scripts/novel_ops.py slopcheck -f chapters/<NNN>.md`
-   机械扫（AI 味词/过度连接词/重复句首），命中处改写；再整章过一遍 **text-polisher**（去 AI 感模式）。
+5. **Chỉ nạp lát cắt liên quan** (đừng nhét cả sách): đọc `bible/` (toàn bộ, là ràng buộc cứng) + đúng dòng của chương này trong `outline/chapters.md` +
+   `state/summary.md` (tóm tắt tiền truyện) + các nhân vật liên quan trong `state/character-state.md`.
+6. **(Tuỳ chọn) ra thẻ cảnh trước**: chương phức tạp thì theo `references/scene-card-schema.md` liệt kê thẻ cảnh (nhân vật/địa điểm/xung đột/story value lên xuống/cảm xúc/lối ra) rồi mới viết chính văn.
+7. **Viết chính văn** vào `chapters/<ba chữ số>.md`: theo văn phong `bible/voice.md`, cuối chương hook mạnh.
+8. **Cổng số chữ**: đưa chính văn qua
+   `python3 skills/shared/scripts/wordcount.py check --target <số chữ mục tiêu của nền tảng> --tolerance 0.15 -f chapters/<NNN>.md`
+   (Zhihu Yanxuan/Fanqie thường 2000-4000 chữ mỗi chương, xem platform-specs), chưa đạt thì thêm bớt theo gợi ý.
+9. **Khử mùi AI**: chạy `python skills/openclaw/novel-writer/scripts/novel_ops.py slopcheck -f chapters/<NNN>.md` trước
+   để quét máy móc (từ mùi AI/từ nối thừa/lặp đầu câu), chỗ nào dính thì viết lại; rồi cho cả chương qua **text-polisher** (chế độ khử mùi AI).
 
-### E. sync（定稿后维护状态，防跨章崩坏）
+### E. sync (chốt bản xong thì bảo trì trạng thái, chống vỡ mạch giữa các chương)
 
-10. 更新 `state/` 与 `bible/canon.md`：
-    - 用 **text-condenser**（摘要模式）把「已发生剧情」滚动压缩进 `state/summary.md`（下一章加载它，不是全文）。
-    - 更新 `state/character-state.md`（角色位置/处境/关系变化）、`state/plot-arcs.md`（各线进度）、`bible/canon.md`（新事件/时间线/伏笔状态：埋下→回收）。
-    - 登记进度：`novel_ops.py record --book "<书名>" --chapter N --title "<标题>" --words <字数> --status done --when <今天日期>`
-      （日期从对话上下文取，脚本不自取时间以保确定性）。
-11. **一致性自查**：对照 `bible/canon.md` 扫本章有无与既定事实/时间线/人设冲突；发现则改正文或补设定（见 `references/consistency-rules.md`）。
+10. Cập nhật `state/` và `bible/canon.md`:
+    - Dùng **text-condenser** (chế độ tóm tắt) nén cuốn chiếu "diễn biến đã xảy ra" vào `state/summary.md` (chương sau nạp file này, không nạp toàn văn).
+    - Cập nhật `state/character-state.md` (vị trí/hoàn cảnh/quan hệ nhân vật thay đổi), `state/plot-arcs.md` (tiến độ từng tuyến), `bible/canon.md` (sự kiện mới/dòng thời gian/trạng thái phục bút: cắm -> thu).
+    - Ghi tiến độ: `novel_ops.py record --book "<tên sách>" --chapter N --title "<tiêu đề>" --words <số chữ> --status done --when <ngày hôm nay>`
+      (ngày lấy từ ngữ cảnh hội thoại, script không tự lấy giờ để giữ tính xác định).
+11. **Tự soát nhất quán**: đối chiếu `bible/canon.md` quét xem chương này có chỏi sự thật/dòng thời gian/nhân vật đã chốt không; có thì sửa chính văn hoặc bổ sung thiết định (xem `references/consistency-rules.md`).
 
-### F.（可选）next 剧情推演
+### F. (Tuỳ chọn) next - suy diễn tình tiết
 
-12. 卡剧情时，生成 2–3 个后续章纲**分支**（不同走向/爽点/反转），列优劣供用户选，选定再写。
+12. Khi bí tình tiết, sinh 2-3 **nhánh** đề cương chương kế (hướng đi/điểm sướng/twist khác nhau), liệt kê hơn kém cho người dùng chọn, chốt rồi mới viết.
 
-### G.（可选）改小红书图文连载
+### G. (Tuỳ chọn) chuyển thành bài ảnh-chữ dài kỳ trên Xiaohongshu
 
-13. 把某章交给 **card-xiaohongshu** 或 **xhs-note-creator**，拆成 3–9 张竖版卡片连载（每卡一个情绪节点，末卡留钩子）。
+13. Giao một chương cho **card-xiaohongshu** hoặc **xhs-note-creator**, tách thành 3-9 thẻ dọc đăng dài kỳ (mỗi thẻ một nốt cảm xúc, thẻ cuối để hook).
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：`platforms.md` 定平台与单章字数/更新频率；`style.md` 融进 `bible/voice.md` 文风；
-  `identity.md`/`audience.md` 定题材调性与目标读者；`preferences.md` 红线（题材/敏感内容）过滤。
-- **无 Profile**：先问平台与题材偏好；默认第三人称、单章 ~3000 字、章末强钩子的通用网文风。
+- **Có Profile**: `platforms.md` chốt nền tảng và số chữ/tần suất ra chương; `style.md` hoà vào văn phong `bible/voice.md`;
+  `identity.md`/`audience.md` chốt tông đề tài và người đọc mục tiêu; `preferences.md` lọc lằn ranh đỏ (đề tài/nội dung nhạy cảm).
+- **Không Profile**: hỏi trước về nền tảng và gu đề tài; mặc định ngôi thứ ba, mỗi chương ~3000 chữ, cuối chương hook mạnh, phong cách truyện mạng phổ thông.
 
-## 规则
+## Quy tắc
 
-1. **文件即真相**：设定/状态以 `bible/` `state/` 文件为准，不靠对话记忆；冲突时以 canon 为准。
-2. **按需加载**：写每章只读相关切片，避免全书塞上下文导致漂移/超长。
-3. **一致性优先**：人设/世界观/伏笔跨章不崩是网文命脉，宁可慢也不崩。
-4. **去 AI 味**：机械 slopcheck + text-polisher 双保险；文风统一靠 `bible/voice.md`。
-5. **不覆盖已写内容**：scaffold 幂等、record upsert；正文/设定改动用增量编辑，别整篇重写抹掉用户改动。
-6. **不编造设定**：拿不准的世界观细节先问或先在 bible 补定义，再写正文。
+1. **File là sự thật**: thiết định/trạng thái lấy theo file `bible/` `state/`, không dựa trí nhớ hội thoại; chỏi nhau thì canon thắng.
+2. **Nạp theo nhu cầu**: mỗi chương chỉ đọc lát cắt liên quan, tránh nhét cả sách vào ngữ cảnh gây trôi/quá dài.
+3. **Nhất quán trên hết**: nhân vật/thế giới quan/phục bút không vỡ giữa các chương là mạch sống của truyện mạng, thà chậm còn hơn vỡ.
+4. **Khử mùi AI**: slopcheck máy móc + text-polisher, hai lớp bảo hiểm; văn phong thống nhất nhờ `bible/voice.md`.
+5. **Không ghi đè nội dung đã viết**: scaffold idempotent, record upsert; sửa chính văn/thiết định bằng chỉnh sửa tăng dần, đừng viết lại cả bài xoá mất sửa của người dùng.
+6. **Không bịa thiết định**: chi tiết thế giới quan chưa chắc thì hỏi trước hoặc bổ sung định nghĩa vào bible rồi mới viết chính văn.
 
-## 参考来源
+## Nguồn tham khảo
 
-见 `EASEL-META.md`。方法论沉淀自 autonovel（模板体系/双免疫去 slop）、马良 MaliangAINovalWriter
-（三级大纲/黄金三章/剧情推演）、AI_NovelGenerator（定稿更新状态+一致性校验）、GOAT-Storytelling-Agent
-（场景卡分解替代长上下文）——均为「文件即真相 + 按需加载」思路，最适合纯文件工具的 Easel。
+Xem `EASEL-META.md`. Phương pháp luận đúc từ autonovel (hệ thống mẫu/miễn dịch kép chống slop), Maliang MaliangAINovalWriter
+(dàn ý 3 cấp/ba chương vàng/suy diễn tình tiết), AI_NovelGenerator (chốt bản thì cập nhật trạng thái + soát nhất quán), GOAT-Storytelling-Agent
+(tách thẻ cảnh thay ngữ cảnh dài) - đều theo tư tưởng "file là sự thật + nạp theo nhu cầu", hợp nhất với Easel thuần công cụ file.

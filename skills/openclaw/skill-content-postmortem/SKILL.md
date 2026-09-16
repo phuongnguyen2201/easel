@@ -7,179 +7,179 @@ description: >-
 layer: attribute
 ---
 
-# 内容复盘与爆款规律提炼
+# Hậu kiểm nội dung và rút quy luật viral
 
-> 拆解单条内容的成败原因，或从多条内容中提炼可复制的爆款公式。
+> Mổ xẻ nguyên nhân thành/bại của một bài, hoặc rút từ nhiều bài ra công thức viral lặp lại được.
 
-## 输入
+## Đầu vào
 
-### 模式 A — 单条复盘
+### Chế độ A - hậu kiểm một bài
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 内容原文或链接 | 是 | 已发布的帖子全文（标题 + 正文 + 标签） |
-| 平台 | 是 | 小红书 / 抖音 / 微博 / 知乎 / B站 / 公众号 / X 等 |
-| 数据指标 | 推荐 | 阅读/播放、点赞、收藏、评论、转发、完播率等 |
-| 发布时间 | 推荐 | 具体日期和时间 |
-| 同期对照 | 可选 | 同账号近期其他帖子的平均数据，用于基线比较 |
+| Nội dung gốc hoặc link | Có | Toàn văn bài đã đăng (tiêu đề + nội dung + tag) |
+| Nền tảng | Có | Facebook / TikTok / YouTube / Zalo / Threads / blog-website / X, v.v. |
+| Chỉ số dữ liệu | Nên có | Lượt đọc/xem, thích, lưu, bình luận, chia sẻ, tỉ lệ xem hết, v.v. |
+| Thời điểm đăng | Nên có | Ngày và giờ cụ thể |
+| Đối chiếu cùng kỳ | Tuỳ chọn | Số liệu trung bình của các bài gần đây cùng kênh, dùng làm baseline so sánh |
 
-### 模式 B — 规律提炼
+### Chế độ B - rút quy luật
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 多条内容数据 | 是 | 至少 5 条内容的标题、正文摘要、平台、核心指标 |
-| 时间范围 | 推荐 | 数据覆盖的起止时间 |
-| 筛选标准 | 可选 | 用户定义的"爆"与"扑"的阈值（如收藏 > 500 为爆） |
+| Dữ liệu nhiều bài | Có | Ít nhất 5 bài kèm tiêu đề, tóm tắt nội dung, nền tảng, chỉ số cốt lõi |
+| Khoảng thời gian | Nên có | Mốc đầu và mốc cuối của dữ liệu |
+| Tiêu chí lọc | Tuỳ chọn | Ngưỡng "viral" và "xịt" do người dùng định nghĩa (ví dụ lưu > 500 là viral) |
 
-若用户未提供数据指标，基于内容本身做定性分析，明确标注"无数据支撑，仅为结构性判断"。
+Nếu người dùng không đưa chỉ số, hãy phân tích định tính dựa trên chính nội dung và ghi rõ "không có dữ liệu hỗ trợ, chỉ là nhận định về cấu trúc".
 
-## 输出
+## Đầu ra
 
-### 模式 A — 单条复盘报告
+### Chế độ A - báo cáo hậu kiểm một bài
 
 ```markdown
-# 内容复盘：[标题摘要]
+# Hậu kiểm nội dung: [tóm tắt tiêu đề]
 
-## 结论速览
-- 判定：爆款 / 中等 / 扑街（附判定依据）
-- 核心成因：一句话总结
+## Kết luận nhanh
+- Phán định: viral / trung bình / xịt (kèm căn cứ phán định)
+- Nguyên nhân cốt lõi: tóm tắt trong một câu
 
-## 多维拆解
+## Mổ xẻ đa chiều
 
-### 1. Hook 分析
-- 开头类型（提问 / 冲突 / 数字 / 故事 / 悬念）
-- 前 3 秒 / 前 2 行吸引力评分（1-10）
-- 改进建议
+### 1. Phân tích Hook
+- Kiểu mở đầu (đặt câu hỏi / xung đột / con số / câu chuyện / gây tò mò)
+- Điểm hấp dẫn của 3 giây đầu / 2 dòng đầu (1-10)
+- Gợi ý cải thiện
 
-### 2. 内容结构
-- 结构类型（总分总 / 递进 / 并列 / 故事弧）
-- 信息密度与节奏
-- 高光点与断裂点
+### 2. Cấu trúc nội dung
+- Kiểu cấu trúc (tổng - phân - tổng / tăng tiến / song song / cung truyện)
+- Mật độ thông tin và nhịp
+- Điểm sáng và điểm đứt mạch
 
-### 3. 选题评估
-- 选题热度（趋势型 / 常青型 / 冷门型）
-- 受众痛点匹配度
-- 差异化角度
+### 3. Đánh giá đề tài
+- Độ nóng của đề tài (theo trend / thường xanh / ngách hẹp)
+- Mức khớp với nỗi đau của khán giả
+- Góc nhìn khác biệt
 
-### 4. 平台适配
-- 是否符合平台内容偏好
-- 格式适配（图文 / 视频 / 长度 / 标签策略）
-- 分发机制利用程度
+### 4. Thích ứng nền tảng
+- Có hợp gu nội dung của nền tảng không
+- Thích ứng định dạng (bài ảnh / video / độ dài / chiến lược tag)
+- Mức tận dụng cơ chế phân phối
 
-### 5. 时间与节奏
-- 发布时间是否为活跃时段
-- 是否踩中热点窗口
-- 互动节奏（评论区运营）
+### 5. Thời điểm và nhịp
+- Giờ đăng có rơi vào khung giờ khán giả hoạt động không
+- Có bắt trend trúng cửa sổ thời gian không
+- Nhịp tương tác (vận hành phần bình luận)
 
-### 6. 视觉 / 封面（如适用）
-- 封面吸引力
-- 视觉风格与平台调性匹配
+### 6. Hình ảnh / ảnh bìa (nếu có)
+- Độ hút mắt của ảnh bìa
+- Phong cách hình ảnh có khớp tông của nền tảng không
 
-## 改进处方
-- 3 条具体可执行的优化建议（按优先级排序）
+## Đơn thuốc cải thiện
+- 3 gợi ý tối ưu cụ thể, làm được ngay (xếp theo thứ tự ưu tiên)
 
-## 数据备注
-- 数据来源与置信度说明
+## Ghi chú dữ liệu
+- Nguồn dữ liệu và mức tin cậy
 ```
 
-### 维度评分标尺
+### Thang điểm các chiều
 
-`references/postmortem-dimensions.md` 提供 Hook力 / 内容结构 / 信息密度 / 互动引导 / 视觉排版 / 平台适配 六维的 1-10 打分标尺；选题、时间节奏为定性分析维度（不打分）。
+`references/postmortem-dimensions.md` cung cấp thang điểm 1-10 cho 6 chiều: sức Hook / cấu trúc nội dung / mật độ thông tin / dẫn dắt tương tác / trình bày hình ảnh / thích ứng nền tảng; đề tài và nhịp thời gian là chiều định tính (không chấm điểm).
 
-| 分数 | 含义 |
+| Điểm | Ý nghĩa |
 |------|------|
-| 1-3 | 该维度存在明显问题，是拖累整体表现的短板 |
-| 4-6 | 及格水平，无明显硬伤但缺乏亮点 |
-| 7-8 | 优于同类内容平均水平，有可复用的做法 |
-| 9-10 | 该维度是本条内容的核心竞争力 |
+| 1-3 | Chiều này có vấn đề rõ, là điểm yếu kéo tụt hiệu quả chung |
+| 4-6 | Mức đạt, không lỗi nặng nhưng thiếu điểm nhấn |
+| 7-8 | Trên mức trung bình của nội dung cùng loại, có cách làm dùng lại được |
+| 9-10 | Chiều này là lợi thế cạnh tranh cốt lõi của bài |
 
-### 模式 B — 规律提炼报告
+### Chế độ B - báo cáo rút quy luật
 
 ```markdown
-# 爆款规律提炼：[账号/主题]
+# Rút quy luật viral: [kênh/chủ đề]
 
-## 数据概览
-- 分析范围：X 条内容，时间 Y-Z
-- 爆款标准：[用户定义或系统推断的阈值]
-- 爆款率：X%
+## Tổng quan dữ liệu
+- Phạm vi phân tích: X bài, thời gian Y-Z
+- Chuẩn viral: [ngưỡng do người dùng đặt hoặc hệ thống suy ra]
+- Tỉ lệ viral: X%
 
-## 爆款共同特征
-| 维度 | 爆款共性 | 扑街共性 | 差异显著性 |
+## Đặc điểm chung của bài viral
+| Chiều | Điểm chung bài viral | Điểm chung bài xịt | Mức khác biệt |
 |------|----------|----------|------------|
-| Hook 类型 | | | |
-| 选题方向 | | | |
-| 内容结构 | | | |
-| 发布时间 | | | |
-| 内容长度 | | | |
-| 标签策略 | | | |
-| 视觉风格 | | | |
+| Kiểu Hook | | | |
+| Hướng đề tài | | | |
+| Cấu trúc nội dung | | | |
+| Thời điểm đăng | | | |
+| Độ dài nội dung | | | |
+| Chiến lược tag | | | |
+| Phong cách hình ảnh | | | |
 
-## 爆款公式
-- 公式 1：[选题类型] + [Hook 模式] + [结构] = 高概率爆款
-- 公式 2：...
-- 反面公式：[避免的组合]
+## Công thức viral
+- Công thức 1: [kiểu đề tài] + [mẫu Hook] + [cấu trúc] = xác suất viral cao
+- Công thức 2: ...
+- Công thức ngược: [tổ hợp cần tránh]
 
-## 可复制行动清单
-1. 下一条内容立即可用的 3 个策略
-2. 中期优化方向（1-2 周内调整）
+## Danh sách hành động lặp lại được
+1. 3 chiến lược dùng được ngay cho bài tiếp theo
+2. Hướng tối ưu trung hạn (điều chỉnh trong 1-2 tuần)
 
-## 数据局限
-- 样本量、数据完整性、平台算法变化等局限说明
+## Giới hạn dữ liệu
+- Nêu giới hạn về cỡ mẫu, độ đầy đủ dữ liệu, thay đổi thuật toán nền tảng
 ```
 
-### 爆款公式模板
+### Mẫu công thức viral
 
-**[标题公式]** 情绪词 + 数字 + 悬念/反差
-**[结构公式]** Hook(前3秒) → 痛点共鸣 → 解决方案 → 行动号召
-**[选题公式]** 热点事件 × 垂直领域 × 反常识角度
+**[Công thức tiêu đề]** Từ cảm xúc + con số + gây tò mò/tương phản
+**[Công thức cấu trúc]** Hook (3 giây đầu) -> chạm nỗi đau -> giải pháp -> kêu gọi hành động
+**[Công thức đề tài]** Sự kiện đang nóng x lĩnh vực ngách x góc nhìn phản trực giác
 
-每个拆解输出：
-- 公式名称（≤8字，便于复用）
-- 公式结构（用 → 连接各环节）
-- 可迁移条件（什么类型的内容可以套用）
-- 套用示例（用创作者自己的领域举一个例子）
+Mỗi lần mổ xẻ cần xuất ra:
+- Tên công thức (<=8 chữ, dễ dùng lại)
+- Cấu trúc công thức (dùng -> để nối các mắt xích)
+- Điều kiện áp dụng được (loại nội dung nào dùng lại được công thức)
+- Ví dụ áp dụng (lấy một ví dụ ngay trong lĩnh vực của nhà sáng tạo)
 
-## 执行步骤
+## Các bước thực hiện
 
-### 模式 A — 单条复盘
+### Chế độ A - hậu kiểm một bài
 
-1. **确认模式**：根据用户输入判断是单条复盘还是规律提炼。若用户只提供一条内容，进入模式 A。
-2. **采集上下文**：确认平台、发布时间、数据指标。缺失数据主动询问一次，用户不补充则继续。
-3. **基线建立**：若有同期对照数据，计算偏离度；若无，使用平台通用基线（参考 `references/` 中的平台特征数据）。
-4. **多维拆解**：可打分维度（Hook力/内容结构/信息密度/互动引导/视觉排版/平台适配）用 `references/postmortem-dimensions.md` 的 1-10 标尺；选题、时间节奏做定性判断。每个维度给出判断和证据。
-5. **归因排序**：识别最关键的 1-2 个成败因素，区分"内容因素"和"运气因素"（如平台推荐、热点窗口）。
-6. **生成处方**：输出 3 条具体、可执行、有优先级的改进建议。
-7. **输出报告**：按输出模板生成完整报告，保存到 `outputs/`。
+1. **Xác nhận chế độ**: dựa vào đầu vào của người dùng để biết là hậu kiểm một bài hay rút quy luật. Nếu chỉ có một bài, vào chế độ A.
+2. **Thu thập bối cảnh**: xác nhận nền tảng, thời điểm đăng, chỉ số dữ liệu. Thiếu dữ liệu thì chủ động hỏi một lần, người dùng không bổ sung thì cứ tiếp tục.
+3. **Dựng baseline**: có dữ liệu đối chiếu cùng kỳ thì tính độ lệch; không có thì dùng baseline chung của nền tảng (tham khảo dữ liệu đặc điểm nền tảng trong `references/`).
+4. **Mổ xẻ đa chiều**: các chiều chấm điểm được (sức Hook/cấu trúc nội dung/mật độ thông tin/dẫn dắt tương tác/trình bày hình ảnh/thích ứng nền tảng) dùng thang 1-10 trong `references/postmortem-dimensions.md`; đề tài và nhịp thời gian thì nhận định định tính. Mỗi chiều đều phải có nhận định kèm bằng chứng.
+5. **Xếp hạng nguyên nhân**: chỉ ra 1-2 yếu tố quyết định thành/bại, tách bạch "yếu tố nội dung" và "yếu tố may mắn" (như được nền tảng đề xuất, trúng cửa sổ trend).
+6. **Kê đơn**: xuất 3 gợi ý cải thiện cụ thể, làm được, có thứ tự ưu tiên.
+7. **Xuất báo cáo**: dựng báo cáo đầy đủ theo mẫu đầu ra, lưu vào `outputs/`.
 
-### 模式 B — 规律提炼
+### Chế độ B - rút quy luật
 
-> **聚合统计交给脚本，LLM 只做规律提炼。** 阈值划分 top20%、爆款组 vs 普通组分组对比、多维交叉、标签共现全部由 [`scripts/aggregate.py`](scripts/aggregate.py) 完成（复用 `../../shared/scripts/social_stats.py` 的 `engagement_score`/`engagement_rate`/`cooccurrence`/`pct_change`/`sample_warning`）。
+> **Thống kê tổng hợp giao cho script, LLM chỉ lo rút quy luật.** Chia ngưỡng top20%, so nhóm viral vs nhóm thường, giao nhiều chiều, đồng xuất hiện của tag đều do [`scripts/aggregate.py`](scripts/aggregate.py) làm (dùng lại `engagement_score`/`engagement_rate`/`cooccurrence`/`pct_change`/`sample_warning` của `../../shared/scripts/social_stats.py`).
 
-1. **数据摄入**：接收多条内容数据，标准化为统一 JSON 数组（每条含标题、平台、数值指标 likes/collects/comments/shares/views，及维度字段 hook_type/topic/structure/length_bucket/time_bucket/tags 等），写入临时文件。
-2. **调用脚本聚合**：
+1. **Nạp dữ liệu**: nhận dữ liệu nhiều bài, chuẩn hoá thành một mảng JSON thống nhất (mỗi bài gồm tiêu đề, nền tảng, chỉ số số học likes/collects/comments/shares/views, và các trường chiều hook_type/topic/structure/length_bucket/time_bucket/tags), ghi ra file tạm.
+2. **Gọi script để tổng hợp**:
    ```bash
    python3 skills/openclaw/skill-content-postmortem/scripts/aggregate.py --input contents.json
    python3 skills/openclaw/skill-content-postmortem/scripts/aggregate.py --input contents.json \
-     --metric collects --threshold 500 --cross "hook_type,topic"  # 指定排名字段/绝对阈值/两维交叉
+     --metric collects --threshold 500 --cross "hook_type,topic"  # chỉ định trường xếp hạng/ngưỡng tuyệt đối/giao 2 chiều
    ```
-   脚本自动完成：阈值划分（`--threshold` 优先，否则 `--top-pct` 百分位）、爆款组/普通组分组对比（每维度 count/top_count/top_rate_pct/avg_score/lift_vs_global）、两维交叉、标签共现、样本量警告。
-3. **模式识别 + 公式生成（LLM 解读）**：从 `by_dimension`/`cross` 读出爆款组高频、高 lift 的取值组合，总结为可复制的"爆款公式"（选题 + Hook + 结构）。
-4. **反面总结 + 行动清单（LLM 解读）**：从低 top_rate / 负 lift 取值总结"避坑清单"，输出分层建议（立即可用 / 中期调整），转达脚本样本量 `warning`。
-5. **输出报告**：按模板生成，保存到 `outputs/`。
+   Script tự làm: chia ngưỡng (`--threshold` ưu tiên, không có thì lấy phân vị `--top-pct`), so nhóm viral/nhóm thường (mỗi chiều có count/top_count/top_rate_pct/avg_score/lift_vs_global), giao 2 chiều, đồng xuất hiện của tag, cảnh báo cỡ mẫu.
+3. **Nhận diện mẫu + sinh công thức (LLM diễn giải)**: từ `by_dimension`/`cross` đọc ra các tổ hợp giá trị xuất hiện nhiều và có lift cao ở nhóm viral, đúc thành "công thức viral" lặp lại được (đề tài + Hook + cấu trúc).
+4. **Tổng kết mặt trái + danh sách hành động (LLM diễn giải)**: từ các giá trị có top_rate thấp / lift âm, đúc ra "danh sách tránh hố", xuất gợi ý phân tầng (dùng ngay / điều chỉnh trung hạn), và chuyển tiếp `warning` về cỡ mẫu của script.
+5. **Xuất báo cáo**: dựng theo mẫu, lưu vào `outputs/`.
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `identity.md`（账号定位、内容风格、赛道信息）
-- 读取 `audience.md`（目标受众画像、痛点偏好）
-- 读取 `platforms.md`（各平台运营策略与历史表现）
-- 复盘时结合账号定位判断选题适配度（"这个选题对你的受众来说太泛了"）
-- 规律提炼时按账号阶段给出针对性建议（冷启动期 vs 增长期 vs 变现期）
-- 对照 Profile 中的"表现好的内容"做历史比较
+**Khi có Profile:**
+- Đọc `identity.md` (định vị kênh, phong cách nội dung, thông tin ngách)
+- Đọc `audience.md` (hồ sơ khán giả mục tiêu, nỗi đau và sở thích)
+- Đọc `platforms.md` (chiến lược vận hành và kết quả trong quá khứ trên từng nền tảng)
+- Khi hậu kiểm, kết hợp định vị kênh để xét độ hợp của đề tài ("đề tài này quá chung so với khán giả của bạn")
+- Khi rút quy luật, đưa gợi ý theo giai đoạn của kênh (giai đoạn khởi động vs tăng trưởng vs kiếm tiền)
+- Đối chiếu với mục "nội dung có kết quả tốt" trong Profile để so sánh theo thời gian
 
-**无 Profile 时：**
-- 退到通用模式，基于平台通用规律分析
-- 不做账号定位相关的适配度判断
-- 提示用户补充 Profile（`identity.md` / `audience.md` / `platforms.md`）可获得更精准复盘
+**Khi không có Profile:**
+- Lùi về chế độ chung, phân tích theo quy luật chung của nền tảng
+- Không nhận định độ hợp liên quan tới định vị kênh
+- Nhắc người dùng bổ sung Profile (`identity.md` / `audience.md` / `platforms.md`) để hậu kiểm chính xác hơn
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và các dự án tham khảo xem `EASEL-META.md` cùng thư mục.

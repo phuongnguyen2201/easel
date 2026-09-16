@@ -7,137 +7,137 @@ description: >-
 layer: publish
 ---
 
-# 发布前完整性检查
+# Kiểm tính đầy đủ trước khi đăng
 
-> 发布前的最后一道关卡，逐项检查内容是否齐全，防止漏标题、漏封面、漏标签等低级错误。
+> Chốt chặn cuối trước khi đăng, rà từng mục xem nội dung đã đủ chưa, chặn các lỗi sơ đẳng như thiếu tiêu đề, thiếu ảnh bìa, thiếu hashtag.
 
-## 与其他 SKILL 的区别
+## Khác gì các SKILL còn lại
 
-| SKILL | 定位 | 检查深度 |
+| SKILL | Định vị | Độ sâu kiểm |
 |---|---|---|
-| **publish-checklist**（本 SKILL） | 完整性检查——"有没有漏东西" | 浅层，逐项打勾 |
-| skill-quality-gate | 深度合规 + 质量审核 | 深层，评分 + 返工 |
-| skill-persona-check | 人设一致性 | 风格/调性维度 |
-| skill-risk-scanner | 原创度 + 版权 | 抄袭/侵权维度 |
+| **publish-checklist** (SKILL này) | Kiểm tính đầy đủ - "có sót gì không" | Nông, tick từng mục |
+| skill-quality-gate | Tuân thủ sâu + soát chất lượng | Sâu, chấm điểm + trả về làm lại |
+| skill-persona-check | Nhất quán persona | Chiều phong cách/tông giọng |
+| skill-risk-scanner | Độ nguyên bản + bản quyền | Chiều đạo văn/vi phạm |
 
-## 输入
+## Đầu vào
 
-用户提供待发布的内容，支持以下形式：
+Người dùng đưa nội dung sắp đăng, nhận các dạng sau:
 
-- **产物目录路径**：指向 `outputs/主题名/` 下的完整产物目录（含 meta.json、正文、图片等）
-- **单篇文案文本**：直接贴文案内容
-- **混合**：文案 + 图片路径 + meta.json
+- **Đường dẫn thư mục sản phẩm**: trỏ tới thư mục sản phẩm đầy đủ trong `outputs/<chủ đề>/` (gồm meta.json, phần thân, ảnh...)
+- **Một bài viết dạng text**: dán thẳng nội dung bài
+- **Hỗn hợp**: bài viết + đường dẫn ảnh + meta.json
 
-可选指定目标平台（小红书、抖音、微博、公众号、LinkedIn、X 等），未指定时做通用检查。
+Có thể nêu nền tảng đích (Xiaohongshu, Douyin, Weibo, WeChat OA, LinkedIn, X...), không nêu thì kiểm theo bộ chung.
 
-## 输出
+## Đầu ra
 
-输出结构化检查报告，JSON 格式：
+Xuất báo cáo kiểm có cấu trúc, định dạng JSON:
 
 ```json
 {
   "status": "ready | not_ready",
   "score": "7/10",
-  "platform": "平台名或generic",
+  "platform": "tên nền tảng hoặc generic",
   "checklist": [
     {
-      "item": "检查项名称",
+      "item": "tên mục kiểm",
       "status": "pass | fail | warn",
-      "detail": "具体说明"
+      "detail": "mô tả cụ thể"
     }
   ],
-  "blocking_issues": ["必须修复才能发布的问题"],
-  "warnings": ["建议修复但不阻塞发布的问题"],
-  "summary": "一句话总结：可以发 / 还差什么"
+  "blocking_issues": ["vấn đề bắt buộc sửa mới đăng được"],
+  "warnings": ["vấn đề nên sửa nhưng không chặn đăng"],
+  "summary": "tóm tắt một câu: đăng được / còn thiếu gì"
 }
 ```
 
-- `status` 为 `ready`：所有必检项通过，可以发布
-- `status` 为 `not_ready`：存在阻塞问题，列出待修复项
+- `status` là `ready`: mọi mục bắt buộc đều đạt, đăng được
+- `status` là `not_ready`: còn vấn đề chặn đăng, liệt kê các mục phải sửa
 
-## 执行步骤
+## Các bước thực thi
 
-### Step 1 — 识别内容形态与目标平台
+### Step 1 - Nhận dạng hình thái nội dung và nền tảng đích
 
-1. 判断输入是产物目录还是单篇文案
-2. 如果有 `meta.json`，读取其中的 `platform`、`type`（图文/视频）、`title`、`tags` 等字段
-3. 如果有 Profile 上下文，读取 `platform` 字段确定目标平台
-4. 无法确定平台时，使用通用检查清单
+1. Xác định đầu vào là thư mục sản phẩm hay một bài viết rời
+2. Nếu có `meta.json`, đọc các trường `platform`, `type` (ảnh-chữ/video), `title`, `tags`...
+3. Nếu có ngữ cảnh Profile, đọc trường `platform` để chốt nền tảng đích
+4. Không xác định được nền tảng thì dùng checklist chung
 
-### Step 2 — 逐项检查（通用清单）
+### Step 2 - Rà từng mục (checklist chung)
 
-按以下维度逐项检查，标记 pass / fail / warn：
+Rà theo các chiều sau, gắn nhãn pass / fail / warn:
 
-**必检项（fail 则阻塞发布）：**
+**Mục bắt buộc (fail là chặn đăng):**
 
-| # | 检查项 | 检查内容 |
+| # | Mục kiểm | Kiểm cái gì |
 |---|---|---|
-| 1 | **标题** | 是否有标题；标题长度是否在平台限制内 |
-| 2 | **正文/内容** | 是否有实质内容；是否为空或占位符 |
-| 3 | **封面/首图** | 图文帖是否有封面图；视频是否有封面帧 |
-| 4 | **格式完整** | Markdown 结构是否完整；图片引用是否有效；链接是否可访问 |
+| 1 | **Tiêu đề** | Có tiêu đề chưa; độ dài tiêu đề có trong giới hạn nền tảng không |
+| 2 | **Phần thân/nội dung** | Có nội dung thực chất không; có bị rỗng hay còn placeholder không |
+| 3 | **Ảnh bìa/khung đầu** | Bài ảnh-chữ đã có ảnh bìa chưa; video đã có khung bìa chưa |
+| 4 | **Định dạng đủ** | Cấu trúc Markdown có đủ không; ảnh tham chiếu có hợp lệ không; link có mở được không |
 
-**建议项（warn 但不阻塞）：**
+**Mục khuyến nghị (warn nhưng không chặn):**
 
-| # | 检查项 | 检查内容 |
+| # | Mục kiểm | Kiểm cái gì |
 |---|---|---|
-| 5 | **标签/Hashtags** | 是否有标签；数量是否在 3-10 个合理区间 |
-| 6 | **CTA（行动号召）** | 是否有引导互动的语句（点赞、收藏、关注、评论等） |
-| 7 | **链接有效性** | 正文中的 URL 是否格式正确 |
-| 8 | **图片规格** | 图片尺寸是否符合平台要求（竖版/横版/正方形） |
-| 9 | **文案长度** | 字数是否在平台推荐范围内 |
-| 10 | **Emoji 使用** | 是否有适当 emoji 增强可读性（视平台而定） |
+| 5 | **Hashtag** | Có hashtag chưa; số lượng có nằm trong khoảng hợp lý 3-10 không |
+| 6 | **CTA (kêu gọi hành động)** | Có câu dẫn tương tác không (thích, lưu, theo dõi, bình luận...) |
+| 7 | **Link còn dùng được** | URL trong bài có đúng định dạng không |
+| 8 | **Quy cách ảnh** | Kích thước ảnh có hợp yêu cầu nền tảng không (dọc/ngang/vuông) |
+| 9 | **Độ dài bài** | Số chữ có nằm trong khoảng nền tảng khuyến nghị không |
+| 10 | **Dùng emoji** | Có emoji vừa đủ để dễ đọc không (tuỳ nền tảng) |
 
-### Step 3 — 平台特有检查（有平台信息时追加）
+### Step 3 - Kiểm riêng theo nền tảng (thêm vào khi biết nền tảng)
 
-根据目标平台追加检查项：
+Tuỳ nền tảng đích mà bổ sung mục kiểm:
 
-**小红书：**
-- 卡片数量是否在 3-9 张
-- 每张卡片文字是否 ≤ 80 字
-- 是否有 caption（发布配文）
-- 封面是否为 3:4 竖版（1080×1440，小红书标准比例）
+**Xiaohongshu:**
+- Số thẻ có nằm trong 3-9 tấm không
+- Chữ trên mỗi thẻ có ≤ 80 chữ không
+- Có caption (bài viết kèm khi đăng) không
+- Ảnh bìa có phải 3:4 dọc không (1080×1440, tỉ lệ chuẩn của Xiaohongshu)
 
-**抖音/视频号：**
-- 视频时长是否在限制内
-- 是否有字幕文案
-- 封面是否有吸引力标题
+**Douyin/Video Channels:**
+- Thời lượng video có trong giới hạn không
+- Có phụ đề không
+- Ảnh bìa đã có tiêu đề đủ hút chưa
 
-**微博：**
-- 正文是否 ≤ 2000 字
-- 话题标签格式是否正确（#话题#）
+**Weibo:**
+- Phần thân có ≤ 2000 chữ không
+- Định dạng hashtag chủ đề có đúng không (#chủ đề#)
 
-**公众号：**
-- 是否有摘要/导语
-- 是否有原文链接
-- 封面图尺寸是否为 2.35:1
+**WeChat OA:**
+- Có tóm tắt/lời dẫn không
+- Có link bài gốc không
+- Kích thước ảnh bìa có phải 2.35:1 không
 
-**X/Twitter：**
-- 单条是否 ≤ 280 字符
-- 是否需要拆分为 thread
+**X/Twitter:**
+- Mỗi bài có ≤ 280 ký tự không
+- Có cần tách thành thread không
 
-**LinkedIn：**
-- 正文是否 ≤ 3000 字符
-- 是否有专业性 CTA
+**LinkedIn:**
+- Phần thân có ≤ 3000 ký tự không
+- Có CTA mang tính chuyên môn không
 
-> 以上平台字数/尺寸为**参考值（as of 2026-07）**，以平台最新规则为准（如 X Premium 已放宽单条字数上限）。
+> Số chữ/kích thước của các nền tảng trên là **giá trị tham khảo (as of 2026-07)**, lấy quy tắc mới nhất của nền tảng làm chuẩn (ví dụ X Premium đã nới trần ký tự mỗi bài).
 
-### Step 4 — 生成检查报告
+### Step 4 - Sinh báo cáo kiểm
 
-1. 汇总所有检查项结果
-2. 统计通过数 / 总数，计算完成度分数
-3. 区分阻塞问题（blocking_issues）和建议（warnings）
-4. 判定 `status`：有任何 fail 项则为 `not_ready`，否则为 `ready`
-5. 生成一句话总结
+1. Gộp kết quả của toàn bộ mục kiểm
+2. Đếm số mục đạt / tổng số, tính điểm mức hoàn chỉnh
+3. Tách vấn đề chặn đăng (blocking_issues) khỏi khuyến nghị (warnings)
+4. Chốt `status`: có bất kỳ mục fail thì là `not_ready`, còn lại là `ready`
+5. Viết tóm tắt một câu
 
-### Step 5 — 输出结论与建议
+### Step 5 - Xuất kết luận và đề xuất
 
-- `ready`：告知用户可以发布，列出优化建议（如有）
-- `not_ready`：明确列出缺失项，给出具体补全指引
+- `ready`: báo người dùng đăng được, liệt kê đề xuất tối ưu (nếu có)
+- `not_ready`: nêu rõ các mục còn thiếu, chỉ cách bổ sung cụ thể
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：读取 `platforms.md` 确定目标平台，启用平台特有检查项；读取 `style.md` 辅助判断封面风格是否匹配；读取 `identity.md` 检查账号名称等信息完整性
-- **无 Profile**：只做通用完整性检查（Step 2），跳过平台特有检查；报告中附注"如提供账号 Profile（含平台信息），可启用平台特有检查项"
+- **Có Profile**: đọc `platforms.md` để chốt nền tảng đích, bật các mục kiểm riêng theo nền tảng; đọc `style.md` để soi phong cách ảnh bìa có khớp không; đọc `identity.md` để kiểm độ đầy đủ của tên kênh và thông tin liên quan
+- **Không có Profile**: chỉ kiểm tính đầy đủ theo bộ chung (Step 2), bỏ qua phần riêng theo nền tảng; trong báo cáo ghi chú "đưa Profile của kênh (kèm thông tin nền tảng) sẽ bật được các mục kiểm riêng theo nền tảng"
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

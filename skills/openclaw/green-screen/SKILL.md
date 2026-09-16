@@ -8,66 +8,66 @@ description: >-
 layer: produce
 ---
 
-# 绿幕抠像 / 换背景合成
+# Tách phông xanh / ghép nền mới
 
-> 把绿幕前景抠出来合成到新背景。全部走 `skills/shared/scripts/chromakey.py`，
-> **不要手拼 chromakey/overlay 滤镜**——脚本已处理抠像、溢色抑制(despill)、边缘融合、
-> 背景缩放、音轨保留。
+> Tách tiền cảnh trên phông xanh rồi ghép vào nền mới. Tất cả đi qua `skills/shared/scripts/chromakey.py`,
+> **đừng tự ghép tay filter chromakey/overlay** - script đã lo phần tách nền, khử tràn màu (despill), hoà viền,
+> co giãn nền, giữ âm thanh.
 
-> 只改画幅见 **video-reframe**；从零 AI 生成画面见 **ai-video-gen**；通用剪辑见 **video-editing**。
+> Chỉ đổi khung hình xem **video-reframe**; sinh hình từ đầu bằng AI xem **ai-video-gen**; dựng phim phổ thông xem **video-editing**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 前景视频 | 是 | 绿幕/蓝幕拍摄的素材（没给就问） |
-| 背景 | 是 | 四选一：图片 / 视频 / 纯色 / 前景自身模糊 |
-| 幕布色 | 否 | 默认绿 `0x00ff00`；蓝幕用 `0x0000ff` |
+| Video tiền cảnh | Có | Tư liệu quay trên phông xanh lá/xanh dương (không đưa thì hỏi) |
+| Nền | Có | Chọn một trong bốn: ảnh / video / màu đơn / chính tiền cảnh làm mờ |
+| Màu phông | Không | Mặc định xanh lá `0x00ff00`; phông xanh dương dùng `0x0000ff` |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 合成后视频（`*-composited.mp4`）
-- 报告：分辨率、抠掉的颜色、所用背景
+- Video sau khi ghép (`*-composited.mp4`)
+- Báo cáo: độ phân giải, màu đã tách bỏ, nền đã dùng
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/chromakey.py`（`key -h` 看参数）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/chromakey.py` (`key -h` để xem tham số).
 
 ```bash
-# 合成到图片背景
-python skills/shared/scripts/chromakey.py key -i <绿幕视频> \
-  --bg <背景图> -o outputs/主题名/<名>-composited.mp4
+# Ghép vào nền là ảnh
+python skills/shared/scripts/chromakey.py key -i "<video phông xanh>" \
+  --bg "<ảnh nền>" -o "outputs/<chủ đề>/<tên>-composited.mp4"
 
-# 合成到视频背景（背景自动循环补足）
-python skills/shared/scripts/chromakey.py key -i <绿幕视频> \
-  --bg <背景视频> -o outputs/主题名/<名>.mp4
+# Ghép vào nền là video (nền tự lặp cho đủ thời lượng)
+python skills/shared/scripts/chromakey.py key -i "<video phông xanh>" \
+  --bg "<video nền>" -o "outputs/<chủ đề>/<tên>.mp4"
 
-# 合成到纯色背景
-python skills/shared/scripts/chromakey.py key -i <绿幕视频> \
-  --bg-color white -o outputs/主题名/<名>.mp4
+# Ghép vào nền màu đơn
+python skills/shared/scripts/chromakey.py key -i "<video phông xanh>" \
+  --bg-color white -o "outputs/<chủ đề>/<tên>.mp4"
 
-# 背景=前景自身放大模糊（虚化景深感）
-python skills/shared/scripts/chromakey.py key -i <绿幕视频> \
-  --bg-blur -o outputs/主题名/<名>.mp4
+# Nền = chính tiền cảnh phóng to làm mờ (tạo cảm giác xoá phông)
+python skills/shared/scripts/chromakey.py key -i "<video phông xanh>" \
+  --bg-blur -o "outputs/<chủ đề>/<tên>.mp4"
 ```
 
-## 调参（抠不干净时）
+## Chỉnh tham số (khi tách chưa sạch)
 
-- **绿边残留 / 抠不净**：调大 `--similarity`（默认 0.30，可到 0.4）。
-- **主体边缘被吃 / 镂空**：调小 `--similarity`，或加大 `--blend`（默认 0.10）柔化边缘。
-- **主体泛绿（溢色）**：脚本已自动 `despill`；仍明显时说明幕布打光不匀，属素材问题。
-- **蓝幕**：`--color 0x0000ff`。
+- **Còn viền xanh / tách không sạch**: tăng `--similarity` (mặc định 0.30, có thể lên 0.4).
+- **Viền nhân vật bị ăn mất / thủng lỗ**: giảm `--similarity`, hoặc tăng `--blend` (mặc định 0.10) để làm mềm viền.
+- **Nhân vật ám xanh (tràn màu)**: script đã tự chạy `despill`; vẫn rõ thì do phông đánh sáng không đều, là lỗi tư liệu.
+- **Phông xanh dương**: `--color 0x0000ff`.
 
-## 规则
+## Quy tắc
 
-1. 幕布色默认绿；蓝幕/其它色用 `--color` 指定。
-2. 背景四选一（`--bg` / `--bg-color` / `--bg-blur`），互斥。
-3. 背景自动缩放裁切到前景画幅、视频背景自动循环补足到前景时长。
-4. 前景音轨自动保留。
-5. 抠像质量取决于素材（幕布纯净度、打光均匀度）；脚本尽力，但拍摄差无法救回。
-6. 产物统一进 `outputs/主题名/`。
+1. Màu phông mặc định là xanh lá; phông xanh dương/màu khác thì chỉ định bằng `--color`.
+2. Nền chọn một trong bốn (`--bg` / `--bg-color` / `--bg-blur`), loại trừ nhau.
+3. Nền tự co giãn và cắt theo khung tiền cảnh, nền video tự lặp cho đủ thời lượng tiền cảnh.
+4. Âm thanh của tiền cảnh được giữ tự động.
+5. Chất lượng tách phụ thuộc tư liệu (phông sạch màu tới đâu, ánh sáng đều tới đâu); script cố hết sức, nhưng quay tệ thì không cứu được.
+6. Sản phẩm đều vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-绿幕抠像用 ffmpeg `chromakey`（按颜色距离生成 alpha）+ `despill`（抑制主体边缘溢色）+
-`overlay` 合成，是标准无 GPU 抠像方案。把颜色阈值、边缘融合、背景适配封装成确定性脚本。
+Tách phông xanh dùng ffmpeg `chromakey` (sinh alpha theo khoảng cách màu) + `despill` (chặn tràn màu ở viền nhân vật) +
+`overlay` để ghép, là phương án tách nền chuẩn không cần GPU. Ngưỡng màu, hoà viền, thích ứng nền được đóng gói thành script tất định.

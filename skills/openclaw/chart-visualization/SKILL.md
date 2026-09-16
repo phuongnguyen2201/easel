@@ -7,109 +7,109 @@ description: >-
 layer: produce
 ---
 
-请根据用户输入的内容，将数据可视化为图表。
+Dựa trên nội dung người dùng nhập, trực quan hoá dữ liệu thành biểu đồ.
 
-## 与其他图表 SKILL 的区别
+## Khác gì các SKILL biểu đồ còn lại
 
-三者都能"生成图表"，但机制与产物不同，按需求路由：
+Cả ba đều "sinh biểu đồ", nhưng cơ chế và sản phẩm khác nhau, định tuyến theo nhu cầu:
 
-- **chart-visualization（本 SKILL）** = 调 AntV 远程 API（gpt-vis），产出**静态图片 URL**，25+ 图表类型，最快拿到单张图。要单张标准统计图、直接拿到图片链接时用它。
-- **infographic** = 本地 JS 渲染，产出**信息图 / GIF 动画图表**（列表/流程/对比/层级模板 + 逐帧动画）。要可导出 SVG 的结构化信息图、或带入场动画的 GIF/MP4 时用它。
-- **data-report** = 输入 CSV/Excel/JSON，产出**整页可视化报告**（KPI 卡 + 多图 + 数据洞察 + 表格）。要一份完整报告页而非单图时用它。
+- **chart-visualization (SKILL này)** = gọi API AntV từ xa (gpt-vis), cho ra **URL ảnh tĩnh**, 25+ loại biểu đồ, nhanh nhất để có một tấm. Cần một biểu đồ thống kê chuẩn, lấy luôn link ảnh thì dùng nó.
+- **infographic** = render JS cục bộ, cho ra **infographic / biểu đồ động GIF** (mẫu danh sách/quy trình/so sánh/phân cấp + hoạt hình từng khung). Cần infographic có cấu trúc xuất được SVG, hoặc GIF/MP4 có hiệu ứng vào, thì dùng nó.
+- **data-report** = nhập CSV/Excel/JSON, cho ra **báo cáo trực quan cả trang** (thẻ KPI + nhiều biểu đồ + insight dữ liệu + bảng). Cần một trang báo cáo đầy đủ chứ không phải một tấm hình thì dùng nó.
 
-## 步骤
-1. 分析用户数据和需求，选择最合适的图表类型
-2. 构造符合规范的 JSON 请求体
-3. 使用 curl 工具调用 API 生成图表图片
-4. 将返回的图片 URL 以 Markdown 图片格式输出
+## Các bước
+1. Phân tích dữ liệu và nhu cầu của người dùng, chọn loại biểu đồ hợp nhất
+2. Dựng body JSON đúng đặc tả
+3. Dùng công cụ curl gọi API để sinh ảnh biểu đồ
+4. Xuất URL ảnh trả về dưới dạng ảnh Markdown
 
-## 图表选择指南
+## Hướng dẫn chọn biểu đồ
 
-根据用户的数据特征和需求，选择最合适的图表类型：
+Dựa vào đặc điểm dữ liệu và nhu cầu của người dùng, chọn loại biểu đồ hợp nhất:
 
-- **时间序列**：用 `line`（趋势）或 `area`（累计趋势）；两个不同量纲用 `dual-axes`
-- **比较类**：用 `bar`（横向分类对比）或 `column`（纵向分类对比）；频率分布用 `histogram`
-- **占比类**：用 `pie`（比例构成）或 `treemap`（层级占比）
-- **关系与流程**：用 `scatter`（相关性）、`sankey`（流向）或 `venn`（集合重叠）
-- **层级与树形**：用 `organization-chart` 或 `mind-map`
-- **专用类型**：
-  - `radar`：多维度对比
-  - `funnel`：流程阶段转化
-  - `liquid`：百分比/进度
-  - `word-cloud`：文本词频
-  - `boxplot` / `violin`：统计分布
-  - `network-graph`：复杂节点关系
-  - `fishbone-diagram`：因果分析
-  - `flow-diagram`：流程图
-  - `spreadsheet`：结构化数据表或透视表
+- **Chuỗi thời gian**: dùng `line` (xu hướng) hoặc `area` (xu hướng tích luỹ); hai đơn vị đo khác nhau thì dùng `dual-axes`
+- **So sánh**: dùng `bar` (so sánh phân loại nằm ngang) hoặc `column` (so sánh phân loại dựng đứng); phân bố tần suất dùng `histogram`
+- **Tỉ trọng**: dùng `pie` (cơ cấu tỉ lệ) hoặc `treemap` (tỉ trọng phân cấp)
+- **Quan hệ và luồng**: dùng `scatter` (tương quan), `sankey` (dòng chảy) hoặc `venn` (giao nhau giữa các tập)
+- **Phân cấp và dạng cây**: dùng `organization-chart` hoặc `mind-map`
+- **Loại chuyên biệt**:
+  - `radar`: so sánh đa chiều
+  - `funnel`: tỉ lệ chuyển đổi qua từng giai đoạn
+  - `liquid`: phần trăm/tiến độ
+  - `word-cloud`: tần suất từ trong văn bản
+  - `boxplot` / `violin`: phân bố thống kê
+  - `network-graph`: quan hệ nút phức tạp
+  - `fishbone-diagram`: phân tích nhân quả
+  - `flow-diagram`: lưu đồ
+  - `spreadsheet`: bảng dữ liệu có cấu trúc hoặc pivot table
 
-## API 接口
+## Giao diện API
 
 POST https://antv-studio.alipay.com/api/gpt-vis
 
-> 该端点为 AntV/支付宝官方 gpt-vis 公共免费托管服务，无需 key；公共服务可能限流或调整，返回失败时重试或退回本地渲染（infographic 模式 A）。
+> Endpoint này là dịch vụ gpt-vis công cộng miễn phí do AntV/Alipay vận hành, không cần key; dịch vụ công có thể bị bóp lưu lượng hoặc thay đổi, khi trả về lỗi thì thử lại hoặc lùi về render cục bộ (infographic chế độ A).
 
-请求体为 JSON，必须包含 `type` 和 `source: "chart-visualization-skills"` 字段。
+Body yêu cầu là JSON, bắt buộc có trường `type` và `source: "chart-visualization-skills"`.
 
-示例：
+Ví dụ:
 ```bash
 curl -X POST https://antv-studio.alipay.com/api/gpt-vis \
   -H "Content-Type: application/json" \
-  -d '{"type":"line","source":"chart-visualization-skills","data":[{"time":"2025-01","value":100}],"title":"示例图表"}'
+  -d '{"type":"line","source":"chart-visualization-skills","data":[{"time":"2025-01","value":100}],"title":"Biểu đồ ví dụ"}'
 ```
 
-返回示例：
+Ví dụ kết quả trả về:
 ```json
 {"success":true,"resultObj":"https://..."}
 ```
 
-将 `resultObj` 中的 URL 以 Markdown 图片格式输出：`![图表](URL)`
+Xuất URL trong `resultObj` dưới dạng ảnh Markdown: `![Biểu đồ](URL)`
 
-## 支持的图表类型
+## Các loại biểu đồ được hỗ trợ
 
-| 分类 | 图表类型 |
+| Nhóm | Loại biểu đồ |
 |------|---------|
-| 比较类 | 条形图(bar)、柱状图(column)、瀑布图(waterfall)、双轴图(dual-axes) |
-| 趋势类 | 面积图(area)、折线图(line)、散点图(scatter) |
-| 分布类 | 箱线图(boxplot)、直方图(histogram)、小提琴图(violin)、漏斗图(funnel) |
-| 占比类 | 饼图(pie)、水波图(liquid)、词云(word-cloud) |
-| 层级类 | 组织架构图(organization-chart)、思维导图(mind-map)、矩形树图(treemap)、桑基图(sankey) |
-| 关系类 | 关系图(network-graph)、韦恩图(venn) |
-| 流程类 | 流程图(flow-diagram)、鱼骨图(fishbone-diagram) |
-| 多维类 | 雷达图(radar) |
-| 表格类 | 表格/透视表(spreadsheet) |
+| So sánh | biểu đồ thanh ngang (bar), biểu đồ cột (column), biểu đồ thác nước (waterfall), biểu đồ hai trục (dual-axes) |
+| Xu hướng | biểu đồ miền (area), biểu đồ đường (line), biểu đồ phân tán (scatter) |
+| Phân bố | biểu đồ hộp (boxplot), biểu đồ tần suất (histogram), biểu đồ violin (violin), biểu đồ phễu (funnel) |
+| Tỉ trọng | biểu đồ tròn (pie), biểu đồ sóng nước (liquid), mây từ khoá (word-cloud) |
+| Phân cấp | sơ đồ tổ chức (organization-chart), sơ đồ tư duy (mind-map), biểu đồ cây ô chữ nhật (treemap), biểu đồ sankey (sankey) |
+| Quan hệ | sơ đồ quan hệ (network-graph), biểu đồ Venn (venn) |
+| Quy trình | lưu đồ (flow-diagram), sơ đồ xương cá (fishbone-diagram) |
+| Đa chiều | biểu đồ radar (radar) |
+| Bảng | bảng/pivot table (spreadsheet) |
 
-## 通用可选参数
+## Tham số tuỳ chọn dùng chung
 
-| 参数 | 类型 | 默认值 | 说明 |
+| Tham số | Kiểu | Mặc định | Mô tả |
 |------|------|--------|------|
-| theme | string | "default" | 主题："default" / "academy" / "dark" |
-| width | number | 600 | 图表宽度 |
-| height | number | 400 | 图表高度 |
-| title | string | "" | 图表标题 |
-| style.texture | string | "default" | 纹理："default" / "rough"（手绘风格） |
+| theme | string | "default" | Chủ đề: "default" / "academy" / "dark" |
+| width | number | 600 | Chiều rộng biểu đồ |
+| height | number | 400 | Chiều cao biểu đồ |
+| title | string | "" | Tiêu đề biểu đồ |
+| style.texture | string | "default" | Vân nét: "default" / "rough" (kiểu vẽ tay) |
 
-带坐标轴的图表还支持：axisXTitle、axisYTitle。
+Biểu đồ có trục toạ độ còn hỗ trợ: axisXTitle, axisYTitle.
 
-## 各图表 data 格式
+## Định dạng data của từng biểu đồ
 
-- **area / line**: `{time: string, value: number, group?: string}[]`，可选 stack: boolean
-- **bar**: `{category: string, value: number, group?: string}[]`，可选 group / stack (默认 stack: true)
-- **column**: `{category: string, value: number, group?: string}[]`，可选 group (默认 true) / stack
+- **area / line**: `{time: string, value: number, group?: string}[]`, tuỳ chọn stack: boolean
+- **bar**: `{category: string, value: number, group?: string}[]`, tuỳ chọn group / stack (mặc định stack: true)
+- **column**: `{category: string, value: number, group?: string}[]`, tuỳ chọn group (mặc định true) / stack
 - **scatter**: `{x: number, y: number, group?: string}[]`
-- **pie**: `{category: string, value: number}[]`，可选 innerRadius: number (0-1)
+- **pie**: `{category: string, value: number}[]`, tuỳ chọn innerRadius: number (0-1)
 - **radar**: `{name: string, value: number, group?: string}[]`
 - **funnel**: `{category: string, value: number}[]`
 - **waterfall**: `{category: string, value?: number, isTotal?: boolean, isIntermediateTotal?: boolean}[]`
 - **dual-axes**: categories: string[], series: {type: "column"|"line", data: number[], axisYTitle?: string}[]
-- **histogram**: `number[]`，可选 binNumber: number
+- **histogram**: `number[]`, tuỳ chọn binNumber: number
 - **boxplot / violin**: `{category: string, value: number, group?: string}[]`
-- **liquid**: percent: number (0-1)，可选 shape: "circle"|"rect"|"pin"|"triangle"
+- **liquid**: percent: number (0-1), tuỳ chọn shape: "circle"|"rect"|"pin"|"triangle"
 - **word-cloud**: `{text: string, value: number}[]`
-- **sankey**: `{source: string, target: string, value: number}[]`，可选 nodeAlign
-- **treemap**: `{name: string, value: number, children?: ...}[]` (最深 3 层)
+- **sankey**: `{source: string, target: string, value: number}[]`, tuỳ chọn nodeAlign
+- **treemap**: `{name: string, value: number, children?: ...}[]` (sâu tối đa 3 lớp)
 - **venn**: `{sets: string[], value: number, label?: string}[]`
 - **network-graph / flow-diagram**: `{nodes: {name: string}[], edges: {source: string, target: string, name?: string}[]}`
-- **fishbone-diagram / mind-map**: `{name: string, children?: ...}` (最深 3 层)
-- **organization-chart**: `{name: string, description?: string, children?: ...}` (最深 3 层)，可选 orient: "horizontal"|"vertical"
-- **spreadsheet**: `Record<string, string | number>[]`，可选 rows / columns / values（透视表字段）
+- **fishbone-diagram / mind-map**: `{name: string, children?: ...}` (sâu tối đa 3 lớp)
+- **organization-chart**: `{name: string, description?: string, children?: ...}` (sâu tối đa 3 lớp), tuỳ chọn orient: "horizontal"|"vertical"
+- **spreadsheet**: `Record<string, string | number>[]`, tuỳ chọn rows / columns / values (trường của pivot table)

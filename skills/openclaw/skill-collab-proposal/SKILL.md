@@ -8,97 +8,97 @@ description: >-
 layer: plan
 ---
 
-# 合作/联名方案生成
+# Sinh phương án booking quảng cáo / collab
 
-> 根据合作需求，查询 KOL 定价表计算报价区间，用平台系数公式预估 KPI，输出可直接发送给品牌方或合作方的结构化提案。
+> Theo nhu cầu hợp tác, tra bảng giá KOL để tính khoảng báo giá, dùng công thức hệ số nền tảng để ước lượng KPI, xuất đề xuất có cấu trúc gửi thẳng được cho nhãn hàng hoặc đối tác.
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Mô tả |
 |------|------|------|
-| 合作方信息 | 是 | 品牌名称/合作方名称、产品或服务描述 |
-| 合作模式 | 否 | 明确指定 A（商单）或 B（联名），未指定时自动判断 |
-| 预算范围 | 否 | 品牌方预算上限，用于反向匹配内容形式 |
-| 补充材料 | 否 | 品牌 brief、竞品案例、过往合作数据 |
+| Thông tin đối tác | Có | Tên thương hiệu/tên đối tác, mô tả sản phẩm hoặc dịch vụ |
+| Chế độ hợp tác | Không | Chỉ định rõ A (booking quảng cáo) hoặc B (collab), không chỉ định thì tự nhận diện |
+| Khoảng ngân sách | Không | Trần ngân sách của nhãn hàng, dùng để suy ngược ra hình thức nội dung |
+| Tài liệu bổ sung | Không | Brief thương hiệu, case của đối thủ, dữ liệu hợp tác trước đây |
 
-**自动判断规则：** 含"报价""商单""品牌植入""接广告"走模式 A；含"联名""联动""博主合作""互推"走模式 B。
+**Quy tắc tự nhận diện:** có "báo giá" "booking quảng cáo" "cài cắm thương hiệu" "nhận quảng cáo" thì đi chế độ A; có "collab" "phối hợp" "hợp tác nhà sáng tạo" "quảng bá chéo" thì đi chế độ B.
 
-## 输出
+## Đầu ra
 
-Markdown 格式方案文档，保存到 `outputs/主题名/collab-proposal.md`。两种模式的完整输出结构模板见 `references/proposal-templates.md`：
-- **模式 A（商单）**：账号概况 / 合作形式与报价 / 内容创意 / KPI 预估 / 排期 / 条款建议
-- **模式 B（联名）**：双方概况对比 / 受众互补 / 联合内容方案 / 互推策略 / 执行排期 / 预期效果
+Tài liệu phương án dạng Markdown, lưu vào `outputs/<chủ đề>/collab-proposal.md`. Mẫu cấu trúc đầu ra đầy đủ của hai chế độ xem `references/proposal-templates.md`:
+- **Chế độ A (booking quảng cáo)**: tổng quan kênh / hình thức hợp tác và báo giá / ý tưởng nội dung / KPI dự kiến / lịch / đề xuất điều khoản
+- **Chế độ B (collab)**: so tổng quan hai bên / khán giả bổ trợ nhau / phương án nội dung chung / chiến lược quảng bá chéo / lịch triển khai / hiệu quả kỳ vọng
 
-## 执行步骤
+## Các bước thực hiện
 
-### 1. 解析意图与提取信息
-- 识别输入判断走模式 A（商单）还是模式 B（联名）
-- 提取关键信息：品牌/合作方名称、产品方向、合作诉求、预算
-- **缺少关键信息时主动追问**，不编造品牌名或产品信息
+### 1. Đọc ý định và trích thông tin
+- Đọc đầu vào để quyết định đi chế độ A (booking quảng cáo) hay chế độ B (collab)
+- Trích thông tin then chốt: tên thương hiệu/đối tác, hướng sản phẩm, nhu cầu hợp tác, ngân sách
+- **Thiếu thông tin then chốt thì chủ động hỏi lại**, không bịa tên thương hiệu hay thông tin sản phẩm
 
-### 2. 读取 Profile 数据
-- `identity.md`：账号名称、粉丝量、内容垂类、过往商单经验
-- `platforms.md`：各平台粉丝数、近 30 天互动率、主力平台
-- `audience.md`：受众画像（年龄、性别、地域、消费力）
-- 无 Profile 时留占位符，提示用户补充（见"Profile 感知"节）
+### 2. Đọc dữ liệu Profile
+- `identity.md`: tên kênh, số người theo dõi, ngách nội dung, kinh nghiệm booking quảng cáo trước đây
+- `platforms.md`: số người theo dõi từng nền tảng, tỉ lệ tương tác 30 ngày gần nhất, nền tảng chủ lực
+- `audience.md`: hồ sơ khán giả (tuổi, giới tính, khu vực, sức chi tiêu)
+- Không có Profile thì để placeholder, nhắc người dùng bổ sung (xem mục "Nhận biết Profile")
 
-### 3. 确定 KOL 层级
-根据 `identity.md` 粉丝量，查 `references/kol-pricing-guide.md` 第 1 节层级表（素人 / KOC / 腰部 / 头部 / 顶流）。后续步骤均基于此层级。
+### 3. Xác định cấp KOL
+Theo số người theo dõi trong `identity.md`, tra bảng cấp ở mục 1 của `references/kol-pricing-guide.md` (người thường / KOC / tầm trung / top đầu / siêu sao). Các bước sau đều dựa trên cấp này.
 
-### 4. 计算报价区间（模式 A）
-1. 查 `references/kol-pricing-guide.md` 第 2 节，得该层级 + 平台 + 内容形式的**基础报价区间**
-2. 按第 3 节的**调整因子**（垂直度/时效节日/独家/二创/多平台等）叠加溢价
-3. 计算：调整后报价 = 基础报价 x (1 + 各项溢价之和)
-4. 用第 4 节 **CPE 公式**反向校验合理性，超出合理区间时标注警告
+### 4. Tính khoảng báo giá (chế độ A)
+1. Tra mục 2 của `references/kol-pricing-guide.md`, lấy **khoảng báo giá gốc** theo cấp + nền tảng + hình thức nội dung (số liệu CNY, chuẩn thị trường Trung Quốc)
+2. Theo **hệ số điều chỉnh** ở mục 3 (độ khớp ngách/tính thời điểm dịp lễ/độc quyền/tái sáng tạo/đa nền tảng...) cộng dồn phần cộng thêm
+3. Tính: báo giá sau điều chỉnh = báo giá gốc x (1 + tổng các phần cộng thêm)
+4. Dùng **công thức CPE** ở mục 4 để kiểm ngược tính hợp lý, vượt khoảng hợp lý thì gắn cảnh báo
 
-### 5. 预估 KPI
-按 `references/kol-pricing-guide.md` 第 5 节公式逐层计算，每个数值标注计算过程：
-1. **预估曝光** = 粉丝数 x 平台曝光系数 x 内容类型系数（系数查第 5.1 节）
-2. **预估互动** = 预估曝光 x 平台互动率基线（查第 5.2 节）
-3. **预估转化** = 预估互动 x 内容转化率（查第 5.3 节；无转化链路的曝光类不强估，标注"以曝光为主"）
-4. 输出**区间**（保守值/乐观值），不给单一数字
+### 5. Ước lượng KPI
+Tính theo từng tầng bằng công thức ở mục 5 của `references/kol-pricing-guide.md`, mỗi con số ghi kèm cách tính:
+1. **Lượt hiển thị dự kiến** = số người theo dõi x hệ số hiển thị nền tảng x hệ số loại nội dung (tra hệ số ở mục 5.1)
+2. **Lượt tương tác dự kiến** = lượt hiển thị dự kiến x tỉ lệ tương tác mốc của nền tảng (tra mục 5.2)
+3. **Chuyển đổi dự kiến** = lượt tương tác dự kiến x tỉ lệ chuyển đổi nội dung (tra mục 5.3; loại chỉ chạy hiển thị mà không có đường dẫn chuyển đổi thì đừng ép ước, ghi "chủ yếu lấy hiển thị")
+4. Xuất **khoảng** (mức thận trọng/mức lạc quan), không đưa một con số duy nhất
 
-### 6. 设计内容方案
-- 推荐 2-3 种内容形式，每种标注：形式（图文/短视频/长视频/直播/混合）、时长或篇幅、创意方向和植入方式（软植入/硬广/口播/场景植入）、脚本概要（3-5 句）
-- 根据 `audience.md` 受众偏好排序推荐优先级
+### 6. Thiết kế phương án nội dung
+- Gợi ý 2-3 hình thức nội dung, mỗi hình thức ghi rõ: dạng (ảnh-chữ/video ngắn/video dài/livestream/kết hợp), thời lượng hoặc độ dài, hướng sáng tạo và cách cài cắm (cài mềm/quảng cáo trực diện/video nói/cài vào bối cảnh), tóm tắt kịch bản (3-5 câu)
+- Xếp thứ tự ưu tiên gợi ý theo sở thích khán giả trong `audience.md`
 
-### 7. 制定排期
-- 制作周期：脚本确认 → 拍摄/制作 → 品牌审核 → 发布
-- 推荐发布时间：避开竞品密集期，匹配节日/热点
-- 标注审核预留时间（通常 3-5 个工作日）
+### 7. Lên lịch
+- Chu kỳ sản xuất: chốt kịch bản → quay/dựng → nhãn hàng duyệt → đăng
+- Thời điểm đăng nên chọn: tránh lúc đối thủ dồn dập, khớp dịp lễ/trend
+- Ghi rõ thời gian chừa cho khâu duyệt (thường 3-5 ngày làm việc)
 
-### 8. 联名策划补充步骤（模式 B）
-- 对比双方账号数据（粉丝量/互动率/受众画像），用表格呈现
-- 估算受众重叠度：同平台同垂类高重叠（40-60%），跨平台或跨垂类低重叠（10-25%）
-- 设计内容分工矩阵：谁出镜/谁剪辑/谁的号首发/评论区互动脚本
-- 双方各自 KPI 预估（复用步骤 5 的公式）
+### 8. Các bước bổ sung khi lập kế hoạch collab (chế độ B)
+- So dữ liệu hai kênh (người theo dõi/tỉ lệ tương tác/hồ sơ khán giả), trình bày bằng bảng
+- Ước mức trùng khán giả: cùng nền tảng cùng ngách thì trùng cao (40-60%), khác nền tảng hoặc khác ngách thì trùng thấp (10-25%)
+- Thiết kế ma trận chia việc nội dung: ai lên hình/ai dựng/đăng đầu ở kênh nào/kịch bản tương tác dưới bình luận
+- Ước lượng KPI riêng cho từng bên (dùng lại công thức ở bước 5)
 
-### 9. 保存产物
-- 保存到 `outputs/合作方案名/collab-proposal.md`
-- 文件顶部标注生成时间、适用模式、数据来源
+### 9. Lưu kết quả
+- Lưu vào `outputs/<chủ đề>/collab-proposal.md`
+- Đầu file ghi thời điểm tạo, chế độ áp dụng, nguồn dữ liệu
 
-## Profile 感知
+## Nhận biết Profile
 
-### 有 Profile 时
-- 从 `identity.md` 读账号名称、粉丝量、垂类定位、过往商单经验
-- 从 `platforms.md` 读各平台粉丝数和互动率，确定主力平台
-- 从 `audience.md` 读受众年龄/性别/地域/消费力，用于内容方向匹配
-- 报价基于实际粉丝量查表计算，KPI 基于实际互动率公式推导
-- 内容形式推荐匹配账号擅长的类型
+### Khi có Profile
+- Đọc từ `identity.md`: tên kênh, số người theo dõi, định vị ngách, kinh nghiệm booking quảng cáo trước đây
+- Đọc từ `platforms.md`: số người theo dõi và tỉ lệ tương tác từng nền tảng, xác định nền tảng chủ lực
+- Đọc từ `audience.md`: tuổi/giới tính/khu vực/sức chi tiêu của khán giả, dùng để khớp hướng nội dung
+- Báo giá tính bằng cách tra bảng theo số người theo dõi thực, KPI suy ra từ công thức dựa trên tỉ lệ tương tác thực
+- Hình thức nội dung gợi ý phải khớp thể loại mà kênh làm tốt
 
-### 无 Profile 时
-- 账号概况留占位符 `[请补充：平台/粉丝量/互动率]`
-- 报价给该内容形式全层级通用区间，标注"仅供参考，需据实际数据调整"
-- KPI 预估用行业中位数，标注"基于行业平均值，实际可能有较大偏差"
-- 末尾附注："如提供账号 Profile（含 identity.md / platforms.md / audience.md），可生成精准报价和 KPI 预估"
+### Khi không có Profile
+- Tổng quan kênh để placeholder `[bổ sung: nền tảng/số người theo dõi/tỉ lệ tương tác]`
+- Báo giá đưa khoảng chung cho mọi cấp ở hình thức nội dung đó, ghi "chỉ để tham khảo, cần chỉnh theo dữ liệu thực"
+- KPI dự kiến dùng trung vị ngành, ghi "dựa trên mức trung bình ngành, thực tế có thể lệch khá nhiều"
+- Cuối bài ghi chú: "Nếu cung cấp Profile của kênh (gồm identity.md / platforms.md / audience.md), có thể sinh báo giá và KPI dự kiến chính xác hơn"
 
-## 规则
+## Quy tắc
 
-1. **报价必须有据可查** — 每个报价数字须能追溯到 `references/kol-pricing-guide.md` 的层级表 + 调整因子，禁止凭空编造
-2. **KPI 必须标注公式** — 每个预估值旁标注计算过程（如"10 万粉 x 0.3 系数 = 3 万曝光"）
-3. **区间优于单值** — 报价和 KPI 一律给保守值-乐观值区间
-4. **缺信息时追问，不编造** — 品牌名、产品信息、预算等关键字段缺失时必须追问
-5. **CPE 校验必做** — 报价算完必须用 CPE 公式反向验证，不合理时标注警告
-6. **内容形式至少 2 个** — 每种标注优劣
-7. **转化预估需谨慎** — 无直接转化链路的合作不强行预估转化率
-8. **禁止使用破折号（em dash）**
+1. **Báo giá phải truy được nguồn** - mỗi con số báo giá phải lần về được bảng cấp + hệ số điều chỉnh trong `references/kol-pricing-guide.md`, cấm bịa ra
+2. **KPI phải ghi công thức** - mỗi giá trị dự kiến ghi kèm cách tính (ví dụ "100 nghìn người theo dõi x hệ số 0.3 = 30 nghìn lượt hiển thị")
+3. **Khoảng tốt hơn một số** - báo giá và KPI đều đưa khoảng từ mức thận trọng tới mức lạc quan
+4. **Thiếu thông tin thì hỏi, không bịa** - thiếu tên thương hiệu, thông tin sản phẩm, ngân sách thì bắt buộc hỏi lại
+5. **Bắt buộc kiểm CPE** - tính xong báo giá phải dùng công thức CPE kiểm ngược, thấy vô lý thì gắn cảnh báo
+6. **Ít nhất 2 hình thức nội dung** - mỗi hình thức ghi rõ ưu nhược
+7. **Ước chuyển đổi phải thận trọng** - hợp tác không có đường dẫn chuyển đổi trực tiếp thì đừng ép ước tỉ lệ chuyển đổi
+8. **Cấm dùng dấu gạch ngang dài (em dash)**

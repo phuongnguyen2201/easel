@@ -7,63 +7,63 @@ description: >-
 layer: publish
 ---
 
-# 发布通知推送
+# Đẩy thông báo sau khi đăng
 
-> 内容发布后把结果推到团队 IM 群机器人或任意 webhook。走 `scripts/notify.py`（纯标准库无依赖）。
-> 常与发布类 SKILL 串联：发布成功 → 推送"已发布 + 链接"；失败 → 推送错误。
+> Sau khi đăng nội dung, đẩy kết quả về bot nhóm IM của team hoặc webhook bất kỳ. Đi qua `scripts/notify.py` (thuần thư viện chuẩn, không phụ thuộc).
+> Thường nối với các SKILL đăng bài: đăng thành công -> đẩy "đã đăng + link"; thất bại -> đẩy lỗi.
 
-## 支持渠道
+## Kênh hỗ trợ
 
-| 渠道 | 需要 | 说明 |
+| Kênh | Cần có | Mô tả |
 |------|------|------|
-| `feishu` | 群机器人 webhook | 飞书/Lark，支持标题富文本 |
-| `dingtalk` | webhook（可选加签 secret） | 钉钉群机器人 |
-| `wecom` | 群机器人 webhook | 企业微信 |
+| `feishu` | webhook bot nhóm | Feishu/Lark, hỗ trợ tiêu đề rich text |
+| `dingtalk` | webhook (tuỳ chọn thêm secret ký) | Bot nhóm DingTalk |
+| `wecom` | webhook bot nhóm | WeCom (WeChat Work) |
 | `telegram` | bot token + chat_id | Telegram Bot |
 | `slack` | Incoming Webhook | Slack |
-| `generic` | 任意 webhook | 发 `{"text": ...}` |
+| `generic` | webhook bất kỳ | Gửi `{"text": ...}` |
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 渠道 | 是 | 上表之一 |
-| webhook / token | 是 | 群机器人地址（telegram 用 token+chat_id） |
-| 通知内容 | 是 | 正文，可选标题 |
+| Kênh | có | Một trong bảng trên |
+| webhook / token | có | Địa chỉ bot nhóm (telegram dùng token+chat_id) |
+| Nội dung thông báo | có | Phần thân, tiêu đề tuỳ chọn |
 
-## 执行
+## Thực thi
 
-脚本路径（相对项目根）：`skills/openclaw/skill-publish-notify/scripts/notify.py`（`send -h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/openclaw/skill-publish-notify/scripts/notify.py` (`send -h`).
 
 ```bash
-# 飞书群
+# Nhóm Feishu
 python <skill>/scripts/notify.py send --channel feishu \
   --webhook "https://open.feishu.cn/open-apis/bot/v2/hook/xxx" \
-  --title "Easel 发布成功" --text "《本期主题》已发布到 抖音+小红书\n链接：..."
+  --title "Easel đăng thành công" --text "<Chủ đề kỳ này> đã đăng lên TikTok+Facebook\nLink: ..."
 
-# 钉钉（加签）
+# DingTalk (bật ký secret)
 python <skill>/scripts/notify.py send --channel dingtalk \
   --webhook "https://oapi.dingtalk.com/robot/send?access_token=xxx" \
-  --secret "SECxxx" --text "已发布"
+  --secret "SECxxx" --text "Đã đăng"
 
 # Telegram
 python <skill>/scripts/notify.py send --channel telegram \
-  --token "123:ABC" --chat-id "456" --text "已发布"
+  --token "123:ABC" --chat-id "456" --text "Đã đăng"
 
-# 先干跑看 payload
+# Chạy thử trước để xem payload
 python <skill>/scripts/notify.py send --channel feishu --webhook URL --text "..." --dry-run
 ```
 
-## 规则
+## Quy tắc
 
-1. 发送前用 `--dry-run` 让用户确认内容与目标群，再真发。
-2. webhook / token 属敏感信息，从用户配置或 .env 读取，不写死、不外泄。
-3. 通知内容简洁：状态 + 标题 + 平台 + 链接即可。
-4. 钉钉群若开了"加签"安全设置，必须带 `--secret`。
-5. 返回 HTTP 200 且各家成功码正确才算成功，否则提示用户检查 webhook。
+1. Trước khi gửi hãy dùng `--dry-run` cho người dùng xác nhận nội dung và nhóm đích, rồi mới gửi thật.
+2. webhook / token là thông tin nhạy cảm, đọc từ cấu hình người dùng hoặc .env, không hard-code, không để lộ.
+3. Nội dung thông báo gọn: trạng thái + tiêu đề + nền tảng + link là đủ.
+4. Nhóm DingTalk nếu bật thiết lập bảo mật "ký secret" thì bắt buộc kèm `--secret`.
+5. Phải trả HTTP 200 và mã thành công riêng của từng nhà thì mới tính là thành công, nếu không thì nhắc người dùng kiểm tra webhook.
 
-## 参考来源
+## Nguồn tham khảo
 
-各家群机器人均为「POST JSON 到 webhook」标准协议：飞书 msg_type、钉钉/企微 msgtype、
-Telegram Bot sendMessage、Slack Incoming Webhook。钉钉加签用 HMAC-SHA256。纯 urllib 实现，
-无需 apprise 等第三方库。
+Bot nhóm của các nhà đều theo giao thức chuẩn "POST JSON tới webhook": Feishu msg_type, DingTalk/WeCom msgtype,
+Telegram Bot sendMessage, Slack Incoming Webhook. DingTalk ký secret bằng HMAC-SHA256. Thuần urllib,
+không cần thư viện bên thứ ba như apprise.

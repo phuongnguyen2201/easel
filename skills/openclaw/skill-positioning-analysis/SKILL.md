@@ -7,53 +7,53 @@ description: >-
 layer: plan
 ---
 
-# 差异化定位分析（positioning-analysis）
+# Phân tích định vị khác biệt (positioning-analysis)
 
-> 找到"我和别人不一样、且用户需要"的位置。领域方法在 `references/positioning-frameworks.md`，
-> 本文件只讲流程。**定义方法与模型，不套具体案例。**
+> Tìm vị trí "mình khác người khác, và khán giả vẫn cần". Phương pháp chuyên sâu ở `references/positioning-frameworks.md`,
+> file này chỉ nói quy trình. **Định nghĩa phương pháp và mô hình, không áp case cụ thể.**
 
-> 竞品拆解见 skill-competitor-analysis（数据/爆款）；人设声音见 skill-voice-builder；
-> 本 SKILL 专做**差异化定位的分析与凝练**（competitor-analysis 偏数据，本 SKILL 偏战略定位）。
+> Mổ xẻ đối thủ xem skill-competitor-analysis (dữ liệu/bài viral); persona và giọng xem skill-voice-builder;
+> SKILL này chuyên **phân tích và chốt định vị khác biệt** (competitor-analysis thiên về dữ liệu, SKILL này thiên về chiến lược định vị).
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 自己账号 | 是 | 赛道、内容、受众、优势（有 Profile 直接读） |
-| 竞品/对标 | 推荐 | 3-5 个对标账号及其特点（没有则据赛道常识推演，并说明是推演） |
-| 目标 | 可选 | 想主打的方向（涨粉/带货/专业影响力等） |
+| Kênh của bạn | Có | Ngách, nội dung, khán giả, lợi thế (có Profile thì đọc thẳng) |
+| Đối thủ/kênh tham chiếu | Nên có | 3-5 kênh tham chiếu và đặc điểm của họ (không có thì suy luận theo hiểu biết ngách, và nói rõ là suy luận) |
+| Mục tiêu | Tuỳ chọn | Hướng muốn đánh mạnh (tăng người theo dõi/bán hàng/uy tín chuyên môn...) |
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **赛道扫描**：明确所在细分赛道、主流玩家的共性打法（读 `references/positioning-frameworks.md`
-   「一、赛道扫描」），找出这个赛道"大家都在做什么"。
-2. **竞品定位坐标**：按「二、定位坐标法」选两个关键维度（如 专业↔娱乐 / 高端↔平价 / 硬核↔日常）
-   画二维坐标，把竞品摆上去，看聚集区与空白区。
-3. **识别空白机会**：按「三、蓝海机会识别」找 需求存在但供给不足 的位置（人群空白/场景空白/
-   价值空白/形式空白），排除伪空白（没人做是因为没需求）。
-4. **多维差异化**：按「四、差异化五维」逐维找差异点——人群细分 / 使用场景 / 核心价值 / 内容形式 /
-   人设风格，选 1-2 个最可持续、最难被模仿的作为主差异点。
-5. **凝练一句话定位**：按「五、一句话定位公式」输出 `为[人群]在[场景]提供[独特价值]的[品类/角色]`，
-   要求具体、可记、可验证。
-6. **落地建议**：定位如何体现在 选题/风格/视觉/人设 上（差异点要在内容里持续可感知），
-   并给"如何验证定位是否成立"的信号。
-7. 输出：赛道共性 → 定位坐标（竞品分布+空白）→ 差异化主张（多维）→ 一句话定位 → 落地建议 → 风险。
+1. **Quét ngách**: xác định rõ ngách nhỏ mình đang ở và lối chơi chung của các kênh chủ lực (đọc `references/positioning-frameworks.md`
+   mục "1. Quét ngách"), tìm ra "ai cũng đang làm gì" trong ngách này.
+2. **Toạ độ định vị đối thủ**: theo "2. Phương pháp toạ độ định vị", chọn hai trục chính (vd chuyên sâu <-> giải trí / cao cấp <-> bình dân / hardcore <-> đời thường)
+   vẽ toạ độ hai chiều, đặt đối thủ lên đó, xem vùng chen chúc và vùng còn trống.
+3. **Nhận diện khoảng trống**: theo "3. Nhận diện cơ hội đại dương xanh", tìm chỗ có nhu cầu nhưng thiếu nguồn cung (trống về nhóm người/trống về bối cảnh/
+   trống về giá trị/trống về hình thức), loại bỏ khoảng trống giả (không ai làm vì không có nhu cầu).
+4. **Khác biệt đa chiều**: theo "4. Năm chiều khác biệt hoá", soi từng chiều để tìm điểm khác biệt - nhóm khán giả / bối cảnh sử dụng / giá trị cốt lõi / hình thức nội dung /
+   phong cách persona; chọn 1-2 điểm bền nhất và khó bắt chước nhất làm khác biệt chính.
+5. **Chốt câu định vị**: theo "5. Công thức định vị một câu", xuất `[chủng loại/vai trò] mang lại [giá trị độc nhất] cho [nhóm khán giả] trong [bối cảnh]`,
+   yêu cầu cụ thể, dễ nhớ, kiểm chứng được.
+6. **Gợi ý triển khai**: định vị thể hiện thế nào ở đề tài/phong cách/hình ảnh/persona (điểm khác biệt phải cảm nhận được liên tục trong nội dung),
+   kèm tín hiệu "làm sao biết định vị có đứng vững hay không".
+7. Đầu ra: điểm chung của ngách -> toạ độ định vị (phân bố đối thủ + khoảng trống) -> tuyên ngôn khác biệt (đa chiều) -> câu định vị -> gợi ý triển khai -> rủi ro.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：自己账号信息直接读 `identity.md`/`audience.md`/`style.md`；定位建议与既有优势/受众一致，
-  不给"推倒重来"式脱离现状的定位；差异点落到 `style.md` 可执行。
-- 无 Profile：先让用户给赛道+对标+优势，或据赛道常识推演并**明确标注为推演**，末尾提示补 Profile 精化。
+- Có Profile: đọc thẳng thông tin kênh từ `identity.md`/`audience.md`/`style.md`; gợi ý định vị phải khớp lợi thế/khán giả sẵn có,
+  không đưa định vị kiểu "đập đi làm lại" xa rời thực tế; điểm khác biệt phải quy về `style.md` để chạy được.
+- Không có Profile: hỏi người dùng ngách + kênh tham chiếu + lợi thế, hoặc suy luận theo hiểu biết ngách và **ghi rõ đó là suy luận**, cuối bài nhắc bổ sung Profile để tinh chỉnh.
 
-## 规则
+## Quy tắc
 
-1. 差异化 = **不同 且 有需求 且 你能持续做到**，三者缺一不可（只不同不叫定位，叫小众自嗨）。
-2. 定位坐标至少用两个能区分竞品的维度，避免选无区分度的维度。
-3. 一句话定位必须具体可验证，拒绝"更好/更专业/更用心"这类无差异空话。
-4. 差异点要能在内容中被用户**持续感知**，否则是纸面定位。
-5. 尊重账号现状与优势，给"从现有基础差异化"的路径，不空谈理想定位。
+1. Khác biệt = **khác người VÀ có nhu cầu VÀ bạn làm được lâu dài**, thiếu một là hỏng (chỉ khác thôi không gọi là định vị, gọi là tự sướng ngách hẹp).
+2. Toạ độ định vị dùng ít nhất hai trục phân biệt được đối thủ, tránh trục không tạo ra khác biệt.
+3. Câu định vị phải cụ thể và kiểm chứng được, bỏ kiểu nói suông "tốt hơn/chuyên hơn/tâm huyết hơn".
+4. Điểm khác biệt phải được khán giả **cảm nhận liên tục** trong nội dung, không thì chỉ là định vị trên giấy.
+5. Tôn trọng hiện trạng và lợi thế của kênh, đưa lộ trình "khác biệt từ nền tảng đang có", không nói suông về định vị lý tưởng.
 
-## 参考来源
+## Nguồn tham khảo
 
-沉淀自定位理论（差异化、心智占位）、蓝海战略（价值曲线/空白机会）、用户细分（人群-场景-价值）
-等通用方法，落地到内容账号定位。框架化为可复用模型，不绑定具体品牌案例。
+Đúc kết từ lý thuyết định vị (khác biệt hoá, chiếm chỗ trong tâm trí), chiến lược đại dương xanh (đường giá trị/cơ hội trống), phân khúc người dùng (nhóm người - bối cảnh - giá trị)
+và các phương pháp phổ quát khác, áp vào định vị kênh nội dung. Đóng khung thành mô hình tái dùng được, không gắn với case thương hiệu cụ thể.

@@ -7,137 +7,137 @@ description: >-
 layer: plan
 ---
 
-# 长文大纲生成
+# Sinh dàn ý bài dài
 
-> 基于搜索分析，生成结构化长文大纲（标题层级、段落字数、图表位置、FAQ），适用于微信公众号、知乎专栏、博客等平台。
+> Dựa trên phân tích tìm kiếm, sinh dàn ý bài dài có cấu trúc (cấp tiêu đề, số chữ từng đoạn, vị trí biểu đồ, FAQ), dùng cho bài dài trên Facebook, blog/website và tương tự.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供：
-- **主题或目标关键词**（必填）
-- **目标关键词** — 要优化的精确短语（若与主题不同）
-- **搜索意图** — 科普/商业/教程（可选，未提供则根据上下文推断）
-- **目标平台** — 公众号/知乎/博客（可选，有 Profile 时自动识别）
+Người dùng cung cấp trong prompt:
+- **Chủ đề hoặc từ khoá mục tiêu** (bắt buộc)
+- **Từ khoá mục tiêu** - cụm chính xác cần tối ưu (nếu khác chủ đề)
+- **Ý định tìm kiếm** - phổ biến kiến thức/thương mại/hướng dẫn (tuỳ chọn, không cho thì suy từ ngữ cảnh)
+- **Nền tảng mục tiêu** - Facebook/blog/website (tuỳ chọn, có Profile thì tự nhận diện)
 
-## 输出
+## Đầu ra
 
-Markdown 大纲文件，包含：标题建议、目标参数、H2/H3 层级结构（含段落字数目标）、图表位置标记、FAQ 规划、内容差异化分析。
+File dàn ý Markdown gồm: gợi ý tiêu đề, tham số mục tiêu, cấu trúc phân cấp H2/H3 (kèm số chữ mục tiêu từng đoạn), đánh dấu vị trí biểu đồ, kế hoạch FAQ, phân tích khác biệt nội dung.
 
-保存至 `outputs/文章主题/outline.md`。
+Lưu vào `outputs/<chủ đề>/outline.md`.
 
-## 执行步骤
+## Các bước thực thi
 
-### 1. 主题与意图确认
+### 1. Xác nhận chủ đề và ý định
 
-从用户输入中提取：
-1. **主题或目标关键词**（必填）
-2. **目标关键词** — 要排名/覆盖的精确短语（若与主题不同）
-3. **搜索意图** — 科普、商业、教程
+Trích từ đầu vào của người dùng:
+1. **Chủ đề hoặc từ khoá mục tiêu** (bắt buộc)
+2. **Từ khoá mục tiêu** - cụm chính xác cần lên hạng/phủ sóng (nếu khác chủ đề)
+3. **Ý định tìm kiếm** - phổ biến kiến thức, thương mại, hướng dẫn
 
-仅提供主题时，根据上下文推断关键词和意图。
+Chỉ có chủ đề thì suy từ khoá và ý định theo ngữ cảnh.
 
-### 2. 搜索分析
+### 2. Phân tích tìm kiếm
 
-使用 WebSearch 分析目标关键词的前 5 条结果：
+Dùng WebSearch phân tích 5 kết quả đầu của từ khoá mục tiêu:
 
-1. 搜索目标关键词
-2. 对每条结果记录：
-   - **标题结构** — 覆盖了哪些 H2/H3 话题
-   - **内容篇幅** — 大致字数
-   - **视觉元素** — 图表、配图、信息图
-   - **FAQ** — 是否有常见问题板块
-   - **独特视角** — 各结果的差异化切入点
-   - **缺失** — 哪些方面薄弱或遗漏
-3. 对排名前 2-3 的结果使用 WebFetch 提取详细标题结构（搜索摘要不够时）
-4. 汇总共性模式与空白机会
+1. Tìm từ khoá mục tiêu
+2. Với mỗi kết quả, ghi lại:
+   - **Cấu trúc tiêu đề** - đã phủ những chủ đề H2/H3 nào
+   - **Độ dài nội dung** - khoảng bao nhiêu chữ
+   - **Yếu tố hình ảnh** - biểu đồ, ảnh minh hoạ, infographic
+   - **FAQ** - có mục câu hỏi thường gặp không
+   - **Góc nhìn riêng** - điểm khác biệt của từng kết quả
+   - **Thiếu sót** - mặt nào còn yếu hoặc bỏ sót
+3. Với 2-3 kết quả xếp hạng đầu, dùng WebFetch trích cấu trúc tiêu đề chi tiết (khi tóm tắt tìm kiếm chưa đủ)
+4. Tổng hợp mẫu hình chung và khoảng trống cơ hội
 
-### 3. 生成大纲
+### 3. Sinh dàn ý
 
-按以下模板生成结构化大纲：
+Sinh dàn ý có cấu trúc theo mẫu sau:
 
 ```
-# 大纲：[主题]
+# Dàn ý: [chủ đề]
 
-## 标题建议
-1. [主标题 — 15-25 字，关键词前置，有力度]
-2. [备选标题 — 不同切入角度]
-3. [备选标题 — 提问式]
+## Gợi ý tiêu đề
+1. [tiêu đề chính - 15-25 chữ, đặt từ khoá lên trước, có lực]
+2. [tiêu đề thay thế - góc tiếp cận khác]
+3. [tiêu đề thay thế - dạng câu hỏi]
 
-## 目标参数
-- **核心关键词**：[关键词]
-- **搜索意图**：[科普/商业/教程]
-- **目标字数**：[X,XXX] 字
-- **H2 段落数**：[6-8]
-- **目标平台**：[公众号/知乎/博客/通用]
+## Tham số mục tiêu
+- **Từ khoá lõi**: [từ khoá]
+- **Ý định tìm kiếm**: [phổ biến kiến thức/thương mại/hướng dẫn]
+- **Số chữ mục tiêu**: [X.XXX] chữ
+- **Số đoạn H2**: [6-8]
+- **Nền tảng mục tiêu**: [Facebook/blog/website/chung]
 
 ---
 
-## 正文大纲
+## Dàn ý thân bài
 
-### H2：[段落标题 — 推荐使用提问式]（~400-600 字）
-- **开篇要点**：[用什么事实或数据引入这一段？]
-- **要点覆盖**：
-  - [要点 1]
-  - [要点 2]
-  - [要点 3]
-- **H3：[子段落]**（如有必要）
-  - [子段落内容方向]
-- **关键数据**：[需要查找什么数据来增强说服力？]
-- **图表建议**：[柱状图/折线图/饼图/无] — [可视化什么数据]
-- **配图位置**：[是/否] — [建议配图描述]
+### H2: [tiêu đề đoạn - nên dùng dạng câu hỏi] (~400-600 chữ)
+- **Ý mở đầu**: [dùng sự thật hay số liệu nào để dẫn vào đoạn này?]
+- **Ý cần phủ**:
+  - [ý 1]
+  - [ý 2]
+  - [ý 3]
+- **H3: [đoạn con]** (nếu cần)
+  - [hướng nội dung của đoạn con]
+- **Số liệu then chốt**: [cần tìm số liệu gì để tăng sức thuyết phục?]
+- **Gợi ý biểu đồ**: [cột/đường/tròn/không] - [trực quan hoá dữ liệu gì]
+- **Vị trí ảnh minh hoạ**: [có/không] - [mô tả ảnh gợi ý]
 
-### H2：[段落标题]（~400-600 字）
-[... 重复 6-8 个段落 ...]
+### H2: [tiêu đề đoạn] (~400-600 chữ)
+[... lặp lại 6-8 đoạn ...]
 
-### FAQ 板块（3-5 题）
-1. [来自搜索联想的问题] — [回答方向]
-2. [来自搜索联想的问题] — [回答方向]
-3. [来自搜索联想的问题] — [回答方向]
-4. [来自搜索分析的问题] — [回答方向]
+### Mục FAQ (3-5 câu)
+1. [câu hỏi từ gợi ý tìm kiếm] - [hướng trả lời]
+2. [câu hỏi từ gợi ý tìm kiếm] - [hướng trả lời]
+3. [câu hỏi từ gợi ý tìm kiếm] - [hướng trả lời]
+4. [câu hỏi từ phân tích tìm kiếm] - [hướng trả lời]
 
-### 结尾（~100-200 字）
-- 核心要点总结
-- 行动号召方向
+### Kết (~100-200 chữ)
+- Tóm tắt các ý cốt lõi
+- Hướng kêu gọi hành động
 
 ---
 
-## 内链规划
-- **本文应引用**：[已有内容中可链接的相关文章]
-- **应链向本文**：[已有内容中应加链接指向本文的文章]
+## Kế hoạch link nội bộ
+- **Bài này nên dẫn tới**: [bài liên quan đã có, có thể link tới]
+- **Nên link về bài này**: [bài đã có nên thêm link trỏ về bài này]
 
-## 内容差异化
-1. [竞品普遍遗漏而本文应覆盖的内容]
-2. [可纳入的独特视角或原创观点]
-3. [格式优势 — 更好的可视化、更深的覆盖、更清晰的结构]
+## Khác biệt nội dung
+1. [nội dung đối thủ hay bỏ sót mà bài này nên phủ]
+2. [góc nhìn riêng hoặc quan điểm gốc có thể đưa vào]
+3. [lợi thế định dạng - trực quan tốt hơn, phủ sâu hơn, cấu trúc rõ hơn]
 ```
 
-标题生成原则：
-- 60-70% 的 H2 标题使用提问式
-- 每个 H2 段落都有明确的"开篇要点"提示
-- H3 子段落仅在话题确实需要细分时使用
-- 各段字数目标之和应接近总目标字数
-- 图表类型建议应多样化（避免重复同一类型）
-- 配图位置应均匀分布
+Nguyên tắc sinh tiêu đề:
+- 60-70% tiêu đề H2 dùng dạng câu hỏi
+- Mỗi đoạn H2 đều có gợi ý "ý mở đầu" rõ ràng
+- Chỉ dùng đoạn con H3 khi chủ đề thực sự cần chia nhỏ
+- Tổng số chữ mục tiêu các đoạn phải xấp xỉ tổng số chữ mục tiêu chung
+- Gợi ý loại biểu đồ nên đa dạng (tránh lặp một loại)
+- Vị trí ảnh minh hoạ nên rải đều
 
-### 4. 内容差异化分析
+### 4. Phân tích khác biệt nội dung
 
-大纲生成后，补充差异化分析：
-1. 列出 3-5 个所有头部竞品都遗漏的话题或视角
-2. 标识可加入原创数据、案例或观点的机会
-3. 指出本文可利用的格式优势（更多图表、更好结构、更深覆盖）
+Sinh xong dàn ý thì bổ sung phân tích khác biệt:
+1. Liệt kê 3-5 chủ đề hoặc góc nhìn mà toàn bộ đối thủ top đầu đều bỏ sót
+2. Chỉ ra chỗ có thể thêm số liệu, case hoặc quan điểm gốc
+3. Nêu lợi thế định dạng bài này khai thác được (nhiều biểu đồ hơn, cấu trúc tốt hơn, phủ sâu hơn)
 
-### 5. 保存
+### 5. Lưu
 
-将大纲保存至 `outputs/文章主题/outline.md`。
-`outputs/` 目录或子目录不存在时自动创建。
+Lưu dàn ý vào `outputs/<chủ đề>/outline.md`.
+Thư mục `outputs/` hoặc thư mục con chưa có thì tự tạo.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 检测 `=== EASEL ACCOUNT PROFILE ===` 标记
-- **有 Profile 时**：
-  - 根据 `platform` 字段适配平台特征（公众号长文排版惯例、知乎专栏深度偏好、博客 SEO 侧重）
-  - 根据 `tone` / `style` 字段调整标题风格和用语
-  - 根据 `audience` 字段匹配受众认知水平，调整深度和术语密度
-- **无 Profile 时**：
-  - 生成通用大纲，`目标平台` 设为 `通用`
-  - 附注"如提供账号 Profile 可获得平台定制化大纲"
+- Phát hiện dấu `=== EASEL ACCOUNT PROFILE ===`
+- **Khi có Profile**:
+  - Theo trường `platform` mà thích ứng đặc điểm nền tảng (thói quen trình bày bài dài trên Facebook, thiên hướng chiều sâu của blog chuyên đề, trọng tâm SEO của website)
+  - Theo trường `tone` / `style` mà chỉnh phong cách tiêu đề và cách dùng từ
+  - Theo trường `audience` mà khớp mức hiểu biết của khán giả, chỉnh độ sâu và mật độ thuật ngữ
+- **Khi không có Profile**:
+  - Sinh dàn ý chung, `Nền tảng mục tiêu` đặt là `chung`
+  - Ghi chú "cung cấp Profile của kênh sẽ có dàn ý tuỳ biến theo nền tảng"

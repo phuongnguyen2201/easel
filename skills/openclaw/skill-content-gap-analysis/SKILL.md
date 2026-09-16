@@ -8,159 +8,159 @@ description: >-
 layer: discover
 ---
 
-# 蓝海选题发现
+# Tìm đề tài đại dương xanh
 
-> 扫描目标赛道在社媒平台上的内容供给与用户需求，找出"需求旺但好内容少"的蓝海选题，输出带优先级的选题清单。
+> Quét nguồn cung nội dung và nhu cầu người dùng của ngách mục tiêu trên các nền tảng mạng xã hội, tìm ra đề tài đại dương xanh "nhu cầu cao mà ít nội dung tốt", xuất danh sách đề tài có ưu tiên.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供以下信息（部分可选）：
+Người dùng cung cấp các thông tin sau trong prompt (một số là tuỳ chọn):
 
-- **必需**：赛道/领域（如"家居收纳"、"Python 教学"、"母婴辅食"）
-- **可选**：目标平台（小红书、抖音、B站、微博等，默认全平台扫描）
-- **可选**：竞品账号列表（2–5 个同赛道博主）
-- **可选**：自己已发布的内容方向（用于差距对比）
+- **Bắt buộc**: ngách/lĩnh vực (ví dụ "sắp xếp nhà cửa", "dạy Python", "ăn dặm cho bé")
+- **Tuỳ chọn**: nền tảng mục tiêu (Facebook, TikTok, YouTube, Zalo..., mặc định quét toàn bộ nền tảng)
+- **Tuỳ chọn**: danh sách kênh đối thủ (2-5 nhà sáng tạo cùng ngách)
+- **Tuỳ chọn**: các hướng nội dung mình đã đăng (để đối chiếu khoảng trống)
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 蓝海选题发现: {赛道}
-日期: {date}
-目标平台: {平台列表}
-扫描竞品: {账号列表}
-发现蓝海选题数: {count}
+# Tìm đề tài đại dương xanh: {ngách}
+Ngày: {date}
+Nền tảng mục tiêu: {danh sách nền tảng}
+Đối thủ đã quét: {danh sách kênh}
+Số đề tài đại dương xanh tìm được: {count}
 
-## 摘要
-{2-3 句概括最大机会方向}
+## Tóm tắt
+{2-3 câu khái quát hướng cơ hội lớn nhất}
 
-## 蓝海选题清单
+## Danh sách đề tài đại dương xanh
 
-### 🔵 高优先（需求强 + 竞争弱）
-| 选题方向 | 需求信号 | 竞争程度 | 建议平台 | 建议内容形式 | 时效性 |
+### 🔵 Ưu tiên cao (nhu cầu mạnh + cạnh tranh yếu)
+| Hướng đề tài | Tín hiệu nhu cầu | Mức cạnh tranh | Nền tảng gợi ý | Dạng nội dung gợi ý | Tính thời sự |
 |---------|---------|---------|---------|-------------|--------|
 
-### 🟢 中优先（需求明确 + 竞争适中）
-| 选题方向 | 需求信号 | 竞争程度 | 建议平台 | 建议内容形式 | 时效性 |
+### 🟢 Ưu tiên vừa (nhu cầu rõ + cạnh tranh trung bình)
+| Hướng đề tài | Tín hiệu nhu cầu | Mức cạnh tranh | Nền tảng gợi ý | Dạng nội dung gợi ý | Tính thời sự |
 
-### ⚪ 观察池（潜在趋势 + 尚需验证）
-| 选题方向 | 需求信号 | 竞争程度 | 建议平台 | 建议内容形式 | 时效性 |
+### ⚪ Hồ quan sát (trend tiềm năng + còn phải kiểm chứng)
+| Hướng đề tài | Tín hiệu nhu cầu | Mức cạnh tranh | Nền tảng gợi ý | Dạng nội dung gợi ý | Tính thời sự |
 
-## 需求信号来源
-{每个选题的需求证据：热搜词、搜索联想词、评论区高频问题等}
+## Nguồn tín hiệu nhu cầu
+{Bằng chứng nhu cầu của từng đề tài: từ khoá trending, từ gợi ý tìm kiếm, câu hỏi lặp nhiều ở phần bình luận...}
 
-## 竞品覆盖盲区
-{竞品账号未覆盖但用户有需求的方向}
+## Điểm mù của đối thủ
+{Những hướng kênh đối thủ chưa phủ nhưng người dùng có nhu cầu}
 
-## 内容形式建议
-{针对不同选题推荐的最佳内容形式：图文笔记、短视频、中长视频、直播、合集等}
+## Gợi ý dạng nội dung
+{Dạng nội dung tốt nhất cho từng đề tài: bài viết kèm ảnh, video ngắn, video trung/dài, livestream, tuyển tập...}
 
-## 速赢清单
-{3-5 个本周可立即动手的选题 + 具体内容角度}
+## Danh sách thắng nhanh
+{3-5 đề tài có thể bắt tay làm ngay trong tuần này + góc nội dung cụ thể}
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-> 需求信号的三个来源（平台搜索联想词 / 平台热搜 / 评论区未满足需求）及其采法与降级方案，参照 [demand-signals.md](references/demand-signals.md)。三类信号交叉验证，缺一不可。
+> Ba nguồn tín hiệu nhu cầu (từ gợi ý tìm kiếm trên nền tảng / bảng trending của nền tảng / nhu cầu chưa được đáp ứng ở phần bình luận) cùng cách thu thập và phương án dự phòng, xem [demand-signals.md](references/demand-signals.md). Ba loại tín hiệu phải đối chiếu chéo, thiếu một là không được.
 
-### 1. 采集平台实时热点
+### 1. Thu thập trend thời gian thực của nền tảng
 
-用 web_fetch 调用热搜 API（参照 [hotlist-apis.md](../../shared/hotlist-apis.md)），获取各平台当前热门话题：
+Dùng web_fetch gọi API bảng trending (xem [hotlist-apis.md](../../shared/hotlist-apis.md)) để lấy chủ đề đang nóng trên từng nền tảng:
 
-- 抖音热搜：`web_fetch https://60s.viki.moe/v2/douyin`
-- B站热门：`web_fetch https://60s.viki.moe/v2/bili`（⚠️ 常 500 不稳定，挂时改用备用源 `web_fetch https://v2.xxapi.cn/api/bilibilihot`）
-- 微博热搜：`web_fetch https://60s.viki.moe/v2/weibo`
-- 知乎热榜：`web_fetch https://60s.viki.moe/v2/zhihu`
-- 头条热榜：`web_fetch https://60s.viki.moe/v2/toutiao`
+- Trending Douyin: `web_fetch https://60s.viki.moe/v2/douyin`
+- Nội dung nóng Bilibili: `web_fetch https://60s.viki.moe/v2/bili` (⚠️ hay lỗi 500, không ổn định; khi hỏng thì đổi sang nguồn dự phòng `web_fetch https://v2.xxapi.cn/api/bilibilihot`)
+- Trending Weibo: `web_fetch https://60s.viki.moe/v2/weibo`
+- Bảng nóng Zhihu: `web_fetch https://60s.viki.moe/v2/zhihu`
+- Bảng nóng Toutiao: `web_fetch https://60s.viki.moe/v2/toutiao`
 
-从热搜列表中筛选与用户赛道相关的话题，记录热度值，作为时效性选题的候选池。
+Lọc từ danh sách trending ra các chủ đề liên quan tới ngách của người dùng, ghi lại chỉ số độ nóng, dùng làm hồ ứng viên cho đề tài mang tính thời sự.
 
-### 2. 挖掘搜索联想词
+### 2. Đào từ gợi ý tìm kiếm
 
-用 web_search 搜索赛道核心关键词，收集搜索引擎和平台的联想词（长尾需求）：
+Dùng web_search tìm từ khoá cốt lõi của ngách, thu thập từ gợi ý của công cụ tìm kiếm và của nền tảng (nhu cầu đuôi dài):
 
-- 搜索 `{赛道} site:xiaohongshu.com`、`{赛道} site:bilibili.com` 等，观察搜索建议
-- 搜索 `{赛道} + 怎么/如何/推荐/避坑/对比/教程` 等需求词，发现具体用户问题
-- 收集"相关搜索"中出现的长尾词 — 这些代表真实用户需求
+- Tìm `{ngách} site:xiaohongshu.com`, `{ngách} site:bilibili.com`..., quan sát các gợi ý tìm kiếm
+- Tìm `{ngách} + cách/làm sao/gợi ý/tránh lỗi/so sánh/hướng dẫn` và các từ thể hiện nhu cầu khác, để lộ ra câu hỏi cụ thể của người dùng
+- Thu thập các từ đuôi dài xuất hiện ở mục "tìm kiếm liên quan" - đây là nhu cầu thật của người dùng
 
-将搜索联想词按意图分类：学习型、决策型、问题解决型、种草型。
+Phân loại từ gợi ý tìm kiếm theo ý định: học hỏi, ra quyết định, giải quyết vấn đề, seeding mua sắm.
 
-### 3. 扫描评论区未满足需求
+### 3. Quét nhu cầu chưa được đáp ứng ở phần bình luận
 
-用 web_search 找到赛道内的热门内容，用 web_fetch 抓取页面，重点分析评论区：
+Dùng web_search tìm nội dung đang hot trong ngách, dùng web_fetch lấy trang về, tập trung phân tích phần bình luận:
 
-- 高赞评论中反复出现的追问（"求出个 XX 教程"、"能不能讲讲 XX"）
-- 用户吐槽现有内容的痛点（"说了等于没说"、"根本没讲到重点"）
-- 提问类评论的点赞数 — 点赞越高说明需求越普遍
-- 收藏/转发远高于点赞的内容 — 说明实用但表达不够好，可以做得更好
+- Câu hỏi lặp đi lặp lại trong các bình luận nhiều like ("xin một video hướng dẫn XX", "nói kỹ về XX được không")
+- Điểm đau người dùng than phiền về nội dung hiện có ("nói như không nói", "chẳng vào trọng tâm gì cả")
+- Số like của các bình luận dạng hỏi - càng nhiều like thì nhu cầu càng phổ biến
+- Nội dung có lượt lưu/chia sẻ cao hơn hẳn lượt like - tức là hữu ích nhưng trình bày chưa tốt, mình làm tốt hơn được
 
-### 4. 分析竞品账号覆盖
+### 4. Phân tích độ phủ của kênh đối thủ
 
-如果用户提供了竞品账号：
+Nếu người dùng đã cung cấp kênh đối thủ:
 
-- 用 web_search 搜索 `site:xiaohongshu.com {竞品昵称}` 或 `{竞品昵称} {平台}` 获取其内容列表
-- 按主题分类竞品已发布内容，画出覆盖地图
-- 找出覆盖盲区：竞品未做但用户有需求的方向
-- 找出质量洼地：竞品做了但质量差（评论区负面反馈多）的方向
+- Dùng web_search tìm `site:xiaohongshu.com {tên đối thủ}` hoặc `{tên đối thủ} {nền tảng}` để lấy danh sách nội dung của họ
+- Phân loại nội dung đối thủ đã đăng theo chủ đề, vẽ ra bản đồ độ phủ
+- Tìm điểm mù: hướng đối thủ chưa làm nhưng người dùng có nhu cầu
+- Tìm vùng trũng chất lượng: hướng đối thủ đã làm nhưng chất lượng kém (bình luận phản hồi tiêu cực nhiều)
 
-如果用户未提供竞品账号：
+Nếu người dùng không cung cấp kênh đối thủ:
 
-- 用 web_search 搜索 `{赛道} 博主推荐` 或 `{赛道} 账号` 找到头部账号
-- 抽样分析 2-3 个头部账号的内容覆盖
+- Dùng web_search tìm `{ngách} nhà sáng tạo nên theo dõi` hoặc `{ngách} kênh` để ra các kênh top đầu
+- Lấy mẫu phân tích độ phủ nội dung của 2-3 kênh top đầu
 
-### 5. 评估竞争程度
+### 5. Đánh giá mức cạnh tranh
 
-对每个候选选题评估内容供给情况：
+Với mỗi đề tài ứng viên, đánh giá tình hình nguồn cung nội dung:
 
-- 用 web_search 搜索该选题，观察结果数量和质量
-- **蓝海信号**：搜索结果少于 10 条相关内容、结果质量参差不齐、没有头部博主覆盖、内容陈旧（半年以上未更新）
-- **红海信号**：大量高质量内容、多个头部博主已覆盖、内容更新频繁
-- **伪蓝海**：搜索结果少但用户需求也弱 — 需要交叉验证需求信号
+- Dùng web_search tìm đề tài đó, xem số lượng và chất lượng kết quả
+- **Tín hiệu đại dương xanh**: kết quả tìm kiếm có dưới 10 nội dung liên quan, chất lượng không đồng đều, chưa có nhà sáng tạo top đầu nào phủ, nội dung cũ kỹ (trên nửa năm chưa cập nhật)
+- **Tín hiệu đại dương đỏ**: rất nhiều nội dung chất lượng cao, nhiều nhà sáng tạo top đầu đã phủ, nội dung cập nhật liên tục
+- **Đại dương xanh giả**: kết quả tìm kiếm ít nhưng nhu cầu người dùng cũng yếu - cần đối chiếu chéo tín hiệu nhu cầu
 
-### 6. 匹配内容形式
+### 6. Ghép dạng nội dung
 
-根据选题特征和平台属性推荐最佳内容形式：
+Dựa vào đặc điểm đề tài và tính chất nền tảng để gợi ý dạng nội dung tốt nhất:
 
-| 选题类型 | 小红书 | 抖音 | B站 | 微博 |
+| Loại đề tài | Xiaohongshu | Douyin | Bilibili | Weibo |
 |---------|--------|------|-----|------|
-| 教程/攻略 | 图文合集 | 短视频 | 中长视频 | 长图文 |
-| 测评/对比 | 图文笔记 | 短视频 | 中长视频 | 投票+图文 |
-| 避坑/经验 | 图文笔记 | 口播短视频 | 中长视频 | 话题帖 |
-| 种草/推荐 | 图文笔记 | 好物分享 | 合集视频 | 九宫格图文 |
-| 热点解读 | 图文笔记 | 短视频 | 时评视频 | 评论/转发 |
+| Hướng dẫn/cẩm nang | Tuyển tập bài ảnh | Video ngắn | Video trung/dài | Bài dài kèm ảnh |
+| Đánh giá/so sánh | Bài viết kèm ảnh | Video ngắn | Video trung/dài | Bình chọn + bài ảnh |
+| Tránh lỗi/kinh nghiệm | Bài viết kèm ảnh | Video ngắn dạng nói | Video trung/dài | Bài theo chủ đề hashtag |
+| Seeding/gợi ý mua | Bài viết kèm ảnh | Chia sẻ đồ hay | Video tuyển tập | Bài ảnh lưới 9 ô |
+| Bình luận tin nóng | Bài viết kèm ảnh | Video ngắn | Video bình luận thời sự | Bình luận/chia sẻ lại |
 
-### 7. 优先级排序
+### 7. Xếp thứ tự ưu tiên
 
-按加权评分排列每个选题，参照 [scoring-model.md](references/scoring-model.md)：
+Xếp hạng từng đề tài theo điểm có trọng số, xem [scoring-model.md](references/scoring-model.md):
 
-| 因素 | 权重 | 评估方法 |
+| Yếu tố | Trọng số | Cách đánh giá |
 |------|------|---------|
-| 需求强度 | 30% | 搜索联想频次、评论区追问数、热搜相关度 |
-| 竞争空白 | 25% | 现有内容数量少、质量差、更新慢 |
-| 赛道匹配 | 20% | 与用户定位和受众的契合度 |
-| 制作成本 | 15% | 能否用现有素材和能力快速产出 |
-| 时效价值 | 10% | 是否有热点借势窗口或季节性机会 |
+| Độ mạnh nhu cầu | 30% | Tần suất từ gợi ý tìm kiếm, số câu hỏi ở bình luận, độ liên quan với trend |
+| Khoảng trống cạnh tranh | 25% | Nội dung hiện có ít, chất lượng kém, cập nhật chậm |
+| Khớp với ngách | 20% | Mức khớp với định vị và khán giả của người dùng |
+| Chi phí sản xuất | 15% | Có dùng tư liệu và năng lực sẵn có để làm nhanh được không |
+| Giá trị thời sự | 10% | Có cửa sổ bắt trend hay cơ hội theo mùa không |
 
-### 8. 生成选题清单
+### 8. Sinh danh sách đề tài
 
-输出按优先级分级的蓝海选题清单 + 3-5 个速赢行动项。每个速赢必须包含：具体选题、目标平台、内容形式、核心角度。
+Xuất danh sách đề tài đại dương xanh phân theo mức ưu tiên + 3-5 việc thắng nhanh. Mỗi việc thắng nhanh bắt buộc phải có: đề tài cụ thể, nền tảng mục tiêu, dạng nội dung, góc tiếp cận cốt lõi.
 
-## 重要原则
+## Nguyên tắc quan trọng
 
-- **需求验证优先** — 蓝海选题必须有真实需求信号支撑，不是"没人做"就等于"蓝海"
-- **竞争弱 ≠ 没人做** — 有人做但做得不好，比完全没人做更好，说明需求已验证
-- **平台差异化** — 同一选题在不同平台的竞争程度可能完全不同，逐平台评估
-- **避免伪蓝海** — 搜索结果少 + 评论区无相关讨论 = 可能根本没需求
-- **先速赢后深耕** — 优先推荐制作成本低、见效快的选题，建立正反馈
-- **不追所有热点** — 热点只有与赛道契合时才有价值，硬蹭热点不可持续
+- **Kiểm chứng nhu cầu trước** - đề tài đại dương xanh phải có tín hiệu nhu cầu thật chống lưng, "chưa ai làm" không đồng nghĩa với "đại dương xanh"
+- **Cạnh tranh yếu ≠ chưa ai làm** - có người làm nhưng làm dở còn tốt hơn hoàn toàn chưa ai làm, vì nhu cầu đã được kiểm chứng
+- **Khác biệt theo nền tảng** - cùng một đề tài, mức cạnh tranh ở các nền tảng có thể khác hẳn nhau, phải đánh giá từng nền tảng
+- **Tránh đại dương xanh giả** - kết quả tìm kiếm ít + bình luận không ai bàn tới = có thể chẳng có nhu cầu nào cả
+- **Thắng nhanh trước, cày sâu sau** - ưu tiên đề tài chi phí sản xuất thấp, thấy kết quả nhanh, để tạo phản hồi tích cực
+- **Không đu mọi trend** - trend chỉ có giá trị khi khớp với ngách, bắt trend gượng ép thì không bền
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile 时**：
-  - 读取 `platforms.md`，聚焦用户实际运营的平台，优先分析这些平台的内容空白
-  - 读取 `identity.md`，匹配用户的内容定位和专业优势，过滤超出能力范围的选题
-  - 读取 `audience.md`，锁定目标受众的需求场景，在评论区分析中重点关注该人群的追问
-  - 结合 Profile 中的内容风格偏好，在内容形式建议中优先推荐用户擅长的形式
-- **无 Profile 时**：
-  - 退回通用模式，要求用户提供赛道信息
-  - 全平台扫描，不做平台特化分析
-  - 附注"如提供账号 Profile 可获得更精准的选题方向和平台匹配"
+- **Khi có Profile**:
+  - Đọc `platforms.md`, tập trung vào nền tảng người dùng thực sự đang làm, ưu tiên phân tích khoảng trống nội dung trên các nền tảng đó
+  - Đọc `identity.md`, khớp với định vị nội dung và thế mạnh chuyên môn của người dùng, lọc bỏ đề tài vượt quá khả năng
+  - Đọc `audience.md`, khoá vào bối cảnh nhu cầu của khán giả mục tiêu, khi phân tích bình luận thì chú ý các câu hỏi của nhóm này
+  - Kết hợp thiên hướng phong cách nội dung trong Profile, khi gợi ý dạng nội dung thì ưu tiên dạng người dùng làm tốt
+- **Khi không có Profile**:
+  - Lùi về chế độ chung, yêu cầu người dùng cung cấp thông tin ngách
+  - Quét toàn bộ nền tảng, không phân tích chuyên biệt theo nền tảng
+  - Ghi chú thêm "nếu cung cấp Profile kênh thì sẽ nhận được hướng đề tài và gợi ý nền tảng chính xác hơn"

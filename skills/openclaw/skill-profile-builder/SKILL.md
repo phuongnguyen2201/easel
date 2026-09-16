@@ -8,56 +8,56 @@ description: >-
 layer: general
 ---
 
-# Profile 构建器（首次引导）
+# Bộ dựng Profile (dẫn dắt lần đầu)
 
-> 把"空白/半空的画像"变成"可用的 6 维 Profile"。用户首次使用 Easel 时先跑这个：收集社媒链接 + 运营意图 → 分析已发内容/收藏喜好 → 生成 `profiles/<名>/` 下 6 个维度文件。生成后交给 [account-diagnosis](../skill-account-diagnosis/SKILL.md) 做起号诊断。
+> Biến "hồ sơ trống/nửa vời" thành "Profile 6 chiều dùng được". Người dùng chạy skill này đầu tiên khi mới dùng Easel: thu link mạng xã hội + ý định vận hành -> phân tích bài đã đăng/gu lưu-thích -> sinh 6 file chiều trong `profiles/<tên>/`. Sinh xong thì giao cho [account-diagnosis](../skill-account-diagnosis/SKILL.md) chẩn đoán xây kênh.
 
-## 与 profile-manager 的区别
+## Khác gì so với profile-manager
 
-- **profile-builder（本 SKILL）** = 从 0 到 1 **生成**画像（引导填写 + 社媒分析 + 综合成稿）。
-- **profile-manager** = 已有画像的 CRUD、切换、字段增删改。
+- **profile-builder (SKILL này)** = **sinh** hồ sơ từ 0 tới 1 (dẫn dắt khai báo + phân tích mạng xã hội + tổng hợp thành bản).
+- **profile-manager** = CRUD, chuyển đổi, thêm/xoá/sửa trường của hồ sơ đã có.
 
-## 输入
+## Đầu vào
 
-用户按需提供（缺的通过追问补，不编造）：
+Người dùng cung cấp theo nhu cầu (thiếu thì hỏi thêm để bù, không bịa):
 
-| 项 | 说明 |
-|----|------|
-| 画像名 | 一个人设 = 一个画像（非一个平台），如"科技数码达人" |
-| 社媒链接 | 各平台主页 URL（小红书/抖音/B站/微博/知乎/公众号），用于分析已发内容与收藏喜好 |
-| 运营意图 | 想做什么方向、为什么做、自己的特点/优势/资源 |
-| 内容偏好 | 喜欢看什么类型、想产出什么类型、参考/对标的账号 |
-| 红线 | 明确不做的内容、合规底线 |
+| Mục | Mô tả |
+|----|----|
+| Tên hồ sơ | Một persona = một hồ sơ (không phải một nền tảng), ví dụ "chuyên gia công nghệ - đồ số" |
+| Link mạng xã hội | URL trang chủ ở từng nền tảng (Facebook/TikTok/YouTube/Zalo/Threads/blog-website), dùng để phân tích bài đã đăng và gu lưu-thích |
+| Ý định vận hành | Muốn làm hướng nào, vì sao làm, đặc điểm/thế mạnh/nguồn lực của bản thân |
+| Gu nội dung | Thích xem loại nào, muốn làm ra loại nào, kênh tham khảo/đối chuẩn |
+| Lằn ranh đỏ | Nội dung nhất định không làm, đáy tuân thủ |
 
-## 输出
+## Đầu ra
 
-`profiles/<画像名>/` 下生成 6 个文件（结构见 `profiles/_template/`）：
-`identity.md` / `style.md` / `audience.md` / `platforms.md` / `preferences.md` / `memory.md`。
-每个字段标注来源：`[用户自述]` / `[链接分析]` / `[待补充]`。
+Sinh 6 file trong `profiles/<tên hồ sơ>/` (cấu trúc xem `profiles/_template/`):
+`identity.md` / `style.md` / `audience.md` / `platforms.md` / `preferences.md` / `memory.md`.
+Mỗi trường ghi rõ nguồn: `[người dùng tự khai]` / `[phân tích link]` / `[cần bổ sung]`.
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **确定画像名**，检查 `profiles/<名>/` 是否已存在（存在则问是覆盖还是完善）。不存在则复制 `profiles/_template/` 为骨架。
+1. **Chốt tên hồ sơ**, kiểm tra `profiles/<tên>/` đã tồn tại chưa (có rồi thì hỏi ghi đè hay bổ sung). Chưa có thì copy `profiles/_template/` làm khung.
 
-2. **收集社媒链接**。按 [onboarding-questions.md](references/onboarding-questions.md) 的清单引导用户给出主页链接与基础信息。
+2. **Thu link mạng xã hội**. Theo danh sách trong [onboarding-questions.md](references/onboarding-questions.md), dẫn người dùng đưa link trang chủ và thông tin cơ bản.
 
-3. **分析社媒链接**。按 [social-link-analysis.md](references/social-link-analysis.md) 用 web_fetch 抓取可获取的公开内容（近期发帖标题/题材/互动、公开收藏/点赞），推断：常发题材、风格语气、受众画像、高互动内容特征。
-   - 抓取受限（多数平台反爬）时**降级**：明确告诉用户哪些没抓到，改由用户口述 + 追问补齐，**不臆造数据**。
+3. **Phân tích link mạng xã hội**. Theo [social-link-analysis.md](references/social-link-analysis.md), dùng web_fetch lấy phần nội dung công khai lấy được (tiêu đề/đề tài/tương tác của bài gần đây, mục lưu/thích công khai), rồi suy ra: đề tài hay đăng, phong cách giọng điệu, hồ sơ khán giả, đặc điểm nội dung tương tác cao.
+   - Khi bị chặn thu thập (đa số nền tảng chống bot) thì **hạ cấp**: nói rõ cái nào không lấy được, chuyển sang để người dùng kể + hỏi thêm cho đủ, **không bịa dữ liệu**.
 
-4. **收集运营意图与偏好**。按 onboarding-questions.md 逐维度提问：想运营的方向、原因、自己的特点/资源、内容偏好、对标账号、红线。
+4. **Thu ý định vận hành và gu**. Theo onboarding-questions.md, hỏi lần lượt từng chiều: hướng muốn làm, lý do, đặc điểm/nguồn lực của bản thân, gu nội dung, kênh đối chuẩn, lằn ranh đỏ.
 
-5. **综合生成 6 维**。把[链接分析]与[用户自述]融合，按 `profiles/_template/` 各文件的字段填写：
-   - identity ← 定位/差异化/内容方向
-   - style ← 语气/开头结构/视觉/节奏/标志元素（链接分析里的高频风格优先）
-   - audience ← 核心人群/兴趣/痛点/互动特征
-   - platforms ← 各平台账号名/粉丝量级/内容形式（来自链接）
-   - preferences ← 要做/不做/合规底线
-   - memory ← 首次留空或只放链接分析得到的初步洞察
+5. **Tổng hợp sinh 6 chiều**. Trộn [phân tích link] với [người dùng tự khai], điền theo các trường của từng file trong `profiles/_template/`:
+   - identity <- định vị/khác biệt hoá/hướng nội dung
+   - style <- giọng điệu/cấu trúc mở đầu/hình ảnh/nhịp/yếu tố nhận diện (ưu tiên phong cách xuất hiện nhiều trong phân tích link)
+   - audience <- nhóm cốt lõi/sở thích/nỗi đau/đặc điểm tương tác
+   - platforms <- tên tài khoản từng nền tảng/quy mô người theo dõi/hình thức nội dung (lấy từ link)
+   - preferences <- làm gì/không làm gì/đáy tuân thủ
+   - memory <- lần đầu để trống hoặc chỉ ghi insight sơ bộ rút từ phân tích link
 
-6. **标注缺口 + 追问**。任何维度信息不足就在该处写 `[待补充]` 并**列出需要用户回答的具体问题**（做成 plan 让用户逐条补），不要用通用套话填满。
+6. **Đánh dấu chỗ thiếu + hỏi thêm**. Chiều nào thiếu thông tin thì ghi ngay `[cần bổ sung]` tại chỗ đó và **liệt kê các câu hỏi cụ thể cần người dùng trả lời** (làm thành plan để người dùng bù từng mục), không lấp đầy bằng câu chữ sáo rỗng.
 
-7. **写入并回执**。写 `profiles/<名>/` 各文件，输出一份"画像已生成"摘要：各维度完成度、哪些来自链接分析、哪些待补充，并建议下一步跑 account-diagnosis。
+7. **Ghi file và báo lại**. Ghi các file trong `profiles/<tên>/`, xuất một bản tóm tắt "đã sinh hồ sơ": mức hoàn thiện từng chiều, phần nào từ phân tích link, phần nào còn thiếu, và gợi ý bước tiếp theo là chạy account-diagnosis.
 
-## Profile 感知
+## Nhận biết Profile
 
-本 SKILL 是**生成** Profile，不消费。生成质量取决于用户提供的链接可抓取程度与自述完整度——信息越全，后续 account-diagnosis 越准。
+SKILL này **sinh** Profile chứ không tiêu thụ. Chất lượng sinh ra phụ thuộc vào mức lấy được dữ liệu từ link người dùng đưa và độ đầy đủ của phần tự khai - thông tin càng đủ thì account-diagnosis sau đó càng chuẩn.

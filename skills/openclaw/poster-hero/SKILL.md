@@ -8,63 +8,63 @@ description: >-
 layer: produce
 ---
 
-# 营销海报
+# Poster marketing
 
-你是一名视觉营销设计师。根据用户提供的内容，生成一张竖版高冲击力营销海报 HTML。
+Bạn là nhà thiết kế marketing thị giác. Dựa trên nội dung người dùng đưa, sinh một file HTML poster marketing dọc có sức tác động mạnh.
 
-> ⚠️ **生成前先读 [card-design](../card-design/SKILL.md) 设计系统**（锁配色/字体层级/填满画幅/去 AI 廉价感）。营销海报可用**有品味的**渐变/mesh 作背景氛围（这是海报的合理手段，与知识卡不同），但仍**禁**：蓝紫科技渐变、渐变文字、emoji 当图标、粗黑大标题、底部死空白。海报也要填满 1080×1920。
+> ⚠️ **Trước khi sinh phải đọc hệ thống thiết kế [card-design](../card-design/SKILL.md)** (khoá bảng màu/cấp bậc font/lấp đầy khung hình/khử vẻ rẻ tiền kiểu AI). Poster marketing được dùng gradient/mesh **có gu** làm nền tạo không khí (đây là thủ pháp hợp lý của poster, khác thẻ kiến thức), nhưng vẫn **cấm**: gradient xanh tím kiểu công nghệ, chữ gradient, emoji làm icon, tiêu đề lớn đậm đen, khoảng trắng chết ở đáy. Poster cũng phải lấp đầy 1080×1920.
 
-## 输出规范
+## Quy cách đầu ra
 
-- 容器 `width: 1080px; height: 1920px`，居中显示，圆角裁切
-- 输出完整的 HTML 文件，写入 `outputs/` 目录，可直接在浏览器打开截图
+- Khung chứa `width: 1080px; height: 1920px`, canh giữa, bo góc cắt
+- Xuất file HTML hoàn chỉnh, ghi vào thư mục `outputs/`, mở thẳng trên trình duyệt để chụp ảnh được
 
-## 海报结构
+## Cấu trúc poster
 
-1. **上部** — 品牌名 / 标签（发布日期、版本号、活动名等）+ 一个**线性图标或抽象几何标记**（禁 emoji 当图标）
-2. **中部视觉中心** — 主标题（**字越大越细**：大字用 Thin/Light 字重，靠字号+留白建立层级，而非 `font-black`）+ 一句话副标题，用 1 个强调色高亮关键词
-3. **下部信息卡片** — 3-5 条核心卖点，每条 **线性图标（Lucide，stroke 1.5）** + 短句
-4. **底部** — 右下角品牌 / 二维码（用 SVG 占位）+ CTA 文案；**底部填满，不留死空白**
+1. **Phần trên** - tên thương hiệu / nhãn (ngày phát hành, số phiên bản, tên sự kiện...) + một **icon nét mảnh hoặc dấu hình học trừu tượng** (cấm emoji làm icon)
+2. **Tâm thị giác ở giữa** - tiêu đề chính (**chữ càng lớn càng mảnh**: chữ lớn dùng độ đậm Thin/Light, dựng cấp bậc bằng cỡ chữ + khoảng trống chứ không phải `font-black`) + một câu phụ đề, dùng 1 màu nhấn làm nổi từ khoá
+3. **Thẻ thông tin phần dưới** - 3-5 điểm bán chính, mỗi điểm một **icon nét mảnh (Lucide, stroke 1.5)** + câu ngắn
+4. **Đáy** - thương hiệu / mã QR ở góc dưới phải (dùng SVG làm chỗ giữ) + nội dung CTA; **đáy lấp đầy, không chừa khoảng trắng chết**
 
-## 视觉风格
+## Phong cách thị giác
 
-> 遵循 [card-design](../card-design/SKILL.md)：先按内容/Profile 选一个风格立场并**锁定它的配色与字体**，全程只用这一套。海报允许**有品味的**氛围渐变作背景，但下列是硬红线。
+> Theo [card-design](../card-design/SKILL.md): trước hết chọn một lập trường phong cách theo nội dung/Profile rồi **khoá bảng màu và font của nó**, cả bài chỉ dùng đúng một bộ. Poster cho phép gradient không khí **có gu** làm nền, nhưng dưới đây là lằn ranh đỏ.
 
-- **背景**：氛围渐变 / mesh 或单色系深底 + 1 个强调色。**禁蓝紫科技渐变**（`from-violet-* via-fuchsia-* to-indigo-*` 这类是头号 AI tell）；配色取自 card-design 选中风格，不自由撞色。
-- **文字**：**字越大越细**（大标题 Thin/Light），仅 1 个对比强调色突出关键词；正文/副标题不用纯白硬撞，用低透明度或浅灰建立层次。**禁渐变文字**（`bg-clip-text`）。
-- **装饰克制**：发丝线 / 网格 / 极淡噪点纹理（grain）即可。**禁玻璃拟态**（`backdrop-filter:blur`）、禁堆叠阴影。
-- **字体**：Noto Sans / Serif SC 全字重（细体已装），英文用 Inter Tight；经 Tailwind CDN + Google Fonts 加载。
-- **填满 1080×1920**：内容覆盖 ≥75% 画高，任何无理由空白带 >15% 画高 = 失败（见 card-design `layout-laws.md`）。
+- **Nền**: gradient không khí / mesh hoặc nền tối đơn sắc + 1 màu nhấn. **Cấm gradient xanh tím kiểu công nghệ** (`from-violet-* via-fuchsia-* to-indigo-*` là dấu hiệu AI số một); bảng màu lấy từ phong cách đã chọn trong card-design, không tự phối bừa.
+- **Chữ**: **chữ càng lớn càng mảnh** (tiêu đề lớn dùng Thin/Light), chỉ 1 màu nhấn tương phản làm nổi từ khoá; thân bài/phụ đề đừng dùng trắng tinh chọi thẳng, hãy dùng độ mờ thấp hoặc xám nhạt để tạo lớp. **Cấm chữ gradient** (`bg-clip-text`).
+- **Trang trí tiết chế**: nét mảnh như sợi tóc / lưới / vân nhiễu cực nhạt (grain) là đủ. **Cấm hiệu ứng kính mờ** (`backdrop-filter:blur`), cấm chồng đổ bóng.
+- **Font**: Noto Sans / Serif SC đủ mọi độ đậm (bản mảnh đã cài sẵn), tiếng Anh dùng Inter Tight; nạp qua Tailwind CDN + Google Fonts.
+- **Lấp đầy 1080×1920**: nội dung phủ ≥75% chiều cao khung, bất kỳ dải trắng vô cớ nào >15% chiều cao khung = hỏng (xem `layout-laws.md` của card-design).
 
-## 示例 Prompt
+## Prompt ví dụ
 
-- "帮我做一张产品发布海报，产品是 XXX，核心卖点是 A、B、C"
-- "做一张活动宣传海报，主题是年中大促，时间 7 月 20 日"
-- "朋友圈分享图，内容是我们团队刚拿了 XX 奖"
+- "Làm giúp tôi một poster ra mắt sản phẩm, sản phẩm là XXX, điểm bán chính là A, B, C"
+- "Làm một poster quảng bá sự kiện, chủ đề là đợt sale giữa năm, thời gian 20 tháng 7"
+- "Ảnh chia sẻ lên story/feed, nội dung là đội tôi vừa nhận giải XX"
 
-## 与其他卡片 SKILL 的区别
+## Khác gì các SKILL thẻ hình còn lại
 
-三者都是"HTML 单图 → 截图"，仅画幅与场景不同，互不替代：
+Cả ba đều là "HTML một tấm → chụp ảnh màn hình", chỉ khác khung hình và tình huống, không thay thế nhau:
 
-- **poster-hero（本 SKILL）** = 1080×1920 竖版营销海报 / 朋友圈分享图，全屏渐变 + 大标题 + 卖点卡片 + 二维码，用于产品发布、活动宣传。
-- **card-quote** = 16:9 横版金句/数据卡，单张 hero 观点或核心数字，配微博 / 知乎 / X / 公众号。
-- **card-xiaohongshu** = 1080×1440 竖版小红书知识卡（走 card-design 风格库），可多张联排滑动浏览，一套干货拆成多张。
+- **poster-hero (SKILL này)** = poster marketing dọc 1080×1920 / ảnh chia sẻ story/feed, gradient tràn màn + tiêu đề lớn + thẻ điểm bán + mã QR, dùng cho ra mắt sản phẩm, quảng bá sự kiện.
+- **card-quote** = thẻ câu đắt/số liệu ngang 16:9, một tấm hero cho luận điểm hoặc con số chính, hợp Facebook / X / blog, website.
+- **card-xiaohongshu** = thẻ kiến thức dọc 1080×1440 chuẩn Xiaohongshu (dùng thư viện phong cách card-design), xếp nhiều tấm lướt ngang được, một bộ nội dung hay tách ra nhiều tấm.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `style.md` 读取品牌配色替换默认背景，从 `identity.md` 读取品牌名用于底部署名
-- **无 Profile**：按 card-design 选一个风格立场锁定配色（如「高奢黑金」「杂志暖纸」），底部署名留空——**不要**退回蓝紫科技渐变默认。
+- **Có Profile**: đọc bảng màu thương hiệu từ `style.md` để thay nền mặc định, đọc tên thương hiệu từ `identity.md` để ký ở đáy
+- **Không có Profile**: theo card-design chọn một lập trường phong cách rồi khoá bảng màu (ví dụ "đen vàng cao cấp", "giấy ấm kiểu tạp chí"), phần ký ở đáy để trống - **đừng** lùi về mặc định gradient xanh tím kiểu công nghệ.
 
-## 输出
+## Đầu ra
 
-生成完整的 HTML 文件，写入 `outputs/` 目录，再用共享脚本自动渲染成图（勿手动截图）：
+Sinh file HTML hoàn chỉnh, ghi vào thư mục `outputs/`, rồi dùng script dùng chung để tự động render thành ảnh (đừng chụp màn hình bằng tay):
 
 ```bash
 python skills/shared/scripts/render_card.py \
-  --html outputs/主题名/assets/poster.html \
-  --out outputs/主题名/poster.png \
+  --html "outputs/<chủ đề>/assets/poster.html" \
+  --out "outputs/<chủ đề>/poster.png" \
   --full-page --width 1080 --height 1920
 ```
 
-- 竖版海报 1080×1920 用 `--full-page`。脚本对 CDN/字体有界超时不卡死。
-- 首次需 `pip install playwright && playwright install chromium`。
+- Poster dọc 1080×1920 thì dùng `--full-page`. Script đặt timeout có giới hạn cho CDN/font nên không treo.
+- Lần đầu cần `pip install playwright && playwright install chromium`.

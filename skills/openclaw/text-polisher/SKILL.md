@@ -8,108 +8,108 @@ description: >-
 layer: produce
 ---
 
-# 文本润色
+# Trau chuốt văn bản
 
-> 两刀流打磨：系统化编辑提升质量 + 去 AI 感让文字像人写的。
+> Đánh hai đường dao: biên tập có hệ thống để nâng chất lượng + khử mùi AI cho chữ giống người viết.
 
-## 输入
+## Đầu vào
 
-用户提供待编辑的文案文本。可选附加信息：
-1. **文案目标** — 品牌认知 / 转化 / 留存
-2. **侧重** — 全面打磨 / 只去 AI 感 / 只改语法风格
-3. **语言** — 中文 / 英文 / 双语
-4. **证据素材** — 可用的数字、评价、案例
+Người dùng đưa vào đoạn nội dung cần biên tập. Thông tin bổ sung tuỳ chọn:
+1. **Mục tiêu bài viết** - nhận biết thương hiệu / chuyển đổi / giữ chân
+2. **Trọng tâm** - trau chuốt toàn diện / chỉ khử mùi AI / chỉ sửa ngữ pháp và văn phong
+3. **Ngôn ngữ** - tiếng Việt / tiếng Anh / song ngữ
+4. **Chất liệu bằng chứng** - con số, nhận xét, ca thực tế có thể dùng
 
-## 输出
+## Output
 
 ```
-=== 修改后文案 ===
-（完整修改后文本）
+=== Bài đã sửa ===
+(toàn văn sau khi sửa)
 
-=== 评分 ===
-| 维度 | 分数 (1-10) | 说明 |
+=== Chấm điểm ===
+| Tiêu chí | Điểm (1-10) | Diễn giải |
 |------|------------|------|
-| 清晰度 | X | 是否直接明了？ |
-| 节奏感 | X | 长短句变化？ |
-| 真实感 | X | 像人写的还是 AI？ |
-| 价值密度 | X | 还有可以删的吗？ |
-| 语气匹配 | X | 与目标受众/品牌一致？ |
-| 总分 | XX/50 | |
+| Độ rõ ràng | X | Có thẳng và dễ hiểu không? |
+| Nhịp điệu | X | Câu dài câu ngắn có đổi nhịp không? |
+| Độ thật | X | Giống người viết hay giống AI? |
+| Mật độ giá trị | X | Còn chỗ nào cắt được nữa không? |
+| Khớp giọng | X | Có khớp khán giả mục tiêu và thương hiệu không? |
+| Tổng điểm | XX/50 | |
 
-=== 主要修改 ===
-- 修改点 1
-- 修改点 2
+=== Các sửa đổi chính ===
+- Điểm sửa 1
+- Điểm sửa 2
 ...
 ```
 
-**两道门（顺序固定，都过才交付）：**
-1. **AI 味专项自检（前置门）** — 中文用 `references/zh-ai-markers.md` 五维（直接性/节奏/信任度/活人感/精炼度），阈值 **≥45/50**；不过先改到过，别急着评综合。
-2. **通用润色五维（综合质量门）** — 上表五维，阈值 **≥35/50**；不过继续改。
+**Hai cửa ải (thứ tự cố định, qua cả hai mới giao):**
+1. **Tự soát riêng mùi AI (cửa trước)** - văn bản tiếng Trung dùng `references/zh-ai-markers.md` với năm chiều (độ thẳng/nhịp/độ tin cậy/chất người thật/độ tinh gọn), ngưỡng **≥45/50**; chưa qua thì sửa tới khi qua, đừng vội chấm điểm tổng hợp.
+2. **Năm chiều trau chuốt chung (cửa chất lượng tổng hợp)** - năm chiều ở bảng trên, ngưỡng **≥35/50**; chưa qua thì sửa tiếp.
 
-先过 AI 味门，再过综合门——两者量纲相同但把关维度不同，不要混用。
+Qua cửa mùi AI trước, rồi mới tới cửa tổng hợp - hai cửa cùng thang điểm nhưng gác những chiều khác nhau, đừng trộn lẫn.
 
-## 执行步骤
+## Các bước thực hiện
 
-### 第一阶段：七轮聚焦扫描
+### Giai đoạn 1: bảy vòng quét tập trung
 
-每轮只关注一个维度，不做全面修改：
+Mỗi vòng chỉ nhìn một tiêu chí, không sửa dàn trải:
 
-| 轮次 | 维度 | 检查什么 |
+| Vòng | Tiêu chí | Soát cái gì |
 |------|------|---------|
-| 1 | 清晰度 | 主旨是否 5 秒内可抓取？有没有模糊语句？ |
-| 2 | 语气 | 是否匹配目标受众？品牌一致性？ |
-| 3 | 价值感 | 每段是否提供具体价值？能否加数字/案例？ |
-| 4 | 证据 | 论点有没有支撑？数字是否准确？ |
-| 5 | 具体性 | "节省时间"→"每周报告从 4 小时缩短到 15 分钟" |
-| 6 | 情感 | 是否与读者建立连接？有没有共鸣点？ |
-| 7 | 风险 | 是否有歧义、冒犯、法律风险？ |
+| 1 | Độ rõ ràng | Ý chính có nắm được trong 5 giây không? Có câu nào mơ hồ không? |
+| 2 | Giọng | Có khớp khán giả mục tiêu không? Có nhất quán với thương hiệu không? |
+| 3 | Cảm giác giá trị | Mỗi đoạn có mang giá trị cụ thể không? Thêm được số liệu hoặc ca thực tế không? |
+| 4 | Bằng chứng | Luận điểm có gì chống đỡ không? Con số có chuẩn không? |
+| 5 | Độ cụ thể | "tiết kiệm thời gian" → "báo cáo tuần rút từ 4 tiếng xuống 15 phút" |
+| 6 | Cảm xúc | Có nối được với người đọc không? Có điểm đồng cảm nào không? |
+| 7 | Rủi ro | Có chỗ nào gây hiểu lầm, xúc phạm hay rủi ro pháp lý không? |
 
-### 第二阶段：去 AI 感改写
+### Giai đoạn 2: viết lại để khử mùi AI
 
-加载清除清单 → `references/phrases-to-remove.md`
-加载回避结构 → `references/structures-to-avoid.md`
-中文文本 → `references/zh-ai-markers.md`（中文禁用词/标点/句式/活人感，含小红书平台特化）
+Nạp danh sách cần xoá → `references/phrases-to-remove.md`
+Nạp cấu trúc cần tránh → `references/structures-to-avoid.md`
+Văn bản tiếng Trung → `references/zh-ai-markers.md` (từ cấm/dấu câu/cấu trúc câu/chất người thật trong tiếng Trung, kèm phần đặc thù cho nền tảng Xiaohongshu)
 
-**8 条核心规则：**
+**8 quy tắc lõi:**
 
-1. **砍填充短语** — "首先/值得注意的是/毫无疑问/在当今…" 全删
-2. **打破公式结构** — 不用"不是 X，而是 Y"二元对比；不用修辞设置
-3. **主动语态** — 每句有人在做事。不让无生命物执行人类动作
-4. **具体化** — 不写 "reasons are structural"，说出具体原因
-5. **让读者身临其境** — "你"胜过"人们"，具体胜过抽象
-6. **变化节奏** — 长短句交替。两项胜过三项。不用破折号
-7. **信任读者** — 跳过铺垫和辩护，直接陈述事实
-8. **砍金句** — 听起来像拉引语的句子，重写
+1. **Chặt câu đệm** - "trước hết/đáng chú ý là/không thể phủ nhận rằng/trong thời đại ngày nay..." xoá hết
+2. **Phá cấu trúc công thức** - không dùng lối đối lập nhị nguyên "không phải X, mà là Y"; không dựng bối cảnh tu từ
+3. **Câu chủ động** - mỗi câu phải có ai đó đang làm gì. Đừng để vật vô tri thực hiện hành động của con người
+4. **Cụ thể hoá** - đừng viết "reasons are structural", hãy nói rõ nguyên nhân cụ thể
+5. **Kéo người đọc vào trong** - "bạn" hơn "mọi người", cụ thể hơn trừu tượng
+6. **Đổi nhịp** - câu dài câu ngắn xen kẽ. Hai vế hơn ba vế. Không dùng dấu gạch ngang
+7. **Tin người đọc** - bỏ phần dạo đầu và biện minh, nói thẳng sự việc
+8. **Chặt câu đắt** - câu nào nghe như đang cố tạo trích dẫn thì viết lại
 
-### 第三阶段：自检
+### Giai đoạn 3: tự soát
 
-- [ ] 副词？删掉
-- [ ] 被动语态？找动作者
-- [ ] 连续三句长度相近？打断
-- [ ] "here's what/这里是" 开场白？直奔主题
-- [ ] 模糊声明？说出具体含义
-- [ ] 破折号？删掉
+- [ ] Trạng từ? Xoá
+- [ ] Câu bị động? Tìm ra người làm
+- [ ] Ba câu liên tiếp dài gần bằng nhau? Ngắt nhịp
+- [ ] Mở bài kiểu "here's what/đây là"? Vào thẳng vấn đề
+- [ ] Tuyên bố mơ hồ? Nói rõ nghĩa cụ thể
+- [ ] Dấu gạch ngang? Xoá
 
-## 中文特有规则
+## Quy tắc riêng cho tiếng Trung
 
-处理中文时，完整规则见 `references/zh-ai-markers.md`。速查：
+Khi xử lý tiếng Trung, quy tắc đầy đủ xem `references/zh-ai-markers.md`. Tra nhanh:
 
-- 删除"在…中"冗余结构
-- "进行/开展/实施+名词" → 直接用动词
-- "对于…来说" → 简化
-- "不得不承认/毫无疑问/众所周知" → 删除
-- "以前所未有的方式" → 说出具体方式
+- Xoá cấu trúc thừa kiểu "trong quá trình..."
+- "tiến hành/triển khai/thực hiện + danh từ" → dùng thẳng động từ
+- "đối với... mà nói" → rút gọn
+- "phải thừa nhận rằng/không thể phủ nhận rằng/ai cũng biết rằng" → xoá
+- "theo một cách chưa từng có" → nói rõ cách cụ thể
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：读取 style.md 匹配创作者风格，不追求通用"像人"而是匹配个人写作习惯
-- **无 Profile**：改为通用专业/对话体，追求清晰、直接、自然
+- **Có Profile**: đọc style.md để khớp phong cách nhà sáng tạo, không chạy theo cái "giống người" chung chung mà bám thói quen viết của cá nhân đó
+- **Không có Profile**: chuyển sang giọng chuyên nghiệp hoặc trò chuyện phổ thông, hướng tới rõ ràng, thẳng thắn, tự nhiên
 
-## 参考资料
+## Tài liệu tham khảo
 
-- `references/phrases-to-remove.md` — 填充短语清除清单
-- `references/structures-to-avoid.md` — 公式化结构回避清单
-- `references/zh-ai-markers.md` — 中文去 AI 感权威源（禁用词/标点/句式/活人感 + 小红书特化）
-- `references/checklist.md` — 编辑检查清单
-- `references/content-refresh.md` — 旧稿翻新策略
-- `references/plain-english-alternatives.md` — 简洁替代词表
+- `references/phrases-to-remove.md` - danh sách câu đệm cần xoá
+- `references/structures-to-avoid.md` - danh sách cấu trúc công thức cần tránh
+- `references/zh-ai-markers.md` - nguồn chuẩn khử mùi AI cho tiếng Trung (từ cấm/dấu câu/cấu trúc câu/chất người thật + phần đặc thù Xiaohongshu)
+- `references/checklist.md` - checklist biên tập
+- `references/content-refresh.md` - chiến lược làm mới bài cũ
+- `references/plain-english-alternatives.md` - bảng từ thay thế gọn hơn

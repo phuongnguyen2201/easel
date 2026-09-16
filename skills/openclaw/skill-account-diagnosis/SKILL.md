@@ -8,46 +8,46 @@ description: >-
 layer: plan
 ---
 
-# 账号诊断 / 起号体检
+# Chẩn đoán kênh / khám sức khoẻ khi xây kênh
 
-> 对着一个**具体账号**做归因式体检并开处方。读 [profile-builder](../skill-profile-builder/SKILL.md) 生成的画像 + 用户近期内容/数据 → 诊断账号健康 → 给分阶段起号意见与发布建议。**与画像强相关**：没有完善的 Profile 就先去跑 profile-builder。
+> Khám và kê đơn theo lối truy nguyên cho **một kênh cụ thể**. Đọc hồ sơ do [profile-builder](../skill-profile-builder/SKILL.md) sinh ra + nội dung/dữ liệu gần đây của người dùng -> chẩn đoán sức khoẻ kênh -> đưa ý kiến xây kênh theo từng giai đoạn và gợi ý đăng bài. **Gắn chặt với hồ sơ**: chưa có Profile hoàn chỉnh thì đi chạy profile-builder trước.
 
-## 前置条件
+## Điều kiện trước
 
-- 必须有**已完善**的 Profile（`profiles/<名>/` 六维基本填好）。若 Profile 缺失或大面积 `[待补充]`，**先让用户跑 `skill-profile-builder`**，不要在信息不全时硬诊断。
+- Bắt buộc có Profile **đã hoàn chỉnh** (`profiles/<tên>/` điền cơ bản đủ sáu chiều). Nếu Profile thiếu hoặc còn `[cần bổ sung]` trên diện rộng, **bảo người dùng chạy `skill-profile-builder` trước**, đừng cố chẩn đoán khi thông tin chưa đủ.
 
-## 输入
+## Đầu vào
 
-| 项 | 必需 | 说明 |
+| Mục | Bắt buộc | Diễn giải |
 |----|------|------|
-| 画像名 | 是 | 指向 `profiles/<名>/` |
-| 近期内容数据 | 否 | 近 10-30 条内容的标题/题材/曝光/互动（有则诊断更准；无则基于 Profile + 追问） |
-| 具体困惑 | 否 | 如"播放上不去""是不是被限流了" |
+| Tên hồ sơ | Có | Trỏ tới `profiles/<tên>/` |
+| Dữ liệu nội dung gần đây | Không | Tiêu đề/đề tài/lượt hiển thị/tương tác của 10-30 nội dung gần nhất (có thì chẩn đoán chuẩn hơn; không có thì dựa vào Profile + hỏi thêm) |
+| Vướng mắc cụ thể | Không | Ví dụ "lượt xem không lên", "có phải bị bóp tương tác không" |
 
-## 输出
+## Đầu ra
 
-一份诊断报告 + 分阶段行动清单：
+Một báo cáo chẩn đoán + danh sách hành động theo từng giai đoạn:
 
-1. **五维诊断**（每维：现状 → 证据 → 结论），见 [diagnosis-framework.md](references/diagnosis-framework.md)：
-   垂直度 / 定位清晰度 / 限流降权信号 / 流量池阶段 / 内容-受众匹配。
-2. **病因→证据→处方**：每个问题都要三段式，不给空泛建议。
-3. **分阶段起号意见**：按当前所处阶段（0-500 / 500-5k / 5k-1w / 1w+）给这一档该做什么。
-4. **发布建议**：内容方向优先级、发布节奏、需要补强的能力（可指向下游 SKILL：选题→content-matrix、脚本→video-script、合规→quality-gate 等）。
-5. **信息缺口 → Plan**：诊断依赖但缺失的信息（如没有近期数据），**列成 plan 向用户提问**，不要编造数据下结论。
+1. **Chẩn đoán năm chiều** (mỗi chiều: hiện trạng -> bằng chứng -> kết luận), xem [diagnosis-framework.md](references/diagnosis-framework.md):
+   độ tập trung ngách / độ rõ của định vị / tín hiệu bị bóp tương tác / giai đoạn vòng phân phối / độ khớp nội dung - khán giả.
+2. **Bệnh -> bằng chứng -> đơn thuốc**: mọi vấn đề đều phải đủ ba đoạn, không đưa lời khuyên chung chung.
+3. **Ý kiến xây kênh theo giai đoạn**: theo bậc đang đứng (0-500 / 500-5k / 5k-10k / 10k+) mà nói bậc đó cần làm gì.
+4. **Gợi ý đăng bài**: ưu tiên hướng nội dung, nhịp đăng, năng lực cần bồi thêm (có thể trỏ sang SKILL phía sau: đề tài -> content-matrix, kịch bản -> video-script, tuân thủ -> quality-gate...).
+5. **Khoảng trống thông tin -> Plan**: thông tin cần cho chẩn đoán mà đang thiếu (ví dụ không có dữ liệu gần đây), **liệt thành plan để hỏi người dùng**, đừng bịa dữ liệu rồi kết luận.
 
-## 执行步骤
+## Các bước thực thi
 
-1. **读 Profile 六维**（identity/style/audience/platforms/preferences/memory），评估完整度。缺口过大 → 建议先跑 profile-builder 并停止。
-2. **收集近期数据**：有用户提供则用；没有则说明"缺数据会影响诊断精度"，并在需要处追问（近期几条内容的题材与互动）。
-3. **逐维诊断**：按 diagnosis-framework.md 的标尺给每一维打现状 + 找证据 + 下结论。限流信号按清单逐项自检。
-4. **判定流量池阶段**：结合粉丝量级 + 近期互动率，定位当前档位。
-5. **开处方**：把诊断出的问题按"病因→证据→处方"组织，处方要具体可执行（不是"多互动"这种废话）。
-6. **给分阶段动作清单**：当前档 + 下一档的关键动作。
-7. **列信息缺口 plan**：把不确定、需用户确认或补数据的点做成清单，交给用户回答后再细化。
-8. **回流建议**：诊断中发现的可复用洞察，建议用户确认后写入 `profiles/<名>/memory.md`（本 SKILL 不自动改 Profile，只建议）。
+1. **Đọc sáu chiều của Profile** (identity/style/audience/platforms/preferences/memory), đánh giá độ đầy đủ. Thiếu quá nhiều -> khuyên chạy profile-builder trước rồi dừng.
+2. **Thu thập dữ liệu gần đây**: người dùng đưa thì dùng; không có thì nói rõ "thiếu dữ liệu sẽ ảnh hưởng độ chính xác của chẩn đoán", và hỏi thêm ở chỗ cần (đề tài và tương tác của vài nội dung gần đây).
+3. **Chẩn đoán từng chiều**: theo thước đo trong diagnosis-framework.md mà chấm hiện trạng + tìm bằng chứng + hạ kết luận cho mỗi chiều. Tín hiệu bóp tương tác thì tự soát theo từng mục trong danh sách.
+4. **Xác định giai đoạn vòng phân phối**: kết hợp lượng người theo dõi + tỉ lệ tương tác gần đây để định vị bậc hiện tại.
+5. **Kê đơn**: sắp các vấn đề đã chẩn ra theo "bệnh -> bằng chứng -> đơn thuốc", đơn thuốc phải cụ thể làm được ngay (không phải kiểu nói suông "tương tác nhiều lên").
+6. **Đưa danh sách hành động theo giai đoạn**: các việc then chốt của bậc hiện tại + bậc kế tiếp.
+7. **Liệt plan cho khoảng trống thông tin**: gom các điểm chưa chắc, cần người dùng xác nhận hoặc bổ sung dữ liệu thành một danh sách, chờ họ trả lời rồi mới làm mịn.
+8. **Gợi ý hồi lưu**: các insight dùng lại được phát hiện trong lúc chẩn đoán, khuyên người dùng xác nhận rồi ghi vào `profiles/<tên>/memory.md` (SKILL này không tự sửa Profile, chỉ gợi ý).
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：全程以该画像的定位/风格/受众/红线为基准做诊断——垂直度是"离该定位有多远"，而非通用标准。
-- **Profile 不完整**：先导向 profile-builder，不硬诊断。
-- 诊断结论只**建议**回写 memory，由用户确认，避免污染画像。
+- **Có Profile**: suốt quá trình lấy định vị/phong cách/khán giả/lằn ranh đỏ của hồ sơ đó làm chuẩn để chẩn đoán - độ tập trung ngách là "lệch bao xa so với định vị ấy", chứ không phải chuẩn chung chung.
+- **Profile chưa hoàn chỉnh**: dẫn sang profile-builder trước, không cố chẩn đoán.
+- Kết luận chẩn đoán chỉ **gợi ý** ghi ngược vào memory, do người dùng xác nhận, tránh làm nhiễu hồ sơ.

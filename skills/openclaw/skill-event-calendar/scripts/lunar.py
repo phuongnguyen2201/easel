@@ -11,7 +11,8 @@ skill-event-calendar 承诺"日期不出错"，但农历→公历换算靠 LLM �
     python3 lunar.py l2s 2023 2 1 --leap        # 闰二月初一
     # 公历 → 农历
     python3 lunar.py s2l 2025-10-06
-    # 某农历节日在指定公历年的日期
+    # 某农历节日在指定公历年的日期（tên lễ nhận cả tiếng Việt lẫn tiếng Trung）
+    python3 lunar.py festival "Trung thu" 2025
     python3 lunar.py festival 中秋 2025
     python3 lunar.py festival --list            # 列出支持的节日
     # 自测锚点
@@ -24,6 +25,7 @@ EASEL-META.md 血缘记录。JSON 输出加 --json。
 import argparse
 import json
 import sys
+import unicodedata
 from datetime import date, timedelta
 
 # 1900-2100 农历年信息表：每年 20bit。
@@ -156,11 +158,68 @@ FESTIVALS = {
     "除夕": None,  # 特殊：春节前一天
 }
 
+# Tên tiếng Việt của từng ngày lễ -> key trong FESTIVALS.
+# Tra cứu không phân biệt hoa thường và không phân biệt dấu (xem _norm).
+# Ngày lễ nào không phổ biến ở Việt Nam thì ghi tên dịch sát nghĩa.
+VI_NAMES = {
+    "春节": "Tết Nguyên đán",
+    "元宵": "Tết Nguyên tiêu",
+    "龙抬头": "Tết Rồng ngẩng đầu",
+    "端午": "Tết Đoan ngọ",
+    "七夕": "Thất tịch",
+    "中元": "Rằm tháng Bảy",
+    "中秋": "Tết Trung thu",
+    "重阳": "Tết Trùng cửu",
+    "腊八": "Lễ Lạp bát",
+    "小年": "Tết ông Công ông Táo",
+    "除夕": "Giao thừa",
+}
+
+# Cách gọi khác mà người Việt hay dùng, ngoài tên chính trong VI_NAMES.
+VI_ALIASES = {
+    "春节": ["Tết", "Tết Âm lịch", "Tết Ta"],
+    "元宵": ["Rằm tháng Giêng", "Nguyên tiêu"],
+    "端午": ["Đoan ngọ", "Tết giết sâu bọ", "Tết nửa năm"],
+    "中元": ["Vu Lan", "Rằm tháng 7", "Tết Trung nguyên"],
+    "中秋": ["Trung thu", "Tết thiếu nhi"],
+    "重阳": ["Trùng cửu", "Trùng dương"],
+    "小年": ["Tết Táo quân", "ông Công ông Táo", "23 tháng Chạp"],
+    "除夕": ["Tất niên", "đêm Giao thừa", "30 Tết"],
+}
+
+
+def _norm(name: str) -> str:
+    """Chuẩn hoá tên lễ: bỏ dấu, bỏ hoa thường, gom khoảng trắng."""
+    text = unicodedata.normalize("NFD", name.strip().lower())
+    text = "".join(c for c in text if unicodedata.category(c) != "Mn")
+    return " ".join(text.replace("\u0111", "d").split())
+
+
+def _build_lookup() -> dict:
+    table = {_norm(key): key for key in FESTIVALS}
+    for key, vi in VI_NAMES.items():
+        table[_norm(vi)] = key
+    for key, names in VI_ALIASES.items():
+        for alias in names:
+            table[_norm(alias)] = key
+    return table
+
+
+LOOKUP = _build_lookup()
+
+
+def resolve(name: str) -> str:
+    """Tên lễ (tiếng Trung hoặc tiếng Việt) -> key chuẩn trong FESTIVALS."""
+    key = LOOKUP.get(_norm(name))
+    if key is None:
+        supported = ", ".join(f"{VI_NAMES[k]} ({k})" for k in FESTIVALS)
+        raise ValueError(f"Không rõ ngày lễ: {name}. Hỗ trợ: {supported}")
+    return key
+
 
 def festival(name: str, solar_year: int) -> date:
-    """某农历节日在指定公历年的公历日期。"""
-    if name not in FESTIVALS:
-        raise ValueError(f"未知节日：{name}。支持：{'、'.join(FESTIVALS)}")
+    """某农历节日在指定公历年的公历日期。Nhận tên tiếng Trung hoặc tiếng Việt."""
+    name = resolve(name)
     if name == "除夕":
         return l2s(solar_year, 1, 1) - timedelta(days=1)
     month, day, off = FESTIVALS[name]
@@ -189,6 +248,13 @@ def _selftest() -> int:
         ("festival 中秋 2025", festival("中秋", 2025), date(2025, 10, 6)),
         ("festival 除夕 2025", festival("除夕", 2025), date(2025, 1, 28)),
         ("festival 腊八 2025", festival("腊八", 2025), date(2025, 1, 7)),
+        # tên tiếng Việt phải ra cùng kết quả với key tiếng Trung
+        ("festival Trung thu 2025", festival("Trung thu", 2025), date(2025, 10, 6)),
+        ("festival 'Tết Nguyên đán' 2025", festival("Tết Nguyên đán", 2025), date(2025, 1, 29)),
+        ("festival 'tet nguyen dan' 2025", festival("tet nguyen dan", 2025), date(2025, 1, 29)),
+        ("festival 'Giao thừa' 2025", festival("Giao thừa", 2025), date(2025, 1, 28)),
+        ("festival 'ông Công ông Táo' 2025", festival("ông Công ông Táo", 2025), date(2025, 1, 22)),
+        ("festival 'Đoan ngọ' 2025", festival("Đoan ngọ", 2025), date(2025, 5, 31)),
         # 往返一致性
         ("s2l(2025-01-29)", s2l(date(2025, 1, 29)), (2025, 1, 1, False)),
         ("s2l(2025-10-06)", s2l(date(2025, 10, 6)), (2025, 8, 15, False)),
@@ -242,7 +308,8 @@ def main():
     ps.add_argument("--json", action="store_true")
 
     pf = sub.add_parser("festival", help="农历节日在指定公历年的日期")
-    pf.add_argument("name", nargs="?", help="节日名，如 中秋")
+    pf.add_argument("name", nargs="?",
+                    help="Tên ngày lễ, tiếng Việt hoặc tiếng Trung (ví dụ: Trung thu / 中秋)")
     pf.add_argument("year", type=int, nargs="?", help="公历年")
     pf.add_argument("--list", action="store_true", help="列出支持的节日")
     pf.add_argument("--json", action="store_true")
@@ -265,7 +332,9 @@ def main():
                   "year": y, "month": m, "day": dd, "is_leap": lp}, args.json)
         elif args.cmd == "festival":
             if args.list:
-                _out({"festivals": list(FESTIVALS)}, args.json)
+                _out({"festivals": list(FESTIVALS),
+                      "vi": VI_NAMES,
+                      "aliases": VI_ALIASES}, args.json)
             elif args.name and args.year:
                 d = festival(args.name, args.year)
                 _out({"festival": args.name, "solar_year": args.year,
@@ -273,7 +342,7 @@ def main():
             else:
                 sys.exit("用法：festival <节日名> <公历年>，或 festival --list")
     except ValueError as e:
-        sys.exit(f"错误：{e}")
+        sys.exit(f"Lỗi: {e}")
 
 
 if __name__ == "__main__":

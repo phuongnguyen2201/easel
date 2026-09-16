@@ -8,53 +8,53 @@ description: >-
 layer: publish
 ---
 
-# 批量定时发布排期
+# Hẹn giờ đăng hàng loạt theo lịch
 
-> 管理一张排期表（内容×平台×时间），到点把任务派发给各平台发布 SKILL。走
-> `scripts/publish_queue.py`（纯标准库）。**本 SKILL 负责调度与状态，实际发布委派各平台 publisher**
-> （skill-xhs-publisher / skill-douyin-upload / skill-wechat-publisher / skill-bilibili-upload / cross-platform-publish）。
+> Quản lý một bảng lịch đăng (nội dung x nền tảng x giờ), đến giờ thì giao việc cho SKILL đăng của từng nền tảng. Chạy qua
+> `scripts/publish_queue.py` (thuần thư viện chuẩn). **SKILL này lo điều phối và trạng thái, việc đăng thật giao cho publisher của từng nền tảng**
+> (SKILL đăng của từng nền tảng - adapter VN dựng ở Giai đoạn 5).
 
-## 输入
+## Đầu vào
 
-排期表 CSV（表头需含 `publish_at, platform, content`，可选 `title, note`）：
+Bảng lịch đăng dạng CSV (header phải có `publish_at, platform, content`, tuỳ chọn `title, note`):
 ```csv
 publish_at,platform,content,title
-2026-08-01 09:00,xiaohongshu,outputs/note1,早间笔记
-2026-08-01 20:00,douyin,outputs/主题名/final.mp4,晚间视频
+2026-08-01 09:00,xiaohongshu,outputs/note1,Bài buổi sáng
+2026-08-01 20:00,douyin,outputs/<chủ đề>/final.mp4,Video buổi tối
 ```
-或等价 JSON。
+Hoặc file JSON tương đương.
 
-## 执行
+## Thực thi
 
-脚本路径（相对项目根）：`skills/openclaw/skill-publish-scheduler/scripts/publish_queue.py`（各子命令 `-h`）。
+Đường dẫn script (tính từ gốc dự án): `skills/openclaw/skill-publish-scheduler/scripts/publish_queue.py` (mỗi subcommand đều có `-h`).
 
 ```bash
 Q=outputs/publish-queue/q.json
-python <skill>/scripts/publish_queue.py import --file plan.csv --queue $Q   # 导入排期
-python <skill>/scripts/publish_queue.py list  --queue $Q                    # 查看队列
-python <skill>/scripts/publish_queue.py due   --queue $Q                    # 此刻到期项
-python <skill>/scripts/publish_queue.py run   --queue $Q                    # 打印到期派发计划
-# 按计划逐条委派对应平台 publisher 发布，完成后回填：
+python <skill>/scripts/publish_queue.py import --file plan.csv --queue $Q   # nhập lịch đăng
+python <skill>/scripts/publish_queue.py list  --queue $Q                    # xem hàng đợi
+python <skill>/scripts/publish_queue.py due   --queue $Q                    # các mục đến hạn lúc này
+python <skill>/scripts/publish_queue.py run   --queue $Q                    # in kế hoạch giao việc cho mục đến hạn
+# Theo kế hoạch, giao từng mục cho publisher của nền tảng tương ứng để đăng, xong thì ghi lại trạng thái:
 python <skill>/scripts/publish_queue.py mark  --queue $Q --id 1 --status done
 ```
 
-## 到期派发流程（编排）
+## Quy trình giao việc khi đến hạn (điều phối)
 
-1. `due`/`run` 得到此刻到期项。
-2. **对每条到期项**：按 `platform` 委派对应发布 SKILL 执行真实发布
-   （单平台或用 cross-platform-publish）。发布前按平台适配内容格式。
-3. 发布成功/失败后 `mark` 回填状态（可配合 skill-publish-notify 推送结果、skill-publish-log 记录）。
-4. 需要"守护式到点触发"时，由 OpenClaw 定时任务周期性跑 `run`（本脚本只做单次到期计算，不常驻）。
+1. `due`/`run` cho ra các mục đến hạn ngay lúc này.
+2. **Với từng mục đến hạn**: theo `platform` mà giao cho SKILL đăng tương ứng thực hiện việc đăng thật
+   (một nền tảng, hoặc dùng cross-platform-publish). Trước khi đăng thì chỉnh định dạng nội dung cho hợp nền tảng.
+3. Đăng thành công/thất bại xong thì `mark` để ghi lại trạng thái (có thể kết hợp skill-publish-notify đẩy kết quả, skill-publish-log lưu nhật ký).
+4. Khi cần "canh giờ tự kích hoạt", để tác vụ định kỳ của OpenClaw chạy `run` theo chu kỳ (script này chỉ tính đến hạn một lần, không chạy thường trú).
 
-## 规则
+## Quy tắc
 
-1. 本 SKILL 不直接驱动浏览器/API 发布——只做排期与状态管理，发布交给各平台 publisher。
-2. `--now` 可覆盖当前时间用于预演（查看某时刻会发哪些），不影响真实时间。
-3. 发布时间用 `YYYY-MM-DD HH:MM`；同一时刻多平台会一并到期。
-4. 每条发布后务必 `mark`，避免重复发布。
-5. 定时触发依赖上层（OpenClaw cron / 手动周期跑），本脚本是无状态到期计算 + 持久化队列。
+1. SKILL này không trực tiếp điều khiển trình duyệt/API để đăng - chỉ lo lịch và trạng thái, việc đăng giao cho publisher của từng nền tảng.
+2. `--now` cho phép ghi đè thời gian hiện tại để chạy thử (xem tại một thời điểm sẽ đăng những gì), không ảnh hưởng thời gian thật.
+3. Giờ đăng dùng định dạng `YYYY-MM-DD HH:MM`; cùng một thời điểm thì nhiều nền tảng sẽ đến hạn cùng lúc.
+4. Mỗi mục đăng xong bắt buộc phải `mark`, tránh đăng trùng.
+5. Việc kích hoạt theo giờ phụ thuộc tầng trên (OpenClaw cron / tự chạy định kỳ), script này là bộ tính đến hạn không trạng thái + hàng đợi lưu bền.
 
-## 参考来源
+## Nguồn tham khảo
 
-排期→到期计算→派发→状态回填是内容日历落地发布的标准闭环。调度与真实发布分层：
-调度纯脚本（可测），发布委派各平台 publisher（环境相关）。
+Lịch đăng → tính đến hạn → giao việc → ghi lại trạng thái là vòng khép kín chuẩn để đưa lịch nội dung ra đăng thật. Tách tầng điều phối và đăng thật:
+điều phối là script thuần (test được), đăng thì giao cho publisher của từng nền tảng (phụ thuộc môi trường).

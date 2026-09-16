@@ -8,72 +8,72 @@ description: >-
 layer: attribute
 ---
 
-# 统一内容日历底座
+# Nền lịch nội dung thống nhất
 
-> 记录发布 + 排期 + 平台活动到一条时间线，供规划读回。产物即 Web「内容日历」页所见。
+> Ghi lần đăng + lịch đã xếp + sự kiện nền tảng vào một dòng thời gian, để khâu lập kế hoạch đọc lại. Sản phẩm chính là những gì thấy ở trang "Lịch nội dung" trên Web.
 
-## 数据层定位
+## Định vị tầng dữ liệu
 
-唯一权威存储 `outputs/_schedule.json`（与 Web 日历页 `/api/schedule` **同一文件**）。每条：
+Kho lưu trữ có thẩm quyền duy nhất là `outputs/_schedule.json` (**cùng một file** với `/api/schedule` của trang lịch trên Web). Mỗi bản ghi:
 
-| 字段 | 说明 |
+| Trường | Mô tả |
 |------|------|
-| `kind` | `content`（内容/发布）\| `event`（平台活动/节日/特殊日期） |
-| `status` | content 专属：`idea`/`draft`/`scheduled`/`published` |
-| `platform` `title` `date` `time` `note` `url` | 通用 |
-| `source` | `manual`/`publish-page`/`chat`/`scheduler`（来源可溯） |
-| `event_type` `end_date` | event 专属 |
+| `kind` | `content` (nội dung/bài đăng) \| `event` (sự kiện nền tảng/ngày lễ/ngày đặc biệt) |
+| `status` | riêng cho content: `idea`/`draft`/`scheduled`/`published` |
+| `platform` `title` `date` `time` `note` `url` | dùng chung |
+| `source` | `manual`/`publish-page`/`chat`/`scheduler` (truy được nguồn) |
+| `event_type` `end_date` | riêng cho event |
 
-- **发布自动落库，无需手动**：发布页与对话页最终都调 publisher 脚本（`xhs_publish`/`douyin_publish`/`web_publisher`/`bili_upload`），脚本在 `--exec` 成功时自动记一条 `published`（并同步转发 `skill-publish-log`）。别再手动补记，避免重复。
-- **与 publish-log 分工**：本底座管时间线（何时发什么、待发排期、平台节点、该补内容提醒）；`skill-publish-log` 管每条发布的指标（阅读/点赞/复盘）。record-publish 一次调用同时写两库，不漂移。
+- **Đăng bài tự vào kho, không cần làm tay**: trang đăng bài và trang chat cuối cùng đều gọi script publisher (`xhs_publish`/`douyin_publish`/`web_publisher`/`bili_upload`), script tự ghi một bản ghi `published` khi `--exec` chạy thành công (và đồng thời chuyển tiếp sang `skill-publish-log`). Đừng ghi bù thủ công nữa, tránh trùng.
+- **Phân vai với publish-log**: nền này quản dòng thời gian (khi nào đăng gì, lịch chờ đăng, mốc của nền tảng, nhắc chỗ cần bù nội dung); `skill-publish-log` quản chỉ số của từng bài (lượt đọc/lượt thích/hậu kiểm). Một lần gọi record-publish ghi cả hai kho, không lệch nhau.
 
-## 触发场景
+## Tình huống kích hoạt
 
-- **读回规划**（最常用）：规划选题/排期前先看日历——各平台发布节奏、断更缺口、待发排期、临近可蹭的平台活动。
-- **记平台活动**：把节日/电商大促/平台活动落到对应日期（常配合 `skill-event-calendar` 查出节点再批量导入）。
-- **手动排期/补记**：用户口头说的排期或线下已发的内容。
+- **Đọc lại để lập kế hoạch** (hay dùng nhất): trước khi chọn đề tài/xếp lịch thì xem lịch trước - nhịp đăng từng nền tảng, khoảng trống bị đứt bài, lịch chờ đăng, sự kiện nền tảng sắp tới có thể bắt trend.
+- **Ghi sự kiện nền tảng**: đưa ngày lễ/đợt sale lớn/sự kiện nền tảng vào đúng ngày (thường đi kèm `skill-event-calendar` để tra ra mốc rồi nhập hàng loạt).
+- **Xếp lịch/ghi bù thủ công**: lịch người dùng nói miệng hoặc nội dung đã đăng ngoài hệ thống.
 
-## 命令
+## Lệnh
 
 ```bash
-# 读回规划摘要（Agent 规划前必读）：各平台节奏/断更缺口 + 待发排期 + 临近节点 + 建议
+# Đọc lại tóm tắt để lập kế hoạch (Agent bắt buộc đọc trước khi lên kế hoạch): nhịp đăng/khoảng đứt bài từng nền tảng + lịch chờ đăng + mốc sắp tới + gợi ý
 python skills/shared/scripts/calendar_ops.py context --days 14 --gap 5
 
-# 未来 N 天的排期 + 活动（--kind 可只看 content 或 event）
+# Lịch đã xếp + sự kiện trong N ngày tới (--kind để chỉ xem content hoặc event)
 python skills/shared/scripts/calendar_ops.py upcoming --days 14 [--kind event]
 
-# 一键铺某年固定节日（阳历固定日 + 阴历经 lunar.py 换算 + 母亲节/感恩节等"第N个周几"；幂等可反复跑）
+# Rải một lượt các ngày lễ cố định của một năm (ngày dương cố định + âm lịch quy đổi qua lunar.py + kiểu "thứ mấy của tuần thứ N" như Ngày của Mẹ/Black Friday; idempotent, chạy lại nhiều lần được)
 python skills/shared/scripts/calendar_ops.py seed-holidays --year 2026
 
-# 记录一条平台活动/节日/特殊日期
-python skills/shared/scripts/calendar_ops.py add-event --title "双11" --date 2026-11-11 \
-  --event-type 电商 [--end-date 2026-11-12] [--platform 抖音] [--note 备注]
+# Ghi một sự kiện nền tảng/ngày lễ/ngày đặc biệt
+python skills/shared/scripts/calendar_ops.py add-event --title "11.11" --date 2026-11-11 \
+  --event-type "thương mại điện tử" [--end-date 2026-11-12] [--platform TikTok] [--note "ghi chú"]
 
-# 从 skill-event-calendar 的 JSON 批量导入活动（同名同日幂等去重；stdin 或 --file）
+# Nhập hàng loạt sự kiện từ JSON của skill-event-calendar (trùng tên trùng ngày thì khử trùng, idempotent; stdin hoặc --file)
 python skills/shared/scripts/calendar_ops.py import-events --file events.json
 
-# 过滤查询
-python skills/shared/scripts/calendar_ops.py list [--kind content] [--platform 小红书] \
+# Lọc và tra cứu
+python skills/shared/scripts/calendar_ops.py list [--kind content] [--platform Facebook] \
   [--since 2026-08-01] [--until 2026-08-31]
 
-# 手动补记一条已发布（仅当发布未经 publisher 脚本、需人工补录时用）
-python skills/shared/scripts/calendar_ops.py record-publish --platform 小红书 --title "标题" \
-  --type 图文 [--url ...] [--tags "AI,教程"] [--note ...] [--source manual]
+# Ghi bù thủ công một bài đã đăng (chỉ dùng khi bài không đăng qua script publisher, cần nhập tay)
+python skills/shared/scripts/calendar_ops.py record-publish --platform Facebook --title "Tiêu đề" \
+  --type "ảnh + chữ" [--url ...] [--tags "AI,hướng dẫn"] [--note ...] [--source manual]
 ```
 
-`context` 输出的 `suggestions`（断更提醒 / 临近节点无排期）应原样转达用户，作为"接下来做什么"的依据。
+`suggestions` mà `context` in ra (nhắc đứt bài / mốc sắp tới chưa có lịch) nên chuyển nguyên văn cho người dùng, làm căn cứ cho "tiếp theo làm gì".
 
-## 与其他 SKILL 的分工
+## Phân vai với các SKILL khác
 
-| SKILL | 关系 |
+| SKILL | Quan hệ |
 |-------|------|
-| `skill-content-calendar`（plan） | 生成月度排期表；排前先读本底座 `context`，排后把计划写回（`add-event`/或前端排期） |
-| `skill-event-calendar`（discover） | 查未来节日/节点；查到后可 `import-events` 落库到日历 |
-| `skill-publish-log`（attribute） | 指标底座；发布记录已由脚本自动同步，无需重复调用 |
+| `skill-content-calendar` (plan) | Sinh bảng lịch đăng theo tháng; trước khi xếp thì đọc `context` của nền này, xếp xong ghi kế hoạch trở lại (`add-event`/hoặc xếp lịch ở frontend) |
+| `skill-event-calendar` (discover) | Tra ngày lễ/mốc sắp tới; tra xong dùng `import-events` ghi vào lịch |
+| `skill-publish-log` (attribute) | Nền chỉ số; bản ghi đăng bài đã được script tự đồng bộ, không cần gọi lại |
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：`platform` 可从 `platforms.md` 主平台推断；`context` 的断更提醒结合账号主平台更有意义。
-- 无 Profile：覆盖全部记录，不做账号过滤。
+- Có Profile: `platform` suy được từ nền tảng chính trong `platforms.md`; nhắc đứt bài của `context` kết hợp nền tảng chính của kênh sẽ có ý nghĩa hơn.
+- Không có Profile: bao phủ toàn bộ bản ghi, không lọc theo kênh.
 
-> 自研溯源与参考见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và tài liệu tham khảo xem `EASEL-META.md` cùng thư mục.

@@ -7,139 +7,139 @@ description: >-
 layer: discover
 ---
 
-# 跨平台内容差异分析
+# Phân tích khác biệt nội dung giữa các nền tảng
 
-> 分析同一话题在不同中文社媒平台的呈现差异，输出平台适配策略。
+> Phân tích cùng một chủ đề được thể hiện khác nhau ra sao trên từng nền tảng mạng xã hội, xuất chiến lược thích ứng cho từng nền tảng.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 话题/内容主题 | 是 | 要分析的话题、关键词或一段内容 |
-| 目标平台 | 推荐 | 要对比的平台列表（默认全平台扫描） |
-| 分析目的 | 推荐 | "我想把这个内容发到各平台" / "想了解平台差异" / "选择主攻平台" |
-| 已有内容 | 可选 | 如果用户已有某平台的内容，可作为对比基准 |
-| 赛道 / 行业 | 可选 | 不同赛道在各平台的差异可能不同 |
+| Chủ đề/đề tài nội dung | Có | Chủ đề, từ khoá hoặc một đoạn nội dung cần phân tích |
+| Nền tảng mục tiêu | Nên có | Danh sách nền tảng cần so sánh (mặc định quét toàn bộ nền tảng) |
+| Mục đích phân tích | Nên có | "tôi muốn đăng nội dung này lên các nền tảng" / "muốn hiểu khác biệt giữa các nền tảng" / "chọn nền tảng chủ lực" |
+| Nội dung sẵn có | Tuỳ chọn | Nếu người dùng đã có nội dung trên một nền tảng, dùng làm mốc so sánh |
+| Ngách / ngành | Tuỳ chọn | Ngách khác nhau thì khác biệt giữa các nền tảng cũng khác nhau |
 
-支持的平台：小红书、抖音、B站、知乎、微博、公众号、视频号、X/Twitter、快手。
+Các nền tảng hỗ trợ: Facebook, TikTok, YouTube (Shorts), Zalo, Threads, blog/website, X/Twitter.
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 跨平台差异分析：[话题/主题]
+# Phân tích khác biệt giữa các nền tảng: [chủ đề/đề tài]
 
-## 分析概要
-- 分析话题：[话题]
-- 对比平台：[平台列表]
-- 分析时间：[日期]
+## Tóm tắt phân tích
+- Chủ đề phân tích: [chủ đề]
+- Nền tảng so sánh: [danh sách nền tảng]
+- Thời điểm phân tích: [ngày]
 
-## 平台差异全景
+## Toàn cảnh khác biệt giữa các nền tảng
 
-### 对比矩阵
-| 维度 | 小红书 | 抖音 | B站 | 知乎 | 微博 | 公众号 |
+### Ma trận so sánh
+| Chiều | Facebook | TikTok | YouTube | Zalo | Threads | Blog/Website |
 |------|--------|------|-----|------|------|--------|
-| 主力内容形式 | | | | | | |
-| 核心受众画像 | | | | | | |
-| 话语体系/语气 | | | | | | |
-| 流量分发逻辑 | | | | | | |
-| 内容生命周期 | | | | | | |
-| 变现路径 | | | | | | |
-| 该话题适配度 | | | | | | |
+| Hình thức nội dung chủ lực | | | | | | |
+| Chân dung khán giả cốt lõi | | | | | | |
+| Hệ ngôn ngữ/giọng điệu | | | | | | |
+| Logic phân phối traffic | | | | | | |
+| Vòng đời nội dung | | | | | | |
+| Đường kiếm tiền | | | | | | |
+| Độ hợp của chủ đề này | | | | | | |
 
-### 平台逐一分析
+### Phân tích từng nền tảng
 
-#### [平台名]
-- **该话题在此平台的典型呈现**：内容形式、风格、角度
-- **受众期待**：这个平台的用户看到这个话题时期待什么
-- **话语体系**：用词习惯、语气、表达方式
-- **流量逻辑**：该话题如何获取流量（搜索 / 推荐 / 社交传播）
-- **成功案例特征**：该话题在此平台表现好的内容有什么共性
-- **避坑指南**：该话题在此平台容易踩的坑
-- **变现可能**：该话题在此平台的商业化路径
+#### [tên nền tảng]
+- **Chủ đề này thường xuất hiện thế nào trên nền tảng này**: hình thức, phong cách, góc nhìn
+- **Kỳ vọng của khán giả**: người dùng nền tảng này mong gì khi thấy chủ đề đó
+- **Hệ ngôn ngữ**: thói quen dùng từ, giọng điệu, cách diễn đạt
+- **Logic traffic**: chủ đề này lấy lượt xem bằng cách nào (tìm kiếm / đề xuất / lan truyền xã hội)
+- **Đặc điểm ca thành công**: nội dung về chủ đề này chạy tốt trên nền tảng này có gì giống nhau
+- **Cẩm nang tránh hố**: những hố dễ sụp khi làm chủ đề này trên nền tảng này
+- **Khả năng kiếm tiền**: đường thương mại hoá của chủ đề này trên nền tảng này
 
-（每个目标平台各一节）
+(mỗi nền tảng mục tiêu một mục)
 
-## 核心差异洞察
-1. [最重要的跨平台差异发现]
-2. [第二重要的发现]
+## Insight khác biệt cốt lõi
+1. [phát hiện khác biệt quan trọng nhất giữa các nền tảng]
+2. [phát hiện quan trọng thứ hai]
 3. ...
 
-## 平台选择建议
-- **主攻推荐**：[最适合的 1-2 个平台 + 原因]
-- **辅助布局**：[值得同步运营的平台 + 策略]
-- **不推荐**：[不适合的平台 + 原因]
+## Gợi ý chọn nền tảng
+- **Nên làm chủ lực**: [1-2 nền tảng hợp nhất + lý do]
+- **Bố trí hỗ trợ**: [nền tảng đáng vận hành song song + chiến lược]
+- **Không nên**: [nền tảng không hợp + lý do]
 
-## 适配策略
-针对每个推荐平台，给出从"原始内容"到"平台适配内容"的转化要点：
-- 标题改写方向
-- 内容结构调整
-- 语气和用词转换
-- 格式和长度要求
-- 标签/话题策略
-- 发布时间建议
+## Chiến lược thích ứng
+Với mỗi nền tảng được đề xuất, nêu các điểm chuyển đổi từ "nội dung gốc" sang "nội dung đã thích ứng nền tảng":
+- Hướng viết lại tiêu đề
+- Điều chỉnh cấu trúc nội dung
+- Chuyển đổi giọng điệu và từ ngữ
+- Yêu cầu định dạng và độ dài
+- Chiến lược tag/hashtag
+- Gợi ý thời điểm đăng
 
-## 注意事项
-- 平台规则和算法变化的时效性说明
-- 分析依据（平台公开信息 + 行业认知）
+## Lưu ý
+- Ghi chú về tính thời điểm: luật và thuật toán nền tảng thay đổi liên tục
+- Căn cứ phân tích (thông tin công khai của nền tảng + hiểu biết ngành)
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **明确分析范围**
-   - 确认话题/主题和目标平台
-   - 若用户未指定平台，默认分析主流 6 个平台：小红书、抖音、B站、知乎、微博、公众号
-   - 确认分析目的（了解差异 / 选平台 / 做适配）
+1. **Xác định phạm vi phân tích**
+   - Xác nhận chủ đề/đề tài và nền tảng mục tiêu
+   - Nếu người dùng không chỉ định nền tảng, mặc định phân tích 6 nền tảng chính: Facebook, TikTok, YouTube, Zalo, Threads, blog/website
+   - Xác nhận mục đích phân tích (hiểu khác biệt / chọn nền tảng / làm thích ứng)
 
-2. **加载平台知识**
-   - 读取 `references/platform-traits.md` 获取各平台基础特征
-   - 这是底层知识，不直接输出，用于支撑分析
+2. **Nạp kiến thức nền tảng**
+   - Đọc `references/platform-traits.md` để lấy đặc điểm cơ bản của từng nền tảng
+   - Đây là kiến thức nền, không xuất trực tiếp, chỉ dùng để chống lưng cho phân tích
 
-3. **话题-平台交叉分析**
-   - 对每个目标平台，分析该话题在此平台的适配情况：
-     - 内容形式：该话题在此平台通常以什么形式呈现（图文 / 短视频 / 长视频 / 问答 / 文章）
-     - 受众期待：此平台用户看到这个话题时想获得什么（知识 / 娱乐 / 种草 / 讨论 / 共鸣）
-     - 话语体系：此平台讨论这个话题的用词、语气、风格
-     - 流量来源：该话题在此平台主要通过什么渠道获取流量
+3. **Phân tích giao chủ đề - nền tảng**
+   - Với mỗi nền tảng mục tiêu, phân tích mức độ thích ứng của chủ đề trên nền tảng đó:
+     - Hình thức nội dung: chủ đề này thường xuất hiện dưới dạng gì (bài ảnh / video ngắn / video dài / hỏi đáp / bài viết)
+     - Kỳ vọng khán giả: người dùng nền tảng này muốn nhận được gì (kiến thức / giải trí / seeding / thảo luận / đồng cảm)
+     - Hệ ngôn ngữ: từ ngữ, giọng điệu, phong cách khi bàn chủ đề này trên nền tảng đó
+     - Nguồn traffic: trên nền tảng này, chủ đề đó lấy lượt xem chủ yếu qua kênh nào
 
-4. **差异提取**
-   - 做平台间横向对比，识别关键差异点
-   - 重点关注：同一话题在不同平台的"信息需求差异"（同一个关键词，用户在知乎搜和在小红书搜的目的完全不同）
-   - 总结差异规律（如"越深度的平台越需要论据，越碎片的平台越需要情绪"）
+4. **Rút khác biệt**
+   - So sánh ngang giữa các nền tảng, chỉ ra điểm khác biệt then chốt
+   - Tập trung vào "khác biệt nhu cầu thông tin" của cùng một chủ đề trên các nền tảng (cùng một từ khoá, mục đích khi tìm trên YouTube và khi tìm trên TikTok hoàn toàn khác nhau)
+   - Đúc ra quy luật khác biệt (ví dụ "nền tảng càng chuyên sâu càng cần luận cứ, nền tảng càng vụn càng cần cảm xúc")
 
-5. **适配度评估**
-   - 结合话题特性和平台特征，给出各平台的适配度评级
-   - 评估维度：内容天然匹配度、竞争饱和度、变现可行性、运营成本
-   - 给出主攻/辅助/不推荐的分层建议
+5. **Đánh giá độ thích ứng**
+   - Kết hợp đặc tính chủ đề và đặc điểm nền tảng để chấm mức thích ứng của từng nền tảng
+   - Các chiều đánh giá: độ khớp tự nhiên của nội dung, độ bão hoà cạnh tranh, khả năng kiếm tiền, chi phí vận hành
+   - Đưa gợi ý phân tầng chủ lực/hỗ trợ/không nên
 
-   ### 适配度评分（每项 1-5 分）
+   ### Chấm điểm độ thích ứng (mỗi mục 1-5 điểm)
 
-   | 维度 | 1 分 | 3 分 | 5 分 |
+   | Chiều | 1 điểm | 3 điểm | 5 điểm |
    |------|------|------|------|
-   | 内容匹配 | 该话题在此平台几乎无人关注 | 有一定受众但非主流 | 该平台此类内容流量大、互动高 |
-   | 竞争饱和 | 头部账号垄断，新人几乎无机会 | 有竞争但仍可差异化 | 内容稀缺，供不应求 |
-   | 变现可行 | 该平台此类内容无商业模式 | 可接广告但品牌少 | 品牌方活跃，变现路径清晰 |
-   | 运营成本 | 需要持续高频更新+运营互动 | 中等运营投入 | 内容长尾效应强，运营压力小 |
+   | Độ khớp nội dung | Chủ đề gần như không ai quan tâm trên nền tảng này | Có khán giả nhất định nhưng không phải dòng chính | Nội dung loại này có lượt xem lớn, tương tác cao |
+   | Bão hoà cạnh tranh | Các kênh top độc chiếm, người mới gần như hết cửa | Có cạnh tranh nhưng vẫn khác biệt hoá được | Nội dung khan hiếm, cung không đủ cầu |
+   | Kiếm tiền khả thi | Loại nội dung này trên nền tảng chưa có mô hình kinh doanh | Nhận booking quảng cáo được nhưng ít nhãn hàng | Nhãn hàng hoạt động mạnh, đường kiếm tiền rõ ràng |
+   | Chi phí vận hành | Phải đăng đều tần suất cao + chăm tương tác liên tục | Mức đầu tư vận hành trung bình | Nội dung có đuôi dài mạnh, ít áp lực vận hành |
 
-6. **适配策略生成**
-   - 对推荐的平台，给出具体的内容适配策略
-   - 不做内容改写（那是 repurposing 的职责），而是给出"转化方向指引"
-   - 包括标题方向、结构调整、语气转换、格式要求、标签策略
+6. **Sinh chiến lược thích ứng**
+   - Với các nền tảng được đề xuất, đưa chiến lược thích ứng nội dung cụ thể
+   - Không viết lại nội dung (đó là việc của repurposing), chỉ đưa "chỉ dẫn hướng chuyển đổi"
+   - Gồm hướng tiêu đề, điều chỉnh cấu trúc, chuyển giọng điệu, yêu cầu định dạng, chiến lược tag
 
-7. **输出报告**
-   - 按模板生成完整分析报告
-   - 保存到 `outputs/`
+7. **Xuất báo cáo**
+   - Dựng báo cáo phân tích đầy đủ theo mẫu
+   - Lưu vào `outputs/`
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 identity.md（赛道定位）、platforms.md（当前主攻平台）、audience.md（受众画像）
-- 平台选择建议对齐账号现有能力（"你擅长长图文，B站和知乎比抖音更适合你"）
-- 适配策略考虑账号已有的内容资产（"你公众号的深度文章可以拆成小红书的卡片组"）
-- 变现路径建议结合 Profile 中的商业化目标
+**Khi có Profile:**
+- Đọc identity.md (định vị ngách), platforms.md (nền tảng chủ lực hiện tại), audience.md (hồ sơ khán giả)
+- Gợi ý chọn nền tảng bám theo năng lực sẵn có của kênh ("bạn mạnh bài dài nhiều ảnh, YouTube và blog/website hợp với bạn hơn TikTok")
+- Chiến lược thích ứng có tính tới tài sản nội dung sẵn có ("bài phân tích sâu trên blog/website của bạn có thể tách thành bộ carousel cho Facebook")
+- Gợi ý đường kiếm tiền gắn với mục tiêu thương mại hoá trong Profile
 
-**无 Profile 时：**
-- 退到通用模式，做客观的平台差异分析
-- 平台选择建议基于话题特性而非账号特性
-- 不做"你适合什么"的个性化判断，只做"这个话题适合什么平台"
+**Khi không có Profile:**
+- Lùi về chế độ chung, phân tích khách quan khác biệt giữa các nền tảng
+- Gợi ý chọn nền tảng dựa trên đặc tính chủ đề chứ không dựa trên đặc tính kênh
+- Không phán "bạn hợp cái gì" theo cá nhân, chỉ phán "chủ đề này hợp nền tảng nào"
 
-> 自研溯源与参考的学术研究/开源项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và các nghiên cứu/dự án mã nguồn mở tham khảo xem `EASEL-META.md` cùng thư mục.

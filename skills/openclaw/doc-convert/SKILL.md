@@ -8,46 +8,46 @@ description: >-
 layer: produce
 ---
 
-# Markdown 格式转换 / 排版
+# Chuyển đổi định dạng / dàn trang Markdown
 
-> 把 Markdown 排版成 HTML / PDF / 长图 PNG。走 `skills/shared/scripts/doc_convert.py`
-> （python-markdown 排版 + Chromium 打印/截图）。
+> Dàn trang Markdown thành HTML / PDF / ảnh dài PNG. Chạy qua `skills/shared/scripts/doc_convert.py`
+> (python-markdown lo dàn trang + Chromium in/chụp màn hình).
 
-> 思维导图见 mindmap；公众号专属排版见 skill-wechat-publisher；卡片/海报见 card-*/poster-hero。
+> Sơ đồ tư duy: xem mindmap; dàn trang riêng theo nền tảng: xem SKILL đăng tương ứng; card/poster: xem card-*/poster-hero.
 
-## 输入 / 输出
+## Đầu vào / đầu ra
 
-- 输入：Markdown 文件（支持标题、列表、表格、代码块、引用、图片等）。
-- 输出（`outputs/主题名/`）：按后缀 `.html` / `.pdf` / `.png`（长图）。
+- Đầu vào: file Markdown (hỗ trợ tiêu đề, danh sách, bảng, khối mã, trích dẫn, hình ảnh...).
+- Đầu ra (`outputs/<chủ đề>/`): theo đuôi file `.html` / `.pdf` / `.png` (ảnh dài).
 
-## 执行
+## Thực thi
 
-脚本路径（相对项目根）：`skills/shared/scripts/doc_convert.py`（`convert -h`）。
+Đường dẫn script (tương đối gốc dự án): `skills/shared/scripts/doc_convert.py` (`convert -h`).
 
 ```bash
-# 转干净 HTML（可读排版 + CJK 字体）
-python skills/shared/scripts/doc_convert.py convert -i article.md -o outputs/主题名/a.html
+# Chuyển sang HTML sạch (dàn trang dễ đọc + font CJK)
+python skills/shared/scripts/doc_convert.py convert -i article.md -o "outputs/<chủ đề>/a.html"
 
-# 转 PDF（A4 可打印，适合存档/发送）
-python skills/shared/scripts/doc_convert.py convert -i article.md -o outputs/主题名/a.pdf
+# Chuyển sang PDF (khổ A4 in được, hợp để lưu trữ/gửi đi)
+python skills/shared/scripts/doc_convert.py convert -i article.md -o "outputs/<chủ đề>/a.pdf"
 
-# 转长图 PNG（适合发不支持 MD 的平台/朋友圈存档）
-python skills/shared/scripts/doc_convert.py convert -i article.md -o outputs/主题名/a.png --width 800
+# Chuyển sang ảnh dài PNG (hợp để đăng nơi không hỗ trợ MD / lưu lại story)
+python skills/shared/scripts/doc_convert.py convert -i article.md -o "outputs/<chủ đề>/a.png" --width 800
 ```
 
-## 前置
+## Yêu cầu trước
 
-- MD→HTML：需 `pip install markdown`。
-- MD→PDF/PNG：需 playwright + chromium（`playwright install chromium`）。
+- MD sang HTML: cần `pip install markdown`.
+- MD sang PDF/PNG: cần playwright + chromium (`playwright install chromium`).
 
-## 规则
+## Quy tắc
 
-1. 长图宽度 `--width` 按平台调（朋友圈/小红书 ~750-1080）；正文宽度 `--page-width` 控制 HTML/PDF 版心。
-2. 图片用相对/绝对可访问路径，渲染时要能加载到。
-3. 需要 DOCX/PPT/富交互排版时本 SKILL 不覆盖（提示用 pandoc 或对应平台工具）。
-4. 产物统一进 `outputs/主题名/`。
+1. Chiều rộng ảnh dài `--width` chỉnh theo nền tảng (story/feed, Xiaohongshu ~750-1080); chiều rộng phần thân `--page-width` kiểm soát vùng chữ của HTML/PDF.
+2. Ảnh dùng đường dẫn tương đối/tuyệt đối truy cập được, lúc render phải tải lên được.
+3. Cần DOCX/PPT hoặc dàn trang tương tác phức tạp thì SKILL này không làm (gợi ý dùng pandoc hoặc công cụ của nền tảng tương ứng).
+4. Sản phẩm đều đưa vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-python-markdown（含 extra/tables/fenced_code/toc 扩展）做 MD→HTML，Chromium 无头
-`page.pdf()`/`screenshot(full_page)` 出 PDF/长图，替代 pandoc 完成最常用的 MD 排版分发需求。
+python-markdown (kèm các extension extra/tables/fenced_code/toc) lo phần MD sang HTML, Chromium headless
+dùng `page.pdf()`/`screenshot(full_page)` xuất PDF/ảnh dài, thay pandoc cho các nhu cầu dàn trang và phân phối MD thông dụng nhất.

@@ -8,72 +8,72 @@ description: >-
 layer: produce
 ---
 
-# 音频可视化视频
+# Video trực quan hoá audio
 
-> 把音频渲染成带动态波形/频谱的视频，配封面+标题，让纯音频能发到视频平台。全部走
-> `skills/shared/scripts/audio_viz.py`，**不要手拼 showwaves/showcqt 滤镜**。
+> Render audio thành video có sóng/phổ chuyển động, kèm ảnh bìa + tiêu đề, để audio thuần đăng được lên nền tảng video. Tất cả đi qua
+> `skills/shared/scripts/audio_viz.py`, **đừng tự ghép tay filter showwaves/showcqt**.
 
-> 输出音频（混音）见 **audio-mix**；用图片做视频见 **slideshow-video**；
-> 给已有视频加字幕见 **auto-subtitle**。
+> Xuất audio (mix) xem **audio-mix**; làm video từ ảnh xem **slideshow-video**;
+> thêm phụ đề cho video có sẵn xem **auto-subtitle**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 音频文件 | 是 | 播客/音乐/口播片段（没给就问） |
-| 画幅 | 是 | 用户或上游任务未明确横版/竖版（或具体分辨率）时，制作前必须追问并等确认；不得按平台、Profile 或默认值静默推断，已明确则不重复问 |
-| 模式 | 否 | `cqt`（默认，音乐最好看）/ `bars` / `waves` / `spectrum` |
-| 封面 | 否 | 居中封面图（专辑封面/头像/主题图） |
-| 标题 | 否 | 顶部标题文字 |
+| File audio | Có | Podcast/nhạc/đoạn video nói (không đưa thì hỏi) |
+| Khung hình | Có | Khi người dùng hoặc task phía trên chưa nói rõ ngang/dọc (hoặc độ phân giải cụ thể), phải hỏi lại và chờ xác nhận trước khi làm; không được im lặng suy theo nền tảng, Profile hay giá trị mặc định, đã rõ rồi thì không hỏi lại |
+| Chế độ | Không | `cqt` (mặc định, nhạc nhìn đẹp nhất) / `bars` / `waves` / `spectrum` |
+| Ảnh bìa | Không | Ảnh bìa đặt giữa (bìa album/ảnh đại diện/ảnh chủ đề) |
+| Tiêu đề | Không | Dòng chữ tiêu đề ở trên cùng |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 可视化视频（`*.mp4`，音频已嵌入）
-- 报告：模式、时长、画幅
+- Video trực quan hoá (`*.mp4`, audio đã nhúng sẵn)
+- Báo cáo: chế độ, thời lượng, khung hình
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/audio_viz.py`（`render -h` 看参数）。
+Đường dẫn script (tính từ gốc dự án): `skills/shared/scripts/audio_viz.py` (`render -h` để xem tham số).
 
 ```bash
-# 音乐/金句：CQT 音乐频谱（随音符跳动，最好看）
+# Nhạc/câu đắt: phổ nhạc CQT (nhảy theo nốt, nhìn đẹp nhất)
 python skills/shared/scripts/audio_viz.py render -i clip.mp3 \
-  -o outputs/主题名/out.mp4 --mode cqt --title "本期金句" --cover cover.jpg
+  -o outputs/<chủ đề>/out.mp4 --mode cqt --title "Câu đắt số này" --cover cover.jpg
 
-# 播客口播：底部波形条 + 封面
+# Podcast/video nói: dải sóng dưới đáy + ảnh bìa
 python skills/shared/scripts/audio_viz.py render -i podcast.mp3 \
-  -o outputs/主题名/out.mp4 --mode waves --cover avatar.png --size 1080x1920
+  -o outputs/<chủ đề>/out.mp4 --mode waves --cover avatar.png --size 1080x1920
 
-# 律动柱状 / 滚动声谱
+# Cột nhảy theo nhịp / phổ âm cuộn
 python skills/shared/scripts/audio_viz.py render -i song.mp3 -o out.mp4 --mode bars
 python skills/shared/scripts/audio_viz.py render -i song.mp3 -o out.mp4 --mode spectrum
 ```
 
-## 模式怎么选
+## Chọn chế độ thế nào
 
-| 模式 | 观感 | 适用 |
+| Chế độ | Cảm giác nhìn | Hợp với |
 |------|------|------|
-| `cqt` | 全屏音符频谱，随旋律跳动 | 音乐、有旋律的内容（默认） |
-| `bars` | 底部频谱柱，律动感强 | 音乐、卡点、电台 |
-| `waves` | 底部波形线，简洁干净 | 播客、口播、访谈 |
-| `spectrum` | 全屏滚动声谱图，科技感 | 电子/科技类、氛围 |
+| `cqt` | Phổ nốt nhạc toàn màn hình, nhảy theo giai điệu | Nhạc, nội dung có giai điệu (mặc định) |
+| `bars` | Cột phổ ở đáy, cảm giác bắt nhịp mạnh | Nhạc, cắt theo nhịp, radio |
+| `waves` | Đường sóng ở đáy, gọn và sạch | Podcast, video nói, phỏng vấn |
+| `spectrum` | Phổ âm cuộn toàn màn hình, chất công nghệ | Nhạc điện tử/chủ đề công nghệ, tạo không khí |
 
-`--bg-image` 换背景图，`--color` 换背景色，`--wave-color` 换波形颜色。
+`--bg-image` đổi ảnh nền, `--color` đổi màu nền, `--wave-color` đổi màu sóng.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：`platforms.md` 只用于给出画幅建议，仍须用户确认；标题/封面风格贴合账号；
-  播客/口播账号默认 `waves`，音乐账号默认 `cqt`/`bars`。
-- 无 Profile：先确认横版/竖版；默认 cqt 模式。
+- Có Profile: `platforms.md` chỉ dùng để gợi ý khung hình, vẫn phải để người dùng xác nhận; phong cách tiêu đề/ảnh bìa bám theo kênh;
+  kênh podcast/video nói mặc định `waves`, kênh nhạc mặc định `cqt`/`bars`.
+- Không có Profile: xác nhận ngang/dọc trước; mặc định chế độ cqt.
 
-## 规则
+## Quy tắc
 
-1. 长音频先用 audio-editing/text-condenser 截出金句片段再可视化，别整集渲染。
-2. 音频原声完整嵌入输出，不重采样丢质量。
-3. 封面图会等比缩放居中，标题自动描边保证可读。
-4. 产物统一进 `outputs/主题名/`。
+1. Audio dài thì dùng audio-editing/text-condenser cắt ra đoạn câu đắt rồi mới trực quan hoá, đừng render cả tập.
+2. Nhúng nguyên tiếng gốc vào bản xuất, không resample làm mất chất lượng.
+3. Ảnh bìa được thu phóng đúng tỉ lệ và căn giữa, tiêu đề tự viền để bảo đảm dễ đọc.
+4. Sản phẩm gom hết vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-音频波形/频谱可视化用 ffmpeg `showwaves`/`showfreqs`/`showspectrum`/`showcqt`，是播客/音频号
-上视频平台的标准做法。把各可视化滤镜与封面/标题合成封装成确定性脚本。
+Trực quan hoá sóng/phổ audio bằng ffmpeg `showwaves`/`showfreqs`/`showspectrum`/`showcqt` là cách chuẩn để podcast/kênh audio
+lên được nền tảng video. Các filter trực quan hoá cùng phần ghép ảnh bìa/tiêu đề được gói thành script chạy ra kết quả xác định.

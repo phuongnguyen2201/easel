@@ -8,138 +8,138 @@ description: >-
 layer: general
 ---
 
-# 账号画像管理器
+# Trình quản lý hồ sơ kênh
 
-> 创建、编辑、记忆更新、导出、对比 — 画像的全生命周期管理
+> Tạo, sửa, cập nhật memory, xuất, so sánh - quản lý trọn vòng đời hồ sơ
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| action | 是 | 操作类型：`create` / `edit` / `memory-update` / `export` / `diff` / `list` / `switch` |
-| profile_name | 视操作 | 画像名称（create 时必填，list 时不需要） |
-| field | 否 | 要编辑的文件：`identity` / `style` / `audience` / `platforms` / `preferences` / `memory` |
-| content | 否 | 要写入的内容（edit / memory-update 时使用） |
-| profile_b | 否 | 第二个画像名称（diff 操作时必填） |
-| data_source | 否 | 记忆更新的数据来源：用户口述 / 数据报告 / 帖子反馈 |
+| action | Có | Loại thao tác: `create` / `edit` / `memory-update` / `export` / `diff` / `list` / `switch` |
+| profile_name | Tuỳ thao tác | Tên hồ sơ (bắt buộc khi create, không cần khi list) |
+| field | Không | File cần sửa: `identity` / `style` / `audience` / `platforms` / `preferences` / `memory` |
+| content | Không | Nội dung cần ghi (dùng khi edit / memory-update) |
+| profile_b | Không | Tên hồ sơ thứ hai (bắt buộc khi thao tác diff) |
+| data_source | Không | Nguồn dữ liệu cho cập nhật memory: người dùng kể / báo cáo số liệu / phản hồi bài đăng |
 
-## 输出
+## Đầu ra
 
-### create 操作
+### Thao tác create
 
-输出新画像目录结构确认：
+Xuất xác nhận cấu trúc thư mục hồ sơ mới:
 
 ```markdown
-## 画像创建完成
+## Đã tạo xong hồ sơ
 
-**画像名称**: {profile_name}
-**目录**: profiles/{profile_name}/
+**Tên hồ sơ**: {profile_name}
+**Thư mục**: profiles/{profile_name}/
 
-### 已创建文件
-| 文件 | 状态 | 说明 |
+### File đã tạo
+| File | Trạng thái | Mô tả |
 |------|------|------|
-| identity.md | ✅ 已填写 | 定位、差异化、内容方向 |
-| style.md | ✅ 已填写 | 语气、开头结构、视觉风格 |
-| audience.md | ✅ 已填写 | 人口统计、兴趣、痛点 |
-| platforms.md | ⬜ 待补充 | 平台账号、内容格式 |
-| preferences.md | ⬜ 待补充 | 合规规则、红线 |
-| memory.md | ⬜ 空 | 将随使用积累 |
+| identity.md | ✅ Đã điền | Định vị, khác biệt hoá, hướng nội dung |
+| style.md | ✅ Đã điền | Tone giọng, cấu trúc mở đầu, phong cách hình ảnh |
+| audience.md | ✅ Đã điền | Nhân khẩu học, sở thích, điểm đau |
+| platforms.md | ⬜ Chờ bổ sung | Tài khoản nền tảng, định dạng nội dung |
+| preferences.md | ⬜ Chờ bổ sung | Quy tắc tuân thủ, lằn ranh đỏ |
+| memory.md | ⬜ Trống | Sẽ tích luỹ dần khi dùng |
 ```
 
-### diff 操作
+### Thao tác diff
 
-输出两个画像的逐文件对比表：
+Xuất bảng đối chiếu từng file của hai hồ sơ:
 
 ```markdown
-## 画像对比：{profile_a} vs {profile_b}
+## Đối chiếu hồ sơ: {profile_a} vs {profile_b}
 
-| 维度 | {profile_a} | {profile_b} | 差异摘要 |
+| Chiều | {profile_a} | {profile_b} | Tóm tắt khác biệt |
 |------|-------------|-------------|----------|
-| 定位 | ... | ... | ... |
-| 风格 | ... | ... | ... |
-| 受众 | ... | ... | ... |
-| 平台 | ... | ... | ... |
-| 偏好 | ... | ... | ... |
+| Định vị | ... | ... | ... |
+| Phong cách | ... | ... | ... |
+| Khán giả | ... | ... | ... |
+| Nền tảng | ... | ... | ... |
+| Sở thích | ... | ... | ... |
 ```
 
-### list 操作
+### Thao tác list
 
 ```markdown
-## 当前画像列表
+## Danh sách hồ sơ hiện có
 
-| 画像 | 完整度 | 最后更新 | 记忆条数 |
+| Hồ sơ | Độ đầy đủ | Cập nhật cuối | Số mục memory |
 |------|--------|----------|----------|
-| 科技数码达人 | 85% | 2026-07-15 | 12 |
-| 搞笑整活博主 | 60% | 2026-07-10 | 3 |
+| Chuyên gia công nghệ số | 85% | 2026-07-15 | 12 |
+| Nhà sáng tạo hài hước | 60% | 2026-07-10 | 3 |
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-### 操作路由
+### Định tuyến thao tác
 
-1. **解析用户意图**：从用户输入识别 action 类型
-   - "创建画像" / "新建账号" → `create`
-   - "编辑画像" / "改一下画像" → `edit`
-   - "写进画像" / "画像记忆" / "记住这个" → `memory-update`
-   - "导出画像" → `export`
-   - "画像对比" / "两个画像比较" → `diff`
-   - "有哪些画像" / "画像列表" → `list`
-   - "切换画像" / "用另一个画像" → `switch`
+1. **Phân tích ý định người dùng**: nhận diện loại action từ câu người dùng nhập
+   - "tạo hồ sơ" / "thêm kênh mới" → `create`
+   - "sửa hồ sơ" / "chỉnh lại hồ sơ" → `edit`
+   - "ghi vào hồ sơ" / "memory hồ sơ" / "nhớ cái này" → `memory-update`
+   - "xuất hồ sơ" → `export`
+   - "so sánh hồ sơ" / "đối chiếu hai hồ sơ" → `diff`
+   - "có những hồ sơ nào" / "danh sách hồ sơ" → `list`
+   - "đổi hồ sơ" / "dùng hồ sơ khác" → `switch`
 
-### create 流程
+### Luồng create
 
-2. **检查画像是否已存在**：读取 `profiles/` 目录，确认同名画像不存在
-3. **复制模板**：将 `profiles/_template/` 复制为 `profiles/{profile_name}/`
-4. **引导填写核心信息**：依次向用户提问，收集以下信息
-   - **identity.md**：你是谁？做什么内容？和别人有什么不同？
-   - **style.md**：你的语言风格是什么？正式/轻松/搞笑？常用口头禅？
-   - **audience.md**：你的目标受众是谁？年龄、兴趣、痛点？
-5. **写入文件**：将收集到的信息按模板格式写入对应文件
-6. **提示后续**：告知用户可后续补充 platforms.md 和 preferences.md
+2. **Kiểm tra hồ sơ đã tồn tại chưa**: đọc thư mục `profiles/`, xác nhận chưa có hồ sơ trùng tên
+3. **Copy template**: copy `profiles/_template/` thành `profiles/{profile_name}/`
+4. **Hướng dẫn điền thông tin lõi**: hỏi người dùng lần lượt, thu thập các thông tin sau
+   - **identity.md**: bạn là ai? làm nội dung gì? khác người khác ở chỗ nào?
+   - **style.md**: phong cách ngôn ngữ của bạn thế nào? trang trọng/nhẹ nhàng/hài hước? câu cửa miệng hay dùng?
+   - **audience.md**: khán giả mục tiêu của bạn là ai? tuổi, sở thích, điểm đau?
+5. **Ghi file**: ghi thông tin đã thu thập vào đúng file theo định dạng template
+6. **Nhắc việc tiếp theo**: cho người dùng biết có thể bổ sung platforms.md và preferences.md sau
 
-### edit 流程
+### Luồng edit
 
-7. **定位文件**：根据 field 参数确定要编辑的文件路径 `profiles/{profile_name}/{field}.md`
-8. **读取当前内容**：展示该文件的当前内容给用户确认
-9. **应用修改**：根据用户指示修改指定字段，保持文件其他部分不变
-10. **确认变更**：输出修改前后的 diff 摘要
+7. **Xác định file**: dựa vào tham số field để suy ra đường dẫn file cần sửa `profiles/{profile_name}/{field}.md`
+8. **Đọc nội dung hiện tại**: hiện nội dung hiện có của file đó cho người dùng xác nhận
+9. **Áp thay đổi**: sửa trường được chỉ định theo yêu cầu người dùng, giữ nguyên phần còn lại của file
+10. **Xác nhận thay đổi**: xuất tóm tắt diff trước và sau khi sửa
 
-### memory-update 流程
+### Luồng memory-update
 
-11. **读取现有记忆**：读取 `profiles/{profile_name}/memory.md`
-12. **格式化新记忆条目**：按以下格式追加
+11. **Đọc memory hiện có**: đọc `profiles/{profile_name}/memory.md`
+12. **Định dạng mục memory mới**: ghi thêm theo định dạng sau
     ```
-    ### {日期} — {来源标签}
-    - 发现：{具体发现}
-    - 行动建议：{可执行的建议}
+    ### {ngày} - {nhãn nguồn}
+    - Phát hiện: {phát hiện cụ thể}
+    - Đề xuất hành động: {gợi ý làm được ngay}
     ```
-13. **去重检查**：与已有记忆条目比对，避免重复记录
-14. **追加写入**：将新条目追加到 memory.md 末尾
+13. **Kiểm tra trùng**: đối chiếu với các mục memory đã có, tránh ghi lặp
+14. **Ghi nối tiếp**: thêm mục mới vào cuối memory.md
 
-### export 流程
+### Luồng export
 
-15. **汇总画像**：读取画像目录下所有 .md 文件
-16. **生成摘要卡片**：合并为一份结构化的画像摘要（Markdown 格式）
-17. **输出到 outputs/**：保存为 `outputs/<画像名-导出日期>/profile-export.md`
+15. **Tổng hợp hồ sơ**: đọc mọi file .md trong thư mục hồ sơ
+16. **Sinh thẻ tóm tắt**: gộp thành một bản tóm tắt hồ sơ có cấu trúc (định dạng Markdown)
+17. **Xuất ra outputs/**: lưu thành `outputs/<tên hồ sơ-ngày xuất>/profile-export.md`
 
-### diff 流程
+### Luồng diff
 
-18. **读取两个画像**：分别读取 `profiles/{profile_a}/` 和 `profiles/{profile_b}/` 下所有文件
-19. **逐维度对比**：按 identity / style / audience / platforms / preferences 五个维度对比
-20. **生成差异表**：输出结构化对比表，高亮关键差异点
+18. **Đọc hai hồ sơ**: đọc lần lượt mọi file trong `profiles/{profile_a}/` và `profiles/{profile_b}/`
+19. **Đối chiếu từng chiều**: đối chiếu theo năm chiều identity / style / audience / platforms / preferences
+20. **Sinh bảng khác biệt**: xuất bảng đối chiếu có cấu trúc, làm nổi các điểm khác biệt then chốt
 
-### list 流程
+### Luồng list
 
-21. **扫描 profiles/ 目录**：列出所有子目录（排除 `_template`）
-22. **计算完整度**：检查每个画像的 6 个文件是否有实质内容（非空非模板）
-23. **输出列表**：按完整度排序输出
+21. **Quét thư mục profiles/**: liệt kê mọi thư mục con (trừ `_template`)
+22. **Tính độ đầy đủ**: kiểm tra 6 file của từng hồ sơ có nội dung thực chất không (không rỗng, không còn là template)
+23. **Xuất danh sách**: xuất theo thứ tự độ đầy đủ
 
-## Profile 感知
+## Nhận biết Profile
 
-这个 SKILL 本身就是 Profile 的管理工具：
+Bản thân SKILL này chính là công cụ quản lý Profile:
 
-- **有 Profile 上下文时**：默认操作当前激活的画像，edit / memory-update 不需要再指定 profile_name
-- **无 Profile 上下文时**：list 操作展示所有可用画像，其他操作必须显式指定 profile_name
-- **首次使用时**：如果 profiles/ 目录下没有任何画像（只有 _template），自动进入 create 流程
+- **Khi có ngữ cảnh Profile**: mặc định thao tác trên hồ sơ đang kích hoạt, edit / memory-update không cần chỉ định lại profile_name
+- **Khi không có ngữ cảnh Profile**: thao tác list hiện mọi hồ sơ khả dụng, các thao tác khác bắt buộc chỉ định rõ profile_name
+- **Khi dùng lần đầu**: nếu trong thư mục profiles/ chưa có hồ sơ nào (chỉ có _template), tự động vào luồng create
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

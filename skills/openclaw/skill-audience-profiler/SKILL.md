@@ -7,89 +7,89 @@ description: >-
 layer: plan
 ---
 
-# 受众画像构建器
+# Trình dựng chân dung khán giả
 
-你是受众研究和人群画像专家。当创作者需要定义目标受众、构建粉丝画像或做人群细分时，按此框架执行。
+Bạn là chuyên gia nghiên cứu khán giả và dựng chân dung nhóm người. Khi nhà sáng tạo cần xác định khán giả mục tiêu, dựng chân dung người theo dõi hoặc phân nhóm khán giả, hãy chạy theo khung này.
 
-> 注意：`skill-voice-builder` 构建的是**创作者自己**的声音画像。本 SKILL 构建的是**受众/粉丝**画像——"我在为谁创作内容"。
+> Lưu ý: `skill-voice-builder` dựng hồ sơ giọng văn (voice) của **chính nhà sáng tạo**. SKILL này dựng chân dung **khán giả/người theo dõi** - "tôi đang làm nội dung cho ai".
 
-> 各步骤的详细框架模板见 `references/profiling-frameworks.md`，按需加载。
-
----
-
-## Step 1：收集上下文
-
-确定以下信息（有 Profile 时预填）：
-- 创作者赛道（美食/穿搭/知识/职场/好物...）
-- 解决什么问题 / 提供什么价值
-- 当前粉丝量级和来源平台
-- 主要平台（小红书/抖音/B站/微博）
-- 有无现有数据（后台数据、评论区反馈、私信咨询）
-- 是否有变现模式（广告/电商/课程/咨询）
+> Mẫu khung chi tiết của từng bước xem `references/profiling-frameworks.md`, nạp khi cần.
 
 ---
 
-## Step 2：受众画像框架
+## Step 1: Thu thập bối cảnh
 
-从人口统计、心理特征、行为特征三个层面刻画受众。框架见 `references/profiling-frameworks.md`（第一节）。
-
----
-
-## Step 3：痛点与需求
-
-用痛点结构（严重度/频率/代价/情绪/代表性声音）和五类痛点分类梳理，再提炼核心需求与 JTBD。模板见 `references/profiling-frameworks.md`（第二节）。
-
----
-
-## Step 4：内容偏好
-
-分析受众的内容类型偏好、格式偏好（分平台）、触达方式。模板见 `references/profiling-frameworks.md`（第三节）。
+Xác định các thông tin sau (có Profile thì điền sẵn):
+- Ngách của nhà sáng tạo (ẩm thực/thời trang/kiến thức/công sở/đồ hay...)
+- Giải quyết vấn đề gì / mang lại giá trị gì
+- Quy mô người theo dõi hiện tại và nền tảng xuất phát
+- Nền tảng chính (Facebook/TikTok/YouTube/Zalo)
+- Có sẵn dữ liệu chưa (số liệu trang quản lý, phản hồi ở bình luận, tin nhắn hỏi han)
+- Đã có mô hình kiếm tiền chưa (quảng cáo/bán hàng/khoá học/tư vấn)
 
 ---
 
-## Step 5：渠道触达分析
+## Step 2: Khung chân dung khán giả
 
-按相关度给各渠道打分，锁定 TOP 3 渠道及策略。模板见 `references/profiling-frameworks.md`（第四节）。
-
----
-
-## Step 6：评论区挖掘
-
-从评论区和私信提取高频问题、情绪信号、购买信号、内容需求。模板见 `references/profiling-frameworks.md`（第五节）。
+Phác hoạ khán giả theo ba lớp: nhân khẩu học, đặc điểm tâm lý, đặc điểm hành vi. Khung xem `references/profiling-frameworks.md` (mục 1).
 
 ---
 
-## Step 7：受众画像卡
+## Step 3: Nỗi đau và nhu cầu
 
-生成 2-4 个典型受众画像卡（昵称、简介、需求/痛点、平台/关注账号、内容方向、心声、JTBD）。模板见 `references/profiling-frameworks.md`（第六节）。
-
----
-
-## Step 8：验证
-
-用验证清单确认画像基于真实数据、足够具体、可指导内容。清单及更新时机见 `references/profiling-frameworks.md`（第七节）。
+Rà theo cấu trúc nỗi đau (mức nghiêm trọng/tần suất/cái giá phải trả/cảm xúc/câu nói tiêu biểu) và năm nhóm nỗi đau, rồi chắt ra nhu cầu cốt lõi và JTBD. Mẫu xem `references/profiling-frameworks.md` (mục 2).
 
 ---
 
-## 输出格式
+## Step 4: Gu nội dung
+
+Phân tích gu về loại nội dung, gu về định dạng (tách theo nền tảng) và cách chạm tới khán giả. Mẫu xem `references/profiling-frameworks.md` (mục 3).
+
+---
+
+## Step 5: Phân tích kênh tiếp cận
+
+Chấm điểm từng kênh theo mức liên quan, chốt TOP 3 kênh và chiến lược đi kèm. Mẫu xem `references/profiling-frameworks.md` (mục 4).
+
+---
+
+## Step 6: Đào mỏ bình luận
+
+Từ bình luận và tin nhắn riêng, rút ra câu hỏi lặp nhiều, tín hiệu cảm xúc, tín hiệu mua hàng, nhu cầu nội dung. Mẫu xem `references/profiling-frameworks.md` (mục 5).
+
+---
+
+## Step 7: Thẻ chân dung khán giả
+
+Tạo 2-4 thẻ chân dung khán giả tiêu biểu (biệt danh, mô tả ngắn, nhu cầu/nỗi đau, nền tảng và kênh họ theo dõi, hướng nội dung, tiếng lòng, JTBD). Mẫu xem `references/profiling-frameworks.md` (mục 6).
+
+---
+
+## Step 8: Kiểm chứng
+
+Dùng checklist kiểm chứng để xác nhận chân dung dựa trên dữ liệu thật, đủ cụ thể, đủ sức dẫn hướng nội dung. Checklist và thời điểm cập nhật xem `references/profiling-frameworks.md` (mục 7).
+
+---
+
+## Định dạng output
 
 ```
-受众画像: [创作者/账号名]
+Chân dung khán giả: [tên nhà sáng tạo/kênh]
 ============================
-概述: [2-3 句话总结核心受众]
-受众特征: [完整画像]
-痛点与需求: [按严重度排序]
-典型画像: [2-4 张画像卡]
-内容偏好: [什么打动他们]
-渠道策略: [在哪里触达他们]
-验证计划: [如何确认和优化]
+Tổng quan: [2-3 câu tóm tắt khán giả cốt lõi]
+Đặc điểm khán giả: [chân dung đầy đủ]
+Nỗi đau và nhu cầu: [sắp theo mức nghiêm trọng]
+Chân dung tiêu biểu: [2-4 thẻ chân dung]
+Gu nội dung: [điều gì chạm tới họ]
+Chiến lược kênh: [tiếp cận họ ở đâu]
+Kế hoạch kiểm chứng: [xác nhận và tối ưu thế nào]
 ```
 
-保存到 `outputs/受众画像/audience-profile.md`。如有 Profile 系统，同时保存到 `profiles/<name>/audience.md`，供其他 SKILL 消费。
+Lưu vào `outputs/<chủ đề>/audience-profile.md`. Nếu có hệ thống Profile, lưu thêm vào `profiles/<name>/audience.md` cho các SKILL khác dùng.
 
 ---
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 `identity.md` 读赛道和账号定位，从 `platforms.md` 读目标平台，预填上下文
-- **无 Profile**：主动询问赛道和目标平台，退回通用模式。输出末尾附注："如提供账号 Profile 可获得更精准的受众分析"
+- **Có Profile**: đọc `identity.md` lấy ngách và định vị kênh, đọc `platforms.md` lấy nền tảng mục tiêu, điền sẵn bối cảnh
+- **Không có Profile**: chủ động hỏi ngách và nền tảng mục tiêu, lùi về chế độ chung. Cuối output ghi chú: "Nếu cung cấp Profile của kênh, phân tích khán giả sẽ chính xác hơn"

@@ -8,172 +8,172 @@ description: >-
 layer: attribute
 ---
 
-# 内容投放 ROI 计算器
+# Máy tính ROI cho nội dung chạy quảng cáo
 
-> 根据用户提供的投放数据，计算标准营销效果指标，对比行业基准，输出结构化分析报告。
+> Từ dữ liệu chạy quảng cáo người dùng đưa vào, tính các chỉ số marketing chuẩn, đối chiếu chuẩn ngành, xuất báo cáo phân tích có cấu trúc.
 
-## 输入
+## Đầu vào
 
-用户提供以下字段的任意子集（缺失字段跳过其依赖指标）：
+Người dùng cung cấp một tập con bất kỳ của các trường sau (thiếu trường nào thì bỏ qua chỉ số phụ thuộc trường đó):
 
-| 字段 | 代号 | 单位 | 必要性 |
+| Trường | Mã | Đơn vị | Mức cần thiết |
 |------|------|------|--------|
-| 投放费用 | ad_spend | CNY | 核心（为 0 或缺失时切换有机模式） |
-| 曝光量 | impressions | 次 | 可选 |
-| 点击量 | clicks | 次 | 可选 |
-| 互动量 | engagements | 次（赞+评+转） | 可选 |
-| 转化数 | conversions | 次 | 可选 |
-| 客单价 | avg_order_value | CNY | 可选 |
-| 内容制作成本 | production_cost | CNY | 可选，默认不计 |
+| Chi phí quảng cáo | ad_spend | CNY | Cốt lõi (bằng 0 hoặc thiếu thì chuyển sang chế độ organic) |
+| Lượt hiển thị | impressions | lượt | Tuỳ chọn |
+| Lượt click | clicks | lượt | Tuỳ chọn |
+| Lượt tương tác | engagements | lượt (thích + bình luận + chia sẻ) | Tuỳ chọn |
+| Số chuyển đổi | conversions | lượt | Tuỳ chọn |
+| Giá trị đơn trung bình | avg_order_value | CNY | Tuỳ chọn |
+| Chi phí sản xuất nội dung | production_cost | CNY | Tuỳ chọn, mặc định không tính |
 
-**两种模式：**
+**Hai chế độ:**
 
-- **Mode A — 单活动分析**：一组输入数据，输出完整指标卡片
-- **Mode B — 多活动对比**：多组数据（表格或逐条），按 ROI 降序排列，横向对比
+- **Mode A - phân tích một chiến dịch**: một bộ dữ liệu đầu vào, xuất thẻ chỉ số đầy đủ
+- **Mode B - so sánh nhiều chiến dịch**: nhiều bộ dữ liệu (bảng hoặc từng dòng), sắp theo ROI giảm dần, so sánh ngang
 
-## 输出
+## Đầu ra
 
-### 指标计算（公式表）
+### Tính chỉ số (bảng công thức)
 
-以下指标仅在分母数据存在且非零时计算，否则标注"数据不足，已跳过"：
+Các chỉ số dưới đây chỉ tính khi mẫu số có dữ liệu và khác 0, nếu không thì ghi "thiếu dữ liệu, đã bỏ qua":
 
-| 指标 | 公式 | 依赖字段 |
+| Chỉ số | Công thức | Trường phụ thuộc |
 |------|------|----------|
-| CTR（点击率） | clicks / impressions | impressions, clicks |
-| CPC（单次点击成本） | ad_spend / clicks | ad_spend, clicks |
-| CPM（千次曝光成本） | (ad_spend / impressions) * 1000 | ad_spend, impressions |
-| CPE（单次互动成本） | ad_spend / engagements | ad_spend, engagements |
-| 转化率 | conversions / clicks | conversions, clicks |
-| CPA（单次转化成本） | ad_spend / conversions | ad_spend, conversions |
-| 营收 | conversions * avg_order_value | conversions, avg_order_value |
-| ROAS（广告支出回报率） | revenue / ad_spend | revenue, ad_spend |
-| 总成本 | ad_spend + production_cost | ad_spend（production_cost 缺失按 0） |
-| 利润 | revenue - total_cost | revenue, total_cost |
+| CTR (tỉ lệ click) | clicks / impressions | impressions, clicks |
+| CPC (chi phí mỗi click) | ad_spend / clicks | ad_spend, clicks |
+| CPM (chi phí mỗi 1000 lượt hiển thị) | (ad_spend / impressions) * 1000 | ad_spend, impressions |
+| CPE (chi phí mỗi lượt tương tác) | ad_spend / engagements | ad_spend, engagements |
+| Tỉ lệ chuyển đổi | conversions / clicks | conversions, clicks |
+| CPA (chi phí mỗi chuyển đổi) | ad_spend / conversions | ad_spend, conversions |
+| Doanh thu | conversions * avg_order_value | conversions, avg_order_value |
+| ROAS (doanh thu trên chi phí quảng cáo) | revenue / ad_spend | revenue, ad_spend |
+| Tổng chi phí | ad_spend + production_cost | ad_spend (thiếu production_cost thì tính 0) |
+| Lợi nhuận | revenue - total_cost | revenue, total_cost |
 | ROI | (revenue - total_cost) / total_cost | revenue, total_cost |
 
-### 输出格式
+### Định dạng đầu ra
 
-**Mode A — 单活动分析：**
+**Mode A - phân tích một chiến dịch:**
 
 ```
-## 投放效果报告
+## Báo cáo hiệu quả quảng cáo
 
-### 基础数据
-（用户提供的原始字段）
+### Dữ liệu gốc
+(các trường người dùng cung cấp)
 
-### 计算指标
-| 指标 | 值 | 公式 | 基准对比 |
+### Chỉ số tính được
+| Chỉ số | Giá trị | Công thức | So với chuẩn |
 |------|----|------|----------|
-| CTR  | x% | clicks/impressions | ▲ 高于行业均值 |
+| CTR  | x% | clicks/impressions | ▲ cao hơn trung bình ngành |
 | ...  |    |      |          |
 
-### 基准对比图例
-▲ 高于行业均值（表现良好）
-▼ 低于行业均值（需关注）
-≈ 接近行业均值（正常水平）
-⚠ 显著偏离（超出基准 2 倍或低于 50%）
+### Chú giải so sánh chuẩn
+▲ cao hơn trung bình ngành (tốt)
+▼ thấp hơn trung bình ngành (cần lưu ý)
+≈ xấp xỉ trung bình ngành (mức bình thường)
+⚠ lệch rõ rệt (vượt chuẩn 2 lần hoặc thấp hơn 50%)
 
-### 诊断
-- 表现突出：（列出高于基准的指标及优势分析）
-- 待优化：（列出低于基准的指标及具体改进方向）
-- 综合评价：（一句话总结本次投放效果）
+### Chẩn đoán
+- Điểm nổi bật: (liệt kê chỉ số cao hơn chuẩn và phân tích lợi thế)
+- Cần tối ưu: (liệt kê chỉ số thấp hơn chuẩn và hướng cải thiện cụ thể)
+- Đánh giá chung: (một câu tổng kết hiệu quả đợt chạy này)
 ```
 
-**Mode B — 多活动对比：**
+**Mode B - so sánh nhiều chiến dịch:**
 
 ```
-## 多活动横向对比（按 ROI 降序）
+## So sánh ngang nhiều chiến dịch (ROI giảm dần)
 
-| 活动 | 花费 | 营收 | ROI | ROAS | CTR | CPC | 综合评价 |
+| Chiến dịch | Chi phí | Doanh thu | ROI | ROAS | CTR | CPC | Đánh giá chung |
 |------|------|------|-----|------|-----|-----|----------|
 | ...  |      |      |     |      |     |     |          |
 
-### 最优/最差活动分析
-（对比 ROI 最高与最低活动的关键指标差异，找出差距来源）
+### Phân tích chiến dịch tốt nhất / kém nhất
+(so chênh lệch chỉ số then chốt giữa chiến dịch ROI cao nhất và thấp nhất, tìm nguồn gốc khoảng cách)
 
-### 预算分配建议
-（基于各活动效率，建议预算向高 ROI 活动倾斜的比例）
+### Gợi ý chia ngân sách
+(dựa trên hiệu suất từng chiến dịch, đề xuất tỉ lệ dồn ngân sách về chiến dịch ROI cao)
 
-### 优化建议
-（针对低效活动的具体改进方向）
+### Gợi ý tối ưu
+(hướng cải thiện cụ thể cho chiến dịch kém hiệu quả)
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-> **确定性计算交给脚本，LLM 只做解读。** 上表各项指标（含营收/利润派生，有机模式另算互动率）、
-> 有机模式切换、字段校验、Mode B 按 ROI 降序排序，全部由
-> [`scripts/calc.py`](scripts/calc.py) 完成（复用 `skills/shared/scripts/social_stats.py`
-> 的 `safe_div`，除零/缺字段一律返回 `null`，不心算、不猜数）。
+> **Tính toán xác định giao cho script, LLM chỉ diễn giải.** Mọi chỉ số ở bảng trên (gồm doanh thu/lợi nhuận suy ra, chế độ organic tính thêm tỉ lệ tương tác),
+> việc chuyển chế độ organic, kiểm tra trường dữ liệu, Mode B sắp ROI giảm dần, tất cả đều do
+> [`scripts/calc.py`](scripts/calc.py) lo (dùng lại `safe_div` của `skills/shared/scripts/social_stats.py`,
+> chia 0 hoặc thiếu trường đều trả `null`, không nhẩm tay, không đoán số).
 
-1. **解析输入** — 从用户 prompt 中提取数据字段，识别 Mode A（单组数据）或 Mode B（多组数据）
-2. **调用脚本算指标** —
-   - Mode A（单活动）：
+1. **Đọc đầu vào** - trích các trường dữ liệu từ prompt của người dùng, nhận biết Mode A (một bộ dữ liệu) hay Mode B (nhiều bộ dữ liệu)
+2. **Gọi script tính chỉ số** -
+   - Mode A (một chiến dịch):
      ```bash
-     python3 skills/openclaw/roi-calculator/scripts/calc.py single --name "活动名" \
+     python3 skills/openclaw/roi-calculator/scripts/calc.py single --name "Tên chiến dịch" \
        --ad-spend 5000 --impressions 100000 --clicks 3000 \
        --engagements 8000 --conversions 150 --avg-order-value 200 \
        --production-cost 1000
      ```
-   - Mode B（多活动，按 ROI 降序）：把各活动整理成 JSON 数组文件后
+   - Mode B (nhiều chiến dịch, ROI giảm dần): gom các chiến dịch vào một file mảng JSON rồi
      ```bash
      python3 skills/openclaw/roi-calculator/scripts/calc.py multi --file campaigns.json
      ```
-   脚本自动：11 指标逐项计算（分母为 0/缺失返回 `null` 并视为"数据不足"）、
-   营收→ROAS/利润/ROI 派生、`ad_spend` 为 0/缺失时切有机模式（跳过成本类指标）、
-   字段校验（负值 / 曝光<点击 / 转化>点击 写入 `warnings`）、Mode B 按 `roi_pct` 降序排序并标 `roi_rank`。
-3. **加载基准** — 读取 [benchmarks.md](references/benchmarks.md) 获取行业基准数据
-4. **确定对比基准** —
-   - 有 Profile：读取 `platforms.md` 确定主平台，选对应平台基准
-   - 无 Profile：使用跨平台均值
-5. **基准对比（LLM 解读）** — 把脚本输出的每个指标与基准比较，标注 ▲ 高于 / ▼ 低于 / ≈ 持平 / ⚠ 显著偏离
-6. **生成诊断（LLM 解读）** — 汇总表现突出项和待优化项，给出可操作的改进建议；转达脚本 `warnings`
-7. **Mode B 追加（LLM 解读）** — 基于脚本已排好的 ROI 排名，标注最优/最差，分析差异原因，给出预算分配建议
+   Script tự lo: tính lần lượt 11 chỉ số (mẫu số bằng 0 hoặc thiếu thì trả `null` và coi là "thiếu dữ liệu"),
+   suy ra doanh thu -> ROAS/lợi nhuận/ROI, `ad_spend` bằng 0 hoặc thiếu thì chuyển chế độ organic (bỏ nhóm chỉ số chi phí),
+   kiểm tra trường (số âm / hiển thị < click / chuyển đổi > click ghi vào `warnings`), Mode B sắp theo `roi_pct` giảm dần và gắn `roi_rank`.
+3. **Nạp chuẩn ngành** - đọc [benchmarks.md](references/benchmarks.md) để lấy dữ liệu chuẩn ngành (số liệu gốc theo thị trường Trung Quốc)
+4. **Chọn chuẩn để đối chiếu** -
+   - Có Profile: đọc `platforms.md` để xác định nền tảng chính, chọn chuẩn của nền tảng đó
+   - Không có Profile: dùng mức trung bình chung của các nền tảng
+5. **Đối chiếu chuẩn (LLM diễn giải)** - so từng chỉ số script xuất ra với chuẩn, gắn ▲ cao hơn / ▼ thấp hơn / ≈ ngang / ⚠ lệch rõ rệt
+6. **Viết chẩn đoán (LLM diễn giải)** - tổng hợp điểm nổi bật và điểm cần tối ưu, đưa gợi ý cải thiện làm được ngay; chuyển tiếp `warnings` của script
+7. **Phần thêm cho Mode B (LLM diễn giải)** - dựa trên thứ hạng ROI script đã sắp, đánh dấu tốt nhất/kém nhất, phân tích nguyên nhân chênh lệch, đề xuất cách chia ngân sách
 
-## 有机内容模式
+## Chế độ nội dung organic
 
-当 ad_spend 为 0 或缺失时，自动切换：
+Khi ad_spend bằng 0 hoặc thiếu, tự động chuyển:
 
-- 跳过所有成本类指标（CPC/CPM/CPE/CPA/ROAS/ROI/利润）
-- 仅计算：CTR（若有 impressions + clicks）、互动率（engagements / impressions）
-- 报告标题标注"有机内容效果分析"
-- 基准对比使用自然流量基准（通常高于付费流量）
+- Bỏ qua mọi chỉ số nhóm chi phí (CPC/CPM/CPE/CPA/ROAS/ROI/lợi nhuận)
+- Chỉ tính: CTR (nếu có impressions + clicks), tỉ lệ tương tác (engagements / impressions)
+- Tiêu đề báo cáo ghi rõ "Phân tích hiệu quả nội dung organic"
+- Đối chiếu bằng chuẩn của lượng tiếp cận tự nhiên (thường cao hơn lượng trả phí)
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `platforms.md` 获取主投放平台，选用平台专属基准区间
-- 读取 `audience.md` 了解受众特征，为转化率判断提供上下文
-- 对比结论使用平台维度的精确基准
+**Khi có Profile:**
+- Đọc `platforms.md` để biết nền tảng chạy chính, dùng khoảng chuẩn riêng của nền tảng đó
+- Đọc `audience.md` để nắm đặc điểm khán giả, làm ngữ cảnh cho việc đánh giá tỉ lệ chuyển đổi
+- Kết luận so sánh dùng chuẩn chính xác theo từng nền tảng
 
-**无 Profile 时：**
-- 使用跨平台综合均值作为基准
-- 在报告末尾附注："提供账号 Profile（含平台信息）可获得平台专属基准对比"
+**Khi không có Profile:**
+- Dùng mức trung bình tổng hợp của các nền tảng làm chuẩn
+- Cuối báo cáo ghi chú: "Cung cấp Profile của kênh (kèm thông tin nền tảng) sẽ có đối chiếu chuẩn riêng theo nền tảng"
 
-## 规则
+## Quy tắc
 
-1. **不捏造输入** — 所有指标仅从用户提供的数据计算，缺失字段跳过依赖指标
-2. **公式透明** — 每个指标旁标注计算公式，用户可验证
-3. **基准对比** — 与行业基准比较，明确标注高于/低于/持平
-4. **缺失容忍** — 缺字段不假设数值，跳过并说明"因缺少 X 数据无法计算"
-5. **有机切换** — ad_spend 为 0 或缺失时自动切换有机模式，不报错
+1. **Không bịa đầu vào** - mọi chỉ số chỉ tính từ dữ liệu người dùng đưa, thiếu trường thì bỏ qua chỉ số phụ thuộc
+2. **Công thức minh bạch** - ghi công thức bên cạnh mỗi chỉ số để người dùng kiểm được
+3. **Đối chiếu chuẩn** - so với chuẩn ngành, ghi rõ cao hơn/thấp hơn/ngang bằng
+4. **Chấp nhận thiếu dữ liệu** - thiếu trường thì không giả định số, bỏ qua và nói rõ "thiếu dữ liệu X nên không tính được"
+5. **Tự chuyển organic** - ad_spend bằng 0 hoặc thiếu thì tự chuyển chế độ organic, không báo lỗi
 
-## 自研笔记
+## Ghi chú tự phát triển
 
-**基准数据来源（定期更新 references/benchmarks.md）：**
-- Google Ads / Meta Ads 官方行业基准报告
-- 巨量引擎 / 千川 投放效果白皮书
-- 新榜 / 飞瓜 / 蝉妈妈 行业报告
-- 各平台创作者中心公开数据
+**Nguồn dữ liệu chuẩn (cập nhật định kỳ references/benchmarks.md):**
+- Báo cáo chuẩn ngành chính thức của Google Ads / Meta Ads
+- Sách trắng hiệu quả quảng cáo của Ocean Engine / Qianchuan (chuẩn thị trường Trung Quốc)
+- Báo cáo ngành của Newrank / Feigua / Chanmama (chuẩn thị trường Trung Quốc)
+- Dữ liệu công khai từ trung tâm nhà sáng tạo của các nền tảng
 
-**迭代方向：**
-- 增加时间序列对比（周环比、月同比）
-- 支持自定义基准（用户提供历史均值作为对比基线）
-- 接入真实 API 数据源（巨量引擎 / 小红书聚光 / 微信广告）
-- 漏斗可视化输出（impressions → clicks → conversions 漏斗图）
-- 归因模型支持（首次触达 / 末次触达 / 线性归因）
-- 与 content-postmortem SKILL 联动，投放数据反哺内容策略
+**Hướng phát triển tiếp:**
+- Thêm so sánh theo chuỗi thời gian (tuần liền kề, cùng kỳ tháng)
+- Hỗ trợ chuẩn tự đặt (người dùng đưa mức trung bình lịch sử làm mốc so sánh)
+- Kết nối nguồn dữ liệu API thật (Ocean Engine / Xiaohongshu Juguang / WeChat Ads)
+- Xuất biểu đồ phễu (phễu impressions → clicks → conversions)
+- Hỗ trợ mô hình attribution (chạm đầu / chạm cuối / attribution tuyến tính)
+- Liên thông với SKILL content-postmortem, lấy dữ liệu quảng cáo nuôi lại chiến lược nội dung
 
-**基准数据维护规则：**
-- 每季度对照最新行业报告校准 benchmarks.md 中的数值区间
-- 标注数据采集时间，过期超过 6 个月的基准加 ⚠ 提示
-- 鼓励用户提供自身历史数据，逐步建立账号级内部基准
+**Quy tắc bảo trì dữ liệu chuẩn:**
+- Mỗi quý đối chiếu báo cáo ngành mới nhất để hiệu chỉnh các khoảng số trong benchmarks.md
+- Ghi thời điểm thu thập dữ liệu, chuẩn quá hạn trên 6 tháng thì gắn nhắc ⚠
+- Khuyến khích người dùng đưa dữ liệu lịch sử của chính họ để dần dựng chuẩn nội bộ cấp kênh

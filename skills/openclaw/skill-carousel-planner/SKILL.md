@@ -7,168 +7,168 @@ description: >-
 layer: plan
 ---
 
-# 轮播图规划
+# Lên kế hoạch carousel
 
-> 规划多图笔记/轮播图的分页结构：封面 Hook、内容节奏、每页文案和视觉方向、CTA 设计，附互动潜力评分。
+> Lên cấu trúc từng trang cho bài nhiều ảnh/carousel: Hook trang bìa, nhịp nội dung, chữ và hướng hình mỗi trang, thiết kế CTA, kèm điểm tiềm năng tương tác.
 
-**加载后立即开始规划流程，不做摘要或等待确认。**
+**Nạp xong là bắt đầu quy trình lên kế hoạch ngay, không tóm tắt, không chờ xác nhận.**
 
-**关键参考文件：**
-- `references/format-specs.md` -- 尺寸规范、页数限制、文字大小
-- `references/hook-library.md` -- 经过验证的封面 Hook 公式及互动数据
-- `references/scoring-system.md` -- 互动评分维度与阈值
+**File tham khảo chính:**
+- `references/format-specs.md` -- chuẩn kích thước, giới hạn số trang, cỡ chữ
+- `references/hook-library.md` -- công thức Hook trang bìa đã kiểm chứng kèm dữ liệu tương tác
+- `references/scoring-system.md` -- các tiêu chí chấm điểm tương tác và ngưỡng đạt
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供的主题和目标。可以是关键词、一句话描述，或详细 brief。
+Chủ đề và mục tiêu người dùng đưa trong prompt. Có thể là từ khoá, một câu mô tả, hoặc brief chi tiết.
 
-## 输出
+## Đầu ra
 
-结构化轮播图规划文档，包含：封面文案、逐页分解、配文、评分卡、制作备注。
+Tài liệu kế hoạch carousel có cấu trúc, gồm: chữ trang bìa, bóc tách từng trang, caption, bảng điểm, ghi chú sản xuất.
 
-保存到 `outputs/主题名/carousel-brief.md`。
+Lưu vào `outputs/<chủ đề>/carousel-brief.md`.
 
-## 执行步骤
+## Các bước thực hiện
 
-### 第一步：确认上下文
+### Bước 1: Xác nhận bối cảnh
 
-1. 从用户 prompt 中提取主题和目标（教育、转化、建立权威、娱乐）。
-2. 识别目标受众。
-3. 加载所有关键参考文件。
-4. 查阅 `references/hook-library.md`，找到与主题最匹配的高互动 Hook 类型。
+1. Trích chủ đề và mục tiêu từ prompt của người dùng (giáo dục, chuyển đổi, xây uy tín, giải trí).
+2. Xác định khán giả mục tiêu.
+3. Nạp toàn bộ file tham khảo chính.
+4. Tra `references/hook-library.md`, tìm kiểu Hook tương tác cao khớp chủ đề nhất.
 
-### 第二步：封面页 Hook
+### Bước 2: Hook trang bìa
 
-封面页遵循与短视频开头相同的规则：必须在 1 秒内打断滑动。
+Trang bìa theo đúng luật mở đầu của video ngắn: phải chặn được ngón tay lướt trong 1 giây.
 
-#### 封面 Hook 规则
+#### Quy tắc Hook trang bìa
 
-- 封面文字不超过 12 个字
-- 必须制造好奇缺口或情绪触发
-- 使用 `references/hook-library.md` 中经过验证的 6 个公式：
-  - **反常识：** "别再XX了"
-  - **数字清单：** "5 个毁掉XX的错误"
-  - **对比冲击：** 前后对比的视觉悬念
-  - **直击痛点：** "为什么你XX总是失败"（陈述式，不加问号）
-  - **颠覆声明：** "这会改变你的一切"
-  - **身份认同：** "XX 人必看"（收藏率 + 分享率高）
-- 字体必须大、加粗，在缩略图尺寸下也清晰可读
-- 封面不放 logo 或品牌标识（会削弱好奇心）
+- Chữ trang bìa không quá 12 chữ
+- Phải tạo được khoảng trống tò mò hoặc cú chạm cảm xúc
+- Dùng 6 công thức đã kiểm chứng trong `references/hook-library.md`:
+  - **Ngược lẽ thường:** "Đừng XX nữa"
+  - **Danh sách số:** "5 sai lầm phá hỏng XX"
+  - **Đối lập gây sốc:** kịch tính thị giác trước - sau
+  - **Đánh thẳng nỗi đau:** "Vì sao bạn XX mãi vẫn thất bại" (dạng khẳng định, không thêm dấu hỏi)
+  - **Tuyên bố lật ngược:** "Điều này sẽ thay đổi tất cả"
+  - **Gắn danh tính:** "Dân XX nhất định phải xem" (tỉ lệ lưu + chia sẻ cao)
+- Font phải to, in đậm, ở cỡ thumbnail vẫn đọc rõ
+- Trang bìa không đặt logo hay nhận diện thương hiệu (làm giảm tò mò)
 
-记录选定的 Hook 公式和封面文案。
+Ghi lại công thức Hook đã chọn và chữ trang bìa.
 
-### 第三步：分页结构
+### Bước 3: Cấu trúc từng trang
 
-按 **Hook > 内容铺垫 > 揭晓 > 行动号召** 弧线编排：
+Sắp theo cung **Hook > dẫn dắt nội dung > hé lộ > kêu gọi hành động**:
 
-| 页码 | 角色 | 规则 |
+| Trang | Vai trò | Quy tắc |
 |------|------|------|
-| 1 | Hook / 封面 | 不超过 12 字，好奇缺口，见第二步 |
-| 2-3 | 问题 / 铺垫 | 建立痛点或抛出问题 |
-| 4-7 | 内容 / 价值 | 每页一个要点，页面文字不超过 20 字 |
-| 8-9 | 揭晓 / 收获 | 交付核心洞察或转变 |
-| 末页 | 行动号召 | 收藏/分享/关注引导 |
+| 1 | Hook / trang bìa | Không quá 12 chữ, tạo khoảng trống tò mò, xem Bước 2 |
+| 2-3 | Vấn đề / dẫn dắt | Dựng nỗi đau hoặc đặt câu hỏi |
+| 4-7 | Nội dung / giá trị | Mỗi trang một ý, chữ trên trang không quá 20 chữ |
+| 8-9 | Hé lộ / thu hoạch | Trao insight cốt lõi hoặc sự thay đổi |
+| Trang cuối | Kêu gọi hành động | Dẫn lưu bài/chia sẻ/theo dõi |
 
-#### 每页内容规则
+#### Quy tắc nội dung mỗi trang
 
-- **每页只讲一个点。** 需要逗号就拆页。
-- **每页文字不超过 20 字**（文字叠层）。越少越好。
-- **视觉统一：** 全篇使用相同的背景风格、字体和配色。
-- **阅读动线：** 从上到下，从左到右。不散乱排布。
-- **翻页动力：** 每页必须制造让读者翻到下一页的理由。
+- **Mỗi trang chỉ nói một ý.** Cần tới dấu phẩy là tách trang.
+- **Chữ mỗi trang không quá 20 chữ** (lớp chữ đè lên hình). Càng ít càng tốt.
+- **Đồng nhất thị giác:** cả bài dùng chung một kiểu nền, một font và một bảng màu.
+- **Đường đọc:** từ trên xuống, từ trái sang phải. Không bày lộn xộn.
+- **Lực kéo lật trang:** mỗi trang phải tạo lý do để người đọc lật sang trang sau.
 
-逐页输出：
-1. 页码
-2. 页面文案（文字叠层，不超过 20 字）
-3. 视觉描述
-4. 翻页动力说明（读者为什么会翻到下一页）
+Xuất theo từng trang:
+1. Số trang
+2. Chữ trên trang (lớp chữ đè, không quá 20 chữ)
+3. Mô tả hình ảnh
+4. Giải thích lực kéo lật trang (vì sao người đọc lật sang trang sau)
 
-### 第四步：末页行动号召
+### Bước 4: Kêu gọi hành động ở trang cuối
 
-末页决定帖子能否被收藏和转发。根据内容类型选择：
+Trang cuối quyết định bài có được lưu và chia sẻ hay không. Chọn theo loại nội dung:
 
-| CTA 类型 | 适用场景 | 示例 |
+| Loại CTA | Tình huống dùng | Ví dụ |
 |----------|----------|------|
-| 收藏引导 | 干货教程类 | "收藏备用" / "先码住" |
-| 分享引导 | 共鸣实用类 | "@你身边的XX" / "转给需要的人" |
-| 关注引导 | 系列内容 | "关注看更多" / "下期更新XX" |
-| 评论引导 | 观点讨论类 | "你是哪种？评论区告诉我" |
-| 私信引导 | 引流转化类 | "评论区回复'方案'领取完整版" |
+| Dẫn lưu bài | Nội dung kiến thức, hướng dẫn | "Lưu lại dùng dần" / "Cất vào đây đã" |
+| Dẫn chia sẻ | Nội dung đồng cảm, hữu dụng | "@ đứa bạn XX của bạn" / "Gửi cho người đang cần" |
+| Dẫn theo dõi | Nội dung dạng series | "Theo dõi để xem tiếp" / "Số sau nói về XX" |
+| Dẫn bình luận | Nội dung bàn luận quan điểm | "Bạn thuộc kiểu nào? Kể cho mình ở bình luận" |
+| Dẫn nhắn riêng | Nội dung kéo chuyển đổi | "Bình luận 'giải pháp' để nhận bản đầy đủ" |
 
-CTA 必须具体。禁止使用空泛的"点击主页"作为主要 CTA。
+CTA phải cụ thể. Cấm dùng kiểu chung chung "bấm vào trang chủ" làm CTA chính.
 
-### 第五步：配文
+### Bước 5: Caption
 
-撰写与轮播图互补（不重复）的配文：
+Viết caption bổ trợ cho carousel (không lặp lại nội dung trong ảnh):
 
-- 第一句：独立于轮播图也能打的 Hook
-- 正文：展开轮播图中的某一点，加入个人视角
-- 结尾：与末页 CTA 呼应
-- 话题标签：3-5 个垂直标签，禁用泛标签（#生活 #日常 这类无效）
-- 配文长度：300-800 字（小红书最佳区间）
+- Câu đầu: một Hook tách khỏi carousel vẫn đủ ăn
+- Thân bài: khai triển một ý trong carousel, thêm góc nhìn cá nhân
+- Kết: hô ứng với CTA ở trang cuối
+- Hashtag: 3-5 tag đúng ngách, cấm tag chung chung (#doisong #hangngay kiểu này vô dụng)
+- Độ dài caption: 300-800 chữ (khoảng tối ưu của Xiaohongshu)
 
-### 第六步：互动评分
+### Bước 6: Chấm điểm tương tác
 
-使用 `references/scoring-system.md` 中的标准评分：
+Chấm theo chuẩn trong `references/scoring-system.md`:
 
-| 维度 | 权重 | 评分 (1-10) |
+| Tiêu chí | Trọng số | Điểm (1-10) |
 |------|------|-------------|
-| Hook 强度 | 25% | |
-| 翻页节奏 / 翻页动力 | 20% | |
-| 价值密度 | 20% | |
-| CTA 有效性 | 15% | |
-| 视觉统一性 | 10% | |
-| 配文质量 | 10% | |
+| Độ mạnh Hook | 25% | |
+| Nhịp lật trang / lực kéo lật trang | 20% | |
+| Mật độ giá trị | 20% | |
+| Hiệu quả CTA | 15% | |
+| Đồng nhất thị giác | 10% | |
+| Chất lượng caption | 10% | |
 
-**最低通过分：7.0 加权平均。**
+**Điểm đạt tối thiểu: 7.0 trung bình có trọng số.**
 
-低于 7.0 时，定位最弱维度并修改后重新评分。
+Dưới 7.0 thì tìm tiêu chí yếu nhất, sửa rồi chấm lại.
 
-### 第七步：输出
+### Bước 7: Xuất kết quả
 
-将以下内容保存到 `outputs/主题名/carousel-brief.md`：
+Lưu nội dung sau vào `outputs/<chủ đề>/carousel-brief.md`:
 
 ```
-## 轮播图规划
+## Kế hoạch carousel
 
-**主题：** [主题]
-**目标：** [目标]
-**页数：** [数量]
-**Hook 公式：** [来自 hook-library.md 的公式名]
-**评分：** [X.X / 10]
+**Chủ đề:** [chủ đề]
+**Mục tiêu:** [mục tiêu]
+**Số trang:** [số lượng]
+**Công thức Hook:** [tên công thức lấy từ hook-library.md]
+**Điểm:** [X.X / 10]
 
-### 逐页分解
+### Bóc tách từng trang
 
-#### 第 1 页（封面）
-- 文案："[封面文案]"
-- 视觉：[描述]
+#### Trang 1 (bìa)
+- Chữ: "[chữ trang bìa]"
+- Hình: [mô tả]
 
-#### 第 2 页
-- 文案："[文案]"
-- 视觉：[描述]
-- 翻页动力：[为什么读者会翻到下一页]
+#### Trang 2
+- Chữ: "[chữ trên trang]"
+- Hình: [mô tả]
+- Lực kéo lật trang: [vì sao người đọc lật sang trang sau]
 
 ...
 
-### 配文
-[完整配文]
+### Caption
+[caption đầy đủ]
 
-### 制作备注
-- [设计说明、素材需求、字体/配色建议]
+### Ghi chú sản xuất
+- [hướng dẫn thiết kế, tư liệu cần chuẩn bị, gợi ý font/bảng màu]
 ```
 
-## Profile 感知
+## Nhận biết Profile
 
-### 有 Profile
+### Có Profile
 
-- 读取 `platform` 字段，按平台调整尺寸和排版规范（小红书 3:4 / 1:1；Instagram 4:5 / 1:1 为海外可选）
-- 读取 `tone` / `voice` 字段，调整封面文案和配文的语气风格
-- 读取 `audience` 字段，确保 Hook 和内容切入点与目标受众匹配
-- 读取 `positioning` 字段，确保内容围绕账号定位展开
-- 读取 `visual_style` 字段（如有），应用到视觉描述中
+- Đọc trường `platform`, chỉnh kích thước và chuẩn dàn trang theo nền tảng (Xiaohongshu 3:4 / 1:1; Instagram 4:5 / 1:1 là tuỳ chọn cho thị trường ngoài)
+- Đọc trường `tone` / `voice`, chỉnh giọng điệu cho chữ trang bìa và caption
+- Đọc trường `audience`, bảo đảm Hook và góc vào nội dung khớp khán giả mục tiêu
+- Đọc trường `positioning`, bảo đảm nội dung bám định vị của kênh
+- Đọc trường `visual_style` (nếu có), áp vào phần mô tả hình
 
-### 无 Profile
+### Không có Profile
 
-- 退回通用模式，默认小红书 3:4 尺寸
-- 使用中性语气生成
-- 在输出末尾附注："如提供账号 Profile，可适配平台风格和视觉调性"
+- Lùi về chế độ chung, mặc định kích thước 3:4 theo chuẩn Xiaohongshu
+- Sinh nội dung với giọng trung tính
+- Cuối phần đầu ra ghi chú: "Nếu cung cấp Profile của kênh, có thể bám phong cách nền tảng và tông thị giác"

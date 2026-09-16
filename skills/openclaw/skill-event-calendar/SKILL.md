@@ -8,147 +8,147 @@ description: >-
 layer: discover
 ---
 
-# 节日/节点日历
+# Lịch ngày lễ / mốc sự kiện
 
-> 查询未来 N 天的节日、纪念日、电商节点、行业事件，为创作者提供内容蹭点和提前准备的时间窗口。
+> Tra ngày lễ, ngày kỷ niệm, mốc sale thương mại điện tử, sự kiện ngành trong N ngày tới, cho nhà sáng tạo điểm bắt trend và cửa sổ thời gian chuẩn bị trước.
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Mô tả |
 |------|------|------|
-| 时间范围 | 否 | 未来 N 天（默认 30 天） |
-| 赛道/领域 | 否 | 筛选与特定赛道相关的节点（有 Profile 时自动提取） |
-| 节点类型 | 否 | 筛选特定类型：节日/电商/行业/考试/体育（默认全部） |
+| Khoảng thời gian | Không | N ngày tới (mặc định 30 ngày) |
+| Ngách/lĩnh vực | Không | Lọc các mốc liên quan tới một ngách cụ thể (có Profile thì tự trích) |
+| Loại mốc | Không | Lọc theo loại: ngày lễ/thương mại điện tử/ngành/thi cử/thể thao (mặc định lấy tất cả) |
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 内容节点日历
+# Lịch mốc nội dung
 
-时间范围: {start_date} - {end_date}
-赛道筛选: {赛道或"全部"}
-生成时间: {date}
+Khoảng thời gian: {start_date} - {end_date}
+Lọc theo ngách: {ngách hoặc "tất cả"}
+Thời điểm tạo: {date}
 
-## 近期重点节点（7 天内）
+## Mốc trọng điểm sắp tới (trong 7 ngày)
 
-| 日期 | 节点名称 | 类型 | 蹭点价值 | 提前准备天数 | 建议赛道 |
+| Ngày | Tên mốc | Loại | Giá trị bắt trend | Số ngày chuẩn bị trước | Ngách gợi ý |
 |------|---------|------|---------|------------|---------|
-| {date} | {name} | {type} | ★★★★★ | {N 天} | {赛道} |
+| {date} | {name} | {type} | ★★★★★ | {N ngày} | {ngách} |
 
-## 未来 30 天节点总览
+## Tổng quan mốc trong 30 ngày tới
 
-### {月份}
+### {tháng}
 
-| 日期 | 节点名称 | 类型 | 蹭点价值 | 内容方向建议 |
+| Ngày | Tên mốc | Loại | Giá trị bắt trend | Hướng nội dung gợi ý |
 |------|---------|------|---------|------------|
-| {date} | {name} | {type} | ★★★★☆ | {一句话建议} |
+| {date} | {name} | {type} | ★★★★☆ | {gợi ý một câu} |
 
-## 高价值节点详解（Top 3-5）
+## Giải thích chi tiết các mốc giá trị cao (Top 3-5)
 
-### {节点名称}（{日期}）
-- 类型: {节日/电商/行业/考试/体育}
-- 蹭点价值: ★★★★★
-- 提前准备: {建议提前 X 天开始准备}
-- 内容方向:
-  1. {方向 A}: {一句话描述}
-  2. {方向 B}: {一句话描述}
-  3. {方向 C}: {一句话描述}
-- 适合赛道: {哪些赛道的创作者适合蹭}
-- 避坑提醒: {注意事项}
-- 去年爆款参考: {去年同节点的热门内容类型}
+### {tên mốc} ({ngày})
+- Loại: {ngày lễ/thương mại điện tử/ngành/thi cử/thể thao}
+- Giá trị bắt trend: ★★★★★
+- Chuẩn bị trước: {nên bắt đầu chuẩn bị trước X ngày}
+- Hướng nội dung:
+  1. {hướng A}: {mô tả một câu}
+  2. {hướng B}: {mô tả một câu}
+  3. {hướng C}: {mô tả một câu}
+- Hợp ngách: {nhà sáng tạo ở ngách nào hợp để bắt}
+- Nhắc tránh hố: {điều cần lưu ý}
+- Tham chiếu bài viral năm ngoái: {loại nội dung hot ở cùng mốc năm ngoái}
 
-## 本月内容节奏建议
+## Gợi ý nhịp nội dung tháng này
 
-{基于节点密度和类型分布，给出本月的内容节奏建议}
+{dựa trên mật độ mốc và phân bố loại, đưa gợi ý nhịp nội dung cho tháng này}
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **解析时间范围**
-   - 默认查询未来 30 天
-   - 用户指定范围时按指定范围查询
-   - 计算起止日期，确定要覆盖的月份
+1. **Phân tích khoảng thời gian**
+   - Mặc định tra 30 ngày tới
+   - Người dùng chỉ định khoảng nào thì tra theo khoảng đó
+   - Tính ngày đầu ngày cuối, xác định các tháng phải phủ
 
-2. **加载节点数据**
-   - 读取 [events-china.md](references/events-china.md) 获取中国全年节日和电商节点数据
-   - 按时间范围筛选出落在范围内的所有节点
-   - 补充当年特殊事件（如奥运会、世界杯等非固定事件）
-   - **农历节日的公历日期一律用 `scripts/lunar.py` 换算，不靠估算**：
-     - 查节日：`python3 skills/openclaw/skill-event-calendar/scripts/lunar.py festival 中秋 2026`
-     - 通用换算：`python3 skills/openclaw/skill-event-calendar/scripts/lunar.py l2s 2026 8 15`
-     - 支持节日见 `python3 skills/openclaw/skill-event-calendar/scripts/lunar.py festival --list`（春节/元宵/端午/七夕/中秋/重阳/腊八/小年/除夕等）
+2. **Nạp dữ liệu mốc**
+   - Đọc [events-china.md](references/events-china.md) để lấy dữ liệu ngày lễ cả năm và mốc sale của Trung Quốc (kho này theo lịch Trung Quốc)
+   - Theo khoảng thời gian, lọc ra mọi mốc rơi vào khoảng đó
+   - Bổ sung sự kiện đặc biệt của năm (như Olympic, World Cup, những sự kiện không cố định)
+   - **Ngày dương lịch của các ngày lễ âm lịch đều quy đổi bằng `scripts/lunar.py`, không ước lượng**:
+     - Tra ngày lễ: `python3 skills/openclaw/skill-event-calendar/scripts/lunar.py festival "Trung thu" 2026` (nhận tên tiếng Việt, không phân biệt dấu/hoa thường)
+     - Quy đổi tổng quát: `python3 skills/openclaw/skill-event-calendar/scripts/lunar.py l2s 2026 8 15`
+     - Danh sách ngày lễ hỗ trợ xem `python3 skills/openclaw/skill-event-calendar/scripts/lunar.py festival --list` (Tết Nguyên đán/Nguyên tiêu/Đoan ngọ/Thất tịch/Trung thu/Trùng cửu/Lạp bát - lễ Trung Quốc/Tết ông Táo/Giao thừa...)
 
-3. **赛道关联匹配**
-   - 如有赛道信息（用户指定或 Profile 提取），对每个节点评估关联度
-   - 标注每个节点适合哪些赛道的创作者
-   - 赛道关联度影响"蹭点价值"评分
+3. **Khớp liên quan với ngách**
+   - Nếu có thông tin ngách (người dùng chỉ định hoặc trích từ Profile), đánh giá độ liên quan của từng mốc
+   - Ghi rõ mỗi mốc hợp với nhà sáng tạo ở ngách nào
+   - Độ liên quan với ngách ảnh hưởng tới điểm "giá trị bắt trend"
 
-4. **蹭点价值评估**
-   - 对每个节点按以下维度评分（1-5 星）：
-     - 全民关注度：是否全民参与（春节 5 星，世界读书日 2 星）
-     - 内容创作空间：能产出多少差异化内容
-     - 商业价值：品牌方是否有投放需求
-     - 时间持续性：话题热度持续多久
-     - 与赛道的关联度（有赛道信息时）
+4. **Đánh giá giá trị bắt trend**
+   - Chấm điểm từng mốc theo các chiều sau (1-5 sao):
+     - Độ quan tâm toàn dân: có phải cả nước cùng tham gia không (Tết Nguyên đán 5 sao, Ngày Sách thế giới 2 sao)
+     - Không gian sáng tạo nội dung: làm ra được bao nhiêu nội dung khác biệt
+     - Giá trị thương mại: nhãn hàng có nhu cầu chạy quảng cáo không
+     - Độ bền thời gian: chủ đề còn hot trong bao lâu
+     - Độ liên quan với ngách (khi có thông tin ngách)
 
-   ### 蹭点价值评分标尺
+   ### Thang chấm giá trị bắt trend
 
-   | 星级 | 标准 |
+   | Số sao | Tiêu chuẩn |
    |------|------|
-   | ⭐ | 节点存在感弱，仅小众群体关注，创作空间有限 |
-   | ⭐⭐ | 有一定关注度，但内容角度受限或竞争过于激烈 |
-   | ⭐⭐⭐ | 全民关注度中等，有 2-3 种明确的内容角度可切入 |
-   | ⭐⭐⭐⭐ | 高关注度，多种角度可切，且与多个垂直赛道相关 |
-   | ⭐⭐⭐⭐⭐ | 全民级节点（如春节/618/双11），创作空间极大，商业价值高 |
+   | ⭐ | Mốc mờ nhạt, chỉ nhóm nhỏ quan tâm, không gian sáng tạo hạn chế |
+   | ⭐⭐ | Có mức quan tâm nhất định, nhưng góc nội dung bị bó hoặc cạnh tranh quá gắt |
+   | ⭐⭐⭐ | Mức quan tâm toàn dân trung bình, có 2-3 góc nội dung rõ ràng để vào |
+   | ⭐⭐⭐⭐ | Quan tâm cao, nhiều góc để vào, lại liên quan tới nhiều ngách dọc |
+   | ⭐⭐⭐⭐⭐ | Mốc cấp toàn dân (như Tết Nguyên đán/11.11/12.12), không gian sáng tạo cực lớn, giá trị thương mại cao |
 
-5. **内容方向建议**
-   - 对高价值节点（4-5 星），生成 3 个具体内容方向建议
-   - 内容方向需考虑：平台特性、往年爆款类型、创作者定位
-   - 标注提前准备天数：
-     - 短视频/直播：提前 3-5 天
-     - 图文内容：提前 1-3 天
-     - 系列策划：提前 7-14 天
+5. **Gợi ý hướng nội dung**
+   - Với mốc giá trị cao (4-5 sao), sinh 3 hướng nội dung cụ thể
+   - Hướng nội dung phải cân nhắc: đặc tính nền tảng, dạng bài viral các năm trước, định vị của nhà sáng tạo
+   - Ghi rõ số ngày chuẩn bị trước:
+     - Video ngắn/livestream: trước 3-5 ngày
+     - Nội dung ảnh-chữ: trước 1-3 ngày
+     - Kế hoạch theo series: trước 7-14 ngày
 
-6. **节奏规划建议**
-   - 分析时间范围内的节点密度
-   - 识别节点密集期和空白期
-   - 建议内容节奏：密集期聚焦高价值节点，空白期补充常青内容
-   - 提醒时间冲突：同一天多个节点时建议取舍
+6. **Gợi ý hoạch định nhịp**
+   - Phân tích mật độ mốc trong khoảng thời gian
+   - Nhận ra giai đoạn dày mốc và giai đoạn trống
+   - Gợi ý nhịp nội dung: giai đoạn dày thì dồn vào mốc giá trị cao, giai đoạn trống thì bù nội dung thường xanh
+   - Nhắc xung đột thời gian: cùng một ngày có nhiều mốc thì gợi ý chọn bỏ
 
-7. **输出交付**
-   - 按输出格式生成完整日历
-   - 近 7 天节点单独突出显示，提醒紧迫性
-   - 高价值节点提供详细解读
+7. **Giao đầu ra**
+   - Sinh lịch hoàn chỉnh theo định dạng đầu ra
+   - Mốc trong 7 ngày tới làm nổi bật riêng, nhắc mức gấp
+   - Mốc giá trị cao thì phân tích chi tiết
 
-8. **落库到内容日历（可选）**
-   - 用户想把查到的节点存进日历长期跟踪时，把节点整理成 JSON 数组（`title`/`date`/可选 `event_type`/`end_date`/`platform`）交给 `skill-content-calendar-log` 批量导入（同名同日幂等去重）：
+8. **Lưu vào lịch nội dung (tuỳ chọn)**
+   - Khi người dùng muốn lưu các mốc đã tra vào lịch để theo dõi lâu dài, gom các mốc thành mảng JSON (`title`/`date`/tuỳ chọn `event_type`/`end_date`/`platform`) rồi giao `skill-content-calendar-log` nhập hàng loạt (trùng tên trùng ngày thì tự khử trùng lặp, chạy lại không đổi kết quả):
 
    ```bash
    python skills/shared/scripts/calendar_ops.py import-events --file events.json
    ```
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `identity.md` 获取赛道，自动筛选高关联节点
-- 读取 `platforms.md` 获取活跃平台，调整内容方向建议的形式
-- 读取 `audience.md` 获取受众画像，评估受众对各节点的关注度
-- 从 `identity.md`/`preferences.md` 提取商业化偏好，评估哪些节点有商业合作机会
+**Khi có Profile:**
+- Đọc `identity.md` lấy ngách, tự lọc các mốc liên quan cao
+- Đọc `platforms.md` lấy nền tảng đang hoạt động, chỉnh dạng thức của gợi ý hướng nội dung
+- Đọc `audience.md` lấy hồ sơ khán giả, đánh giá mức quan tâm của khán giả với từng mốc
+- Trích sở thích thương mại hoá từ `identity.md`/`preferences.md`, đánh giá mốc nào có cơ hội hợp tác thương mại
 
-**无 Profile 时：**
-- 展示全量节点，不做赛道筛选
-- 蹭点价值基于全民关注度评估，不含赛道匹配维度
-- 内容方向给出通用建议
-- 附注"提供 Profile 或指定赛道，可获得更精准的节点筛选"
+**Khi không có Profile:**
+- Hiện toàn bộ mốc, không lọc theo ngách
+- Giá trị bắt trend chấm theo độ quan tâm toàn dân, không có chiều khớp ngách
+- Hướng nội dung đưa gợi ý phổ thông
+- Ghi chú "cung cấp Profile hoặc chỉ định ngách sẽ lọc mốc chính xác hơn"
 
-## 规则
+## Quy tắc
 
-1. 节点数据必须准确，日期不可出错（参照 references/events-china.md）
-2. 农历节日的公历日期一律调用 `scripts/lunar.py` 换算，禁止凭记忆或估算（脚本覆盖 1900-2100，已通过锚点自测）
-3. 电商大促节点的时间以当年官方公布为准，未公布时使用往年惯例
-4. 蹭点价值评分必须有依据，不可凭感觉
-5. 提前准备天数必须务实，考虑实际制作周期
-6. 涉及政治性纪念日时，仅建议正能量内容方向
-7. 节日数据每年需更新农历转换和新增电商节点
+1. Dữ liệu mốc phải chính xác, ngày không được sai (tham chiếu references/events-china.md, kho theo lịch Trung Quốc)
+2. Ngày dương lịch của ngày lễ âm lịch đều gọi `scripts/lunar.py` để quy đổi, cấm dựa vào trí nhớ hay ước lượng (script phủ 1900-2100, đã tự kiểm bằng mốc neo)
+3. Thời điểm các đợt sale lớn của sàn lấy theo công bố chính thức của năm đó, chưa công bố thì dùng thông lệ các năm trước
+4. Điểm giá trị bắt trend phải có căn cứ, không chấm theo cảm tính
+5. Số ngày chuẩn bị trước phải thực tế, tính tới chu kỳ sản xuất thật
+6. Khi đụng ngày kỷ niệm mang tính chính trị, chỉ gợi ý hướng nội dung tích cực
+7. Dữ liệu ngày lễ mỗi năm cần cập nhật lại phần quy đổi âm lịch và các mốc sale mới
 
-> 自研溯源、农历换算算法血缘与参考开源项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển, phả hệ thuật toán quy đổi âm lịch và dự án mã nguồn mở tham khảo xem `EASEL-META.md` cùng thư mục.

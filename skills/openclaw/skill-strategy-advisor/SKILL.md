@@ -8,148 +8,148 @@ description: >-
 layer: attribute
 ---
 
-# 策略迭代建议
+# Gợi ý điều chỉnh chiến lược
 
-> 基于现有内容数据与画像，给出下一阶段的内容策略优化建议。
+> Dựa trên dữ liệu nội dung hiện có và hồ sơ (Profile), đưa ra gợi ý tối ưu chiến lược nội dung cho giai đoạn tiếp theo.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 内容数据摘要 | 是 | 过去一段时间的内容表现数据（至少包含标题、平台、核心指标），或复盘报告 |
-| 时间范围 | 推荐 | 数据覆盖的时间段（如"最近 30 天"、"6 月"） |
-| 当前策略描述 | 推荐 | 现行的内容方向、赛道、发布节奏、主要形式等 |
-| 目标变化 | 可选 | 近期目标是否有变化（如从涨粉转向变现、从单平台转向多平台） |
-| 行业/赛道信息 | 可选 | 所在行业的近期变化、竞品动向 |
-| 复盘报告 | 可选 | 若已运行过 skill-content-postmortem，可直接引用其输出 |
+| Tóm tắt dữ liệu nội dung | Có | Dữ liệu hiệu quả nội dung của giai đoạn vừa qua (ít nhất có tiêu đề, nền tảng, chỉ số cốt lõi), hoặc báo cáo hậu kiểm |
+| Khoảng thời gian | Nên có | Giai đoạn mà dữ liệu bao phủ (ví dụ "30 ngày gần nhất", "tháng 6") |
+| Mô tả chiến lược hiện tại | Nên có | Hướng nội dung, ngách, nhịp đăng, hình thức chính đang chạy |
+| Thay đổi mục tiêu | Tuỳ chọn | Mục tiêu gần đây có đổi không (ví dụ từ tăng người theo dõi chuyển sang kiếm tiền, từ một nền tảng sang đa nền tảng) |
+| Thông tin ngành/ngách | Tuỳ chọn | Biến động gần đây của ngành, động thái đối thủ |
+| Báo cáo hậu kiểm | Tuỳ chọn | Nếu đã chạy skill-content-postmortem, có thể trích thẳng đầu ra của nó |
 
-若用户仅提供模糊描述（如"最近数据不太好"），引导补充具体数据，但不阻断流程。基于可用信息给出建议，标注置信度。
+Nếu người dùng chỉ đưa mô tả mơ hồ (ví dụ "dạo này số liệu không tốt lắm"), hãy dẫn dắt họ bổ sung dữ liệu cụ thể, nhưng đừng chặn quy trình. Dựa trên thông tin sẵn có mà đưa gợi ý, kèm ghi chú mức độ tin cậy.
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 策略迭代建议：[账号/主题] — [时间段]
+# Gợi ý điều chỉnh chiến lược: [kênh/chủ đề] - [giai đoạn]
 
-## 现状诊断
+## Chẩn đoán hiện trạng
 
-### 数据总览
-| 指标 | 当前值 | 趋势（↑↓→） | 健康度 |
+### Tổng quan số liệu
+| Chỉ số | Giá trị hiện tại | Xu hướng (↑↓→) | Độ khoẻ |
 |------|--------|-------------|--------|
-| 发布频率 | | | |
-| 平均阅读/播放 | | | |
-| 平均互动率 | | | |
-| 粉丝增长 | | | |
-| 爆款率 | | | |
+| Tần suất đăng | | | |
+| Lượt đọc/xem trung bình | | | |
+| Tỉ lệ tương tác trung bình | | | |
+| Tăng trưởng người theo dõi | | | |
+| Tỉ lệ viral | | | |
 
-### 核心问题识别
-- 问题 1：[具体问题 + 数据支撑]
-- 问题 2：...
-- 积极信号：[做得好的方面，不能只说问题]
+### Nhận diện vấn đề cốt lõi
+- Vấn đề 1: [vấn đề cụ thể + dữ liệu chứng minh]
+- Vấn đề 2: ...
+- Tín hiệu tích cực: [những mặt làm tốt, không được chỉ nói vấn đề]
 
-## 策略建议（按优先级排序）
+## Gợi ý chiến lược (xếp theo mức ưu tiên)
 
-### 1. [最高优先级建议标题]
-- **现状**：当前怎么做的
-- **问题**：数据说明了什么
-- **建议**：具体怎么调整
-- **预期效果**：调整后预期的变化
-- **执行要点**：落地时的注意事项
+### 1. [tiêu đề gợi ý ưu tiên cao nhất]
+- **Hiện trạng**: đang làm thế nào
+- **Vấn đề**: dữ liệu nói lên điều gì
+- **Gợi ý**: chỉnh cụ thể ra sao
+- **Hiệu quả kỳ vọng**: thay đổi dự kiến sau khi chỉnh
+- **Điểm then chốt khi thực thi**: lưu ý lúc triển khai
 
-### 2. [次优先级建议标题]
+### 2. [tiêu đề gợi ý ưu tiên kế tiếp]
 ...
 
-（共 3-5 条建议）
+(tổng cộng 3-5 gợi ý)
 
-## 内容方向调整
+## Điều chỉnh hướng nội dung
 
-### 保持的方向
-- [表现好的方向 + 原因]
+### Hướng giữ nguyên
+- [hướng đang chạy tốt + lý do]
 
-### 加强的方向
-- [有潜力但投入不足的方向 + 依据]
+### Hướng cần đẩy mạnh
+- [hướng có tiềm năng nhưng đầu tư chưa đủ + căn cứ]
 
-### 减少或放弃的方向
-- [表现差或 ROI 低的方向 + 替代方案]
+### Hướng giảm bớt hoặc bỏ
+- [hướng hiệu quả kém hoặc ROI thấp + phương án thay thế]
 
-### 新赛道探索建议
-- [基于数据和趋势推荐的新方向 + 试水方案]
+### Gợi ý thăm dò ngách mới
+- [hướng mới gợi ý từ dữ liệu và xu hướng + phương án thử nước]
 
-## 内容形式优化
-- 格式建议（图文 / 视频 / 直播 / 混合）
-- 长度建议
-- 发布节奏建议（频率 + 最佳时段）
+## Tối ưu hình thức nội dung
+- Gợi ý định dạng (bài ảnh-chữ / video / livestream / kết hợp)
+- Gợi ý độ dài
+- Gợi ý nhịp đăng (tần suất + khung giờ tốt nhất)
 
-## 画像微调建议（如有 Profile）
-- 定位描述是否需要更新
-- 目标受众是否需要调整
-- 内容风格是否需要迭代
-- 具体修改建议（给出修改前后对比）
+## Gợi ý tinh chỉnh hồ sơ (khi có Profile)
+- Mô tả định vị có cần cập nhật không
+- Khán giả mục tiêu có cần chỉnh không
+- Phong cách nội dung có cần đổi mới không
+- Gợi ý sửa cụ thể (đưa đối chiếu trước và sau khi sửa)
 
-## 下一步行动清单
-1. 本周立即执行：[1-2 个动作]
-2. 两周内完成：[2-3 个调整]
-3. 持续观察：[需要跟踪验证的指标]
+## Danh sách hành động tiếp theo
+1. Làm ngay tuần này: [1-2 hành động]
+2. Hoàn tất trong hai tuần: [2-3 điều chỉnh]
+3. Theo dõi liên tục: [chỉ số cần bám để kiểm chứng]
 
-## 数据局限与假设
-- 分析基于的数据范围和质量说明
-- 关键假设（如平台算法未大幅变化）
+## Giới hạn dữ liệu và giả định
+- Thuyết minh phạm vi và chất lượng dữ liệu dùng để phân tích
+- Giả định then chốt (ví dụ thuật toán nền tảng không thay đổi lớn)
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **数据摄入与清理**
-   - 接收用户提供的内容数据（CSV、截图、文字描述、复盘报告均可）
-   - 标准化为统一格式：内容标题、平台、发布时间、核心指标
-   - 若引用了 skill-content-postmortem 的输出，直接复用其分析结论
+1. **Nạp và làm sạch dữ liệu**
+   - Nhận dữ liệu nội dung người dùng đưa (CSV, ảnh chụp màn hình, mô tả bằng chữ, báo cáo hậu kiểm đều được)
+   - Chuẩn hoá về một định dạng thống nhất: tiêu đề nội dung, nền tảng, thời gian đăng, chỉ số cốt lõi
+   - Nếu đã trích đầu ra của skill-content-postmortem thì dùng lại luôn kết luận phân tích của nó
 
-2. **现状诊断**
-   - 计算核心指标的均值、趋势、波动
-   - 识别表现异常点（突增突降）
-   - 对照 references/platform-benchmarks.md 判断账号健康度
-   - 标记正面信号和问题信号
+2. **Chẩn đoán hiện trạng**
+   - Tính giá trị trung bình, xu hướng, biên độ dao động của các chỉ số cốt lõi
+   - Nhận diện điểm bất thường (tăng vọt, tụt mạnh)
+   - Đối chiếu references/platform-benchmarks.md để đánh giá độ khoẻ của kênh
+   - Đánh dấu tín hiệu tích cực và tín hiệu có vấn đề
 
-3. **归因分析**
-   - 交叉分析：哪些内容方向 x 内容形式的组合表现最好/最差
-   - 时间维度：趋势是在好转还是恶化
-   - 外部因素：是否有平台规则变化、行业热点、季节因素的影响
+3. **Phân tích quy nguyên**
+   - Phân tích chéo: tổ hợp hướng nội dung x hình thức nội dung nào chạy tốt nhất/tệ nhất
+   - Chiều thời gian: xu hướng đang tốt lên hay xấu đi
+   - Yếu tố bên ngoài: có chịu ảnh hưởng từ thay đổi quy tắc nền tảng, trend ngành, yếu tố mùa vụ không
 
-4. **趋势与机会扫描**
-   - 基于赛道信息，判断行业内容趋势变化
-   - 识别用户数据中的潜在增长方向（有苗头但未放大的信号）
-   - 结合平台最新的流量倾斜方向（如平台近期推什么格式）
+4. **Quét xu hướng và cơ hội**
+   - Dựa trên thông tin ngách, nhận định thay đổi xu hướng nội dung của ngành
+   - Nhận diện hướng tăng trưởng tiềm năng trong dữ liệu người dùng (tín hiệu đã nhú nhưng chưa được khuếch đại)
+   - Kết hợp hướng ưu tiên phân phối mới nhất của nền tảng (ví dụ nền tảng đang đẩy định dạng nào)
 
-5. **策略生成**
-   - 生成 3-5 条策略建议，每条包含：现状、问题、建议、预期效果、执行要点
-   - 按预期影响力排序（高影响 + 低执行难度优先）
-   - 确保建议具体可执行，不写"提高内容质量"这类空话
+5. **Sinh chiến lược**
+   - Sinh 3-5 gợi ý chiến lược, mỗi gợi ý gồm: hiện trạng, vấn đề, gợi ý, hiệu quả kỳ vọng, điểm then chốt khi thực thi
+   - Xếp theo mức tác động kỳ vọng (tác động cao + dễ thực thi được ưu tiên)
+   - Bảo đảm gợi ý cụ thể, làm được ngay, không viết câu sáo rỗng kiểu "nâng cao chất lượng nội dung"
 
-6. **方向调整矩阵**
-   - 将现有内容方向分为四象限：保持 / 加强 / 减少 / 新增
-   - 每个方向的调整都有数据支撑
-   - 新赛道建议附带低成本试水方案（如"先发 3 条测试反馈"）
+6. **Ma trận điều chỉnh hướng**
+   - Chia các hướng nội dung hiện có thành bốn ô: giữ / đẩy mạnh / giảm / thêm mới
+   - Mỗi điều chỉnh hướng đều phải có dữ liệu chống lưng
+   - Gợi ý ngách mới phải kèm phương án thử nước chi phí thấp (ví dụ "đăng trước 3 bài để đo phản hồi")
 
-7. **画像微调（有 Profile 时）**
-   - 比对数据表现与 Profile 中的定位描述
-   - 若数据显示受众/风格/方向与 Profile 不符，给出微调建议
-   - 提供修改前后对比，而非只说"需要调整"
+7. **Tinh chỉnh hồ sơ (khi có Profile)**
+   - Đối chiếu hiệu quả dữ liệu với mô tả định vị trong Profile
+   - Nếu dữ liệu cho thấy khán giả/phong cách/hướng lệch với Profile, hãy đưa gợi ý tinh chỉnh
+   - Đưa đối chiếu trước và sau khi sửa, chứ không chỉ nói "cần điều chỉnh"
 
-8. **输出与交付**
-   - 按输出模板生成完整报告
-   - 生成行动清单（本周 / 两周内 / 持续观察）
-   - 保存到 `outputs/`
+8. **Xuất và bàn giao**
+   - Sinh báo cáo đầy đủ theo mẫu đầu ra
+   - Sinh danh sách hành động (tuần này / trong hai tuần / theo dõi liên tục)
+   - Lưu vào `outputs/<chủ đề>/`
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 identity.md（赛道定位）、platforms.md（当前主攻平台）、audience.md（受众画像）、preferences.md（变现/商业化偏好）
-- 策略建议对齐 Profile 中的长期目标（不会为了短期数据建议偏离账号定位）
-- 画像微调：当数据表现与 Profile 定义出现偏差时，明确指出并给出修改建议
-- 分阶段建议：冷启动期侧重"找到有效方向"，增长期侧重"放大优势"，变现期侧重"转化效率"
+**Khi có Profile:**
+- Đọc identity.md (định vị ngách), platforms.md (nền tảng đang tập trung), audience.md (hồ sơ khán giả), preferences.md (thiên hướng kiếm tiền/thương mại hoá)
+- Gợi ý chiến lược bám mục tiêu dài hạn trong Profile (không vì số liệu ngắn hạn mà khuyên chệch khỏi định vị kênh)
+- Tinh chỉnh hồ sơ: khi hiệu quả dữ liệu lệch với định nghĩa trong Profile thì chỉ rõ và đưa gợi ý sửa
+- Gợi ý theo giai đoạn: giai đoạn xây kênh nghiêng về "tìm hướng hiệu quả", giai đoạn tăng trưởng nghiêng về "khuếch đại lợi thế", giai đoạn kiếm tiền nghiêng về "hiệu suất chuyển đổi"
 
-**无 Profile 时：**
-- 退到通用模式，基于数据本身做诊断和建议
-- 不做"是否偏离定位"的判断（因为不知道定位是什么）
-- 不输出画像微调部分
-- 建议用户创建 Profile 以获得更精准的策略迭代
+**Khi không có Profile:**
+- Lui về chế độ chung, chẩn đoán và gợi ý dựa trên chính dữ liệu
+- Không phán "có chệch định vị hay không" (vì chưa biết định vị là gì)
+- Không xuất phần tinh chỉnh hồ sơ
+- Khuyên người dùng tạo Profile để có gợi ý chiến lược chính xác hơn
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và các dự án tham khảo xem `EASEL-META.md` trong cùng thư mục.

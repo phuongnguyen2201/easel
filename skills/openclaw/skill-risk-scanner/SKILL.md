@@ -7,155 +7,155 @@ description: >-
 layer: publish
 ---
 
-# 内容原创度与版权风险评估
+# Đánh giá độ nguyên bản và rủi ro bản quyền của nội dung
 
-> 基于 LLM 文本分析能力，评估内容的原创度风险和素材版权风险，输出定性风险报告与改进建议。
+> Dựa trên khả năng phân tích văn bản của LLM, đánh giá rủi ro về độ nguyên bản và rủi ro bản quyền tư liệu, xuất báo cáo rủi ro định tính kèm đề xuất cải thiện.
 
-## 能力边界声明
+## Tuyên bố giới hạn năng lực
 
-本 SKILL 基于 LLM 文本分析，**不包含**以下技术能力：
+SKILL này dựa trên phân tích văn bản của LLM, **không bao gồm** các năng lực kỹ thuật sau:
 
-- **不做技术查重** — 无法计算余弦相似度或精确重复率，需要 Copyleaks / Originality.ai 等外部 API
-- **不输出相似度分数** — 所有风险判断均为定性等级（低/中/高），不伪造百分比或小数
-- **不做图片内容识别** — 无法读取 EXIF、检测水印、识别图片来源；图片风险评估基于用户提供的来源描述
-- **不做音频指纹匹配** — 无法识别 BGM 曲目，基于用户标注的音乐来源进行风险判断
+- **Không check trùng kỹ thuật** - không tính được độ tương đồng cosine hay tỉ lệ trùng lặp chính xác, việc đó cần API ngoài như Copyleaks / Originality.ai
+- **Không xuất điểm tương đồng** - mọi kết luận rủi ro đều là mức định tính (thấp/trung bình/cao), không bịa phần trăm hay số thập phân
+- **Không nhận diện nội dung ảnh** - không đọc được EXIF, không dò watermark, không truy ra nguồn ảnh; rủi ro ảnh được đánh giá dựa trên mô tả nguồn do người dùng cung cấp
+- **Không đối chiếu vân tay âm thanh** - không nhận ra được bản nhạc BGM, chỉ kết luận rủi ro dựa trên nguồn nhạc người dùng ghi chú
 
-## 与其他 SKILL 的区别
+## Khác gì các SKILL còn lại
 
-| SKILL | 定位 | 检查焦点 |
+| SKILL | Định vị | Trọng tâm kiểm tra |
 |---|---|---|
-| **risk-scanner**（本 SKILL） | 原创度 + 版权风险 | 洗稿模式识别、素材版权风险、引用合规 |
-| skill-quality-gate | 平台合规 + 内容质量 | 敏感词、平台规则、广告法、绝对化用语、医疗违规 |
-| skill-publish-checklist | 完整性检查 | 有没有漏标题、漏封面 |
+| **risk-scanner** (SKILL này) | Độ nguyên bản + rủi ro bản quyền | Nhận diện mẫu xào bài, rủi ro bản quyền tư liệu, tuân thủ khi trích dẫn |
+| skill-quality-gate | Tuân thủ nền tảng + chất lượng nội dung | Từ nhạy cảm, quy tắc nền tảng, luật quảng cáo, từ tuyệt đối, vi phạm về y tế |
+| skill-publish-checklist | Kiểm tính đầy đủ | Có sót tiêu đề, sót ảnh bìa hay không |
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Mô tả |
 |------|------|------|
-| 待检查文案 | 是 | 文案正文、脚本、长文原稿 |
-| 素材来源说明 | 否 | 用户描述图片/音频/视频的来源（如"图片来自 Unsplash"、"BGM 用的抖音自带音乐"） |
-| 参考来源文本 | 否 | 原始参考文章的文本或 URL，用于对比改写充分度 |
-| 目标平台 | 否 | 发布平台名称，用于匹配平台版权规则 |
+| Nội dung cần kiểm | Có | Thân bài viết, kịch bản, bản thảo bài dài |
+| Mô tả nguồn tư liệu | Không | Người dùng mô tả nguồn ảnh/audio/video (ví dụ "ảnh lấy từ Unsplash", "BGM dùng nhạc có sẵn của TikTok") |
+| Văn bản nguồn tham khảo | Không | Văn bản hoặc URL của bài gốc đã tham khảo, dùng để đối chiếu mức độ viết lại |
+| Nền tảng đích | Không | Tên nền tảng sẽ đăng, dùng để khớp quy tắc bản quyền của nền tảng |
 
-## 输出
+## Đầu ra
 
-Markdown 格式的风险评估报告，结构如下：
+Báo cáo đánh giá rủi ro dạng Markdown, cấu trúc như sau:
 
 ```markdown
-# 风险评估报告
+# Báo cáo đánh giá rủi ro
 
-## 整体风险等级：🟢 低风险 / 🟡 中风险 / 🔴 高风险
+## Mức rủi ro tổng thể: 🟢 thấp / 🟡 trung bình / 🔴 cao
 
-## 一、文本原创度评估
+## 1. Đánh giá độ nguyên bản của văn bản
 
-### 洗稿模式扫描
-- [扫描结果与具体发现]
+### Quét mẫu xào bài
+- [kết quả quét và phát hiện cụ thể]
 
-### 内容独特性判断
-- [是否包含个人经验/独家数据/原创观点]
+### Đánh giá tính độc nhất của nội dung
+- [có trải nghiệm cá nhân/dữ liệu độc quyền/quan điểm nguyên bản hay không]
 
-### 引用规范检查
-- [引用是否标注来源、数据是否注明出处]
+### Kiểm chuẩn trích dẫn
+- [trích dẫn có ghi nguồn không, số liệu có ghi xuất xứ không]
 
-## 二、素材版权风险（仅在用户提供素材来源描述时输出）
+## 2. Rủi ro bản quyền tư liệu (chỉ xuất khi người dùng có mô tả nguồn tư liệu)
 
-### 图片素材
-- [基于用户描述的来源判断]
+### Tư liệu ảnh
+- [kết luận dựa trên nguồn người dùng mô tả]
 
-### 音频/BGM
-- [基于用户描述的来源判断]
+### Audio/BGM
+- [kết luận dựa trên nguồn người dùng mô tả]
 
-## 三、品牌与商标风险
-- [文案中提及的品牌名/商标的使用风险]
+## 3. Rủi ro thương hiệu và nhãn hiệu
+- [rủi ro khi dùng tên thương hiệu/nhãn hiệu được nhắc trong bài]
 
-## 四、风险清单
+## 4. Danh sách rủi ro
 
-### 必须处理（阻塞发布）
-- [高风险项]
+### Bắt buộc xử lý (chặn đăng)
+- [mục rủi ro cao]
 
-### 建议处理（不阻塞但有隐患）
-- [中风险项]
+### Nên xử lý (không chặn nhưng có nguy cơ)
+- [mục rủi ro trung bình]
 
-## 五、改进建议
-- [针对每个风险项的具体操作建议]
+## 5. Đề xuất cải thiện
+- [đề xuất thao tác cụ thể cho từng mục rủi ro]
 ```
 
-风险等级定义：
-- **低风险** — 内容有明显原创成分，引用规范，素材来源清晰
-- **中风险** — 存在部分洗稿嫌疑或素材来源不明，建议修改后发布
-- **高风险** — 有明显搬运/抄袭模式或版权侵权风险，不建议直接发布
+Định nghĩa mức rủi ro:
+- **Rủi ro thấp** - nội dung có phần nguyên bản rõ rệt, trích dẫn đúng chuẩn, nguồn tư liệu rõ ràng
+- **Rủi ro trung bình** - có phần nghi xào bài hoặc nguồn tư liệu không rõ, nên sửa rồi mới đăng
+- **Rủi ro cao** - có dấu hiệu bê bài/sao chép rõ ràng hoặc nguy cơ xâm phạm bản quyền, không nên đăng thẳng
 
-## 执行步骤
+## Các bước thực hiện
 
-### Step 1 — 确认输入与检查范围
+### Step 1 - Chốt đầu vào và phạm vi kiểm tra
 
-1. 读取用户提供的待检查文案
-2. 确认是否提供了素材来源说明（图片、音频、视频的来源描述）
-3. 确认是否提供了参考来源文本（用于对比改写充分度）
-4. 确认目标平台（用于匹配平台特有版权规则）
-5. 未提供素材来源说明时，跳过素材版权评估模块，在报告中注明"用户未提供素材来源信息，无法评估素材版权风险"
+1. Đọc nội dung cần kiểm mà người dùng đưa
+2. Xác nhận có mô tả nguồn tư liệu hay không (nguồn ảnh, audio, video)
+3. Xác nhận có văn bản nguồn tham khảo hay không (để đối chiếu mức độ viết lại)
+4. Xác nhận nền tảng đích (để khớp quy tắc bản quyền riêng của nền tảng)
+5. Không có mô tả nguồn tư liệu thì bỏ phần đánh giá bản quyền tư liệu, ghi rõ trong báo cáo "người dùng chưa cung cấp thông tin nguồn tư liệu, không đánh giá được rủi ro bản quyền tư liệu"
 
-### Step 2 — 文本洗稿模式扫描
+### Step 2 - Quét mẫu xào bài trong văn bản
 
-逐段扫描文案，按 `references/washing-patterns.md`「一、洗稿模式识别」识别机械性同义替换、句式变换但论点复刻、段落搬运重排三类特征。对发现的每个特征引用具体段落文本并说明理由；未发现时明确说明"未检测到明显洗稿模式"。
+Quét từng đoạn, theo phần "1. Nhận diện mẫu xào bài" trong `references/washing-patterns.md` để bắt ba nhóm dấu hiệu: thay từ đồng nghĩa một cách máy móc, đổi cấu trúc câu nhưng sao y luận điểm, bê nguyên đoạn rồi xáo thứ tự. Mỗi dấu hiệu tìm được phải trích đúng đoạn văn và nêu lý do; không thấy gì thì nói rõ "không phát hiện mẫu xào bài rõ rệt".
 
-### Step 3 — 内容独特性评估
+### Step 3 - Đánh giá tính độc nhất của nội dung
 
-按 `references/washing-patterns.md`「二、内容独特性评估」判断文案是否包含个人经验、独家数据、原创观点、具体细节，并据此给出原创度较高/一般/低的结论。
+Theo phần "2. Đánh giá tính độc nhất của nội dung" trong `references/washing-patterns.md`, xét bài có trải nghiệm cá nhân, dữ liệu độc quyền, quan điểm nguyên bản, chi tiết cụ thể hay không, rồi kết luận độ nguyên bản cao/trung bình/thấp.
 
-### Step 4 — 引用规范检查
+### Step 4 - Kiểm chuẩn trích dẫn
 
-按 `references/washing-patterns.md`「三、引用规范检查」核对观点引用、数据引用、截图引用的来源标注；若用户提供了参考来源文本，对比本文与来源的转述充分度（是否只换词不换意、是否加入自己的分析、是否改变结构和论证逻辑）。
+Theo phần "3. Kiểm chuẩn trích dẫn" trong `references/washing-patterns.md`, soát việc ghi nguồn cho trích dẫn quan điểm, trích dẫn số liệu, ảnh chụp màn hình; nếu người dùng có đưa văn bản nguồn tham khảo thì đối chiếu mức độ diễn đạt lại (chỉ đổi từ mà không đổi ý, có thêm phân tích riêng không, có đổi cấu trúc và mạch lập luận không).
 
-### Step 5 — 素材版权风险评估（基于用户描述）
+### Step 5 - Đánh giá rủi ro bản quyền tư liệu (dựa trên mô tả của người dùng)
 
-**仅在用户提供素材来源描述时执行此步骤。**
+**Chỉ chạy bước này khi người dùng có mô tả nguồn tư liệu.**
 
-根据用户描述的素材来源，参照 `references/copyright-guide.md`「七、素材来源风险速查表」（图片 7.1 / 音频 BGM 7.2）判断风险等级，并对高风险素材推荐 `references/copyright-guide.md` 中的免费图库和音乐库替代来源。
+Dựa trên nguồn tư liệu người dùng mô tả, tham chiếu phần "7. Bảng tra nhanh rủi ro nguồn tư liệu" trong `references/copyright-guide.md` (ảnh 7.1 / audio BGM 7.2) để định mức rủi ro, và với tư liệu rủi ro cao thì gợi ý nguồn thay thế từ kho ảnh và kho nhạc miễn phí trong `references/copyright-guide.md`.
 
-### Step 6 — 品牌与商标风险扫描
+### Step 6 - Quét rủi ro thương hiệu và nhãn hiệu
 
-扫描文案中出现的品牌名、商标、产品名：
+Quét tên thương hiệu, nhãn hiệu, tên sản phẩm xuất hiện trong bài:
 
-1. **竞品品牌提及** — 在推广内容中贬低竞品构成不正当竞争风险
-2. **未授权使用品牌名** — 在标题/封面中突出使用他人品牌名可能构成商标侵权
-3. **虚假关联暗示** — "XX 品牌推荐/XX 品牌同款"等未经授权的关联表述
-4. 列出所有检测到的品牌名及其使用上下文，给出风险判断
+1. **Nhắc tên thương hiệu đối thủ** - dìm đối thủ trong nội dung quảng bá là rủi ro cạnh tranh không lành mạnh
+2. **Dùng tên thương hiệu khi chưa được phép** - đặt nổi tên thương hiệu của người khác ở tiêu đề/ảnh bìa có thể thành xâm phạm nhãn hiệu
+3. **Ám chỉ liên kết sai sự thật** - các cách nói gán ghép chưa được phép như "thương hiệu XX khuyên dùng/hàng giống thương hiệu XX"
+4. Liệt kê mọi tên thương hiệu bắt được kèm ngữ cảnh sử dụng, rồi kết luận mức rủi ro
 
-### Step 7 — 汇总风险报告
+### Step 7 - Tổng hợp báo cáo rủi ro
 
-1. 汇总 Step 2-6 的所有发现
-2. 确定整体风险等级（取所有维度中的最高风险等级）
-3. 区分"必须处理"和"建议处理"两类风险：
-   - **必须处理**：明显洗稿段落、高风险素材来源、未授权品牌使用
-   - **建议处理**：缺少引用标注、原创成分偏少、AI 生成标注缺失
-4. 对每个风险项给出具体改进建议：
-   - 洗稿段落 → 指出具体段落并给出改写方向（补充个人经验、换论证角度）
-   - 来源不明素材 → 推荐具体的免费替代来源
-   - 引用缺失 → 指出应补充引用的具体位置
-5. 输出完整 Markdown 格式风险报告
+1. Gom toàn bộ phát hiện từ Step 2-6
+2. Chốt mức rủi ro tổng thể (lấy mức cao nhất trong tất cả các chiều)
+3. Tách rủi ro thành hai nhóm "bắt buộc xử lý" và "nên xử lý":
+   - **Bắt buộc xử lý**: đoạn xào bài rõ rệt, nguồn tư liệu rủi ro cao, dùng thương hiệu khi chưa được phép
+   - **Nên xử lý**: thiếu ghi nguồn trích dẫn, phần nguyên bản hơi ít, thiếu nhãn ghi nội dung do AI tạo
+4. Với từng mục rủi ro, đưa đề xuất cải thiện cụ thể:
+   - Đoạn xào bài → chỉ đúng đoạn và nêu hướng viết lại (bổ sung trải nghiệm cá nhân, đổi góc lập luận)
+   - Tư liệu không rõ nguồn → gợi ý nguồn miễn phí thay thế cụ thể
+   - Thiếu trích dẫn → chỉ đúng vị trí cần bổ sung trích dẫn
+5. Xuất báo cáo rủi ro đầy đủ dạng Markdown
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `platform` 字段，启用该平台的版权规则（参照 `references/copyright-guide.md`）：
-  - 小红书：AI 生成内容标注要求、图片搬运检测机制
-  - 抖音：BGM 版权限制、原声使用规范
-  - B站：转载标注规范、素材引用要求
-  - 公众号：原创声明规则、白名单转载机制
-- 读取 `positioning` 字段，评估内容与账号定位的一致性（定位偏移本身不是版权风险，但在报告中提示）
-- 读取历史内容风格，判断本次内容是否与以往风格一致（风格突变可能暗示搬运）
+**Khi có Profile:**
+- Đọc trường `platform`, bật quy tắc bản quyền của nền tảng đó (tham chiếu `references/copyright-guide.md`):
+  - Xiaohongshu: yêu cầu gắn nhãn nội dung do AI tạo, cơ chế phát hiện ảnh bê nguyên
+  - Douyin: giới hạn bản quyền BGM, chuẩn dùng âm thanh gốc
+  - Bilibili: chuẩn ghi nhãn khi đăng lại, yêu cầu trích dẫn tư liệu
+  - WeChat OA: quy tắc khai báo bài nguyên bản, cơ chế đăng lại theo whitelist
+- Đọc trường `positioning`, xét độ khớp giữa nội dung và định vị kênh (lệch định vị tự nó không phải rủi ro bản quyền, nhưng vẫn nhắc trong báo cáo)
+- Đọc phong cách nội dung cũ, xét lần này có hợp phong cách trước không (phong cách đổi đột ngột có thể là dấu hiệu bê bài)
 
-**无 Profile 时：**
-- 做通用原创度和版权检查，不做平台特化
-- 在报告末尾附注："如提供账号 Profile（含平台信息），可启用平台特有版权规则检查"
+**Khi không có Profile:**
+- Kiểm độ nguyên bản và bản quyền ở mức tổng quát, không đặc thù hoá theo nền tảng
+- Ghi chú ở cuối báo cáo: "nếu cung cấp Profile của kênh (kèm thông tin nền tảng), có thể bật phần kiểm quy tắc bản quyền riêng của nền tảng"
 
-## 规则
+## Quy tắc
 
-1. **不伪造量化指标** — 禁止输出相似度百分比、原创度分数、匹配率等数值，所有判断用定性等级表达
-2. **不声称技术查重能力** — 报告中不得暗示已进行数据库比对、向量检索或指纹匹配
-3. **素材评估必须基于用户描述** — 用户未描述素材来源时，不猜测，明确标注"来源未提供，无法评估"
-4. **发现必须引用原文** — 标记洗稿嫌疑时，必须引用具体文本段落，不做笼统判断
-5. **建议必须可操作** — 每条改进建议必须告诉用户具体做什么（改哪段、换什么素材、补什么引用）
-6. **诚实标注局限** — 报告末尾附注"本评估基于 LLM 文本分析，如需精确查重请使用 Copyleaks、Originality.ai 等专业工具"
-7. 禁止使用破折号（em dash）
+1. **Không bịa chỉ số định lượng** - cấm xuất phần trăm tương đồng, điểm nguyên bản, tỉ lệ khớp; mọi kết luận diễn đạt bằng mức định tính
+2. **Không tuyên bố có khả năng check trùng kỹ thuật** - báo cáo không được ám chỉ đã đối chiếu cơ sở dữ liệu, tìm kiếm vector hay so vân tay
+3. **Đánh giá tư liệu phải dựa trên mô tả của người dùng** - người dùng không mô tả nguồn thì không đoán, ghi rõ "chưa có nguồn, không đánh giá được"
+4. **Phát hiện phải trích nguyên văn** - khi đánh dấu nghi xào bài, bắt buộc trích đúng đoạn văn, không kết luận chung chung
+5. **Đề xuất phải làm được ngay** - mỗi đề xuất cải thiện phải nói rõ người dùng làm gì (sửa đoạn nào, đổi tư liệu nào, bổ sung trích dẫn nào)
+6. **Trung thực về giới hạn** - ghi chú cuối báo cáo "đánh giá này dựa trên phân tích văn bản của LLM, nếu cần check trùng chính xác hãy dùng công cụ chuyên dụng như Copyleaks, Originality.ai"
+7. Cấm dùng dấu gạch ngang dài (em dash)

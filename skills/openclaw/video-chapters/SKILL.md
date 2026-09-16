@@ -8,71 +8,71 @@ description: >-
 layer: produce
 ---
 
-# 视频章节 / 时间戳目录
+# Chương video / mục lục timestamp
 
-> 给中长视频生成章节时间戳目录（B站/YouTube 描述区可用）。带时间轴转录走 `asr.py`，
-> **章节切分与命名由你（LLM）完成**。
+> Sinh mục lục timestamp chương cho video trung/dài (dùng được ở phần mô tả của Bilibili/YouTube). Transcript kèm mốc thời gian chạy `asr.py`,
+> **việc chia chương và đặt tên chương do bạn (LLM) làm**.
 
-> 出成篇图文见 **video-to-article**；出字幕见 **auto-subtitle**；切成短视频见 **video-highlights**。
+> Ra bài viết hoàn chỉnh: xem **video-to-article**; ra phụ đề: xem **auto-subtitle**; cắt thành video ngắn: xem **video-highlights**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 视频文件 | 是 | 中长视频（教程/评测/讲座/直播回放；没给就问） |
-| 目标平台 | 否 | B站 / YouTube / 通用（影响格式与措辞） |
-| 章节数 | 否 | 期望章节数（默认按内容自然划分，通常 5-12 段） |
+| File video | Có | Video trung/dài (hướng dẫn/review/bài giảng/phát lại livestream; không đưa thì hỏi) |
+| Nền tảng đích | Không | Bilibili / YouTube / dùng chung (ảnh hưởng định dạng và cách diễn đạt) |
+| Số chương | Không | Số chương mong muốn (mặc định chia tự nhiên theo nội dung, thường 5-12 đoạn) |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- `chapters.txt` — 时间戳目录（每行 `mm:ss 章节名`，可直接贴描述区）
-- `chapters.json` — 结构化（start 秒 + 标题），供程序化使用
-- `transcript.txt` — 转录原文（备查）
+- `chapters.txt` - mục lục timestamp (mỗi dòng `mm:ss tên chương`, dán thẳng vào phần mô tả được)
+- `chapters.json` - dạng cấu trúc (start tính bằng giây + tiêu đề), để chương trình dùng
+- `transcript.txt` - bản transcript gốc (để tra lại)
 
-## 执行步骤
+## Các bước thực thi
 
-脚本路径（相对项目根）：`skills/shared/scripts/asr.py`。
+Đường dẫn script (tương đối gốc dự án): `skills/shared/scripts/asr.py`.
 
-### 1. 带时间轴转录
+### 1. Transcript kèm mốc thời gian
 ```bash
-python skills/shared/scripts/asr.py transcribe -i <视频> --format json \
-  -o outputs/主题名/transcript.json
+python skills/shared/scripts/asr.py transcribe -i <video> --format json \
+  -o "outputs/<chủ đề>/transcript.json"
 ```
-（首次跑 ASR 需外网代理下模型，见 auto-subtitle 前置说明。）
+(Lần đầu chạy ASR cần proxy ra ngoài để tải model, xem phần yêu cầu trước của auto-subtitle.)
 
-### 2. 划分章节（你来做）
-读 transcript.json（每段带 start/end），按**话题转折**划分章节：
-- 找主题切换点作为章节边界（不是均匀切时间，而是按内容）。
-- **第一章从 00:00 开始**（平台要求，否则章节功能不生效）。
-- 每章名 6-16 字，动词开头或点明看点（如"实测续航翻车了""3 分钟教你上手"），不写"第一部分"。
-- 章节数适中（太碎观众烦，太粗没用），一般 5-12 段；短视频（<3 分钟）通常不需要章节。
-- 章节最短 ≥10 秒（平台 YouTube 要求相邻章节间隔 ≥10s）。
+### 2. Chia chương (bạn tự làm)
+Đọc transcript.json (mỗi đoạn có start/end), chia chương theo **điểm chuyển chủ đề**:
+- Tìm điểm đổi chủ đề làm ranh giới chương (không cắt đều theo thời gian mà cắt theo nội dung).
+- **Chương đầu bắt đầu từ 00:00** (nền tảng yêu cầu, không thì tính năng chương không chạy).
+- Tên mỗi chương 6-16 chữ, mở đầu bằng động từ hoặc nêu thẳng điểm đáng xem (ví dụ "Thử pin thực tế và cái kết", "3 phút để bạn dùng thành thạo"), không viết "Phần một".
+- Số chương vừa phải (quá vụn thì khán giả khó chịu, quá thô thì vô dụng), thường 5-12 đoạn; video ngắn (<3 phút) thường không cần chia chương.
+- Chương ngắn nhất ≥10 giây (YouTube yêu cầu khoảng cách giữa hai chương liền kề ≥10s).
 
-### 3. 输出目录
-写 `chapters.txt`（每行 `mm:ss 章节名`，首行必须 `00:00`）：
+### 3. Xuất mục lục
+Ghi `chapters.txt` (mỗi dòng `mm:ss tên chương`, dòng đầu bắt buộc là `00:00`):
 ```
-00:00 开场｜今天聊什么
-01:24 第一个坑：xxx
-03:50 实测环节
+00:00 Mở đầu | Hôm nay bàn gì
+01:24 Cái bẫy đầu tiên: xxx
+03:50 Phần thử nghiệm thực tế
 ...
 ```
-同时写 `chapters.json`：`[{"start": 0, "title": "开场｜今天聊什么"}, ...]`。
+Đồng thời ghi `chapters.json`: `[{"start": 0, "title": "Mở đầu | Hôm nay bàn gì"}, ...]`.
 
-## 平台格式差异
+## Khác biệt định dạng theo nền tảng
 
-- **YouTube**：贴在视频描述区，首个必须 `0:00`，≥3 章、每章 ≥10s 自动生效。
-- **B站**：作为"看点/进度条章节"或分P说明，格式 `mm:ss 标题`。
-- **通用**：`chapters.txt` 通用可读。
+- **YouTube**: dán vào phần mô tả video, mốc đầu bắt buộc `0:00`, có ≥3 chương và mỗi chương ≥10s thì tự kích hoạt.
+- **Bilibili**: dùng làm "điểm xem/chương trên thanh tiến trình" hoặc phần mô tả phân P, định dạng `mm:ss tiêu đề`.
+- **Dùng chung**: `chapters.txt` đọc được ở mọi nơi.
 
-## 规则
+## Quy tắc
 
-1. 章节边界按**话题转折**定，不是均匀切时间。
-2. 首章必须 00:00；相邻章节间隔 ≥10s。
-3. 章节名点明看点、简洁有吸引力，不用"第一部分"这类空名。
-4. 不编造视频没讲的内容；依据转录如实划分。
-5. 产物统一进 `outputs/主题名/`。
+1. Ranh giới chương xác định theo **điểm chuyển chủ đề**, không cắt đều theo thời gian.
+2. Chương đầu bắt buộc 00:00; khoảng cách giữa hai chương liền kề ≥10s.
+3. Tên chương nêu thẳng điểm đáng xem, ngắn gọn hấp dẫn, không dùng tên rỗng kiểu "Phần một".
+4. Không bịa nội dung video không nói; chia chương đúng theo transcript.
+5. Sản phẩm đều đưa vào `outputs/<chủ đề>/`.
 
-## 参考来源
+## Nguồn tham khảo
 
-章节时间戳是 YouTube/B站 提升完播与检索的标准做法（首章 0:00、≥10s 间隔为平台硬规则）。
-转录用 faster-whisper（asr.py）出时间轴，话题切分交给 LLM——确定性 IO 与语义划分分层。
+Timestamp chương là cách làm chuẩn để tăng tỉ lệ xem hết và khả năng tìm kiếm trên YouTube/Bilibili (chương đầu 0:00, khoảng cách ≥10s là quy tắc cứng của nền tảng).
+Transcript dùng faster-whisper (asr.py) để ra mốc thời gian, việc chia chủ đề giao cho LLM - tách bạch phần IO xác định và phần phân chia ngữ nghĩa.

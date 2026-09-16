@@ -7,122 +7,122 @@ description: >-
 layer: produce
 ---
 
-# 多角色 / 对话配音（Multi-voice Dubbing）
+# Lồng tiếng nhiều vai / hội thoại (Multi-voice Dubbing)
 
-把「多人对话 / 多角色脚本」合成为**多声线音轨**——每个角色一个符合其人设的声音，
-不再是「全程一个声音」。核心引擎 `skills/shared/scripts/multivoice.py`：
-逐行调 `tts.py`（edge-tts 免费多音色）或 `voice_clone.py`（云端表现力 provider / 克隆音色）合成，
-把每行 emotion 喂进 provider 的**真情感通道**，`ffmpeg` 拼成一轨 + 生成对齐的说话人字幕。
+Tổng hợp "hội thoại nhiều người / kịch bản nhiều vai" thành **track nhiều giọng** - mỗi vai một giọng khớp persona của vai đó,
+không còn kiểu "cả video một giọng". Engine lõi `skills/shared/scripts/multivoice.py`:
+gọi `tts.py` (edge-tts, nhiều giọng miễn phí) hoặc `voice_clone.py` (provider cloud giàu biểu cảm / giọng clone) để tổng hợp từng dòng,
+đẩy emotion của mỗi dòng vào **kênh cảm xúc thật** của provider, `ffmpeg` nối thành một track + sinh phụ đề người nói khớp thời gian.
 
-> 创意（谁说什么、什么情绪）由你 LLM 产出；音色映射在 cast。确定性 IO（逐行合成/拼接/字幕）走引擎。
-> 产物 `voice.mp3` 可直接当 narration 喂 `auto-short-video/assemble.py` 或加进任意视频；`voice.srt` 是带角色名的字幕。
+> Phần sáng tạo (ai nói gì, cảm xúc gì) do bạn - LLM - tạo ra; ánh xạ giọng nằm trong cast. Phần IO tất định (tổng hợp từng dòng/nối/phụ đề) giao cho engine.
+> Sản phẩm `voice.mp3` dùng thẳng làm narration cho `auto-short-video/assemble.py` hoặc ghép vào video bất kỳ; `voice.srt` là phụ đề kèm tên vai.
 
-## 配音质量分层（重要：治「像 AI 平读」）
+## Phân tầng chất lượng lồng tiếng (quan trọng: trị bệnh "đọc đều như AI")
 
-**edge-tts 没有情感引擎**，只能变速变调，再怎么调也像机器平读。要"像人"必须用有情感通道的**云 provider**（用户自备 key，**无需 GPU**）：
+**edge-tts không có engine cảm xúc**, chỉ đổi được tốc độ và cao độ, chỉnh cỡ nào cũng vẫn là giọng máy đọc đều. Muốn "giống người thật" bắt buộc dùng **provider cloud** có kênh cảm xúc (người dùng tự lo key, **không cần GPU**):
 
-| 引擎（cast 里 `engine`）| 质量 | 需要 | 情感机制 |
+| Engine (`engine` trong cast) | Chất lượng | Cần gì | Cơ chế cảm xúc |
 |---|---|---|---|
-| `edge`（默认，免费兜底）| ⚠️ 平、机器感，仅供草稿 | 无 key、外网 | 仅 rate/pitch/volume 微调 |
-| `clone`+`openai-compatible`→**SiliconFlow CosyVoice2**（推荐）| 好、中文自然 | VOICE_API_KEY（便宜/新用户赠额）| 内联 `<\|endofprompt\|>` 指令 |
-| `clone`+`gemini` | 好、**真免费** | GEMINI_API_KEY（Google 免费层，国内需代理）| 自然语言前缀 |
-| `clone`+`minimax` / `dashscope` | 好、有情绪 | 各家 key | emotion 枚举 / instruct |
+| `edge` (mặc định, miễn phí đỡ lưng) | ⚠️ đều đều, máy móc, chỉ để nháp | không cần key, cần mạng ngoài | chỉ chỉnh nhẹ rate/pitch/volume |
+| `clone`+`openai-compatible`→**SiliconFlow CosyVoice2** (khuyên dùng) | tốt, tiếng Trung tự nhiên | VOICE_API_KEY (rẻ, tặng credit cho người mới) | lệnh nội tuyến `<\|endofprompt\|>` |
+| `clone`+`gemini` | tốt, **miễn phí thật** | GEMINI_API_KEY (bậc miễn phí của Google, ở Trung Quốc cần proxy) | tiền tố ngôn ngữ tự nhiên |
+| `clone`+`minimax` / `dashscope` | tốt, có cảm xúc | key của từng nhà | enum emotion / instruct |
 
-**推荐 SiliconFlow**（云端 CosyVoice2、无需 GPU、中文最稳）配置落 `.env`：
+**Khuyên dùng SiliconFlow** (CosyVoice2 trên cloud, không cần GPU, ổn nhất với tiếng Trung), cấu hình ghi vào `.env`:
 ```bash
 VOICE_PROVIDER=openai-compatible
 VOICE_BASE_URL=https://api.siliconflow.cn/v1
-VOICE_API_KEY=<你的key>
+VOICE_API_KEY=<key của bạn>
 VOICE_MODEL=FunAudioLLM/CosyVoice2-0.5B
 VOICE_INSTRUCT_MODE=inline
 ```
-cast 里角色：`--engine clone --provider openai-compatible --voice-id FunAudioLLM/CosyVoice2-0.5B:alex`（8 音色 alex/anna/benjamin/…）。
+Vai trong cast: `--engine clone --provider openai-compatible --voice-id FunAudioLLM/CosyVoice2-0.5B:alex` (8 giọng alex/anna/benjamin/...).
 
-- **逐行 emotion 自动驱动演绎**：`lines.json` 每行的 `emotion`（愤怒/崩溃大哭/冷笑/温柔…）→ 引擎按 provider 转成对应情感参数。写具体越贴戏越好。
-- 想要「像人」→ 至少给主角/关键角色配一个云 provider（`engine=clone`）；配了 key 才有情绪，没 key 自动回退 edge（平）并告警。
-- provider 配置见 `voice_clone.py` 头部（各家 env）；`voice_clone.py check --provider <名>` 离线校验 key 是否齐。
+- **emotion từng dòng tự dẫn dắt diễn xuất**: `emotion` của mỗi dòng trong `lines.json` (giận dữ/khóc nấc/cười khẩy/dịu dàng...) → engine đổi thành tham số cảm xúc tương ứng theo từng provider. Viết càng cụ thể càng bám vai.
+- Muốn "giống người thật" → ít nhất phải cho vai chính/vai then chốt một provider cloud (`engine=clone`); có key mới có cảm xúc, thiếu key thì tự lùi về edge (đều đều) kèm cảnh báo.
+- Cấu hình provider xem ở đầu file `voice_clone.py` (env của từng nhà); `voice_clone.py check --provider <tên>` kiểm offline xem key đã đủ chưa.
 
-## 谁会用到
+## Ai sẽ dùng
 
-短剧对白（short-drama 已内部委派）、**论文双人问答讲解**（paper-explainer：主讲+提问者）、
-访谈/播客脚本、有声剧、任何「多个说话人」的口播。单人整段口播用 **tts-voiceover** 即可。
+Thoại phim ngắn (short-drama đã uỷ thác sẵn bên trong), **giảng paper dạng hỏi đáp hai người** (paper-explainer: người giảng + người hỏi),
+kịch bản phỏng vấn/podcast, kịch truyền thanh, mọi video nói có "nhiều người nói". Video nói một người cả đoạn thì dùng **tts-voiceover** là đủ.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| cast.json | 是 | 选角表：每个说话人 → 音色（edge 音色 + pitch/rate，或克隆音色）。含「旁白/主讲」条目 |
-| lines.json | 是 | 逐行对白：有序 `[{speaker, text, emotion}]`（speaker 用 cast 里的名字；emotion 如 冷/怒/紧张/温柔，自动匹配语气） |
-| 输出路径 | 否 | voice.mp3（默认与调用方约定）；voice.srt 同名 |
+| cast.json | Có | Bảng chọn vai: mỗi người nói → một giọng (giọng edge + pitch/rate, hoặc giọng clone). Có cả mục "dẫn chuyện/người giảng" |
+| lines.json | Có | Thoại từng dòng: mảng có thứ tự `[{speaker, text, emotion}]` (speaker lấy tên trong cast; emotion kiểu lạnh/giận/căng/dịu, tự khớp ngữ điệu) |
+| Đường dẫn ra | Không | voice.mp3 (mặc định thoả thuận với bên gọi); voice.srt cùng tên |
 
-## 执行步骤
+## Các bước thực thi
 
-### 1. 选角（cast.json）——读选角指南定音色
+### 1. Chọn vai (cast.json) - đọc hướng dẫn chọn vai để chốt giọng
 
-先读 `skills/shared/references/voice-casting.md`（音色→人物原型对照 + 同性别区分 + 旁白独立 + 情绪韵律）。
-为**每个说话人**定一个符合其性别/年龄/气质/身份的音色，旁白/主讲单列且与所有角色不同：
+Đọc `skills/shared/references/voice-casting.md` trước (bảng đối chiếu giọng → nguyên mẫu nhân vật + cách tách giọng cùng giới + dẫn chuyện tách riêng + ngữ điệu cảm xúc).
+Chốt cho **mỗi người nói** một giọng hợp giới tính/tuổi/khí chất/thân phận, dẫn chuyện và người giảng đứng riêng, khác mọi vai:
 
 ```bash
-python skills/shared/scripts/multivoice.py cast init  --cast <路径>/cast.json
-python skills/shared/scripts/multivoice.py cast add   --cast <路径>/cast.json \
-    --name 林策 --role male_lead --voice zh-CN-YunxiNeural --rate=-5% --pitch=-3Hz --note "冷峻男主"   # 负值参数用等号
-python skills/shared/scripts/multivoice.py cast add   --cast <路径>/cast.json \
-    --name 苏晚 --role female_lead --voice zh-CN-XiaoxiaoNeural --note "温婉女主"
-python skills/shared/scripts/multivoice.py cast check --cast <路径>/cast.json    # 校验：音色有效/旁白独立/无撞音色
+python skills/shared/scripts/multivoice.py cast init  --cast "<đường dẫn>/cast.json"
+python skills/shared/scripts/multivoice.py cast add   --cast "<đường dẫn>/cast.json" \
+    --name "Lâm Sách" --role male_lead --voice zh-CN-YunxiNeural --rate=-5% --pitch=-3Hz --note "nam chính lạnh lùng"   # tham số giá trị âm phải dùng dấu bằng
+python skills/shared/scripts/multivoice.py cast add   --cast "<đường dẫn>/cast.json" \
+    --name "Tô Vãn" --role female_lead --voice zh-CN-XiaoxiaoNeural --note "nữ chính dịu dàng"
+python skills/shared/scripts/multivoice.py cast check --cast "<đường dẫn>/cast.json"    # kiểm tra: giọng hợp lệ / dẫn chuyện riêng / không trùng giọng
 ```
-> cast.json 也可直接写（就是 JSON）。想让某角色**像真人有情绪**（治 AI 平读）→ 该角色用云 provider：
+> cast.json cũng có thể viết tay (chỉ là JSON). Muốn một vai **có cảm xúc như người thật** (trị bệnh AI đọc đều) → cho vai đó dùng provider cloud:
 > ```bash
-> python skills/shared/scripts/multivoice.py cast add --cast <路径>/cast.json \
->     --name 霸总 --role male_lead --engine clone --provider minimax --voice-id <你的音色id> --note "克隆/表现力音色"
+> python skills/shared/scripts/multivoice.py cast add --cast "<đường dẫn>/cast.json" \
+>     --name "Tổng tài" --role male_lead --engine clone --provider minimax --voice-id <id giọng của bạn> --note "giọng clone/giàu biểu cảm"
 > ```
-> 需在 `.env` 配对应 provider 的 key（`voice_clone.py check --provider minimax`）；缺 key 该角色**自动回退 edge**（平）并告警。
+> Phải cấu hình key của provider tương ứng trong `.env` (`voice_clone.py check --provider minimax`); thiếu key thì vai đó **tự lùi về edge** (đều đều) kèm cảnh báo.
 
-### 2. 逐行对白（lines.json）
+### 2. Thoại từng dòng (lines.json)
 
-把脚本 / 对话稿拆成有序逐行：
+Tách kịch bản / bản thoại thành từng dòng có thứ tự:
 ```json
 {"lines":[
-  {"speaker":"主讲","text":"这篇论文解决了一个关键问题。","emotion":"平"},
-  {"speaker":"提问","text":"等等，为什么现有方法不行？","emotion":"惊"},
-  {"speaker":"主讲","text":"因为它们忽略了时序依赖。","emotion":"坚定"}
+  {"speaker":"người giảng","text":"Paper này giải quyết một vấn đề then chốt.","emotion":"bình"},
+  {"speaker":"người hỏi","text":"Khoan đã, vì sao các phương pháp hiện có không dùng được?","emotion":"ngạc nhiên"},
+  {"speaker":"người giảng","text":"Vì chúng bỏ qua phụ thuộc theo thời gian.","emotion":"chắc nịch"}
 ]}
 ```
-speaker 必须与 cast 里的名字一致（不一致会回退旁白音色并告警）；emotion 可选。
+speaker phải trùng tên trong cast (lệch thì lùi về giọng dẫn chuyện kèm cảnh báo); emotion là tuỳ chọn.
 
-### 3. 合成多声线音轨 + 字幕
+### 3. Tổng hợp track nhiều giọng + phụ đề
 
 ```bash
 python skills/shared/scripts/multivoice.py dub \
-    --cast <路径>/cast.json --lines <路径>/lines.json -o <路径>/voice.mp3
+    --cast "<đường dẫn>/cast.json" --lines "<đường dẫn>/lines.json" -o "<đường dẫn>/voice.mp3"
 ```
-产出 `voice.mp3`（每角色独立声线、情绪自动调韵律）+ `voice.srt`（带角色名，时序按逐行实测时长对齐）。
-`dub` 会打印**用了几种声线**——确认 ≥2 种（多人对话不该只有一个声音）。
+Ra `voice.mp3` (mỗi vai một giọng riêng, cảm xúc tự chỉnh ngữ điệu) + `voice.srt` (kèm tên vai, thời gian bám đúng độ dài đo được của từng dòng).
+`dub` sẽ in ra **đã dùng mấy giọng** - kiểm cho chắc là ≥2 giọng (hội thoại nhiều người không thể chỉ có một giọng).
 
-### 4. 用到视频里
+### 4. Đưa vào video
 
-- `voice.mp3` 作 narration + `voice.srt` 作字幕，喂 `auto-short-video/scripts/assemble.py`（图/视频合成）。
-- 或与 BGM 混音（**audio-mix**）、加进已有视频（**video-editing**）。
+- `voice.mp3` làm narration + `voice.srt` làm phụ đề, đưa vào `auto-short-video/scripts/assemble.py` (ghép ảnh/video).
+- Hoặc trộn với BGM (**audio-mix**), ghép vào video có sẵn (**video-editing**).
 
-## 降级
+## Hạ cấp
 
-- 缺外网/edge-tts 不通 → 无法合成，如实告知（多声线依赖 edge-tts）。
-- cast 指定克隆音色但缺 key/失败 → 该角色**自动回退 edge 免费音色**并告警，不阻断。
-- 说话人不在 cast → 回退旁白音色并告警（建议补进 cast）。
+- Mất mạng ngoài / edge-tts không thông → không tổng hợp được, phải nói thật (nhiều giọng phụ thuộc edge-tts).
+- cast chỉ định giọng clone nhưng thiếu key hoặc lỗi → vai đó **tự lùi về giọng edge miễn phí** kèm cảnh báo, không chặn.
+- Người nói không có trong cast → lùi về giọng dẫn chuyện kèm cảnh báo (nên bổ sung vào cast).
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：`style.md` 融进音色气质选择（角色气质→音色）；`preferences.md` 红线过滤台词。
-- **无 Profile**：按 voice-casting.md 默认对照选音色。
+- **Có Profile**: `style.md` hoà vào việc chọn khí chất giọng (khí chất vai → giọng); `preferences.md` lọc lằn ranh đỏ trong thoại.
+- **Không có Profile**: chọn giọng theo bảng đối chiếu mặc định trong voice-casting.md.
 
-## 规则
+## Quy tắc
 
-1. **多人对话必须多声线**：每个说话人独立音色、旁白/主讲单列——绝不允许全程一个声音（`cast check` + `dub` 声线数把关）。
-2. **要像人就上云 provider**：edge 只配草稿；成品/关键角色用 `engine=clone`+provider（有真情感通道），无需 GPU。
-3. **音色贴人物**：按 voice-casting.md 的原型对照 + 同性别用 pitch/rate 区分。
-4. **情绪标注要具体**：lines 每行标 emotion（愤怒/崩溃大哭/冷笑/温柔…），会喂进 provider 情感通道驱动演绎。
-5. **确定性留档**：cast.json / lines.json 落文件，改台词/换音色重跑 `dub` 即可，不必重来。
+1. **Hội thoại nhiều người bắt buộc nhiều giọng**: mỗi người nói một giọng riêng, dẫn chuyện/người giảng đứng riêng - tuyệt đối không để cả video một giọng (`cast check` + số giọng của `dub` gác cửa).
+2. **Muốn giống người thì lên provider cloud**: edge chỉ hợp bản nháp; thành phẩm và vai then chốt dùng `engine=clone`+provider (có kênh cảm xúc thật), không cần GPU.
+3. **Giọng phải hợp nhân vật**: theo bảng nguyên mẫu trong voice-casting.md + dùng pitch/rate để tách các vai cùng giới.
+4. **Gắn nhãn cảm xúc cho cụ thể**: mỗi dòng lines đều ghi emotion (giận dữ/khóc nấc/cười khẩy/dịu dàng...), sẽ được đẩy vào kênh cảm xúc của provider để dẫn dắt diễn xuất.
+5. **Lưu lại phần tất định**: cast.json / lines.json ghi ra file, sửa thoại hay đổi giọng chỉ cần chạy lại `dub`, không phải làm lại từ đầu.
 
-## 参考来源
+## Nguồn tham khảo
 
-见 `EASEL-META.md`。多声线配音（cast + 逐行 lines + 按角色音色逐行合成 + ffmpeg 拼接 + 说话人字幕）为 Easel 自研；
-底层封装 edge-tts（tts.py）与云端克隆（voice_clone.py）。
+Xem `EASEL-META.md`. Lồng tiếng nhiều giọng (cast + lines từng dòng + tổng hợp từng dòng theo giọng của vai + ffmpeg nối + phụ đề người nói) là do Easel tự làm;
+bên dưới bọc edge-tts (tts.py) và clone trên cloud (voice_clone.py).

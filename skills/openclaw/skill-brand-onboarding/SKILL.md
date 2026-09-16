@@ -7,149 +7,149 @@ description: >-
 layer: plan
 ---
 
-# 品牌入驻
+# Onboarding thương hiệu
 
-> 通过结构化访谈 + 公开信息采集，为创作者/品牌生成完整的 Easel 账号画像（Profile）。
+> Qua phỏng vấn bài bản + thu thập thông tin công khai, sinh hồ sơ kênh Easel (Profile) đầy đủ cho nhà sáng tạo/thương hiệu.
 
-## 输入
+## Đầu vào
 
-用户提供品牌/账号名称，以及可选的社媒链接、截图、品牌资料。
+Người dùng cung cấp tên thương hiệu/kênh, kèm tuỳ chọn: link mạng xã hội, ảnh chụp màn hình, tài liệu thương hiệu.
 
-## 输出
+## Đầu ra
 
-`profiles/<name>/` 目录，包含：
+Thư mục `profiles/<name>/`, gồm:
 
-| 文件 | 内容 |
+| File | Nội dung |
 |------|------|
-| `identity.md` | 品牌名、定位、使命、差异化、核心产品/服务 |
-| `style.md` | 视觉风格、语气调性、内容节奏、Do/Don't 规则 |
-| `audience.md` | 目标人群画像、用户语言、痛点与需求 |
-| `platforms.md` | 活跃平台、账号信息、发布频率、标签策略 |
-| `preferences.md` | 内容支柱、主推产品、禁区话题、合规底线 |
-| `memory.md` | 初始为空，后续由归因层更新 |
+| `identity.md` | Tên thương hiệu, định vị, sứ mệnh, điểm khác biệt, sản phẩm/dịch vụ cốt lõi |
+| `style.md` | Phong cách hình ảnh, voice/tone, nhịp nội dung, quy tắc Do/Don't |
+| `audience.md` | Hồ sơ khán giả mục tiêu, ngôn ngữ người dùng, nỗi đau và nhu cầu |
+| `platforms.md` | Nền tảng đang hoạt động, thông tin kênh, tần suất đăng, chiến lược hashtag |
+| `preferences.md` | Trụ cột nội dung, sản phẩm chủ lực, chủ đề cấm, lằn ranh tuân thủ |
+| `memory.md` | Ban đầu để trống, lớp quy kết cập nhật sau |
 
 ---
 
-## Phase 0 — 环境准备
+## Phase 0 - Chuẩn bị môi trường
 
-1. 询问画像名称（英文小写，用于目录名，如 `my-brand`）
-2. 检查 `profiles/<name>/` 是否已存在：
-   - 已存在 → 摘要现有内容，询问：更新还是重建？
-   - 不存在 → 继续
-3. 确保 `profiles/<name>/` 目录存在
-
----
-
-## Phase 1 — 信息采集
-
-**先采集公开信息，再问用户补缺口。**
-
-### 步骤 1：收集社媒链接
-
-向用户询问（有哪些提供哪些）：
-- 小红书 / 抖音 / B站 / 微博主页链接或 ID
-- 个人网站 / 公众号名称
-- 已有的品牌手册、VI 文件、截图（可提供文件路径）
-
-### 步骤 2：公开信息提取
-
-对每个链接使用 WebFetch 抓取公开页面，提取：
-
-**可确认的事实（标注来源）：**
-- 品牌名、账号昵称、简介/签名
-- 所在地、服务范围
-- 产品或服务品类
-- 品牌价值观（如简介中有声明）
-- 社媒数据：粉丝数、获赞与收藏、笔记/视频数
-- 视觉观察：封面风格、滤镜偏好、排版习惯、主色调
-
-WebFetch 无法获取的信息标记为待确认缺口。
-
-**仅用户能回答的缺口：**
-- 精确品牌色（hex 值）、字体名称
-- 目标人群描述（ICP）
-- 主推产品/服务、核心差异化
-- 社媒运营目标、当前运营现状
-- 标志性内容格式和真实文案示例
-- 绝对不做的事
+1. Hỏi tên hồ sơ (chữ thường tiếng Anh, dùng làm tên thư mục, ví dụ `my-brand`)
+2. Kiểm tra `profiles/<name>/` đã tồn tại chưa:
+   - Đã có → tóm tắt nội dung hiện tại, hỏi: cập nhật hay dựng lại?
+   - Chưa có → tiếp tục
+3. Bảo đảm thư mục `profiles/<name>/` tồn tại
 
 ---
 
-## Phase 2 — 预填访谈文档
+## Phase 1 - Thu thập thông tin
 
-生成面向用户的访谈文档，写入 `outputs/品牌名/品牌入驻.md`。
+**Thu thập thông tin công khai trước, rồi mới hỏi người dùng bù chỗ thiếu.**
 
-**文档四部分：**
+### Bước 1: Thu thập link mạng xã hội
 
-**第一部分 — 我们已经了解的**
-将 Phase 1 确认的事实以陈述形式呈现，让用户核对纠正。
-> "以上信息是否准确？有无遗漏或需要纠正的？"
+Hỏi người dùng (có cái nào đưa cái đó):
+- Link trang chủ hoặc ID trên Facebook / TikTok / YouTube / Zalo
+- Website cá nhân / tên fanpage hoặc blog
+- Brand guideline, file VI, ảnh chụp màn hình đã có (có thể đưa đường dẫn file)
 
-**第二部分 — 需要你来回答的**（仅真正缺口）
-1. 目标用户是谁？（ICP）
-2. 主推产品/服务？
-3. 和同类账号最大的不同？
-4. 社媒核心目标？（涨粉 / 带货 / 品牌认知 / 社群 — 选 1-2 个）
-5. 目前运营节奏？什么效果好/不好？
+### Bước 2: Trích xuất thông tin công khai
 
-**第三部分 — 素材清单**
-必须：品牌色值、Logo、产品实拍图（高清原图）
-有则更好：场景图、品牌手册、代表性帖子截图、欣赏/想避开的账号
+Với mỗi link, dùng WebFetch lấy trang công khai và trích:
 
-**第四部分 — 品牌与内容细节**
-- 文字排版偏好、标志性内容格式
-- 3-5 条真实文案示例（标注"最有价值的输入"）
-- 内容支柱（勾选 + 自定义）
-- 绝对不发的内容、内容形式比例、近期重要节点
+**Dữ kiện xác nhận được (ghi rõ nguồn):**
+- Tên thương hiệu, nickname kênh, mô tả/chữ ký
+- Địa bàn, phạm vi phục vụ
+- Nhóm sản phẩm hoặc dịch vụ
+- Giá trị thương hiệu (nếu phần mô tả có nêu)
+- Số liệu mạng xã hội: người theo dõi, lượt thích và lưu, số bài/video
+- Quan sát hình ảnh: phong cách ảnh bìa, gu filter, thói quen dàn trang, tông màu chủ đạo
 
-根据品牌调性调整文档语气。
+Thông tin WebFetch không lấy được thì đánh dấu là chỗ thiếu cần xác nhận.
 
----
-
-## Phase 3 — 素材与回复审核
-
-用户返回填写的文档和素材后：
-
-1. **素材处理** — Logo → `profiles/<name>/assets/logo.png`；产品图 → `assets/products/`；场景图 → `assets/lifestyle/`；示例帖子 → `assets/examples/`
-2. **回复整合** — 将用户回答与 Phase 1 采集合并，识别剩余缺口
-3. **补充确认** — 如有关键缺口，针对性追问（不超过 3 个问题）
+**Chỗ thiếu chỉ người dùng trả lời được:**
+- Màu thương hiệu chính xác (mã hex), tên font
+- Mô tả nhóm khán giả mục tiêu (ICP)
+- Sản phẩm/dịch vụ chủ lực, điểm khác biệt cốt lõi
+- Mục tiêu vận hành mạng xã hội, hiện trạng đang chạy
+- Định dạng nội dung đặc trưng và ví dụ bài viết thật
+- Những điều tuyệt đối không làm
 
 ---
 
-## Phase 4 — 生成画像档案
+## Phase 2 - Soạn sẵn tài liệu phỏng vấn
 
-将所有信息综合写入 `profiles/<name>/` 下各文件。
+Sinh tài liệu phỏng vấn gửi người dùng, ghi vào `outputs/<chủ đề>/onboarding-thuong-hieu.md`.
 
-按 [profile-templates.md](references/profile-templates.md) 中的模板结构生成六个文件：
-- `identity.md` — 基本信息、核心产品、差异化、内容方向
-- `style.md` — 语气调性、视觉风格、标志性格式、文案示例、Do/Don't
-- `audience.md` — ICP、用户语言、痛点需求、互动特征
-- `platforms.md` — 各平台账号数据、内容形式、发布频率、标签
-- `preferences.md` — 内容支柱、主推产品、禁区、合规底线、运营目标
-- `memory.md` — 初始为空模板
+**Tài liệu gồm bốn phần:**
 
-未获得的信息标记为 `[待补充]`，不编造。从截图估算的标注 `(估算)`。
+**Phần một - Những gì chúng ta đã nắm được**
+Trình bày các dữ kiện đã xác nhận ở Phase 1 dưới dạng khẳng định để người dùng đối chiếu và sửa.
+> "Thông tin trên đã chính xác chưa? Có gì thiếu hoặc cần sửa không?"
+
+**Phần hai - Những câu bạn cần trả lời** (chỉ hỏi chỗ thiếu thật sự)
+1. Khán giả mục tiêu là ai? (ICP)
+2. Sản phẩm/dịch vụ chủ lực?
+3. Khác biệt lớn nhất so với các kênh cùng loại?
+4. Mục tiêu cốt lõi trên mạng xã hội? (tăng người theo dõi / bán hàng / nhận diện thương hiệu / cộng đồng - chọn 1-2)
+5. Nhịp vận hành hiện tại? Cái gì hiệu quả, cái gì không?
+
+**Phần ba - Danh sách tư liệu**
+Bắt buộc: mã màu thương hiệu, Logo, ảnh chụp thật sản phẩm (ảnh gốc độ phân giải cao)
+Có thì tốt: ảnh bối cảnh, brand guideline, ảnh chụp bài tiêu biểu, kênh bạn thích/muốn tránh
+
+**Phần bốn - Chi tiết thương hiệu và nội dung**
+- Gu trình bày chữ, định dạng nội dung đặc trưng
+- 3-5 ví dụ bài viết thật (ghi chú "đầu vào giá trị nhất")
+- Trụ cột nội dung (tick chọn + tự thêm)
+- Nội dung tuyệt đối không đăng, tỉ lệ các dạng nội dung, mốc quan trọng sắp tới
+
+Điều chỉnh giọng tài liệu theo tone thương hiệu.
 
 ---
 
-## Phase 5 — 确认定稿
+## Phase 3 - Rà tư liệu và câu trả lời
 
-向用户展示生成的完整画像，逐文件确认：
+Sau khi người dùng gửi lại tài liệu đã điền và tư liệu:
 
-1. 有没有事实错误？
-2. 有没有不适用的部分需要删除？
-3. 有没有遗漏需要补充？
-
-修改完成后确认：
-
-> "画像已保存至 `profiles/<name>/`。Easel 的所有 SKILL 将自动读取此画像。"
+1. **Xử lý tư liệu** - Logo → `profiles/<name>/assets/logo.png`; ảnh sản phẩm → `assets/products/`; ảnh bối cảnh → `assets/lifestyle/`; bài mẫu → `assets/examples/`
+2. **Gộp câu trả lời** - hợp nhất câu trả lời của người dùng với dữ liệu thu ở Phase 1, xác định chỗ còn thiếu
+3. **Hỏi bù** - nếu còn chỗ thiếu quan trọng thì hỏi thẳng vào đó (không quá 3 câu)
 
 ---
 
-## 操作备注
+## Phase 4 - Sinh hồ sơ Profile
 
-- **必须先采集公开信息再生成访谈文档** — 预填已知信息体现专业度，用户也能更快完成
-- **标志性内容格式和真实文案示例是最重要的输入** — 让生成内容像本人而非通用 AI 的关键
-- **品牌色是第二重要的视觉输入** — 色值错了所有视觉产出都不对，估算的标注"(估算)"
-- **不编造品牌细节** — 未获得的信息写 `[待补充]`
-- **受众和运营目标不能跳过** — 没有 ICP 和目标，后续内容策划都会泛泛而谈
+Tổng hợp mọi thông tin rồi ghi vào các file trong `profiles/<name>/`.
+
+Sinh sáu file theo cấu trúc mẫu trong [profile-templates.md](references/profile-templates.md):
+- `identity.md` - thông tin cơ bản, sản phẩm cốt lõi, điểm khác biệt, hướng nội dung
+- `style.md` - voice/tone, phong cách hình ảnh, định dạng đặc trưng, ví dụ bài viết, Do/Don't
+- `audience.md` - ICP, ngôn ngữ người dùng, nỗi đau và nhu cầu, đặc điểm tương tác
+- `platforms.md` - số liệu kênh trên từng nền tảng, dạng nội dung, tần suất đăng, hashtag
+- `preferences.md` - trụ cột nội dung, sản phẩm chủ lực, vùng cấm, lằn ranh tuân thủ, mục tiêu vận hành
+- `memory.md` - mẫu trống ban đầu
+
+Thông tin chưa có thì đánh dấu `[chờ bổ sung]`, không bịa. Ước lượng từ ảnh chụp thì ghi `(ước lượng)`.
+
+---
+
+## Phase 5 - Chốt bản cuối
+
+Trình bày hồ sơ hoàn chỉnh cho người dùng, xác nhận từng file:
+
+1. Có sai sót dữ kiện nào không?
+2. Có phần nào không phù hợp cần xoá không?
+3. Có chỗ nào thiếu cần bổ sung không?
+
+Sửa xong thì xác nhận:
+
+> "Hồ sơ đã lưu tại `profiles/<name>/`. Mọi SKILL của Easel sẽ tự đọc hồ sơ này."
+
+---
+
+## Ghi chú vận hành
+
+- **Bắt buộc thu thập thông tin công khai trước khi sinh tài liệu phỏng vấn** - điền sẵn thứ đã biết cho thấy sự chuyên nghiệp, người dùng cũng hoàn thành nhanh hơn
+- **Định dạng nội dung đặc trưng và ví dụ bài viết thật là đầu vào quan trọng nhất** - đây là thứ giúp nội dung sinh ra giống chính chủ chứ không phải AI chung chung
+- **Màu thương hiệu là đầu vào hình ảnh quan trọng thứ hai** - sai mã màu thì mọi sản phẩm hình ảnh đều sai, cái nào ước lượng thì ghi "(ước lượng)"
+- **Không bịa chi tiết thương hiệu** - thông tin chưa có thì ghi `[chờ bổ sung]`
+- **Không được bỏ qua khán giả và mục tiêu vận hành** - không có ICP và mục tiêu thì mọi khâu lên kế hoạch nội dung về sau đều chung chung

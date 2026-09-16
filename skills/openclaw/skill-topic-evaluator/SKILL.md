@@ -8,135 +8,135 @@ description: >-
 layer: plan
 ---
 
-# 选题可行性评估
+# Đánh giá tính khả thi của đề tài
 
-> 用户给一个选题，多维度打分评估值不值得做，输出"做/不做/改方向"建议。
+> Người dùng đưa một đề tài, chấm điểm nhiều chiều xem có đáng làm không, xuất khuyến nghị "làm / bỏ / đổi hướng".
 
-> **评分口径**：本 SKILL 与 `skill-content-matrix` 共用 `../../shared/scoring-dimensions.md` 的**统一七维 + 标尺 + 权重**。matrix 做批量池快评，本 SKILL 做**单条深评**（逐维展开详细分析）。两者维度、标尺、综合分阈值完全一致。
+> **Chuẩn chấm điểm**: SKILL này và `skill-content-matrix` dùng chung **bộ 7 tiêu chí + thang đo + trọng số** trong `../../shared/scoring-dimensions.md`. matrix chấm nhanh cả rổ đề tài, SKILL này **chấm sâu từng đề tài** (mổ xẻ chi tiết theo từng tiêu chí). Tiêu chí, thang đo và ngưỡng điểm tổng của hai bên hoàn toàn giống nhau.
 
-## 输入
+## Đầu vào
 
-| 参数 | 必填 | 说明 |
+| Tham số | Bắt buộc | Mô tả |
 |------|------|------|
-| 选题 | 是 | 用户想做的选题标题或描述 |
-| 目标平台 | 否 | 小红书 / 抖音 / 微博 / 知乎 / B站 / 公众号（有 Profile 时自动提取） |
-| 补充背景 | 否 | 选题来源、灵感、竞品参考等 |
+| Đề tài | Có | Tiêu đề hoặc mô tả đề tài người dùng muốn làm |
+| Nền tảng mục tiêu | Không | Facebook / TikTok / YouTube (Shorts) / Zalo / blog-website (tự lấy khi có Profile) |
+| Bối cảnh bổ sung | Không | Nguồn đề tài, cảm hứng, tham khảo đối thủ... |
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 选题评估报告
+# Báo cáo đánh giá đề tài
 
-## 选题: {用户给出的选题}
-目标平台: {platform}
-评估时间: {date}
+## Đề tài: {đề tài người dùng đưa ra}
+Nền tảng mục tiêu: {platform}
+Thời điểm đánh giá: {date}
 
-## 七维评分
+## Chấm điểm 7 tiêu chí
 
-按 `../../shared/scoring-dimensions.md` 的统一维度和标尺打分，逐维带详细依据：
+Chấm theo bộ tiêu chí và thang đo thống nhất trong `../../shared/scoring-dimensions.md`, mỗi tiêu chí kèm căn cứ chi tiết:
 
-| 维度 | 得分 | 说明 |
+| Tiêu chí | Điểm | Diễn giải |
 |------|------|------|
-| 流量潜力 | X/10 | {痛感强度 + 平台话题热度 + 搜索需求} |
-| 账号匹配 | X/10 | {与定位、受众、内容体系的契合度} |
-| 竞争差异化 | X/10 | {同类饱和度 + 能否切差异化角度，高分=竞争低} |
-| 时效价值 | X/10 | {常青 vs 一次性热点，高分=常青} |
-| 变现空间 | X/10 | {能否自然接广告/带货/引流} |
-| 制作成本 | X/10 | {资源与技能门槛，反向，高分=易做} |
-| 合规风险 | X/10 | {敏感度风险，反向，高分=低风险} |
+| Tiềm năng lưu lượng | X/10 | {mức độ đau + độ nóng của chủ đề trên nền tảng + nhu cầu tìm kiếm} |
+| Khớp kênh | X/10 | {độ ăn khớp với định vị, khán giả và hệ thống nội dung} |
+| Khác biệt cạnh tranh | X/10 | {độ bão hoà của mảng + có cắt được góc khác biệt không; điểm cao = cạnh tranh thấp} |
+| Giá trị thời sự | X/10 | {thường xanh vs trend một lần; điểm cao = thường xanh} |
+| Dư địa kiếm tiền | X/10 | {có nhận booking quảng cáo/bán hàng/kéo traffic một cách tự nhiên được không} |
+| Chi phí sản xuất | X/10 | {rào cản nguồn lực và kỹ năng; đảo chiều, điểm cao = dễ làm} |
+| Rủi ro tuân thủ | X/10 | {mức nhạy cảm; đảo chiều, điểm cao = rủi ro thấp} |
 
-综合得分: XX/100（按 scoring-dimensions.md 的推荐权重加权换算）
+Điểm tổng: XX/100 (quy đổi theo trọng số khuyến nghị trong scoring-dimensions.md)
 
-## 结论: {做 / 不做 / 改方向}
+## Kết luận: {làm / bỏ / đổi hướng}
 
-{一句话总结判断理由}
+{một câu tóm tắt lý do của phán quyết}
 
-## 详细分析
+## Phân tích chi tiết
 
-### 流量潜力分析
-{该选题在目标平台的搜索热度、话题讨论量、同类爆款情况}
+### Phân tích tiềm năng lưu lượng
+{độ nóng tìm kiếm, lượng thảo luận và tình hình bài viral cùng mảng của đề tài này trên nền tảng mục tiêu}
 
-### 竞争差异化
-{头部玩家是否占位、中腰部突围空间、差异化切入点}
+### Khác biệt cạnh tranh
+{nhóm top đã chiếm chỗ chưa, dư địa bứt lên của nhóm giữa, điểm cắt khác biệt}
 
-### 时效价值
-{常青还是短期热点、最佳发布窗口}
+### Giá trị thời sự
+{thường xanh hay trend ngắn hạn, thời điểm đăng tốt nhất}
 
-### 变现路径
-{可接的商业合作类型、引流转化链路}
+### Đường kiếm tiền
+{các dạng hợp tác thương mại có thể nhận, chuỗi kéo traffic và chuyển đổi}
 
-### 制作可行性
-{需要的素材/设备/专业知识/时间投入}
+### Tính khả thi khi sản xuất
+{tư liệu/thiết bị/kiến thức chuyên môn/thời gian phải bỏ ra}
 
-### 账号契合度
-{与创作者内容体系和粉丝画像的匹配程度}
+### Độ hợp với kênh
+{mức khớp với hệ thống nội dung của nhà sáng tạo và hồ sơ người theo dõi}
 
-### 合规风险
-{敏感赛道标注 ⚠️ 及合规建议}
+### Rủi ro tuân thủ
+{gắn nhãn ⚠️ cho mảng nhạy cảm và khuyến nghị tuân thủ}
 
-## 优化建议（改方向时提供）
+## Gợi ý tối ưu (đưa ra khi kết luận là đổi hướng)
 
-1. {角度调整建议}
-2. {形式调整建议}
-3. {时机调整建议}
+1. {gợi ý chỉnh góc tiếp cận}
+2. {gợi ý chỉnh hình thức}
+3. {gợi ý chỉnh thời điểm}
 
-## 替代选题推荐（不做时提供）
+## Đề tài thay thế (đưa ra khi kết luận là bỏ)
 
-1. {替代选题 A} — {推荐理由}
-2. {替代选题 B} — {推荐理由}
+1. {đề tài thay thế A} - {lý do đề xuất}
+2. {đề tài thay thế B} - {lý do đề xuất}
 ```
 
-### 评分标尺
+### Thang chấm điểm
 
-统一的七维标尺（1-3 / 4-6 / 7-8 / 9-10 分档）见 `../../shared/scoring-dimensions.md`，本 SKILL 直接套用，不另立口径。
+Thang 7 tiêu chí thống nhất (các bậc 1-3 / 4-6 / 7-8 / 9-10) xem `../../shared/scoring-dimensions.md`; SKILL này áp dụng thẳng, không tự đặt chuẩn riêng.
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **解析选题意图**
-   - 提取用户给出的选题核心关键词和主题方向
-   - 识别选题类型：知识干货、情绪共鸣、热点追踪、人设展示、带货种草、争议讨论
-   - 如未指定平台，根据选题类型推断最适合的平台，或询问用户
+1. **Phân tích ý đồ của đề tài**
+   - Rút từ khoá cốt lõi và hướng chủ đề từ đề tài người dùng đưa
+   - Nhận diện loại đề tài: kiến thức hữu ích, đồng cảm cảm xúc, bắt trend, thể hiện persona, bán hàng/seeding, tranh luận gây tranh cãi
+   - Nếu chưa chỉ định nền tảng, suy ra nền tảng hợp nhất theo loại đề tài, hoặc hỏi người dùng
 
-2. **逐维深度评估**
+2. **Đánh giá sâu từng tiêu chí**
 
-   按 `../../shared/scoring-dimensions.md` 的七维逐一展开，每维给分并写明具体依据：
-   - **流量潜力** — 平台话题热度、搜索需求、同类历史表现、传播性、算法偏好
-   - **账号匹配** — 与定位/人设/赛道、已有内容承接、粉丝画像兴趣、长期成长影响
-   - **竞争差异化** — 同类饱和度、头部是否占位、中腰部突围空间、可切的新角度
-   - **时效价值** — 常青 vs 时效；常青评估长期搜索价值，时效评估衰减速度和最佳窗口
-   - **变现空间** — 商业价值（品牌/带货/知识付费/引流）、受众付费意愿、变现路径是否自然
-   - **制作成本**（反向）— 所需素材/设备/专业知识/周期，创作者现有能力能否覆盖
-   - **合规风险**（反向）— 敏感赛道标注 ⚠️ 及合规建议
+   Triển khai lần lượt 7 tiêu chí theo `../../shared/scoring-dimensions.md`, mỗi tiêu chí cho điểm kèm căn cứ cụ thể:
+   - **Tiềm năng lưu lượng** - độ nóng của chủ đề trên nền tảng, nhu cầu tìm kiếm, thành tích lịch sử của mảng, khả năng lan truyền, thiên hướng thuật toán
+   - **Khớp kênh** - so với định vị/persona/mảng nội dung, nối tiếp nội dung đã có, sở thích trong hồ sơ người theo dõi, ảnh hưởng tới tăng trưởng dài hạn
+   - **Khác biệt cạnh tranh** - độ bão hoà của mảng, nhóm top đã chiếm chỗ chưa, dư địa bứt lên của nhóm giữa, góc mới có thể cắt vào
+   - **Giá trị thời sự** - thường xanh vs thời vụ; thường xanh thì xét giá trị tìm kiếm dài hạn, thời vụ thì xét tốc độ nguội và thời điểm đăng tốt nhất
+   - **Dư địa kiếm tiền** - giá trị thương mại (thương hiệu/bán hàng/khoá học trả phí/kéo traffic), mức sẵn sàng chi tiền của khán giả, đường kiếm tiền có tự nhiên không
+   - **Chi phí sản xuất** (đảo chiều) - tư liệu/thiết bị/kiến thức chuyên môn/thời gian cần có, năng lực hiện tại của nhà sáng tạo có kham nổi không
+   - **Rủi ro tuân thủ** (đảo chiều) - gắn nhãn ⚠️ cho mảng nhạy cảm và khuyến nghị tuân thủ
 
-3. **综合判断与输出**
-   - 按 scoring-dimensions.md 的推荐权重计算综合得分（满分 100）
-   - 按统一阈值给结论：
-     - **≥ 70**：做，立刻排期
-     - **50-69**：改方向，调整后再评估（附至少 2 条优化建议）
-     - **< 50**：不做，附至少 2 个替代选题
-   - 输出完整评估报告
+3. **Phán quyết tổng hợp và xuất báo cáo**
+   - Tính điểm tổng theo trọng số khuyến nghị trong scoring-dimensions.md (thang 100)
+   - Kết luận theo ngưỡng thống nhất:
+     - **>= 70**: làm, lên lịch đăng ngay
+     - **50-69**: đổi hướng, chỉnh xong đánh giá lại (kèm ít nhất 2 gợi ý tối ưu)
+     - **< 50**: bỏ, kèm ít nhất 2 đề tài thay thế
+   - Xuất báo cáo đánh giá đầy đủ
 
-## Profile 感知
+## Nhận biết Profile
 
-**有 Profile 时：**
-- 读取 `identity.md` 获取赛道定位，精确评估账号匹配度
-- 读取 `audience.md` 获取粉丝画像，评估受众兴趣匹配
-- 读取 `platforms.md` 获取活跃平台，针对性评估平台流量潜力
-- 读取 `style.md` 判断选题与内容风格的兼容性
-- 从 `identity.md`/`preferences.md` 提取变现信息，评估变现路径可行性
+**Khi có Profile:**
+- Đọc `identity.md` để lấy định vị mảng nội dung, đánh giá chính xác mức khớp kênh
+- Đọc `audience.md` để lấy hồ sơ người theo dõi, đánh giá mức khớp về sở thích của khán giả
+- Đọc `platforms.md` để lấy các nền tảng đang hoạt động, đánh giá tiềm năng lưu lượng theo từng nền tảng
+- Đọc `style.md` để xét độ tương thích giữa đề tài và phong cách nội dung
+- Lấy thông tin kiếm tiền từ `identity.md`/`preferences.md`, đánh giá tính khả thi của đường kiếm tiền
 
-**无 Profile 时：**
-- 七维评分改为通用标准，不做账号匹配度的精细评估
-- 账号匹配度维度提示"提供 Profile 可获得更准确的匹配评估"
-- 流量潜力基于平台大盘数据而非账号历史表现
+**Khi không có Profile:**
+- Chấm 7 tiêu chí theo chuẩn chung, không đánh giá chi tiết mức khớp kênh
+- Ở tiêu chí khớp kênh, nhắc "cung cấp Profile để có đánh giá độ khớp chính xác hơn"
+- Tiềm năng lưu lượng dựa trên dữ liệu chung của nền tảng thay vì thành tích lịch sử của kênh
 
-## 规则
+## Quy tắc
 
-1. 评分必须基于具体分析，禁止凭感觉打分
-2. 每个维度的说明必须包含具体依据，不可空泛
-3. "改方向"结论必须附带至少 2 条优化建议
-4. "不做"结论必须附带至少 2 个替代选题
-5. 评估必须考虑创作者的实际能力，不推荐超出能力范围的选题
-6. 涉及敏感赛道（医美、财商、母婴、健康）的选题需标注合规风险
+1. Chấm điểm phải dựa trên phân tích cụ thể, cấm chấm theo cảm tính
+2. Phần diễn giải của mỗi tiêu chí phải có căn cứ cụ thể, không được nói chung chung
+3. Kết luận "đổi hướng" bắt buộc kèm ít nhất 2 gợi ý tối ưu
+4. Kết luận "bỏ" bắt buộc kèm ít nhất 2 đề tài thay thế
+5. Đánh giá phải tính tới năng lực thực tế của nhà sáng tạo, không đề xuất đề tài vượt quá khả năng
+6. Đề tài dính mảng nhạy cảm (thẩm mỹ, tài chính, mẹ và bé, sức khoẻ) phải gắn nhãn rủi ro tuân thủ
 
-> 自研溯源与参考方向见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và hướng tham khảo xem `EASEL-META.md` cùng thư mục.

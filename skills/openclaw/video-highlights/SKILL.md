@@ -7,77 +7,77 @@ description: >-
 layer: produce
 ---
 
-# 长视频 / 直播录像高光切片
+# Cắt highlight từ video dài / bản ghi livestream
 
-> 从长视频里找高光段 → 切成多条短视频（可转竖版 + 加字幕）。切片执行走
-> `skills/shared/scripts/highlight_cut.py`，**不要手拼裁切命令**——脚本已处理精确裁切、
-> 前后留白、批量输出、转竖版、清单生成。
+> Tìm đoạn highlight trong video dài -> cắt thành nhiều clip ngắn (có thể chuyển khung dọc + thêm phụ đề). Việc cắt chạy qua
+> `skills/shared/scripts/highlight_cut.py`, **đừng tự ghép lệnh cắt** - script đã lo cắt chính xác,
+> chừa khoảng trước/sau, xuất hàng loạt, chuyển khung dọc và sinh danh sách clip.
 
-> 英文口播找笑点 + 逐段动态人脸 pan 见 **clipify**；只转画幅见 **video-reframe**；
-> 字幕翻译见 **subtitle-translate**。
+> Video nói tiếng Anh cần tìm điểm cười + pan bám mặt theo từng đoạn thì xem **clipify**; chỉ đổi khung hình thì xem **video-reframe**;
+> dịch phụ đề thì xem **subtitle-translate**.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 |
+| Trường | Bắt buộc | Mô tả |
 |------|------|------|
-| 长视频 | 是 | 直播录像 / 长视频（没给就问） |
-| 找点方式 | 否 | `能量`（默认，情绪高涨处）/ `内容`（转录后按金句/爆点挑） |
-| 片段数 | 否 | 切几条（默认 5） |
-| 每段时长 | 否 | 每条大约多长（默认 20s） |
-| 转竖版 | 否 | 是否转 9:16 发抖音/小红书 |
+| Video dài | Có | Bản ghi livestream / video dài (chưa có thì hỏi) |
+| Cách tìm điểm | Không | `energy` (mặc định, chỗ cảm xúc lên cao) / `content` (bóc băng rồi chọn theo câu đắt/điểm bùng) |
+| Số clip | Không | Cắt mấy clip (mặc định 5) |
+| Độ dài mỗi clip | Không | Mỗi clip dài khoảng bao nhiêu (mặc định 20s) |
+| Chuyển khung dọc | Không | Có chuyển 9:16 để đăng TikTok/YouTube Shorts không |
 
-## 输出（`outputs/主题名/`）
+## Đầu ra (`outputs/<chủ đề>/`)
 
-- 多条切片（`highlight_01.mp4` …）+ 清单 `highlights.json`
+- Nhiều clip (`highlight_01.mp4` ...) + danh sách `highlights.json`
 
-## 执行步骤
+## Các bước thực hiện
 
-脚本路径（相对项目根）：`skills/shared/scripts/highlight_cut.py`（`energy -h` / `cut -h`）。
+Đường dẫn script (so với gốc dự án): `skills/shared/scripts/highlight_cut.py` (`energy -h` / `cut -h`).
 
-### 方式 A：音频能量找点（快，适合有欢呼/情绪起伏的直播）
+### Cách A: tìm điểm theo năng lượng âm thanh (nhanh, hợp livestream có hò reo/cảm xúc lên xuống)
 ```bash
-# 1) 找候选段
-python skills/shared/scripts/highlight_cut.py energy -i <长视频> \
+# 1) Tìm các đoạn ứng viên
+python skills/shared/scripts/highlight_cut.py energy -i "<video dài>" \
   --top 5 --clip-len 20 -o /tmp/hl_cand.json
-# 2) 切片（可同时转竖版）
-python skills/shared/scripts/highlight_cut.py cut -i <长视频> \
-  --segments /tmp/hl_cand.json -o outputs/video-highlights \
+# 2) Cắt clip (có thể chuyển khung dọc luôn)
+python skills/shared/scripts/highlight_cut.py cut -i "<video dài>" \
+  --segments /tmp/hl_cand.json -o "outputs/<chủ đề>" \
   --reframe 9:16 --reframe-mode blur
 ```
 
-### 方式 B：内容找点（准，适合口播/知识/带货，挑金句爆点）
-1. 先转录（复用 auto-subtitle 的 `asr.py`，带时间轴）：
+### Cách B: tìm điểm theo nội dung (chuẩn, hợp video nói/kiến thức/bán hàng, chọn câu đắt và điểm bùng)
+1. Bóc băng trước (dùng lại `asr.py` của auto-subtitle, có timeline):
    ```bash
-   python skills/shared/scripts/asr.py transcribe -i <长视频> --format json -o /tmp/hl.json
+   python skills/shared/scripts/asr.py transcribe -i "<video dài>" --format json -o /tmp/hl.json
    ```
-2. **你**读转录，挑出 3-5 个最有价值/最抓人的片段（完整语义段，别切半句），
-   写成切片清单 `/tmp/hl_segs.json`：
+2. **Bạn** đọc bản bóc băng, chọn ra 3-5 đoạn giá trị nhất/cuốn nhất (trọn ý, đừng cắt nửa câu),
+   ghi thành danh sách clip `/tmp/hl_segs.json`:
    ```json
-   {"segments": [{"start": 73.2, "end": 95.0, "label": "金句：xxx"}, ...]}
+   {"segments": [{"start": 73.2, "end": 95.0, "label": "câu đắt: xxx"}, ...]}
    ```
-3. 切片：
+3. Cắt clip:
    ```bash
-   python skills/shared/scripts/highlight_cut.py cut -i <长视频> \
-     --segments /tmp/hl_segs.json -o outputs/video-highlights --reframe 9:16
+   python skills/shared/scripts/highlight_cut.py cut -i "<video dài>" \
+     --segments /tmp/hl_segs.json -o "outputs/<chủ đề>" --reframe 9:16
    ```
 
-`--pad 0.3` 每段前后留白避免切太紧；不转竖版就去掉 `--reframe`。
+`--pad 0.3` chừa khoảng trước/sau mỗi đoạn để không cắt quá sát; không chuyển khung dọc thì bỏ `--reframe`.
 
-## Profile 感知
+## Nhận biết Profile
 
-- 有 Profile：转竖版比例按 `platforms.md` 主平台；找点侧重贴合账号定位（带货看爆点、
-  知识看金句、娱乐看情绪高潮）；切片时长贴合平台（抖音 15-30s，视频号 30-60s）。
-- 无 Profile：默认能量找点 top5、每段 20s，询问是否转竖版。
+- Có Profile: tỉ lệ khung dọc theo nền tảng chính trong `platforms.md`; tìm điểm bám theo định vị kênh (bán hàng thì nhắm điểm bùng,
+  kiến thức thì nhắm câu đắt, giải trí thì nhắm cao trào cảm xúc); độ dài clip bám theo nền tảng (Douyin 15-30s, Video Channels 30-60s).
+- Không có Profile: mặc định tìm điểm theo năng lượng top5, mỗi đoạn 20s, hỏi xem có chuyển khung dọc không.
 
-## 规则
+## Quy tắc
 
-1. 内容找点务必切**完整语义段**，不要从半句话切进/切出。
-2. 能量找点适合有明显情绪起伏的素材；平淡口播优先用内容找点（方式 B）。
-3. 切片默认前后各留 0.3s 白，避免开头/结尾被切掉。
-4. 转竖版口播类建议 `--reframe-mode smart`（人脸居中），其它用 `blur`（不丢画面）。
-5. 产物统一进 `outputs/主题名/`，附 `highlights.json` 清单。
+1. Tìm điểm theo nội dung thì bắt buộc cắt **trọn ý**, đừng vào/ra giữa nửa câu.
+2. Tìm điểm theo năng lượng hợp với tư liệu có cảm xúc lên xuống rõ; video nói đều đều thì ưu tiên tìm theo nội dung (cách B).
+3. Clip mặc định chừa 0.3s ở đầu và cuối để không bị cắt mất đoạn mở/kết.
+4. Chuyển khung dọc cho video nói thì nên dùng `--reframe-mode smart` (canh giữa khuôn mặt), còn lại dùng `blur` (không mất hình).
+5. Sản phẩm để hết vào `outputs/<chủ đề>/`, kèm danh sách `highlights.json`.
 
-## 参考来源
+## Nguồn tham khảo
 
-音频能量选段用 librosa RMS 峰值（贪心去重保证峰间隔）；内容选段沿用 opus-clip 式"转录→挑金句"
-思路但交给 LLM 判断。切片/转竖版复用确定性脚本，保证时间轴与画幅不出错。
+Chọn đoạn theo năng lượng âm thanh dùng đỉnh RMS của librosa (lọc tham lam để giữ khoảng cách giữa các đỉnh); chọn đoạn theo nội dung theo lối opus-clip "bóc băng -> chọn câu đắt"
+nhưng để LLM phán đoán. Việc cắt và chuyển khung dọc dùng lại script xác định, đảm bảo timeline và khung hình không sai.

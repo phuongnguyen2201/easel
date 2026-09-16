@@ -7,89 +7,89 @@ description: >-
 layer: plan
 ---
 
-# Hook 变体生成
+# Sinh biến thể Hook
 
-> 针对任意主题，生成 6 种经过验证的 Hook 变体，每条 Hook 为 2 行结构（开场 + 反转），用于社媒内容开头的注意力捕获。
+> Với bất kỳ chủ đề nào, sinh 6 biến thể Hook đã kiểm chứng, mỗi Hook có cấu trúc 2 dòng (mở màn + cú lật), dùng để giữ chú ý ngay đầu nội dung mạng xã hội.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供的主题文本。可以是关键词、短语或一句话描述。
+Đoạn chủ đề người dùng đưa trong prompt. Có thể là từ khoá, cụm từ hoặc một câu mô tả.
 
-## 输出
+## Đầu ra
 
-6 条 Hook 变体，每条包含：
+6 biến thể Hook, mỗi biến thể gồm:
 
-- **第 1 行（开场）**：≤40 字符，陈述句，出人意料/具体/有冲击力
-- **第 2 行（反转）**：≤40 字符，与开场形成矛盾/重构/颠覆
+- **Dòng 1 (mở màn)**: ≤40 chữ, câu khẳng định, bất ngờ/cụ thể/có sức va đập
+- **Dòng 2 (cú lật)**: ≤40 chữ, mâu thuẫn/dựng lại/lật ngược dòng mở màn
 
-输出格式：
+Định dạng đầu ra:
 
 ```
-### 1. 数字领衔
-> [开场]
-> [反转]
+### 1. Dẫn bằng con số
+> [mở màn]
+> [cú lật]
 
-### 2. 逆向认知
-> [开场]
-> [反转]
+### 2. Lật nhận thức
+> [mở màn]
+> [cú lật]
 
-### 3. 个人蜕变
-> [开场]
-> [反转]
+### 3. Lột xác cá nhân
+> [mở màn]
+> [cú lật]
 
-### 4. 权威借势
-> [开场]
-> [反转]
+### 4. Mượn uy tín
+> [mở màn]
+> [cú lật]
 
-### 5. 自我坦白
-> [开场]
-> [反转]
+### 5. Tự thú
+> [mở màn]
+> [cú lật]
 
-### 6. 未来冲击
-> [开场]
-> [反转]
+### 6. Cú sốc tương lai
+> [mở màn]
+> [cú lật]
 ```
 
-输出完成后，追加下一步操作提示：
+Xuất xong thì thêm gợi ý bước tiếp theo:
 
 ```
 ---
-选一条 Hook，我帮你扩写成完整帖子。回复编号即可。
+Chọn một Hook, mình viết tiếp thành bài hoàn chỉnh cho bạn. Chỉ cần trả lời số thứ tự.
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **获取主题** — 从用户 prompt 中提取主题；用户已提供则直接使用，无需追问。
-2. **生成 6 种 Hook 变体** — 按 [hook-formulas.md](references/hook-formulas.md) 中的 6 种公式逐一生成：
-   - 数字领衔 (Number-led)
-   - 逆向认知 (Contrarian)
-   - 个人蜕变 (Personal transformation)
-   - 权威借势 (Authority steal)
-   - 自我坦白 (Admission)
-   - 未来冲击 (Future shock)
-3. **逐条校验** — 每条 Hook 必须通过以下检查：
-   - **每行 ≤40 字符**：用脚本取确定性字数，不靠肉眼数。把每一行喂给
-     `python3 skills/shared/scripts/wordcount.py count`（stdin 传入），读
-     `social_count` 字段（社媒计数口径 = 中文字符 + 英文单词 + 数字串 + 标点）。
-     超过 40 就据结果压缩该行后重数，直到 `social_count ≤ 40`。
-   - 开场行不含问号
-   - 优先第一人称（"我"）视角增强代入感（趋势/未来/权威类公式可例外）
-   - 优先使用阿拉伯数字
-4. **按结构化格式输出** — 见上方输出格式。
-5. **提供下一步操作提示** — 告知用户可选一条 Hook 扩写为完整帖子。
+1. **Lấy chủ đề** - trích chủ đề từ prompt của người dùng; đã có sẵn thì dùng luôn, không cần hỏi lại.
+2. **Sinh 6 biến thể Hook** - theo 6 công thức trong [hook-formulas.md](references/hook-formulas.md), làm lần lượt từng công thức:
+   - Dẫn bằng con số (Number-led)
+   - Lật nhận thức (Contrarian)
+   - Lột xác cá nhân (Personal transformation)
+   - Mượn uy tín (Authority steal)
+   - Tự thú (Admission)
+   - Cú sốc tương lai (Future shock)
+3. **Kiểm từng Hook** - mỗi Hook phải qua các kiểm tra sau:
+   - **Mỗi dòng ≤40 chữ**: lấy số chữ bằng script cho chắc, không đếm bằng mắt. Đưa từng dòng vào
+     `python3 skills/shared/scripts/wordcount.py count` (truyền qua stdin), đọc
+     trường `social_count` (cách đếm kiểu mạng xã hội = ký tự chữ + từ tiếng Anh + chuỗi số + dấu câu).
+     Quá 40 thì dựa vào kết quả rút gọn dòng đó rồi đếm lại, tới khi `social_count ≤ 40`.
+   - Dòng mở màn không chứa dấu hỏi
+   - Ưu tiên góc nhìn ngôi thứ nhất ("tôi") cho dễ nhập vai (công thức về trend/tương lai/uy tín được ngoại lệ)
+   - Ưu tiên dùng chữ số Ả Rập
+4. **Xuất theo định dạng có cấu trúc** - xem định dạng đầu ra ở trên.
+5. **Đưa gợi ý bước tiếp theo** - cho người dùng biết có thể chọn một Hook để viết thành bài hoàn chỉnh.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：根据 Profile 中的 `platform`、`tone`、`language` 等字段调整 Hook 的语气、用语风格和平台习惯用法。例如小红书偏口语化、抖音偏节奏感。
-- **无 Profile**：退回通用模式，使用中性语气生成，附注"如提供账号 Profile 可适配平台风格"。
+- **Có Profile**: theo các trường `platform`, `tone`, `language` trong Profile mà chỉnh giọng điệu, lối dùng từ và thói quen của nền tảng cho Hook. Ví dụ Facebook thiên khẩu ngữ, TikTok thiên nhịp điệu.
+- **Không có Profile**: lùi về chế độ chung, sinh Hook với giọng trung tính, ghi chú "cung cấp Profile của kênh thì có thể khớp phong cách từng nền tảng".
 
-## 规则
+## Quy tắc
 
-1. 每行严格 ≤40 字符，用 `../../shared/scripts/wordcount.py count` 逐行取 `social_count` 判定，超限即改
-2. 开场行禁止使用问句
-3. 禁止使用破折号（—）
-4. 禁止填充词（其实、就是、所以、然后）
-5. 数字一律用阿拉伯数字，不拼写
-6. 不含犹豫措辞（可能、也许、大概）
-7. 优先第一人称视角增强代入感；趋势/未来冲击/权威借势类公式可不含"我"
-8. 自动开始，不输出前言或寒暄
+1. Mỗi dòng nghiêm ngặt ≤40 chữ, dùng `../../shared/scripts/wordcount.py count` lấy `social_count` từng dòng để xét, quá hạn là sửa
+2. Dòng mở màn cấm dùng câu hỏi
+3. Cấm dùng dấu gạch ngang dài (em dash)
+4. Cấm từ đệm (thật ra, kiểu như, cho nên, rồi thì)
+5. Số luôn viết bằng chữ số Ả Rập, không viết thành chữ
+6. Không dùng từ ngập ngừng (có thể, chắc là, khoảng chừng)
+7. Ưu tiên góc nhìn ngôi thứ nhất cho dễ nhập vai; công thức trend/cú sốc tương lai/mượn uy tín được phép không có "tôi"
+8. Bắt đầu ngay, không viết lời mở đầu hay chào hỏi

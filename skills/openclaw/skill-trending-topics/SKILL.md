@@ -8,73 +8,73 @@ description: >-
 layer: discover
 ---
 
-# 热点发现
+# Phát hiện trend
 
-> 抓取多平台实时热搜数据，筛选与创作者赛道相关的热点，输出可操作的二创选题。
+> Kéo dữ liệu bảng trend thời gian thực từ nhiều nền tảng, lọc ra trend liên quan tới ngách của nhà sáng tạo, xuất đề tài sáng tạo lại làm được ngay.
 
-## 输入
+## Đầu vào
 
-用户 prompt 中提供以下信息（全部可选）：
+Người dùng cung cấp các thông tin sau trong prompt (đều là tuỳ chọn):
 
-- **平台**：微博 / 抖音 / 知乎 / 头条 / B站（默认：微博 + 抖音）
-- **赛道/领域**：如"科技数码"、"美妆"、"职场"（有 Profile 时自动提取）
-- **目的**：浏览热搜 / 找二创选题 / 追热点写内容
+- **Nền tảng**: Weibo / Douyin / Zhihu / Toutiao / Bilibili (mặc định: Weibo + Douyin)
+- **Ngách/lĩnh vực**: ví dụ "công nghệ - đồ số", "làm đẹp", "công sở" (có Profile thì tự động trích ra)
+- **Mục đích**: lướt bảng trend / tìm đề tài sáng tạo lại / bắt trend viết nội dung
 
-## 输出
+## Đầu ra
 
 ```markdown
-# 热点速报
-日期: {date}
-平台: {platforms}
+# Bản tin trend nhanh
+Ngày: {date}
+Nền tảng: {platforms}
 
-## 🔥 全平台热搜 Top 10
-| # | 平台 | 话题 | 热度 | 与你的相关度 |
+## 🔥 Top 10 trend toàn nền tảng
+| # | Nền tảng | Chủ đề | Độ hot | Mức liên quan tới bạn |
 
-## 🎯 推荐二创选题（3-5 个）
-### 选题 1: {标题}
-- 热点来源: {平台 + 原话题}
-- 二创角度: {怎么切}
-- 建议格式: {图文/短视频/thread}
-- 时效性: {需要多快发}
+## 🎯 Đề tài sáng tạo lại đề xuất (3-5 đề tài)
+### Đề tài 1: {tiêu đề}
+- Nguồn trend: {nền tảng + chủ đề gốc}
+- Góc sáng tạo lại: {cắt vào thế nào}
+- Định dạng gợi ý: {bài ảnh-chữ/video ngắn/thread}
+- Tính thời điểm: {cần đăng nhanh cỡ nào}
 
-## 📊 趋势洞察
-{跨平台重合话题、上升趋势、可预判的后续热点}
+## 📊 Insight xu hướng
+{chủ đề trùng nhau giữa các nền tảng, xu hướng đi lên, trend kế tiếp có thể đoán trước}
 ```
 
-## 执行步骤
+## Các bước thực hiện
 
-1. **抓取热搜数据** — 用 web_fetch 调用**下面这些已验证可用的公益 API**（返回 JSON，无需 key，环境已配外网代理会自动生效）。按用户指定平台抓取，未指定默认抓微博 + 抖音。
+1. **Kéo dữ liệu bảng trend** - dùng web_fetch gọi **những API công ích đã kiểm chứng là dùng được dưới đây** (trả về JSON, không cần key, môi trường đã cấu hình proxy ra ngoài nên tự có hiệu lực). Kéo theo nền tảng mà người dùng chỉ định, không chỉ định thì mặc định kéo Weibo + Douyin.
 
-   🚫 **绝对不要 web_fetch 平台官网**（weibo.com / zhihu.com / douyin.com）**或 tophub.today** —— 它们对服务器 IP 反爬，返回登录页 / 验证码 / 403，不是数据。也不要用未在此列出的第三方接口（vvhan / tenapi 等未验证，勿用）。
+   🚫 **Tuyệt đối không web_fetch trang chủ nền tảng** (weibo.com / zhihu.com / douyin.com) **hay tophub.today** - chúng chặn crawl theo IP máy chủ, trả về trang đăng nhập / captcha / 403 chứ không phải dữ liệu. Cũng đừng dùng API bên thứ ba không có trong danh sách này (vvhan / tenapi... chưa kiểm chứng, đừng dùng).
 
-   **主源 60s（v2，路径必须带 `/v2/`）** base `https://60s.viki.moe`：
-   - 微博 `https://60s.viki.moe/v2/weibo` ｜ 抖音 `https://60s.viki.moe/v2/douyin`
-   - 知乎 `https://60s.viki.moe/v2/zhihu` ｜ 头条 `https://60s.viki.moe/v2/toutiao`
-   - 小红书 `https://60s.viki.moe/v2/rednote` ｜ 百度 `https://60s.viki.moe/v2/baidu/hot`
-   - 返回 `{"code":200,"data":[{"title","hot","url"},...]}`（部分端点为嵌套 `data.data`，解析时都判断一下）。
+   **Nguồn chính 60s (v2, đường dẫn bắt buộc có `/v2/`)** base `https://60s.viki.moe`:
+   - Weibo `https://60s.viki.moe/v2/weibo` | Douyin `https://60s.viki.moe/v2/douyin`
+   - Zhihu `https://60s.viki.moe/v2/zhihu` | Toutiao `https://60s.viki.moe/v2/toutiao`
+   - Xiaohongshu `https://60s.viki.moe/v2/rednote` | Baidu `https://60s.viki.moe/v2/baidu/hot`
+   - Trả về `{"code":200,"data":[{"title","hot","url"},...]}` (một số endpoint lồng trong `data.data`, khi parse nhớ kiểm tra cả hai).
 
-   **备源 xxapi（主源某端点失败时用，尤其 B站）** base `https://v2.xxapi.cn`：
-   - 微博 `/api/weibohot` ｜ 抖音 `/api/douyinhot` ｜ B站 `/api/bilibilihot` ｜ 百度 `/api/baiduhot`
+   **Nguồn dự phòng xxapi (dùng khi một endpoint của nguồn chính lỗi, nhất là Bilibili)** base `https://v2.xxapi.cn`:
+   - Weibo `/api/weibohot` | Douyin `/api/douyinhot` | Bilibili `/api/bilibilihot` | Baidu `/api/baiduhot`
 
-   降级顺序：60s → xxapi → 若全部失败，如实告知并请用户粘贴热搜截图/文字。**完整清单与注意事项见 `shared/hotlist-apis.md`（可选，上面的 URL 已够用）**。
-2. **解析数据** — 提取每条热搜的标题和热度值，按热度排序。
-3. **赛道匹配** — 如有 Profile 或用户指定了赛道，过滤出与赛道相关的话题，标注相关度（高/中/低）。无赛道信息时展示全量 Top 10。
-4. **二创分析** — 从相关话题中挑选 3-5 个有二创价值的选题：
-   - 有争议性或讨论空间
-   - 与创作者定位匹配
-   - 时效性窗口足够（不是已经过气的）
-   - 能产出差异化内容（不是简单搬运）
-5. **趋势洞察** — 分析跨平台重合的话题（同时上微博和抖音热搜的说明是大事件）、上升趋势、可预判的后续热点。
-6. **输出** — 按输出格式交付。
+   Thứ tự hạ cấp: 60s → xxapi → nếu tất cả đều lỗi thì báo thật và nhờ người dùng dán ảnh chụp/nội dung bảng trend. **Danh sách đầy đủ và các lưu ý xem `shared/hotlist-apis.md` (tuỳ chọn, các URL ở trên đã đủ dùng)**.
+2. **Parse dữ liệu** - trích tiêu đề và giá trị độ hot của từng mục trend, sắp xếp theo độ hot.
+3. **Khớp ngách** - nếu có Profile hoặc người dùng đã chỉ định ngách thì lọc ra các chủ đề liên quan tới ngách, ghi mức liên quan (cao/trung bình/thấp). Không có thông tin ngách thì hiển thị nguyên Top 10.
+4. **Phân tích sáng tạo lại** - từ các chủ đề liên quan, chọn 3-5 đề tài đáng làm lại:
+   - Có tính tranh luận hoặc còn không gian bàn luận
+   - Khớp với định vị của nhà sáng tạo
+   - Cửa sổ thời điểm còn đủ rộng (không phải trend đã nguội)
+   - Làm ra được nội dung khác biệt (không phải bê nguyên xi)
+5. **Insight xu hướng** - phân tích chủ đề trùng nhau giữa các nền tảng (cùng lúc lên bảng trend của Weibo và Douyin nghĩa là sự kiện lớn), xu hướng đi lên, trend kế tiếp có thể đoán trước.
+6. **Xuất kết quả** - bàn giao theo định dạng đầu ra.
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile 时**：
-  - 读取 `identity.md` 获取赛道和定位，自动过滤相关热点
-  - 读取 `style.md` 匹配二创建议的内容形式
-  - 读取 `platforms.md` 优先抓取创作者活跃平台的热搜
-  - 读取 `audience.md` 判断哪些热点对目标受众有吸引力
-- **无 Profile 时**：
-  - 展示全平台 Top 10，不做赛道过滤
-  - 二创建议给出通用角度
-  - 附注"指定赛道或提供 Profile 可获得更精准的热点筛选"
+- **Khi có Profile**:
+  - Đọc `identity.md` để lấy ngách và định vị, tự động lọc trend liên quan
+  - Đọc `style.md` để khớp hình thức nội dung cho gợi ý sáng tạo lại
+  - Đọc `platforms.md` để ưu tiên kéo bảng trend của nền tảng mà nhà sáng tạo đang hoạt động
+  - Đọc `audience.md` để xác định trend nào hấp dẫn với khán giả mục tiêu
+- **Khi không có Profile**:
+  - Hiển thị Top 10 toàn nền tảng, không lọc theo ngách
+  - Gợi ý sáng tạo lại đưa ra góc tiếp cận chung
+  - Ghi chú thêm "chỉ định ngách hoặc cung cấp Profile sẽ lọc trend chính xác hơn"

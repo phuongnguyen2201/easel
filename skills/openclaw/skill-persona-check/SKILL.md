@@ -8,38 +8,38 @@ description: >-
 layer: publish
 ---
 
-# 人设一致性检查
+# Kiểm tra nhất quán persona
 
-> 检查内容是否符合创作者人设和品牌调性，输出一致性评分与偏离诊断。
+> Kiểm tra nội dung có khớp persona của nhà sáng tạo và tone thương hiệu không, xuất điểm nhất quán và chẩn đoán điểm lệch.
 
-## 与其他 SKILL 的区别
+## Khác biệt với các SKILL khác
 
-| SKILL | 定位 | 关注点 |
+| SKILL | Định vị | Điểm tập trung |
 |---|---|---|
-| **persona-check**（本 SKILL） | 人设/品牌一致性 | 账号定位、题材、形式、受众、风格是否匹配画像 |
-| skill-quality-gate | 深度合规 + 质量审核 | 平台规则、内容质量 |
-| skill-publish-checklist | 完整性检查 | 有没有漏标题、漏封面等 |
+| **persona-check** (SKILL này) | Nhất quán persona/thương hiệu | Định vị kênh, đề tài, hình thức, khán giả, phong cách có khớp hồ sơ không |
+| skill-quality-gate | Tuân thủ chuyên sâu + duyệt chất lượng | Quy tắc nền tảng, chất lượng nội dung |
+| skill-publish-checklist | Kiểm tra đầy đủ | Có sót tiêu đề, sót ảnh bìa hay không |
 
-## 前提条件
+## Điều kiện tiên quyết
 
-本 SKILL **必须有 Profile 才能工作**。Profile 中应包含以下信息（部分或全部）：
+SKILL này **bắt buộc có Profile mới chạy được**. Profile nên chứa các thông tin sau (một phần hoặc toàn bộ):
 
-- `identity.md`：账号定位、主线赛道、内容方向
-- `style.md`：语气、叙事、视觉和内容形式
-- `audience.md`：目标受众及其需求
-- `preferences.md`：要做、不做和明确红线
-- `memory.md`：当前画像已验证的经验与踩坑
+- `identity.md`: định vị kênh, ngách chủ đạo, hướng nội dung
+- `style.md`: tone giọng, cách kể, hình ảnh và hình thức nội dung
+- `audience.md`: khán giả mục tiêu và nhu cầu của họ
+- `preferences.md`: điều nên làm, không làm và các lằn ranh đỏ
+- `memory.md`: kinh nghiệm đã kiểm chứng và các lần vấp của hồ sơ hiện tại
 
-如果没有 Profile，直接返回提示，不做检查。
+Nếu không có Profile, trả về lời nhắc ngay, không kiểm tra.
 
-## 输入
+## Đầu vào
 
-- **待检查内容**：文案文本或产物路径
-- **Profile**：通过 `=== EASEL ACCOUNT PROFILE ===` 标记注入，或指定画像名称
+- **Nội dung cần kiểm tra**: văn bản bài viết hoặc đường dẫn sản phẩm
+- **Profile**: được nạp qua dấu hiệu `=== EASEL ACCOUNT PROFILE ===`, hoặc chỉ định tên hồ sơ
 
-## 输出
+## Đầu ra
 
-输出结构化一致性报告，JSON 格式：
+Xuất báo cáo nhất quán có cấu trúc, định dạng JSON:
 
 ```json
 {
@@ -49,109 +49,109 @@ layer: publish
   "warning": "",
   "dimensions": [
     {
-      "dimension": "检查维度名",
+      "dimension": "tên chiều kiểm tra",
       "score": 90,
       "status": "aligned | drifted",
-      "evidence": "具体证据文本",
-      "suggestion": "调整建议"
+      "evidence": "văn bản bằng chứng cụ thể",
+      "suggestion": "gợi ý điều chỉnh"
     }
   ],
-  "drift_summary": ["偏离点概述列表"],
-  "rewrite_hints": ["具体修改建议"],
-  "summary": "一句话总结"
+  "drift_summary": ["danh sách tóm tắt các điểm lệch"],
+  "rewrite_hints": ["gợi ý sửa cụ thể"],
+  "summary": "tóm tắt một câu"
 }
 ```
 
-评分标准：
-- 80-100：一致（consistent），无需人设警告
-- 60-79：轻微偏离（minor_drift），明确警告并给出修改建议
-- 0-59：明显偏离（major_drift），醒目警告账号定位/题材/形式偏离
+Chuẩn chấm điểm:
+- 80-100: nhất quán (consistent), không cần cảnh báo persona
+- 60-79: lệch nhẹ (minor_drift), cảnh báo rõ và đưa gợi ý sửa
+- 0-59: lệch rõ (major_drift), cảnh báo nổi bật về lệch định vị kênh/đề tài/hình thức
 
-**人设评分只做提醒，不是发布权限。** `publish_allowed` 始终为 `true`；低分不得阻断发布、
-不得要求用户为了通过评分而强制改稿。用户已经明确要发布时，展示警告后继续发布。内容安全、
-平台合规、敏感信息等独立硬门禁不在本 SKILL 范围内，仍按对应规则处理。
+**Điểm persona chỉ để nhắc, không phải quyền đăng bài.** `publish_allowed` luôn là `true`; điểm thấp không được chặn đăng,
+không được bắt người dùng sửa bài chỉ để qua điểm. Khi người dùng đã nói rõ muốn đăng, hiện cảnh báo rồi đăng tiếp. An toàn nội dung,
+tuân thủ nền tảng, thông tin nhạy cảm là các cổng chặn cứng độc lập, không thuộc phạm vi SKILL này, vẫn xử lý theo quy tắc tương ứng.
 
-## 执行步骤
+## Các bước thực hiện
 
-### Step 1 — 解析 Profile 画像
+### Step 1 - Đọc hiểu hồ sơ Profile
 
-1. 检测是否有 Profile 上下文（`=== EASEL ACCOUNT PROFILE ===` 标记）
-2. **无 Profile** → 直接输出提示信息并终止：
+1. Kiểm tra có ngữ cảnh Profile không (dấu hiệu `=== EASEL ACCOUNT PROFILE ===`)
+2. **Không có Profile** → xuất thẳng lời nhắc rồi dừng:
    ```
-   未检测到账号 Profile，无法进行人设一致性检查。
-   请先创建 Profile：用 skill-profile-builder 引导创建，或复制 profiles/_template/ 手动填写。
-   Profile 的 style.md 应包含：写作风格、语气基调、人格特征、标志性表达。
+   Không phát hiện Profile của kênh, không thể kiểm tra nhất quán persona.
+   Hãy tạo Profile trước: dùng skill-profile-builder để tạo có hướng dẫn, hoặc copy profiles/_template/ rồi điền tay.
+   File style.md của Profile nên có: phong cách viết, tone giọng nền, nét tính cách, cách nói đặc trưng.
    ```
-3. **有 Profile** → 必须读取当前画像的 `identity.md`、`style.md`、`audience.md`、
-   `preferences.md`、`memory.md`；发布场景再读取 `platforms.md`。先提取账号主线、允许题材、
-   内容形式和受众，再提取语气、用词和平台习惯。不得只读 `style.md` 后凭语言相似度评分。
+3. **Có Profile** → bắt buộc đọc `identity.md`, `style.md`, `audience.md`,
+   `preferences.md`, `memory.md` của hồ sơ hiện tại; tình huống đăng bài thì đọc thêm `platforms.md`. Trích trước ngách chủ đạo, đề tài được phép,
+   hình thức nội dung và khán giả, rồi mới trích tone giọng, cách dùng từ và thói quen nền tảng. Không được chỉ đọc `style.md` rồi chấm theo độ giống về ngôn ngữ.
 
-### Step 2 — 分析待检查内容
+### Step 2 - Phân tích nội dung cần kiểm tra
 
-对输入内容进行多维度语言分析：
+Phân tích ngôn ngữ đa chiều với nội dung đầu vào:
 
-1. **题材与意图**：这条内容在讲什么，是否属于账号主线或合理延展
-2. **内容形式**：小说、动画、口播、测评、图文等是否匹配账号定位
-3. **目标受众**：内容解决的问题、情绪价值和阅读门槛是否面向画像受众
-4. **语言风格**：语气、用词、句式、叙事视角和情感色彩
-5. **平台与偏好**：是否适合目标平台，是否触碰画像明确的“不做”项
+1. **Đề tài và ý đồ**: nội dung này nói gì, có thuộc ngách chủ đạo của kênh hoặc mở rộng hợp lý không
+2. **Hình thức nội dung**: truyện, hoạt hình, video nói, review, bài ảnh... có khớp định vị kênh không
+3. **Khán giả mục tiêu**: vấn đề nội dung giải quyết, giá trị cảm xúc và độ khó đọc có hướng tới khán giả trong hồ sơ không
+4. **Phong cách ngôn ngữ**: tone giọng, cách dùng từ, kiểu câu, góc kể và sắc thái cảm xúc
+5. **Nền tảng và sở thích**: có hợp nền tảng đích không, có chạm vào mục "không làm" đã ghi rõ trong hồ sơ không
 
-### Step 3 — 逐维度对比
+### Step 3 - Đối chiếu từng chiều
 
-将内容特征与 Profile 特征逐维度对比，每个维度独立评分：
+Đối chiếu đặc trưng nội dung với đặc trưng Profile theo từng chiều, mỗi chiều chấm điểm độc lập:
 
-| 维度 | 对比内容 | 权重 |
+| Chiều | Nội dung đối chiếu | Trọng số |
 |---|---|---|
-| **账号定位与内容赛道** | 题材/主题 vs `identity.md` 主线、内容方向、选题池 | 30% |
-| **内容形式一致性** | 小说/动画/图文/口播等 vs 画像规定的主要内容形式 | 15% |
-| **目标受众匹配** | 内容价值与阅读/观看人群 vs `audience.md` | 15% |
-| **语气与叙事风格** | 语气、节奏、视角 vs `style.md` | 15% |
-| **人格与用词** | 表达人格、词汇、标志性表达 vs 画像 | 10% |
-| **平台适配** | 内容形态和表达 vs `platforms.md`（无目标平台时给中性分） | 10% |
-| **偏好与经验** | `preferences.md` 与当前画像 `memory.md` | 5% |
+| **Định vị kênh và ngách nội dung** | Đề tài/chủ đề vs ngách chủ đạo, hướng nội dung, kho đề tài trong `identity.md` | 30% |
+| **Nhất quán hình thức nội dung** | Truyện/hoạt hình/bài ảnh/video nói vs hình thức nội dung chính mà hồ sơ quy định | 15% |
+| **Khớp khán giả mục tiêu** | Giá trị nội dung và nhóm người đọc/xem vs `audience.md` | 15% |
+| **Tone giọng và phong cách kể** | Tone giọng, nhịp, góc nhìn vs `style.md` | 15% |
+| **Tính cách và cách dùng từ** | Tính cách trong diễn đạt, vốn từ, cách nói đặc trưng vs hồ sơ | 10% |
+| **Thích ứng nền tảng** | Dạng nội dung và cách diễn đạt vs `platforms.md` (không có nền tảng đích thì chấm điểm trung tính) | 10% |
+| **Sở thích và kinh nghiệm** | `preferences.md` và `memory.md` của hồ sơ hiện tại | 5% |
 
-每个维度评分 0-100，加权计算总分。
+Mỗi chiều chấm 0-100, tính tổng điểm theo trọng số.
 
-为防止语言相似掩盖根本性错位，计算后应用以下上限：
+Để tránh việc giống nhau về ngôn ngữ che lấp sai lệch căn bản, sau khi tính hãy áp các mức trần sau:
 
-- **账号定位与内容赛道 < 40**：总分最高 59，必须判定 `major_drift`。
-- **内容形式一致性 < 40**：总分最高 69，至少判定 `minor_drift`。
-- 触碰画像已确认的“不做”项或红线：总分最高 39，并明确指出证据；但仍只警告，不代替用户决定是否发布。
-- 用户主动要求跨赛道，只代表这是有意识的选择，不能因此虚增一致性分；报告中注明“用户主动跨赛道”即可。
+- **Định vị kênh và ngách nội dung < 40**: tổng điểm tối đa 59, bắt buộc kết luận `major_drift`.
+- **Nhất quán hình thức nội dung < 40**: tổng điểm tối đa 69, ít nhất phải kết luận `minor_drift`.
+- Chạm vào mục "không làm" hoặc lằn ranh đỏ đã chốt trong hồ sơ: tổng điểm tối đa 39, và phải chỉ rõ bằng chứng; nhưng vẫn chỉ cảnh báo, không quyết thay người dùng chuyện đăng hay không.
+- Người dùng chủ động muốn lấn ngách chỉ có nghĩa đó là lựa chọn có ý thức, không vì thế mà thổi điểm nhất quán lên; chỉ cần ghi trong báo cáo "người dùng chủ động lấn ngách".
 
-示例：`2D 搞笑动画博主` 发布纯恐怖文字小说，即使同样口语化、有画面感、有反转，
-账号赛道和内容形式仍严重不符，总分必须低于 60，不能因语言技巧给出 80+。
+Ví dụ: `nhà sáng tạo hoạt hình hài 2D` đăng truyện chữ thuần kinh dị, dù vẫn khẩu ngữ, giàu hình ảnh, có twist,
+ngách kênh và hình thức nội dung vẫn lệch nặng, tổng điểm bắt buộc dưới 60, không được vì kỹ thuật ngôn ngữ mà cho 80+.
 
-### Step 4 — 定位偏离点
+### Step 4 - Khoanh vùng điểm lệch
 
-对于 score < 80 的维度，给出具体偏离证据：
+Với các chiều có score < 80, đưa bằng chứng lệch cụ thể:
 
-1. **引用原文**：指出内容中偏离人设的具体段落或句子
-2. **对比说明**：说明 Profile 期望的表达方式 vs 实际表达
-3. **严重程度**：标记该偏离是否影响整体人设感知
+1. **Trích nguyên văn**: chỉ ra đoạn hoặc câu cụ thể trong nội dung bị lệch persona
+2. **Giải thích đối chiếu**: nói rõ cách diễn đạt mà Profile kỳ vọng vs cách diễn đạt thực tế
+3. **Mức nghiêm trọng**: đánh dấu điểm lệch đó có ảnh hưởng cảm nhận persona tổng thể không
 
-### Step 5 — 生成修改建议
+### Step 5 - Sinh gợi ý chỉnh sửa
 
-针对每个偏离点，给出可操作的修改建议：
+Với mỗi điểm lệch, đưa gợi ý sửa có thể làm được ngay:
 
-- 具体到词级别：建议替换的词汇
-- 具体到句级别：建议调整的句式
-- 具体到段级别：建议重写的方向
+- Cụ thể tới mức từ: từ ngữ nên thay
+- Cụ thể tới mức câu: kiểu câu nên điều chỉnh
+- Cụ thể tới mức đoạn: hướng nên viết lại
 
-### Step 6 — 输出报告
+### Step 6 - Xuất báo cáo
 
-汇总所有维度评分，生成结构化报告：
+Tổng hợp điểm của mọi chiều, sinh báo cáo có cấu trúc:
 
-1. 计算加权总分并应用严重偏离上限
-2. 判定 verdict（consistent / minor_drift / major_drift）
-3. 列出所有偏离点摘要
-4. 给出优先级排序的修改建议
-5. `publish_allowed` 固定输出 `true`；低于 80 分时填写醒目的 `warning`
-6. 生成一句话总结，明确“这是人设提醒，不阻止用户发布”
+1. Tính tổng điểm theo trọng số và áp mức trần cho lệch nghiêm trọng
+2. Kết luận verdict (consistent / minor_drift / major_drift)
+3. Liệt kê tóm tắt toàn bộ điểm lệch
+4. Đưa gợi ý sửa đã sắp theo thứ tự ưu tiên
+5. `publish_allowed` luôn xuất `true`; dưới 80 điểm thì điền `warning` thật nổi bật
+6. Sinh tóm tắt một câu, nói rõ "đây là nhắc nhở về persona, không chặn người dùng đăng bài"
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：从 Profile 提取完整人设特征，进行全维度对比。这是本 SKILL 的标准工作模式。
-- **无 Profile**：**无法工作**。直接提示用户创建 Profile，说明所需内容（style、tone、personality），并终止执行。本 SKILL 是 Easel 中唯一强制要求 Profile 的 SKILL。
+- **Có Profile**: trích đầy đủ đặc trưng persona từ Profile, đối chiếu trên mọi chiều. Đây là chế độ làm việc chuẩn của SKILL này.
+- **Không có Profile**: **không chạy được**. Nhắc thẳng người dùng tạo Profile, nói rõ cần những gì (style, tone, personality), rồi dừng thực thi. Đây là SKILL duy nhất trong Easel bắt buộc phải có Profile.
 
-> 自研溯源与参考项目见同目录 `EASEL-META.md`。
+> Nguồn gốc tự phát triển và dự án tham khảo xem `EASEL-META.md` cùng thư mục.

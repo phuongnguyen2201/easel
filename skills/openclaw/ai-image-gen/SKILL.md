@@ -10,98 +10,98 @@ layer: produce
 
 # ai-image-gen Skill
 
-> 通用 AI 文生图 / 图生图 / 图像变体。用户自备图像生成 API key（OpenAI 兼容 或 apimart 异步），产物写入 `outputs/`。
+> Sinh ảnh AI đa dụng: chữ thành ảnh / ảnh thành ảnh / biến thể ảnh. Người dùng tự có API key sinh ảnh (OpenAI tương thích hoặc apimart bất đồng bộ), sản phẩm ghi vào `outputs/`.
 
-调用共享脚本 `skills/shared/scripts/ai_image.py`（纯标准库，无第三方依赖）。
-本 SKILL 不索要、不回显、不写入、不提交任何真实 API key —— key 只存在于用户自己的 `.env`。
+Gọi script dùng chung `skills/shared/scripts/ai_image.py` (thuần thư viện chuẩn, không phụ thuộc bên thứ ba).
+SKILL này không hỏi xin, không in lại, không ghi, không commit bất kỳ API key thật nào -- key chỉ nằm trong `.env` của chính người dùng.
 
-## 边界（和相邻 SKILL 区分）
+## Ranh giới (phân biệt với các SKILL lân cận)
 
-- **ai-image-gen（本 SKILL）**：通用 AI 生图，任意题材，文生图 / 图生图 / 变体。
-- **ecom-details-image**：电商详情页 / 商品主图专用出图（25 场景模板、PDP 序列）。要做电商商品图走它。
-- **card-\* / poster-\***：HTML+CSS 渲染截图（金句卡、小红书卡、海报），**非 AI 生成**，是确定性设计出图。
-- **image-editing**：已有图片的确定性处理（改尺寸/裁剪/加水印/压缩），不生成新画面。
+- **ai-image-gen (SKILL này)**: sinh ảnh AI đa dụng, mọi đề tài, chữ thành ảnh / ảnh thành ảnh / biến thể.
+- **ecom-details-image**: chuyên xuất ảnh trang chi tiết e-com / ảnh chính của sản phẩm (25 mẫu bối cảnh, chuỗi PDP). Cần ảnh sản phẩm e-com thì dùng nó.
+- **card-\* / poster-\***: chụp ảnh render HTML+CSS (thẻ câu đắt, thẻ Xiaohongshu, poster), **không phải sinh bằng AI**, là xuất ảnh thiết kế tất định.
+- **image-editing**: xử lý tất định ảnh có sẵn (đổi kích thước/cắt/đóng watermark/nén), không sinh khung hình mới.
 
-## 配置（执行前必读）
+## Cấu hình (bắt buộc đọc trước khi chạy)
 
-> **配置检查路径铁律**：先 `cd` 到 `AGENTS.md` 末尾给出的 Easel 项目根，确认当前目录有 `.env` 和 `skills/shared/scripts/ai_image.py`，再运行下列命令。不得在 OpenClaw workspace 用 `./shared/scripts/...` 检查，也不得用 `env` / `printenv` 代替读取项目 `.env`；否则会把已配置的 `IMG_BASE_URL`/Key 误判为缺失。
+> **Luật sắt về đường dẫn kiểm tra cấu hình**: trước hết `cd` tới thư mục gốc dự án Easel ghi ở cuối `AGENTS.md`, xác nhận thư mục hiện tại có `.env` và `skills/shared/scripts/ai_image.py`, rồi mới chạy các lệnh dưới. Không được kiểm tra bằng `./shared/scripts/...` trong workspace OpenClaw, cũng không được dùng `env` / `printenv` thay cho việc đọc `.env` của dự án; nếu không sẽ báo nhầm `IMG_BASE_URL`/Key đã cấu hình thành thiếu.
 
-需在项目根目录 `.env` 中设置三项（脚本从当前目录向上自动查找 `.env`）：
+Cần đặt ba mục trong `.env` ở thư mục gốc dự án (script tự dò ngược lên từ thư mục hiện tại để tìm `.env`):
 
-| 变量 | 说明 | 兼容别名 |
+| Biến | Mô tả | Tên thay thế tương thích |
 |---|---|---|
-| `IMG_BASE_URL` | API 根地址 | `OPENAI_BASE_URL` / `OPENAI_API_BASE` / `BASE_URL` |
-| `IMG_MODEL` | 图片模型名 | `OPENAI_IMAGE_MODEL` / `IMAGE_MODEL` / `OPENAI_MODEL` |
+| `IMG_BASE_URL` | Địa chỉ gốc của API | `OPENAI_BASE_URL` / `OPENAI_API_BASE` / `BASE_URL` |
+| `IMG_MODEL` | Tên model ảnh | `OPENAI_IMAGE_MODEL` / `IMAGE_MODEL` / `OPENAI_MODEL` |
 | `IMG_API_KEY` | API key | `OPENAI_API_KEY` / `API_KEY` |
 
-支持两类服务，脚本按 `base_url` 自动检测（也可 `--mode sync|async` 强制）：
+Hỗ trợ hai loại dịch vụ, script tự nhận diện theo `base_url` (cũng có thể ép bằng `--mode sync|async`):
 
-- **OpenAI 兼容（同步）**：`base_url` 不含 apimart。走 `/images/generations`、`/images/edits`、`/images/variations`。
-  示例：`IMG_BASE_URL=https://api.openai.com/v1`，`IMG_MODEL=gpt-image-1`。
-- **apimart（异步轮询）**：`base_url` 含 `apimart`。提交任务 → 轮询 `/tasks/<id>` → 下载。
-  示例：`IMG_BASE_URL=https://api.apimart.ai/v1`。
+- **OpenAI tương thích (đồng bộ)**: `base_url` không chứa apimart. Đi qua `/images/generations`, `/images/edits`, `/images/variations`.
+  Ví dụ: `IMG_BASE_URL=https://api.openai.com/v1`, `IMG_MODEL=gpt-image-1`.
+- **apimart (bất đồng bộ, poll)**: `base_url` có chứa `apimart`. Gửi tác vụ -> poll `/tasks/<id>` -> tải về.
+  Ví dụ: `IMG_BASE_URL=https://api.apimart.ai/v1`.
 
-## 执行步骤
+## Các bước thực hiện
 
-### 1. 先确认配置（离线，不发请求）
+### 1. Xác nhận cấu hình trước (offline, không gửi request)
 
 ```bash
 python skills/shared/scripts/ai_image.py check
 ```
 
-打印三项配置状态（key 脱敏显示）、命中的别名、自动检测的模式。缺项时给出 `.env` 填写示例并以退出码 2 结束。**配置未就绪就不要往下走**，直接把缺什么、怎么配告诉用户。
+In trạng thái ba mục cấu hình (key hiển thị dạng che), tên thay thế trúng được và chế độ tự nhận diện. Thiếu mục nào thì đưa ví dụ điền `.env` rồi kết thúc với mã thoát 2. **Cấu hình chưa sẵn sàng thì không đi tiếp**, nói thẳng cho người dùng thiếu gì và cấu hình thế nào.
 
-### 2. 文生图 text2img
+### 2. Chữ thành ảnh text2img
 
-先把用户诉求写成一条清晰的图像 Prompt（主体 + 风格 + 构图 + 光线 + 画质），再执行：
+Trước hết viết nhu cầu của người dùng thành một Prompt ảnh rõ ràng (chủ thể + phong cách + bố cục + ánh sáng + chất lượng), rồi chạy:
 
 ```bash
 python skills/shared/scripts/ai_image.py text2img \
-  --prompt "一只戴墨镜的柴犬，扁平插画风，明亮撞色背景，高细节" \
+  --prompt "một chú chó Shiba đeo kính râm, phong cách minh hoạ phẳng, nền màu tương phản rực rỡ, nhiều chi tiết" \
   --size 1024x1024 --n 1 \
-  --output outputs/主题名/ai-image
+  --output "outputs/<chủ đề>/ai-image"
 ```
 
-- `--size`：同步模式用像素（`1024x1024` / `1536x1024` / `1024x1536`…）；异步模式用比例（`1:1` / `16:9` / `9:16`…）。
-- `--n`：生成张数（多张时按序号自动命名）。
-- `--output`：目录（多张自动编号）或含扩展名的单文件；统一放 `outputs/主题名/`。
-- 同步可加 `--quality low|medium|high`；异步可加 `--resolution 1k|2k|4k`。
+- `--size`: chế độ đồng bộ dùng pixel (`1024x1024` / `1536x1024` / `1024x1536`...); chế độ bất đồng bộ dùng tỉ lệ (`1:1` / `16:9` / `9:16`...).
+- `--n`: số ảnh sinh ra (nhiều ảnh thì tự đánh số theo thứ tự).
+- `--output`: thư mục (nhiều ảnh tự đánh số) hoặc một file có đuôi mở rộng; tất cả đặt trong `outputs/<chủ đề>/`.
+- Đồng bộ có thể thêm `--quality low|medium|high`; bất đồng bộ có thể thêm `--resolution 1k|2k|4k`.
 
-### 3. 图生图 / 图像编辑 img2img
+### 3. Ảnh thành ảnh / chỉnh ảnh img2img
 
-基于一张输入图 + 指令生成新图（OpenAI 走 `/images/edits` multipart，可选 `--mask` 局部编辑；apimart 把输入图作参考图走生成端点）：
+Dựa trên một ảnh đầu vào + câu lệnh để sinh ảnh mới (OpenAI đi `/images/edits` multipart, tuỳ chọn `--mask` để sửa cục bộ; apimart lấy ảnh đầu vào làm ảnh tham chiếu rồi đi endpoint sinh ảnh):
 
 ```bash
 python skills/shared/scripts/ai_image.py img2img \
-  --prompt "把背景换成夜晚霓虹街道，保留主体" \
+  --prompt "đổi nền thành phố đêm đèn neon, giữ nguyên chủ thể" \
   --image path/to/input.png \
-  --output outputs/主题名/edited.png
+  --output "outputs/<chủ đề>/edited.png"
 ```
 
-### 4. 图像变体 variations
+### 4. Biến thể ảnh variations
 
-由一张图生成多个变体：
+Từ một ảnh sinh ra nhiều biến thể:
 
 ```bash
 python skills/shared/scripts/ai_image.py variations \
   --image path/to/input.png --n 3 \
-  --output outputs/主题名/variations
+  --output "outputs/<chủ đề>/variations"
 ```
 
-### 5. 交付
+### 5. Bàn giao
 
-告诉用户产物路径、生成参数（模式/模型/尺寸/张数）。如需再改尺寸/加水印/压缩，转 `image-editing`。
+Báo cho người dùng đường dẫn sản phẩm và tham số sinh ảnh (chế độ/model/kích thước/số lượng). Nếu cần đổi kích thước/đóng watermark/nén nữa thì chuyển sang `image-editing`.
 
-## 产物
+## Sản phẩm
 
-统一输出到 `outputs/主题名/`。脚本会自动创建目录，多张按时间戳 + 序号命名。
+Xuất thống nhất vào `outputs/<chủ đề>/`. Script tự tạo thư mục, nhiều ảnh đặt tên theo timestamp + số thứ tự.
 
-## Profile 感知
+## Nhận biết Profile
 
-有账号 Profile（`=== EASEL ACCOUNT PROFILE ===`）时，把品牌视觉风格（配色 / 调性 / 元素偏好）融入 Prompt，保持系列图统一；无 Profile 时按用户描述走通用生成。
+Khi có Profile của kênh (`=== EASEL ACCOUNT PROFILE ===`), hãy đưa phong cách hình ảnh thương hiệu (bảng màu / tông điệu / yếu tố ưa dùng) vào Prompt để giữ bộ ảnh đồng nhất; không có Profile thì sinh ảnh theo mô tả của người dùng.
 
-## 常见问题
+## Câu hỏi thường gặp
 
-- **缺 key / 缺配置**：`check` 会明确指出缺哪项及 `.env` 示例；报错为友好中文，不抛 traceback。
-- **同步 vs 异步用错尺寸格式**：同步用像素、异步用比例。用 `--mode` 可强制模式。
-- **不要把真实 key 写进任何产物或提交**。
+- **Thiếu key / thiếu cấu hình**: `check` sẽ chỉ rõ thiếu mục nào kèm ví dụ `.env`; thông báo lỗi dễ hiểu, không ném traceback.
+- **Dùng sai định dạng kích thước giữa đồng bộ và bất đồng bộ**: đồng bộ dùng pixel, bất đồng bộ dùng tỉ lệ. Dùng `--mode` để ép chế độ.
+- **Không được ghi key thật vào bất kỳ sản phẩm nào hay commit lên repo**.

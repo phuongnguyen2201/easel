@@ -8,151 +8,151 @@ description: >-
 layer: produce
 ---
 
-# 视频脚本生成
+# Sinh kịch bản video
 
-> 根据目标时长自动适配短视频或中长视频模式，生成留存率优化的结构化脚本。
+> Tự khớp chế độ video ngắn hay video trung/dài theo thời lượng mục tiêu, sinh kịch bản có cấu trúc tối ưu cho tỉ lệ giữ chân.
 
-## 输入
+## Đầu vào
 
-| 字段 | 必填 | 说明 | 示例 |
+| Trường | Bắt buộc | Diễn giải | Ví dụ |
 |------|------|------|------|
-| 主题 | 是 | 视频主题 | "为什么 Rust 正在替代 C++" |
-| 目标时长 | 是 | 秒数或分钟数 | 30 秒 / 10 分钟 |
-| 平台 | 否 | 抖音/视频号/小红书/B站（默认按时长推断）| 抖音 |
-| 内容类型 | 否 | 科普/教程/评测/种草/解说/杂谈 | 科普 |
-| 核心要点 | 是 | 要覆盖的关键信息 | 内存安全、性能… |
-| 调性 | 否 | 专业/轻松/犀利/对话感（默认：对话感）| 轻松 |
+| Chủ đề | Có | Chủ đề video | "Vì sao Rust đang thay thế C++" |
+| Thời lượng mục tiêu | Có | Số giây hoặc số phút | 30 giây / 10 phút |
+| Nền tảng | Không | TikTok/Reels/Facebook/YouTube (mặc định suy từ thời lượng)| TikTok |
+| Loại nội dung | Không | Khoa học thường thức/hướng dẫn/đánh giá/seeding/bình luận/tạp đàm | Khoa học thường thức |
+| Ý chính cốt lõi | Có | Thông tin then chốt phải phủ | An toàn bộ nhớ, hiệu năng... |
+| Tông giọng | Không | Chuyên nghiệp/nhẹ nhàng/sắc sảo/như đang trò chuyện (mặc định: như đang trò chuyện)| Nhẹ nhàng |
 
-## 模式自动判定
+## Tự xác định chế độ
 
-| 时长 | 模式 | 典型平台 | 关键指标 |
+| Thời lượng | Chế độ | Nền tảng điển hình | Chỉ số then chốt |
 |------|------|----------|----------|
-| 7-15 秒 | 短视频·极速 | 抖音/视频号 | 3 秒完播率 |
-| 15-60 秒 | 短视频·标准 | 抖音/视频号/小红书 | 完播率、DM 转发、收藏 |
-| 1-5 分钟 | 中视频 | 视频号/抖音/B站 | 5 秒留存、互动率 |
-| 5-30 分钟 | 长视频 | B站/YouTube | 30 秒留存、播放完成率 |
+| 7-15 giây | Video ngắn - siêu tốc | TikTok/Reels | Tỉ lệ xem hết ở 3 giây |
+| 15-60 giây | Video ngắn - chuẩn | TikTok/Reels/Facebook | Tỉ lệ xem hết, chia sẻ DM, lưu |
+| 1-5 phút | Video trung | Facebook/TikTok/YouTube | Giữ chân 5 giây, tỉ lệ tương tác |
+| 5-30 phút | Video dài | YouTube | Giữ chân 30 giây, tỉ lệ xem trọn |
 
-**语速基准**：中文约 250 字/分钟。
+**Chuẩn tốc độ nói**: khoảng 250 chữ/phút.
 
 ---
 
-## 短视频模式（≤60 秒）
+## Chế độ video ngắn (≤60 giây)
 
-### Step 1 — Hook 设计（3 个变体）
+### Step 1 - Thiết kế Hook (3 biến thể)
 
-从 5 种 Hook 类型中选 3 个，各生成一个变体：
+Chọn 3 trong 5 kiểu Hook, mỗi kiểu sinh một biến thể:
 
-| 类型 | 适用场景 | 示例 |
+| Kiểu | Hợp cảnh nào | Ví dụ |
 |------|---------|------|
-| 好奇缺口 | 冷知识、反直觉 | "你每天做的这件事其实在伤害你" |
-| 模式打断 | 反常规、挑战认知 | "忘掉你以前学的所有XX" |
-| 身份触发 | 精准受众 | "如果你是XX，这条一定要看完" |
-| 痛点共鸣 | 真实困扰 | "明明很努力了还是没效果？" |
-| 权威背书 | 数据/研究支撑 | "最新研究发现：XX 竟然是错的" |
+| Khoảng trống tò mò | Kiến thức lạ, phản trực giác | "Việc bạn làm mỗi ngày thật ra đang hại bạn" |
+| Phá vỡ khuôn mẫu | Trái lệ thường, thách thức nhận thức | "Quên hết những gì bạn từng học về XX đi" |
+| Kích hoạt danh tính | Khán giả đúng tệp | "Nếu bạn là XX, clip này nhất định phải xem hết" |
+| Chạm nỗi đau | Vướng mắc có thật | "Rõ ràng đã rất cố gắng mà vẫn không hiệu quả?" |
+| Bảo chứng uy tín | Có số liệu/nghiên cứu đỡ | "Nghiên cứu mới nhất phát hiện: XX hoá ra là sai" |
 
-每个 Hook 按 4 维度评分（每项 1-5，满分 20）：好奇强度、打断效果、身份触发、3 秒清晰度。选最高分作为主 Hook。
+Mỗi Hook chấm theo 4 chiều (mỗi mục 1-5, thang 20): độ tò mò, hiệu quả phá vỡ, kích hoạt danh tính, độ rõ trong 3 giây. Chọn điểm cao nhất làm Hook chính.
 
-### Step 2 — 分秒脚本
+### Step 2 - Kịch bản bấm giờ theo giây
 
-按时长压缩结构：
+Nén cấu trúc theo thời lượng:
 
-| 时长 | 结构 |
+| Thời lượng | Cấu trúc |
 |------|------|
-| 7-15 秒 | Hook(0-2s) + 核心价值(2-10s) + 收尾(10-15s) |
-| 15-30 秒 | Hook(0-3s) + 痛点(3-8s) + 方案(8-20s) + 收尾CTA(20-30s) |
-| 30-60 秒 | Hook(0-3s) + 痛点(3-8s) + 方案(8-40s) + 洞察+CTA(40-60s) |
+| 7-15 giây | Hook(0-2s) + Giá trị cốt lõi(2-10s) + Chốt(10-15s) |
+| 15-30 giây | Hook(0-3s) + Nỗi đau(3-8s) + Giải pháp(8-20s) + Chốt CTA(20-30s) |
+| 30-60 giây | Hook(0-3s) + Nỗi đau(3-8s) + Giải pháp(8-40s) + Insight+CTA(40-60s) |
 
-脚本格式：
+Định dạng kịch bản:
 ```
 [0-3s] HOOK
-口播: "..."
-字幕: "..."
-画面: [描述]
+Lời thoại: "..."
+Phụ đề: "..."
+Hình ảnh: [mô tả]
 
-[3-8s] 痛点
-口播: "..."
-画面: [描述]
+[3-8s] Nỗi đau
+Lời thoại: "..."
+Hình ảnh: [mô tả]
 ```
 
-每句 ≤15 字，口语化，加括号注释（停顿/强调/表情）。
+Mỗi câu ≤15 chữ, văn nói, thêm chú thích trong ngoặc (ngắt/nhấn/biểu cảm).
 
-### Step 3 — caption + 封面
+### Step 3 - caption + ảnh bìa
 
-**caption**：100-300 字，Hook 变体开头（不重复视频 Hook），DM 转发 > 收藏 > 点赞。
-**hashtags**：3-5 个垂直标签，不用泛标签。
-**封面**：3-5 字大标题 + 画面描述 + 表情。
+**caption**: 100-300 chữ, mở đầu bằng biến thể Hook (không lặp lại Hook trong video), chia sẻ DM > lưu > thích.
+**hashtags**: 3-5 tag đúng ngách, không dùng tag chung chung.
+**Ảnh bìa**: tiêu đề lớn 3-5 chữ + mô tả hình ảnh + biểu cảm.
 
-### Step 4 — 质量评分（满分 100）
+### Step 4 - Chấm điểm chất lượng (thang 100)
 
-| 维度 | 权重 | 检查点 |
+| Chiều | Trọng số | Điểm kiểm |
 |------|------|--------|
-| Hook 强度 | 25 | 好奇缺口、打断效果、3 秒清晰度 |
-| 内容质量 | 25 | 价值密度、结构、痛点-方案清晰度 |
-| caption+CTA | 20 | 长度 100+字、转发型 CTA、Hook 变体 |
-| 格式合规 | 15 | 9:16 安全区、时长匹配、封面 |
-| 算法信号 | 15 | 收藏/转发优化、原创性 |
+| Độ mạnh của Hook | 25 | Khoảng trống tò mò, hiệu quả phá vỡ, độ rõ trong 3 giây |
+| Chất lượng nội dung | 25 | Mật độ giá trị, cấu trúc, độ rõ của nỗi đau - giải pháp |
+| caption+CTA | 20 | Dài 100+ chữ, CTA hướng chia sẻ, biến thể Hook |
+| Đúng chuẩn định dạng | 15 | Vùng an toàn 9:16, khớp thời lượng, ảnh bìa |
+| Tín hiệu thuật toán | 15 | Tối ưu lưu/chia sẻ, tính nguyên bản |
 
-≥80 分交付，<60 分返工后重评。
+≥80 điểm thì giao, <60 điểm thì làm lại rồi chấm lại.
 
 ---
 
-## 中长视频模式（>60 秒）
+## Chế độ video trung/dài (>60 giây)
 
-> 留存率优化的详细方法（节奏中断点 / 前向钩子 / 章节结构 / 留存曲线）见 `references/retention-scripting-guide.md`。
+> Phương pháp chi tiết để tối ưu tỉ lệ giữ chân (điểm ngắt nhịp / hook dẫn tiếp / cấu trúc chương / đường cong giữ chân) xem `references/retention-scripting-guide.md`.
 
-### Step 1 — 结构计算
+### Step 1 - Tính cấu trúc
 
-根据目标时长分配各段：
-- **Hook**：0:00-0:30（短视频缩短到 0:00-0:10）
-- **开场**：0:30-2:00
-- **首次 CTA**：约 25% 处
-- **留存再拉回**：约 60% 处
-- **结尾**：最后 60 秒
-- **目标字数** = 时长(分钟) × 250
+Chia các đoạn theo thời lượng mục tiêu:
+- **Hook**: 0:00-0:30 (video ngắn rút còn 0:00-0:10)
+- **Mở đầu**: 0:30-2:00
+- **CTA lần đầu**: khoảng mốc 25%
+- **Kéo giữ chân trở lại**: khoảng mốc 60%
+- **Kết**: 60 giây cuối
+- **Số chữ mục tiêu** = thời lượng (phút) × 250
 
-### Step 2 — 写 Hook（三段式）
+### Step 2 - Viết Hook (ba đoạn)
 
-| 阶段 | 时间 | 目标 |
+| Giai đoạn | Thời gian | Mục tiêu |
 |------|------|------|
-| 抓眼 | 0-5s | 全片最重要的一句话，不加片头 |
-| 承诺 | 5-15s | 看完能获得什么，具体可感知 |
-| 悬念 | 15-30s | 不看会损失什么 |
+| Bắt mắt | 0-5s | Câu quan trọng nhất cả clip, không để intro |
+| Hứa hẹn | 5-15s | Xem hết thì được gì, cụ thể cảm nhận được |
+| Treo | 15-30s | Không xem thì mất gì |
 
-### Step 3 — 内容段落
+### Step 3 - Các đoạn nội dung
 
-每段结构：节奏中断 → 正文 → 微总结 → 前向钩子。
-**节奏中断**每 60-90 秒一次（短视频每 15-30 秒），类型：【镜头切换】【画面】【音效】【数据冲击】。
+Cấu trúc mỗi đoạn: ngắt nhịp -> phần chính -> tóm nhỏ -> hook dẫn tiếp.
+**Ngắt nhịp** mỗi 60-90 giây một lần (video ngắn mỗi 15-30 giây), các kiểu: [cắt cảnh] [hình ảnh] [hiệu ứng âm thanh] [cú sốc số liệu].
 
-### Step 4 — CTA 与结尾
+### Step 4 - CTA và phần kết
 
-- 首次 CTA（25% 处）：软性、对话式、10-15 秒
-- 留存再拉回（60% 处）："接下来是最关键的部分"
-- 结尾 CTA：硬性号召 + 下期预告，**不说"感谢观看"**
+- CTA lần đầu (mốc 25%): mềm, kiểu trò chuyện, 10-15 giây
+- Kéo giữ chân trở lại (mốc 60%): "Tiếp theo mới là phần then chốt nhất"
+- CTA kết: kêu gọi dứt khoát + hé lộ số sau, **không nói "cảm ơn đã xem"**
 
-### Step 5 — 留存风险标注
+### Step 5 - Đánh dấu rủi ro giữ chân
 
-扫描全稿，在危险区标 ⚠️ 警告（至少 3 处）+ 应对方案。
+Quét toàn bản thảo, đánh dấu cảnh báo ⚠️ ở vùng nguy hiểm (ít nhất 3 chỗ) + phương án xử lý.
 
-## 输出格式
+## Định dạng đầu ra
 
-产物写入 `outputs/`。包含：
-- 脚本元数据（主题/时长/平台/字数）
-- 完整分段脚本（含时间码、口播、字幕、画面提示）
-- 节奏中断日志（时间戳/类型/说明）
-- 留存风险地图（中长视频）/ 质量评分（短视频）
-- 剪辑备注
+Sản phẩm ghi vào `outputs/<chủ đề>/`. Bao gồm:
+- Metadata kịch bản (chủ đề/thời lượng/nền tảng/số chữ)
+- Kịch bản phân đoạn đầy đủ (có timecode, lời thoại, phụ đề, gợi ý hình ảnh)
+- Nhật ký ngắt nhịp (timestamp/kiểu/diễn giải)
+- Bản đồ rủi ro giữ chân (video trung/dài) / chấm điểm chất lượng (video ngắn)
+- Ghi chú dựng phim
 
-## 质量检查
+## Kiểm chất lượng
 
-- [ ] 字数与时长匹配（250 字/分钟，±10%）：**用脚本判定，不靠估算**。把全部口播文案（去掉时间码、画面提示等非口播行）喂给
-  `python3 skills/shared/scripts/wordcount.py check --target <时长分钟×250> --tolerance 0.1`（stdin 传入），退出码 0 = 达标；非 0 时脚本给出「还需增/删 X 字」，据结果增删口播后重跑，直到通过。
-- [ ] Hook 完整（短视频 3 变体评分；中长视频三段式）
-- [ ] 节奏中断频率达标
-- [ ] CTA 位置正确
-- [ ] 全稿口语化，短句，不像书面文
-- [ ] 结尾有能量，不含收尾废话
+- [ ] Số chữ khớp thời lượng (250 chữ/phút, ±10%): **dùng script để phán, không ước lượng**. Đưa toàn bộ lời thoại (bỏ timecode, gợi ý hình ảnh và các dòng không phải lời thoại) vào
+  `python3 skills/shared/scripts/wordcount.py check --target <số phút x 250> --tolerance 0.1` (truyền qua stdin), mã thoát 0 = đạt; khác 0 thì script báo "còn cần thêm/bớt X chữ", theo đó tăng giảm lời thoại rồi chạy lại đến khi qua.
+- [ ] Hook đầy đủ (video ngắn: 3 biến thể có chấm điểm; video trung/dài: ba đoạn)
+- [ ] Tần suất ngắt nhịp đạt chuẩn
+- [ ] CTA đặt đúng vị trí
+- [ ] Toàn bản thảo là văn nói, câu ngắn, không giống văn viết
+- [ ] Phần kết có năng lượng, không có lời chốt thừa
 
-## Profile 感知
+## Nhận biết Profile
 
-- **有 Profile**：读取 platform 锁定平台、audience 调整用语、tone 匹配风格、cta_style 使用惯用话术
-- **无 Profile**：默认按时长推断平台，对话感调性
+- **Có Profile**: đọc platform để khoá nền tảng, audience để chỉnh cách dùng từ, tone để khớp phong cách, cta_style để dùng câu quen thuộc
+- **Không có Profile**: mặc định suy nền tảng từ thời lượng, tông giọng như đang trò chuyện
