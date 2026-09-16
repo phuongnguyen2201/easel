@@ -5,6 +5,7 @@ import {
 } from '../lib/api';
 import type { AccountItem, AccountWhoami } from '../lib/api';
 import { getWhoamiCache, setWhoamiCache, verifyStale } from '../lib/whoami';
+import { IconCopy, IconCheck } from './icons';
 
 type QRState = {
   platform: string;
@@ -26,6 +27,13 @@ const STATE_LABEL: Record<string, string> = {
   error: 'Đăng nhập lỗi',
   unknown: 'Đang chờ…',
 };
+
+/** Luồng đăng nhập thiết bị (Facebook): message dạng "… mở <host> và nhập mã: <CODE> …".
+ *  Tách ra để hiển thị mã là cách chính, QR là phương án phụ (quét bằng iPhone có thể lỗi). */
+function parseDeviceCode(message: string): { host: string; code: string } | null {
+  const m = /mở\s+(\S+)\s+và nhập mã:\s*([A-Z0-9]{4,12})/i.exec(message || '');
+  return m ? { host: m[1], code: m[2] } : null;
+}
 
 /** 头像：有 URL 就显示图（加载失败退回首字），否则显示昵称/平台名首字。 */
 function Avatar({ url, name }: { url?: string; name: string }) {
@@ -49,6 +57,7 @@ export default function AccountsPage() {
   const [smsCode, setSmsCode] = useState('');
   const [smsBusy, setSmsBusy] = useState(false);
   const [smsErr, setSmsErr] = useState('');
+  const [codeCopied, setCodeCopied] = useState(false);
   // whoami 结果缓存到 localStorage：打开页面秒显示昵称/头像，不必每次都起浏览器校验
   const [whoami, setWhoami] = useState<Record<string, AccountWhoami | 'loading'>>(() => getWhoamiCache());
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -183,6 +192,8 @@ export default function AccountsPage() {
     return <span className="badge">Chưa đăng nhập</span>;
   };
 
+  const deviceCode = qr ? parseDeviceCode(qr.message) : null;
+
   return (
     <div className="accounts-page">
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
@@ -259,7 +270,9 @@ export default function AccountsPage() {
             <div style={{ fontSize: 13, marginBottom: 14,
               color: qr.state === 'success' ? 'var(--green)'
                 : ['error', 'expired'].includes(qr.state) ? 'var(--red)' : 'var(--text-secondary)' }}>
-              {STATE_LABEL[qr.state] || qr.state}{qr.message ? ` — ${qr.message}` : ''}
+              {qr.state === 'qr_ready' && deviceCode
+                ? 'Nhập mã trên máy tính'
+                : <>{STATE_LABEL[qr.state] || qr.state}{qr.message ? ` — ${qr.message}` : ''}</>}
             </div>
             {qr.state === 'sms_required' ? (
               <div style={{ padding: '6px 4px 2px' }}>
@@ -281,6 +294,37 @@ export default function AccountsPage() {
                   disabled={smsBusy} onClick={submitSms}>
                   {smsBusy ? 'Đang gửi…' : 'Gửi mã xác thực'}
                 </button>
+              </div>
+            ) : qr.state === 'qr_ready' && deviceCode ? (
+              <div style={{ padding: '4px 4px 0' }}>
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                  Mở trang dưới đây trên trình duyệt máy tính (đang đăng nhập tài khoản quản trị Trang) và nhập mã:
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, margin: '12px 0' }}>
+                  <span style={{ fontSize: 30, fontWeight: 700, letterSpacing: 4,
+                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{deviceCode.code}</span>
+                  <button type="button" className="btn btn-sm btn-ghost"
+                    title={codeCopied ? 'Đã sao chép' : 'Sao chép mã'} aria-label={codeCopied ? 'Đã sao chép' : 'Sao chép mã'}
+                    style={{ padding: 6, color: codeCopied ? 'var(--green)' : 'var(--text-secondary)' }}
+                    onClick={() => {
+                      navigator.clipboard?.writeText(deviceCode.code)
+                        .then(() => { setCodeCopied(true); setTimeout(() => setCodeCopied(false), 1500); })
+                        .catch(() => {});
+                    }}>
+                    {codeCopied ? <IconCheck size={18} /> : <IconCopy size={18} />}
+                  </button>
+                </div>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                  <a className="btn btn-sm btn-primary" href={`https://${deviceCode.host}`}
+                    target="_blank" rel="noreferrer">Mở {deviceCode.host}</a>
+                </div>
+                {qr.qr && (
+                  <details style={{ marginTop: 14, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <summary style={{ cursor: 'pointer' }}>Hoặc quét mã QR (có thể lỗi trên iPhone)</summary>
+                    <img className="qr-img" style={{ width: 160, height: 160, marginTop: 8 }}
+                      src={`${mediaUrl(qr.qr)}?v=${qr.qrTs || qrNonce}`} alt="Mã QR đăng nhập" />
+                  </details>
+                )}
               </div>
             ) : qr.state === 'qr_ready' && qr.qr ? (
               <img className="qr-img" src={`${mediaUrl(qr.qr)}?v=${qr.qrTs || qrNonce}`} alt="Mã QR đăng nhập" />
