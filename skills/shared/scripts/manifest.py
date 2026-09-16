@@ -10,8 +10,8 @@ Schema:
   {
     "topic":   "主题名",
     "profile": "画像名 或 ''",
-    "created": ISO8601(CST),
-    "updated": ISO8601(CST),
+    "created": ISO8601(+07:00),
+    "updated": ISO8601(+07:00),
 
     # —— 展示头（供前端「内容库」富展示；均可选，缺省有兜底）——
     "title":        "人类可读标题（缺省=topic）",
@@ -61,7 +61,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(os.environ.get("EASEL_ROOT") or Path(__file__).resolve().parents[3])
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 MANIFEST_NAME = ".easel.json"
-CST = timezone(timedelta(hours=8))
+# Giờ Việt Nam (UTC+7, không có giờ mùa hè); upstream dùng UTC+8.
+VN_TZ = timezone(timedelta(hours=7))
 LAYERS = ("discover", "plan", "produce", "publish", "attribute", "general")
 STATUSES = ("done", "failed")
 # 展示头取值域（前端富展示用；kind 决定内容库卡片图标/分组，proj_status 决定生命周期 chip）
@@ -75,7 +76,7 @@ META_SCALAR_FIELDS = ("title", "summary", "platform", "kind", "status", "cover")
 # I/O
 # --------------------------------------------------------------------------- #
 def _now_iso() -> str:
-    return datetime.now(CST).replace(microsecond=0).isoformat()
+    return datetime.now(VN_TZ).replace(microsecond=0).isoformat()
 
 
 def manifest_path(topic: str | None, data_override: str | None) -> Path:

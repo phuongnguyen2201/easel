@@ -48,7 +48,8 @@ def _find_root() -> Path:
 
 PROJECT_ROOT = _find_root()
 DEFAULT_DATA = PROJECT_ROOT / "outputs" / "_schedule.json"
-CST = timezone(timedelta(hours=8))
+# Giờ Việt Nam (UTC+7, không có giờ mùa hè); upstream dùng UTC+8.
+VN_TZ = timezone(timedelta(hours=7))
 
 CONTENT_STATUSES = {"idea", "draft", "scheduled", "published"}
 KINDS = {"content", "event"}
@@ -88,7 +89,7 @@ def atomic_write(path: Path, items: list[dict]) -> None:
 
 
 def _today() -> datetime:
-    return datetime.now(CST)
+    return datetime.now(VN_TZ)
 
 
 def _new_id() -> str:
